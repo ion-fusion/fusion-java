@@ -5,6 +5,7 @@ package dev.ionfusion.fusion.junit;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.enumeration;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -12,7 +13,6 @@ import java.io.PrintStream;
 import java.io.SequenceInputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 
@@ -36,18 +36,6 @@ public class StdioTestCase
 
         myStdout = new PrintStream(myStdoutBytes);
         myStderr = new PrintStream(myStderrBytes);
-    }
-
-    @AfterEach
-    public void tearDownStdio()
-    {
-        myStdinData = null;
-        myStdin     = null;
-
-        myStdoutBytes = null;
-        myStderrBytes = null;
-        myStdout = null;
-        myStderr = null;
     }
 
 

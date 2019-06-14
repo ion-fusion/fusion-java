@@ -4,24 +4,16 @@
 package dev.ionfusion.fusion.cli;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import dev.ionfusion.fusion.junit.StdioTestCase;
 import java.util.ArrayList;
 import java.util.Arrays;
-import org.junit.jupiter.api.AfterEach;
 
 public class CliTestCase
     extends StdioTestCase
 {
     protected String stdoutText;
     protected String stderrText;
-
-
-    @AfterEach
-    public void tearDownCli()
-    {
-        stdoutText = null;
-        stderrText = null;
-    }
 
 
     void run(String... commandLine)

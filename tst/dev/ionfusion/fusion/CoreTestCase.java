@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion;
 
+import static com.amazon.ion.util.IonTextUtils.printString;
 import static dev.ionfusion.fusion.FusionNumber.isDecimal;
 import static dev.ionfusion.fusion.FusionNumber.isFloat;
 import static dev.ionfusion.fusion.FusionNumber.isInt;
@@ -12,11 +13,10 @@ import static dev.ionfusion.fusion.FusionString.isString;
 import static dev.ionfusion.fusion.FusionString.unsafeStringToJavaString;
 import static dev.ionfusion.fusion.FusionValue.isAnyNull;
 import static dev.ionfusion.fusion.FusionVoid.isVoid;
-import static com.amazon.ion.util.IonTextUtils.printString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
-import dev.ionfusion.fusion.junit.StdioTestCase;
+
 import com.amazon.ion.IonContainer;
 import com.amazon.ion.IonInt;
 import com.amazon.ion.IonList;
@@ -26,6 +26,7 @@ import com.amazon.ion.IonSystem;
 import com.amazon.ion.IonText;
 import com.amazon.ion.IonValue;
 import com.amazon.ion.system.IonSystemBuilder;
+import dev.ionfusion.fusion.junit.StdioTestCase;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.file.Path;
@@ -33,7 +34,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 public class CoreTestCase
@@ -100,16 +100,6 @@ public class CoreTestCase
         throws Exception
     {
         mySystem = IonSystemBuilder.standard().build();
-    }
-
-    @AfterEach
-    public void tearDown()
-        throws Exception
-    {
-        mySystem = null;
-        myRuntimeBuilder = null;
-        myRuntime = null;
-        myTopLevel = null;
     }
 
 

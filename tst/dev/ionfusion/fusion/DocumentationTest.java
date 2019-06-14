@@ -8,6 +8,7 @@ import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.IOException;
 import java.net.URL;
 import org.htmlunit.IncorrectnessListener;
@@ -17,7 +18,6 @@ import org.htmlunit.html.HtmlHeading1;
 import org.htmlunit.html.HtmlPage;
 import org.htmlunit.html.HtmlParagraph;
 import org.htmlunit.html.parser.HTMLParserListener;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -58,11 +58,6 @@ public class DocumentationTest
         });
     }
 
-    @AfterEach
-    public void tearDown()
-    {
-        myWebClient = null;
-    }
 
     private HtmlPage loadModule(String modulePath)
         throws IOException
