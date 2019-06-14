@@ -18,18 +18,19 @@ import org.htmlunit.html.HtmlHeading1;
 import org.htmlunit.html.HtmlPage;
 import org.htmlunit.html.HtmlParagraph;
 import org.htmlunit.html.parser.HTMLParserListener;
+import org.junit.jupiter.api.AutoClose;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class DocumentationTest
 {
-    private WebClient myWebClient;
+    /** Not thread-safe */
+    @AutoClose
+    private final WebClient myWebClient = new WebClient();
 
     @BeforeEach
     public void initWebClient()
     {
-        myWebClient = new WebClient();
-
         myWebClient.setIncorrectnessListener(new IncorrectnessListener()
         {
             @Override
