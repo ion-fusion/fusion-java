@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion;
 
+import static com.amazon.ion.util.IonTextUtils.printSymbol;
 import static dev.ionfusion.fusion.FusionBool.falseBool;
 import static dev.ionfusion.fusion.FusionBool.makeBool;
 import static dev.ionfusion.fusion.FusionCompare.EqualityTier.LOOSE_EQUAL;
@@ -10,7 +11,6 @@ import static dev.ionfusion.fusion.FusionCompare.EqualityTier.STRICT_EQUAL;
 import static dev.ionfusion.fusion.FusionCompare.EqualityTier.TIGHT_EQUAL;
 import static dev.ionfusion.fusion.FusionIo.dispatchIonize;
 import static dev.ionfusion.fusion.FusionIo.dispatchWrite;
-import static dev.ionfusion.fusion.FusionIterator.iterate;
 import static dev.ionfusion.fusion.FusionList.checkNullableListArg;
 import static dev.ionfusion.fusion.FusionList.unsafeJavaIterate;
 import static dev.ionfusion.fusion.FusionList.unsafeListSize;
@@ -20,9 +20,14 @@ import static dev.ionfusion.fusion.FusionText.checkRequiredTextArg;
 import static dev.ionfusion.fusion.FusionText.textToJavaString;
 import static dev.ionfusion.fusion.FusionText.unsafeTextToJavaString;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
-import static com.amazon.ion.util.IonTextUtils.printSymbol;
 import static java.util.AbstractMap.SimpleEntry;
-import static java.util.Collections.emptyIterator;
+
+import com.amazon.ion.IonException;
+import com.amazon.ion.IonStruct;
+import com.amazon.ion.IonType;
+import com.amazon.ion.IonValue;
+import com.amazon.ion.IonWriter;
+import com.amazon.ion.ValueFactory;
 import dev.ionfusion.fusion.FusionBool.BaseBool;
 import dev.ionfusion.fusion.FusionCollection.BaseCollection;
 import dev.ionfusion.fusion.FusionCompare.EqualityTier;
@@ -31,12 +36,6 @@ import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.util.function.BiFunction;
 import dev.ionfusion.fusion.util.function.BiPredicate;
 import dev.ionfusion.fusion.util.hamt.MultiHashTrie;
-import com.amazon.ion.IonException;
-import com.amazon.ion.IonStruct;
-import com.amazon.ion.IonType;
-import com.amazon.ion.IonValue;
-import com.amazon.ion.IonWriter;
-import com.amazon.ion.ValueFactory;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Iterator;
@@ -54,7 +53,7 @@ final class FusionStruct
 
     private static final NullStruct             NULL_STRUCT  = new NullStruct();
     private static final NonNullImmutableStruct EMPTY_STRUCT =
-        new FunctionalStruct(MultiHashTrie.<String, Object>empty(), BaseSymbol.EMPTY_ARRAY);
+        new FunctionalStruct(MultiHashTrie.empty(), BaseSymbol.EMPTY_ARRAY);
 
 
     //========================================================================
@@ -177,7 +176,7 @@ final class FusionStruct
     private static NonNullImmutableStruct
     immutableStruct(MultiHashTrie<String, Object> map, BaseSymbol[] anns)
     {
-        if (map.size() == 0 && anns.length == 0) return EMPTY_STRUCT;
+        if (map.isEmpty() && anns.length == 0) return EMPTY_STRUCT;
         return new FunctionalStruct(map, anns);
     }
 
@@ -189,7 +188,7 @@ final class FusionStruct
     @Deprecated
     static NonNullImmutableStruct immutableStruct(Map<String, Object> map)
     {
-        if (map.size() == 0) return EMPTY_STRUCT;
+        if (map.isEmpty()) return EMPTY_STRUCT;
         return new FunctionalStruct(MultiHashTrie.fromMap(map),
                                     BaseSymbol.EMPTY_ARRAY);
     }
@@ -226,6 +225,7 @@ final class FusionStruct
         return ((MutableStruct) struct).asImmutable();
     }
 
+    // TODO Add asMutableStruct (must throw given null.struct!)
 
     /**
      * Returns a new, empty mutable struct.  This is equivalent to the Fusion
@@ -924,7 +924,6 @@ final class FusionStruct
             throw new IllegalStateException("Cannot wrap mutable struct as syntax");
         }
 
-        @SuppressWarnings("serial")
         private static final class VisitFailure extends RuntimeException
         {
         }
@@ -940,21 +939,14 @@ final class FusionStruct
                                        final SourceLocation loc)
             throws FusionException
         {
-            StructFieldVisitor visitor = new StructFieldVisitor()
-            {
-                @Override
-                public Object visit(String name, Object value)
-                    throws FusionException
+            StructFieldVisitor visitor = (name, value) -> {
+                SyntaxValue converted = Syntax.datumToSyntaxMaybe(eval, value, context, loc);
+                if (converted == null)
                 {
-                    SyntaxValue converted =
-                        Syntax.datumToSyntaxMaybe(eval, value, context, loc);
-                    if (converted == null)
-                    {
-                        // Hit something that's not syntax-able
-                        throw new VisitFailure();
-                    }
-                    return converted;
+                    // Hit something that's not syntax-able
+                    throw new VisitFailure();
                 }
+                return converted;
             };
 
             try
@@ -1115,18 +1107,14 @@ final class FusionStruct
                                            final MapBasedStruct left)
             throws FusionException
         {
-            BiPredicate<Object, Object> comp = new BiPredicate<Object, Object>()
-            {
-                public boolean test(Object lv, Object rv)
+            BiPredicate<Object, Object> comp = (lv, rv) -> {
+                try
                 {
-                    try
-                    {
-                        return tier.eval(eval, lv, rv).isTrue();
-                    }
-                    catch (FusionException e)
-                    {
-                        throw new TunneledFusionException(e);
-                    }
+                    return tier.eval(eval, lv, rv).isTrue();
+                }
+                catch (FusionException e)
+                {
+                    throw new TunneledFusionException(e);
                 }
             };
 
@@ -1750,11 +1738,6 @@ final class FusionStruct
             throws FusionException
         {
             BaseStruct s = (BaseStruct) struct;
-            if (s.size() == 0)
-            {
-                return iterate(eval, emptyIterator());
-            }
-
             return new StructIterator(s.getMap(eval));
         }
     }
@@ -1942,8 +1925,7 @@ final class FusionStruct
             Object names =  checkNullableListArg(eval, this, 0, args);
             Object values = checkNullableListArg(eval, this, 1, args);
 
-            if (unsafeListSize(eval, names) == 0 ||
-                    unsafeListSize(eval, values) == 0)
+            if (unsafeListSize(eval, names) == 0 || unsafeListSize(eval, values) == 0)
             {
                 return empty(eval);
             }
