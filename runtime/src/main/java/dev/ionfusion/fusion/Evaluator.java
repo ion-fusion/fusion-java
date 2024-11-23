@@ -505,12 +505,15 @@ class Evaluator
                         throw e;
                     }
 
+                    if (result == null)
+                    {
+                        return voidValue(this);
+                    }
+
                     continue checkingResult;
                 }
-                if (result == null)
-                {
-                    result = voidValue(this);
-                }
+
+                assert result != null;
                 return result;
             }
         }
@@ -566,6 +569,7 @@ class Evaluator
                     throw new FusionInterrupt();
                 }
 
+                // Closures bounce their body form to eliminate a stack frame:
                 if (result instanceof TailForm)
                 {
                     TailForm tail = (TailForm) result;
@@ -654,6 +658,8 @@ class Evaluator
      * Wraps an expression for evaluation in tail-position. MUST not be called from a
      * procedure. The result MUST be immediately returned to this evaluator, it's not a
      * normal value!
+     *
+     * @return not null
      */
     Object bounceTailForm(Store store, CompiledForm form)
     {
