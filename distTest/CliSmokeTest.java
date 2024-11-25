@@ -1,4 +1,5 @@
-// Copyright (c) 2024 Amazon.com, Inc.  All rights reserved.
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

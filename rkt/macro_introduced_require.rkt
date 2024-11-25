@@ -1,3 +1,6 @@
+;; Copyright Ion Fusion contributors. All rights reserved.
+;; SPDX-License-Identifier: Apache-2.0
+
 #lang racket
 
 ;;; Test cases illustrating how Racket's require-spec forms determine the lexical context

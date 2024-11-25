@@ -1,4 +1,5 @@
-// Copyright (c) 2019 Amazon.com, Inc.  All rights reserved.
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 // This module is malformed due to an Ion syntax error.
 (module m "/fusion"

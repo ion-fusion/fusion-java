@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Copyright Ion Fusion contributors. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 set -e
 
 if [[ -z "$RACKET_HOME" ]]

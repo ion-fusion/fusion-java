@@ -1,4 +1,5 @@
-// Copyright (c) 2012-2020 Amazon.com, Inc.  All rights reserved.
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package com.amazon.fusion.cli;
 
@@ -197,4 +198,3 @@ class Repl
         }
     }
 }
-

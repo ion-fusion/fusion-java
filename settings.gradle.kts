@@ -1,3 +1,6 @@
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
 /*
  * The settings file is used to specify which projects to include in your build.
  *

@@ -1,4 +1,5 @@
-// Copyright (c) 2012-2014 Amazon.com, Inc.  All rights reserved.
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 (require
   "/fusion/experimental/check"
@@ -30,4 +31,3 @@
 (check === 1  (letrec     [( x  0)] (set x (+ x 1)) x))
 (check === 1  (let        [( x  0)] (set x (+ x 1)) x))
 (check === 1  (lets       [( x  0)] (set x (+ x 1)) x))
-
