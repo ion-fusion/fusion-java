@@ -7,14 +7,15 @@ import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
-import com.gargoylesoftware.htmlunit.IncorrectnessListener;
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HTMLParserListener;
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
-import com.gargoylesoftware.htmlunit.html.HtmlHeading1;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import java.io.IOException;
 import java.net.URL;
+import org.htmlunit.IncorrectnessListener;
+import org.htmlunit.WebClient;
+import org.htmlunit.html.HtmlBody;
+import org.htmlunit.html.HtmlHeading1;
+import org.htmlunit.html.HtmlPage;
+import org.htmlunit.html.HtmlParagraph;
+import org.htmlunit.html.parser.HTMLParserListener;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -69,7 +70,7 @@ public class DocumentationTest
         HtmlPage page = myWebClient.getPage(url);
         assertEquals(modulePath, page.getTitleText());
 
-        HtmlElement  body    = page.getBody();
+        HtmlBody     body    = page.getBody();
         HtmlHeading1 firstH1 = body.getFirstByXPath("h1");
         assertEquals("Module " + modulePath, firstH1.getTextContent());
 
@@ -84,10 +85,10 @@ public class DocumentationTest
     public void testFusionDoc()
         throws Exception
     {
-        HtmlPage    page = loadModule("/fusion");
-        HtmlElement body = page.getBody();
+        HtmlPage page = loadModule("/fusion");
+        HtmlBody body = page.getBody();
 
-        HtmlElement p = body.getFirstByXPath("p");
+        HtmlParagraph p = body.getFirstByXPath("p");
         assertNotNull(p, "missing first <p>");
         assertThat(p.getTextContent(), startsWith("The main Fusion language."));
     }

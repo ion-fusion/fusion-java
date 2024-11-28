@@ -24,7 +24,7 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     testImplementation("org.hamcrest:hamcrest-library:1.3")
-    testImplementation("net.sourceforge.htmlunit:htmlunit:2.20")
+    testImplementation("org.htmlunit:htmlunit:4.6.0")
 }
 
 java {
