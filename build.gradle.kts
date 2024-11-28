@@ -259,6 +259,8 @@ tasks.register<JavaExec>("fusiondocGen") {
     args = listOf("document", fusiondocDir.asFile.path, "fusion")
 
     enableAssertions = true
+
+    outputs.dir(fusiondocDir)
 }
 
 val fusiondoc by tasks.register<Copy>("fusiondoc") {
