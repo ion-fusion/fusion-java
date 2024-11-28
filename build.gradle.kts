@@ -13,7 +13,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.amazon.ion:ion-java:1.11.4")
+    implementation("com.amazon.ion:ion-java:1.11.9")
     // TODO This shouldn't be needed when consumers embed Fusion.
     //  It's a build-time dependency, but here b/c consumers use the CLI to
     //  generate their docs.  That should be handled by a plugin instead.
