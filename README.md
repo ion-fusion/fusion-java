@@ -160,6 +160,15 @@ If you have questions, feel free to reach out on our [Slack workspace][slack].
 Contributions of all kinds are welcome! Our [Contributor's Guide](CONTRIBUTING.md) can help you get 
 going.  We are deeply grateful to our many [contributors](CONTRIBUTORS.md).
 
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
 
 # License
 
