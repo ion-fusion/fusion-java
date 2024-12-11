@@ -41,6 +41,7 @@ jobs:
 
 
   dependency-submission:
+    if: github.repository == 'ion-fusion/fusion-java'
 
     runs-on: ubuntu-latest
     permissions:
