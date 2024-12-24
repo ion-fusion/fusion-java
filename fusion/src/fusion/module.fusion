@@ -171,10 +171,10 @@ in one of these ways:
 Any `"."` and `".."` segments can only occur at the front of the path.
 
 > **WARNING: `"."` and `".."` segments are not yet implemented!**
-> See issue [FUSION-150][].
+> See issue [#28][].
 
 > **WARNING: Relative paths are only supported at top-level!**
-> See issue [FUSION-152][].
+> See issue [#29][].
 
 For example, consider these imports within a module `/root/parent/self`:
 
@@ -213,32 +213,20 @@ that well assume and enforce a global hierarchy. Therefore it is more important
 in Fusion to carefully select a namespace within the hierarchy, since conflicts
 will cause more problems.
 
-We recommend that all Amazon code be housed under the `/amazon` root module,
-with further submodules indicating product line and product.  We generally do
-not recommend following Amazon's organizational structure, since Amazon's
-tendency to re-org will likely render your code's hierarchy obsolete.
-
-In Brazil terms, something like `/amazon/`_`appgroup`_`/`_`package`_
-will probably suffice. Of course you can include additional subdirectories
-under the package level.
-
-At this time, we do not recommend having multiple Brazil packages contribute
-modules to the same set of directories in the Fusion repository.
-That is likely to cause problems with future security features, and furthermore
-causes confusion among developers.
-
 **DO NOT CREATE SUBMODULES OF [`/fusion`][fusion].**
 That hierarchy is reserved for exclusive use by the Fusion platform.
 
-See also: [Building and Deploying Fusion][build].
+We recommend that all user code be placed in modules that follow a naming
+convention similar to Java packages. For example, code that in Java would be
+under the package `org.example.company.project` would be in the module
+`/org/example/company/project` in a fusion package.
 
-[build]:   wiki:Building_and_Deploying_Fusion
 [fusion]:  fusion.html
 [module]:  fusion/module.html#module
 [provide]: fusion/module.html#provide
 [require]: fusion/module.html#require
-[FUSION-150]: issue:FUSION-150
-[FUSION-152]: issue:FUSION-152
+[#28]: https://github.com/ion-fusion/fusion-java/issues/28
+[#29]: https://github.com/ion-fusion/fusion-java/issues/29
   '''
 
   (provide all_defined_out module only_in prefix_in
