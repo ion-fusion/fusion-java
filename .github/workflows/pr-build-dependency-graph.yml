@@ -2,23 +2,25 @@
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
 # documentation.
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
-
-name: Java CI with Gradle
+#
+# This workflow will build a Java project with Gradle and upload its dependency graph
+# for another workflow to download and submit for processing. This split is needed because
+# PR-triggered workflows from forked repositories cannot have 'write' permissions.
+#
+# See: https://github.com/gradle/actions/blob/main/docs/dependency-submission.md#usage-with-pull-requests-from-public-forked-repositories
+name: PR Build and Generate Dependency Graph
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - 'main'
+
+permissions:
+  contents: read # 'write' permission is not available
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
 
     steps:
     # https://github.com/actions/checkout
@@ -39,13 +41,8 @@ jobs:
     - name: Build with Gradle Wrapper
       run: ./gradlew release
 
-
   dependency-submission:
-    if: github.repository == 'ion-fusion/fusion-java'
-
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
     - uses: actions/checkout@v4
@@ -55,8 +52,7 @@ jobs:
         java-version: 17
         distribution: corretto
 
-    # Generates and submits a dependency graph, enabling Dependabot Alerts.
-    # https://github.com/gradle/actions/blob/main/dependency-submission
-    # https://github.com/gradle/github-dependency-submission-demo
     - name: Generate and submit dependency graph
       uses: gradle/actions/dependency-submission@v4
+      with:
+        dependency-graph: generate-and-upload
