@@ -219,7 +219,7 @@ That hierarchy is reserved for exclusive use by the Fusion platform.
 We recommend that all user code be placed in modules that follow a naming
 convention similar to Java packages. For example, code that in Java would be
 under the package `org.example.company.project` would be in the module
-`/org/example/company/project` in a fusion package.
+`/org/example/company/project` in a Fusion package.
 
 [fusion]:  fusion.html
 [module]:  fusion/module.html#module
