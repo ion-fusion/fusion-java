@@ -1,7 +1,7 @@
 <!-- Copyright Ion Fusion contributors. All rights reserved. -->
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 
-# Understanding Fusion Security
+# About Fusion Security Mechanisms
 
 Fusion has two primary security mechanisms for constraining the capabilities of evaluated code.
 First and foremost, it allows the evaluation invoker to control the set of visible bindings, which
