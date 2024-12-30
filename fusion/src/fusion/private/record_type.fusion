@@ -57,6 +57,6 @@ field.
 The index must be less than `field_ct`; a subtype's accessor cannot retrieve
 fields inherited from a supertype.
     '''
-    (java_new "dev.ion_fusion.fusion.Records$MakeRecordTypeProc"))
+    (java_new "dev.ionfusion.fusion.Records$MakeRecordTypeProc"))
 
 )

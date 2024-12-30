@@ -131,7 +131,7 @@ file into a list:
 
 For other idioms, see [/fusion/io](fusion/io.html#input).
     '''
-    (java_new "dev.ion_fusion.fusion.FusionIo$WithIonFromFileProc"
+    (java_new "dev.ionfusion.fusion.FusionIo$WithIonFromFileProc"
       current_ion_reader))
 
 
@@ -164,7 +164,7 @@ If more than one value is expected, you can read them all into a list:
 
 For other idioms, see [/fusion/io](fusion/io.html#input).
     '''
-    (java_new "dev.ion_fusion.fusion.FusionIo$WithIonFromStringProc"
+    (java_new "dev.ionfusion.fusion.FusionIo$WithIonFromStringProc"
       current_ion_reader))
 
 
@@ -192,7 +192,7 @@ lob into a list:
 
 For other idioms, see [/fusion/io](fusion/io.html#input).
     '''
-    (java_new "dev.ion_fusion.fusion.FusionIo$WithIonFromLobProc"
+    (java_new "dev.ionfusion.fusion.FusionIo$WithIonFromLobProc"
       current_ion_reader))
 
 
@@ -214,7 +214,7 @@ structs on stdin:
 In general, `read` is more low-level than necessary;
 see [/fusion/io](fusion/io.html#input) for more options.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionIo$ReadProc" current_ion_reader))
+    (java_new "dev.ionfusion.fusion.FusionIo$ReadProc" current_ion_reader))
 
 
   (define_values (is_eof)
@@ -224,7 +224,7 @@ see [/fusion/io](fusion/io.html#input) for more options.
 Determines whether a `value` is the Fusion end-of-file value.  This value is
 bound to the name [`eof`](fusion/io.html#eof).
     '''
-    (java_new "dev.ion_fusion.fusion.FusionIo$IsEofProc"))
+    (java_new "dev.ionfusion.fusion.FusionIo$IsEofProc"))
 
 
 
@@ -235,7 +235,7 @@ bound to the name [`eof`](fusion/io.html#eof).
 Outputs an Ion text representation of `value` to the current output port,
 throwing an exception if the value contains any non-Ionizable data like closures.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionIo$IonizeProc" current_output_port))
+    (java_new "dev.ionfusion.fusion.FusionIo$IonizeProc" current_output_port))
 
 
   (define_values (ionize_to_blob)
@@ -246,7 +246,7 @@ Encodes an Ion binary representation of `value`, throwing an exception if the
 value contains any non-Ionizable data like closures. The result is a blob
 containing an Ion binary document.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionIo$IonizeToBlobProc"))
+    (java_new "dev.ionfusion.fusion.FusionIo$IonizeToBlobProc"))
 
 
   (define_values (ionize_to_string)
@@ -257,7 +257,7 @@ Encodes an Ion text representation of `value`, throwing an exception if the
 value contains any non-Ionizable data like closures. The result is a string
 containing an Ion text document.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionIo$IonizeToStringProc"))
+    (java_new "dev.ionfusion.fusion.FusionIo$IonizeToStringProc"))
 
 
   (define_values (jsonize_to_string)
@@ -279,7 +279,7 @@ Compared to `ionize_to_string`, this method applies these conversions:
   * Symbols are printed as strings.
   * Timestamps are printed as strings, using Ion timestamp format.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionIo$JsonizeToStringProc"))
+    (java_new "dev.ionfusion.fusion.FusionIo$JsonizeToStringProc"))
 
 
   (define_values (write)
@@ -291,7 +291,7 @@ Ion syntax where possible.
 The result will be unreadable (by the Fusion and Ion readers) if the value
 contains any non-Ionizable data like closures.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionIo$WriteProc" current_output_port))
+    (java_new "dev.ionfusion.fusion.FusionIo$WriteProc" current_output_port))
 
 
   (define_values (display)
@@ -306,7 +306,7 @@ All other values are rendered as by [`write`](fusion/io.html#write).
 No characters are written between the values.
 In general, the result will be unreadable by the Fusion and Ion readers.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionIo$DisplayProc" current_output_port))
+    (java_new "dev.ionfusion.fusion.FusionIo$DisplayProc" current_output_port))
 
 
   (define_values (display_to_string)
@@ -316,7 +316,7 @@ In general, the result will be unreadable by the Fusion and Ion readers.
 Returns a string with a human-oriented text representation of the `value`s.
 The output format is as defined by [`display`](fusion/io.html#display).
     '''
-    (java_new "dev.ion_fusion.fusion.FusionIo$DisplayToStringProc"))
+    (java_new "dev.ionfusion.fusion.FusionIo$DisplayToStringProc"))
 
 
   (define_values (displayln)

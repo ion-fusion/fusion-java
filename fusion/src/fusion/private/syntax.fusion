@@ -38,7 +38,7 @@ Compares two identifiers to determine whether `id1` would bind `id2`
 (or vice versa) if one were in a binding position and the other in a suitable
 reference position.
     '''
-    (java_new "dev.ion_fusion.fusion.SyntaxSymbol$BoundIdentifierEqualProc"))
+    (java_new "dev.ionfusion.fusion.SyntaxSymbol$BoundIdentifierEqualProc"))
 
 
   (define_values (datum_to_syntax)
@@ -53,7 +53,7 @@ as-is.
 When `context` isn't provided, converted syntax objects have no lexical
 context.  When `location` isn't provided, they will have no location.
     '''
-    (java_new "dev.ion_fusion.fusion.DatumToSyntaxProc"))
+    (java_new "dev.ionfusion.fusion.DatumToSyntaxProc"))
 
 
   (define_values (expand_once)
@@ -65,7 +65,7 @@ bindings of the current namespace.
 
 The `top_level_form` may be a syntax object or another datum.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionEval$ExpandOnceProc"))
+    (java_new "dev.ionfusion.fusion.FusionEval$ExpandOnceProc"))
 
 
   (define_values (free_identifier_equal)
@@ -75,7 +75,7 @@ The `top_level_form` may be a syntax object or another datum.
 Compares two identifiers to determine whether they both refer to the same
 binding.
     '''
-    (java_new "dev.ion_fusion.fusion.SyntaxSymbol$FreeIdentifierEqualProc"))
+    (java_new "dev.ionfusion.fusion.SyntaxSymbol$FreeIdentifierEqualProc"))
 
 
   (define_values (is_identifier)
@@ -85,7 +85,7 @@ binding.
 Determines whether a `value` is a syntax object holding a symbol, returning
 `true` or `false`.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionSyntax$IsIdentifierProc"))
+    (java_new "dev.ionfusion.fusion.FusionSyntax$IsIdentifierProc"))
 
 
   (define_values (is_syntax)
@@ -94,7 +94,7 @@ Determines whether a `value` is a syntax object holding a symbol, returning
 
 Determines whether a `value` is a syntax object, returning `true` or `false`.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionSyntax$IsSyntaxProc"))
+    (java_new "dev.ionfusion.fusion.FusionSyntax$IsSyntaxProc"))
 
 
   (define_values (syntax_append)
@@ -104,7 +104,7 @@ Determines whether a `value` is a syntax object, returning `true` or `false`.
 Returns a new syntax sexp that combines the `front` and `back` syntax
 sequences.
     '''
-    (java_new "dev.ion_fusion.fusion.SyntaxAppendProc"))
+    (java_new "dev.ionfusion.fusion.SyntaxAppendProc"))
 
 
   (define_values (syntax_column)
@@ -114,7 +114,7 @@ sequences.
 Returns the one-based column number of the source of a syntax object.
 The result is zero if there's no column number available.
     '''
-    (java_new "dev.ion_fusion.fusion.SyntaxColumnProc"))
+    (java_new "dev.ionfusion.fusion.SyntaxColumnProc"))
 
 
   (define_values (syntax_get)
@@ -126,11 +126,11 @@ Traverses down through syntax objects.
 Each `key` must be a string, symbol, or int, to denote either a struct's
 field-name or a sequence's index.
     '''
-    (java_new "dev.ion_fusion.fusion.SyntaxGetProc"))
+    (java_new "dev.ionfusion.fusion.SyntaxGetProc"))
 
 
   (define_values (syntax_is_original)
-    (java_new "dev.ion_fusion.fusion.FusionSyntax$IsOriginalProc"))
+    (java_new "dev.ionfusion.fusion.FusionSyntax$IsOriginalProc"))
 
 
   (define_values (syntax_line)
@@ -140,11 +140,11 @@ field-name or a sequence's index.
 Returns the one-based line number of the source of a syntax object.
 The result is zero if there's no line number available.
     '''
-    (java_new "dev.ion_fusion.fusion.SyntaxLineProc"))
+    (java_new "dev.ionfusion.fusion.SyntaxLineProc"))
 
 
   (define_values (syntax_property)
-    (java_new "dev.ion_fusion.fusion.FusionSyntax$PropertyProc"))
+    (java_new "dev.ionfusion.fusion.FusionSyntax$PropertyProc"))
 
 
   (define_values (syntax_size)
@@ -154,7 +154,7 @@ The result is zero if there's no line number available.
 Returns the number of child elements contained in the syntax sequence.
 The size of `null.list` and `null.sexp` is zero.
     '''
-    (java_new "dev.ion_fusion.fusion.SyntaxSizeProc"))
+    (java_new "dev.ionfusion.fusion.SyntaxSizeProc"))
 
 
   (define_values (syntax_source)
@@ -163,7 +163,7 @@ The size of `null.list` and `null.sexp` is zero.
 
 Returns a description of the source of a syntax object.
     '''
-    (java_new "dev.ion_fusion.fusion.SyntaxSourceProc"))
+    (java_new "dev.ionfusion.fusion.SyntaxSourceProc"))
 
 
   (define_values (syntax_subseq)
@@ -174,7 +174,7 @@ Returns a new syntax sexp that copies children from `sequence` starting at
 `from`.  If `from` is beyond the end of the sequence, the result is an empty
 sequence.
     '''
-    (java_new "dev.ion_fusion.fusion.SyntaxSubseqProc"))
+    (java_new "dev.ionfusion.fusion.SyntaxSubseqProc"))
 
 
   (define_values (syntax_to_datum)
@@ -184,7 +184,7 @@ sequence.
 Given a `syntax` object, removes the lexical information and returns a plain
 value, unwrapping all layers recursively.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionSyntax$ToDatumProc"))
+    (java_new "dev.ionfusion.fusion.FusionSyntax$ToDatumProc"))
 
 
   (define_values (syntax_track_origin)
@@ -194,7 +194,7 @@ value, unwrapping all layers recursively.
 Copies properties from `orig_stx` to `new_stx` and extending origin data with
 the `origin` identifier.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionSyntax$TrackOriginProc"))
+    (java_new "dev.ionfusion.fusion.FusionSyntax$TrackOriginProc"))
 
 
   (define_values (syntax_unwrap)
@@ -204,7 +204,7 @@ the `origin` identifier.
 Given a `syntax` object, removes the lexical information and returns a plain
 value. This only unwraps one layer, retaining inner syntax objects.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionSyntax$UnwrapProc"))
+    (java_new "dev.ionfusion.fusion.FusionSyntax$UnwrapProc"))
 
 
   (define_values (wrong_syntax)
@@ -214,5 +214,5 @@ value. This only unwraps one layer, retaining inner syntax objects.
 Raises a syntax error located at the given `stx` syntax. The `message`s are
 displayed as part of the error.
     '''
-    (java_new "dev.ion_fusion.fusion.WrongSyntaxProc"))
+    (java_new "dev.ionfusion.fusion.WrongSyntaxProc"))
 )

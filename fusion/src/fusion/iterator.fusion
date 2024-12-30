@@ -51,7 +51,7 @@ based on two procedures:
 
 Checks if the `value` is an iterator.  Returns `true` or `false`.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionIterator$IsIteratorProc"))
+    (java_new "dev.ionfusion.fusion.FusionIterator$IsIteratorProc"))
 
 
   (define iterator_has_next
@@ -66,7 +66,7 @@ subsequent calls of `iterator_has_next` on the same instance are expected to
 return `false`, and all subsequent calls of `iterator_next` are expected to
 throw an exception.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionIterator$HasNextProc"))
+    (java_new "dev.ionfusion.fusion.FusionIterator$HasNextProc"))
 
 
   (define iterator_next
@@ -76,7 +76,7 @@ throw an exception.
 Returns the next element of the `iterator`.  When the iterator has no more
 elements, an exception is thrown.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionIterator$NextProc"))
+    (java_new "dev.ionfusion.fusion.FusionIterator$NextProc"))
 
 
   (define (make_iterator has_next_proc next_proc)
@@ -84,7 +84,7 @@ elements, an exception is thrown.
 Returns an iterator that delegates `iterator_has_next` and `iterator_next` to
 the given procedures, which are usually closures with shared state.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionIterator" has_next_proc next_proc))
+    (java_new "dev.ionfusion.fusion.FusionIterator" has_next_proc next_proc))
 
 
   (define empty_iterator

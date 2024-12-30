@@ -23,7 +23,7 @@ related operations on sexps.
 
 Returns the head of `pair`.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionSexp$UnsafePairHeadProc"))
+    (java_new "dev.ionfusion.fusion.FusionSexp$UnsafePairHeadProc"))
 
   (provide unsafe_pair_tail)
   (define_values (unsafe_pair_tail)
@@ -32,7 +32,7 @@ Returns the head of `pair`.
 
 Returns the tail of `pair`.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionSexp$UnsafePairTailProc"))
+    (java_new "dev.ionfusion.fusion.FusionSexp$UnsafePairTailProc"))
 
   (provide unsafe_sexp_iterator)
   (define_values (unsafe_sexp_iterator)
@@ -41,5 +41,5 @@ Returns the tail of `pair`.
 
 Returns an iterator over the elements of `sexp`.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionSexp$UnsafeSexpIteratorProc"))
+    (java_new "dev.ionfusion.fusion.FusionSexp$UnsafeSexpIteratorProc"))
 )

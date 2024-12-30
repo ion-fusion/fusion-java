@@ -79,7 +79,7 @@ The handler must be a procedure that accepts one argument: the raised value.
 Most code should use the `with_handlers` syntax form instead of this procedure,
 which is prone to error by using a non-thunk body expression.
     '''
-    (java_new "dev.ion_fusion.fusion.CallWithHandlerProc"))
+    (java_new "dev.ionfusion.fusion.CallWithHandlerProc"))
 
  (define (sequence_handler preds_and_handlers)  // Argument is a sexp of pairs.
    (lambda (raised)
@@ -158,8 +158,8 @@ See the [Racket Guide on Exceptions][racket-exn] for more details.
             stx)))))
 
 
-  (define FusionExn     (java_class "dev.ion_fusion.fusion.FusionException"))
-  (define FusionUserExn (java_class "dev.ion_fusion.fusion.FusionUserException"))
+  (define FusionExn     (java_class "dev.ionfusion.fusion.FusionException"))
+  (define FusionUserExn (java_class "dev.ionfusion.fusion.FusionUserException"))
 
   (provide is_exn)
   (define (is_exn v)
@@ -197,12 +197,12 @@ Returns `true` or `false`.
           (quote_syntax here)
           stx))))
 
-  (generate_predicate is_error_exn      error_exn      "dev.ion_fusion.fusion.FusionErrorException")
-  (generate_predicate is_argument_error argument_error "dev.ion_fusion.fusion.ArgumentException")
-  (generate_predicate is_arity_error    arity_error    "dev.ion_fusion.fusion.ArityFailure")
-  (generate_predicate is_contract_error contract_error "dev.ion_fusion.fusion.ContractException")
-  (generate_predicate is_result_error   result_error   "dev.ion_fusion.fusion.ResultFailure")
-  (generate_predicate is_syntax_error   syntax_error   "dev.ion_fusion.fusion.SyntaxException")
-  (generate_predicate is_unbound_error  unbound_error  "dev.ion_fusion.fusion.UnboundIdentifierException")
+  (generate_predicate is_error_exn      error_exn      "dev.ionfusion.fusion.FusionErrorException")
+  (generate_predicate is_argument_error argument_error "dev.ionfusion.fusion.ArgumentException")
+  (generate_predicate is_arity_error    arity_error    "dev.ionfusion.fusion.ArityFailure")
+  (generate_predicate is_contract_error contract_error "dev.ionfusion.fusion.ContractException")
+  (generate_predicate is_result_error   result_error   "dev.ionfusion.fusion.ResultFailure")
+  (generate_predicate is_syntax_error   syntax_error   "dev.ionfusion.fusion.SyntaxException")
+  (generate_predicate is_unbound_error  unbound_error  "dev.ionfusion.fusion.UnboundIdentifierException")
 
 )

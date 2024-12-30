@@ -31,5 +31,5 @@ Converts a lob to its hex encoding as a string.  Returns `null.string`
 when given `null.clob` or `null.blob`.  The returned hex string does not
 contain a '0x' prefix, and will only contain the characters [0-9a-f].
     '''
-    (java_new "dev.ion_fusion.fusion.FusionLob$UnsafeLobToHexProc"))
+    (java_new "dev.ionfusion.fusion.FusionLob$UnsafeLobToHexProc"))
 )

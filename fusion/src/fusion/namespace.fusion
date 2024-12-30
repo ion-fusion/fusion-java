@@ -28,6 +28,6 @@ Namespaces are typically used for [dynamic evaluation](fusion/eval.html).
 Makes a fresh namespace with the bindings of `language`, which must be a string
 holding an absolute module path.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionNamespace$MakeNamespaceWithLanguageProc"))
+    (java_new "dev.ionfusion.fusion.FusionNamespace$MakeNamespaceWithLanguageProc"))
 
 )

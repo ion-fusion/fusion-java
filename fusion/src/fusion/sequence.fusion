@@ -47,7 +47,7 @@ particular sequence types may do so.
   * For lists, the `element` becomes the last element of the result.
   * For sexps, the `element` becomes the head of the result.
     '''
-    "dev.ion_fusion.fusion.AddProc")
+    "dev.ionfusion.fusion.AddProc")
 
 
   (defpub is_sequence
@@ -89,7 +89,7 @@ The result has same type and annotations as the first `sequence`.
 Any argument that is `null.list` (or `null.sexp`) is treated as if it were an
 empty list (or empty sexp).
     '''
-    (java_new "dev.ion_fusion.fusion.FusionSequence$AppendProc"))
+    (java_new "dev.ionfusion.fusion.FusionSequence$AppendProc"))
 
 
   (defpub append_m
@@ -102,7 +102,7 @@ The result has same type and annotations as the first `sequence`.
 Any argument that is `null.list` (or `null.sexp`) is treated as if it were an
 empty list (or empty sexp).
     '''
-    (java_new "dev.ion_fusion.fusion.FusionSequence$AppendMProc"))
+    (java_new "dev.ionfusion.fusion.FusionSequence$AppendMProc"))
 
 
   (defpub (subseq seq from to)

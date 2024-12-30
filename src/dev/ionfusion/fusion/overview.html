@@ -1,0 +1,214 @@
+<!-- Copyright Ion Fusion contributors. All rights reserved. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<html lang="en-US">
+<body>
+FusionJava is the reference implementation of the
+<a href="https://ion-fusion.dev/">Fusion programming language</a>, for
+Java<sup><font size="-4">TM</font></sup> 8 and above.
+
+<h2>Warnings and Caveats</h2>
+
+<p>
+This document describes all classes intended for public consumption, limited to
+the packages listed here.  The distribution includes other implementation
+classes and packages not documented here;
+your use of those packages is not supported, so do us both a favor and
+<b>don't use them!</b>
+<p>
+More generally:
+<b>Any behavior or features not present in this API documentation is
+unsupported, probably untested, and subject to change without notice.</b>
+<p>
+Further, do not assume that interfaces and classes documented here may be
+implemented or extended by clients of this library; in fact, unless something
+is documented as an extension point, you must assume that is <em>not</em> the
+case! We may add new methods to interfaces and classes at any time, and your
+extensions will probably break when that happens.
+
+
+<h2>Embedding Fusion</h2>
+
+The primary purpose of these APIs is to enable embedding the Fusion
+evaluator into Java applications. The central component for doing so is the
+{@link dev.ionfusion.fusion.FusionRuntime}. The runtime is a heavyweight object,
+and the vast majority of applications should create exactly one runtime at
+launch or on demand. To acquire a runtime, you'll use a
+{@link dev.ionfusion.fusion.FusionRuntimeBuilder}.
+
+From the runtime, you can then acquire one or more
+{@link dev.ionfusion.fusion.TopLevel}s. Each {@code TopLevel} instace contains
+its own namespace in which bindings (that is, variables) can be {@code define}d
+and code can be evaluated.
+
+Here's a typical processing sequence:
+<pre>
+    IonSystem ionSystem = IonSystemBuilder.standard().build();
+
+    FusionRuntime runtime =
+        FusionRuntimeBuilder.standard()
+            .withRepositoryDirectory(libraryRepository)
+            .withRepositoryDirectory(projectRepository)
+            .build();
+
+    TopLevel topLevel = runtime.getDefaultTopLevel();
+    // The topLevel has the /fusion language already imported.
+
+    // Import our own helper procedures.
+    topLevel.requireModule("/com/example/project/helpers");
+
+    // Evaluate an expression.
+    Object result = topLevel.eval("(compute_something)");
+
+    // Convert the result to an IonValue.
+    IonValue ionResult = runtime.ionize(result, ionSystem);
+
+    // We can also invoke a procedure without making source code.
+    result = topLevel.call("our_procedure", 1, "hello");
+
+    // Let's write it as Ion-ish text. Depending on the data, the result
+    // may not be readable by an Ion parser.
+    FusionIo.write(topLevel, result, System.out);
+</pre>
+
+
+<h2>Concurrency</h2>
+
+Unless documented otherwise, these Java APIs do not provide thread-safety
+guarantees, nor does the Fusion language itself. If you need to evaluate
+Fusion code from multiple threads, you will need to provide your own
+synchronization. In most cases this will involve preventing threads from
+simultaneous use of the same {@link dev.ionfusion.fusion.TopLevel}.
+<p>
+All evaluation APIs such as {@link dev.ionfusion.fusion.TopLevel#eval(String)}
+can be cancelled by calling {@link java.lang.Thread#interrupt()} on the
+evaluation thread. The evaluator periodically checks the thread interrupt
+status, and cancels the computation when it is set. The evaluation API then
+throws {@link dev.ionfusion.fusion.FusionInterruptedException}, leaving the
+thread interrupt status set. Be aware that some activities, notably reading
+from an {@link java.io.InputStream}, are uninterruptible and will block until
+control returns to the evaluator.
+
+
+<h2>Representation of Values</h2>
+
+The data manipulated by the Fusion evaluator are generically referred to as
+<em>Fusion values</em>, and this library takes great pain to <em>not</em>
+specify or constrain their implementation.  The aim is to allow the evaluator
+to be radically rearchitected, rewritten, and/or optimized without disrupting
+existing Java applications that embed Fusion.  For instance, implementing a
+byte-code compiler for Fusion may require major changes to the concrete
+classes that implement the built-in data types.
+<p>
+<b>The Java classes implementing Fusion values may change at any time.</b>
+As a result, the Java APIs used to interact with Fusion values express their
+type as {@link java.lang.Object} and you must use the provided APIs to inspect
+the values.
+
+<ul>
+  <li>
+    Do not assume <em>anything</em> about the Java classes or interfaces used
+    to implement Fusion values.
+  </li>
+  <li>
+    Do not assume that two values with the same Fusion type are implemented
+    with the same Java type.
+  </li>
+  <li>
+    Use of {@link java.lang.Object#equals} or
+    {@link java.lang.Object#hashCode} on Fusion values is not supported.
+  </li>
+  <li>
+    {@link java.lang.Object#toString()} should only be used for debugging;
+    the resulting text is not specified by this library and may change at any
+    time.
+  </li>
+</ul>
+
+What this really means is that there's not much you can do directly with an
+{@code Object} returned by the Fusion APIs. You must instead use static
+utility methods that mirror procedures provided by the Fusion library.
+Examples include {@link dev.ionfusion.fusion.FusionValue},
+{@link dev.ionfusion.fusion.FusionBool}, and
+{@link dev.ionfusion.fusion.FusionIo}.
+<p>
+Most often you'll want to convert the Fusion value to an
+{@link com.amazon.ion.IonValue}, for which you can use
+{@link dev.ionfusion.fusion.FusionRuntime#ionize FusionRuntime.ionize()}.
+
+
+
+<!-- Note, using <a/> causes Firefox rendering problems -->
+<h2 id="inject">Injection and Ejection</h2>
+
+Because Fusion values may use different representations than the typical Java
+classes with similar semantics, this library provides mechanisms for converting
+between them.  Converting an application-provided Java value into an equivalent
+Fusion values is called <em>injection</em>.  Converting a Fusion value into an
+equivalent, well-specified Java value is called <em>ejection</em>.
+<p>
+In general, you should expect that both injection and ejection result in a
+deep copy of the given value. As such, you are advised to limit such
+conversions to the bare minimum.  In particular, you should avoid "bouncing"
+back and forth between Fusion and Java in a way that causes repeated copying
+of large data structures.
+<p>
+Injection may be lazy. This is intended to reduce the overhead of converting
+large Ion containers when only a small portion of the data is needed.  This
+library does not specify when and how lazy injection happens, and the process
+is not synchronized on any mutex.  As a result, <b>mutation of Java objects
+that have been injected into Fusion will result in unspecified behavior</b>.
+This applies to all data referenced by the injected object.
+<p>
+Injection is idempotent: injecting a Fusion value results in the same value.
+Unless otherwise specified, APIs that will inject Java objects (for example,
+{@link dev.ionfusion.fusion.TopLevel#call TopLevel.call()}) will also
+accept Fusion values that were previously injected or that were returned as
+a result of evaluating Fusion code.  However, injection involves a potentially
+expensive "type switch" and you'll get better performance by avoiding no-op
+re-injection of Fusion values.
+
+<h3>Injectable Types</h3>
+
+The following Java types may be injected into the Fusion runtime:
+<ul>
+  <li>
+      Java {@code null} becomes {@linkplain dev.ionfusion.fusion.FusionVoid void},
+      which is the equivalent generic "no-value value".
+  </li>
+  <li>
+    {@link com.amazon.ion.IonDatagram} instances are converted to Fusion
+    {@code list}s that contain the <em>user values</em> in the datagram.
+    System values (version markers and local symbol tables) are not included.
+  </li>
+  <li>
+    Other {@link com.amazon.ion.IonValue} instances are converted to equivalent
+    Fusion values, retaining all annotations and precision.
+  </li>
+  <li>
+    {@link java.lang.Boolean} becomes a Fusion {@code bool}.
+  </li>
+  <li>
+    {@link java.lang.String} becomes a Fusion {@code string}.
+  </li>
+  <li>
+    {@link java.math.BigInteger}, {@link java.lang.Long},
+    {@link java.lang.Integer}, {@link java.lang.Short}, and
+    {@link java.lang.Byte} become a Fusion {@code int}.
+  </li>
+  <li>
+    {@link java.math.BigDecimal} becomes a Fusion {@code decimal}.
+  </li>
+  <li>
+    {@link java.lang.Double} becomes a Fusion {@code float}.
+  </li>
+  <li>
+    {@code byte[]} becomes a Fusion {@code blob}.
+  </li>
+</ul>
+
+Please comment on
+<a href="issue:FUSION-206">FUSION-206</a> to identify
+other types that you'd like to be supported.
+</body>
+</html>

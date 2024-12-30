@@ -25,7 +25,7 @@
 
 UNSUPPORTED.  `name` must be text.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionStruct$UnsafeStructHasKeyProc"))
+    (java_new "dev.ionfusion.fusion.FusionStruct$UnsafeStructHasKeyProc"))
 
   (define unsafe_struct_ref
     '''
@@ -36,19 +36,19 @@ non-null string or symbol.  If no field exists with the name, the `default` is
 used: if it is a procedure, it's applied to no arguments and the result is
 returned, otherwise the `default` is returned as-is.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionStruct$UnsafeStructRefProc"))
+    (java_new "dev.ionfusion.fusion.FusionStruct$UnsafeStructRefProc"))
 
   (define unsafe_struct_put
     '''
     (unsafe_struct_put struct key value)
     '''
-    (java_new "dev.ion_fusion.fusion.FusionStruct$UnsafeStructPutProc"))
+    (java_new "dev.ionfusion.fusion.FusionStruct$UnsafeStructPutProc"))
 
   (define unsafe_struct_put_m
     '''
     (unsafe_struct_put_m struct key value)
     '''
-    (java_new "dev.ion_fusion.fusion.FusionStruct$UnsafeStructPutMProc"))
+    (java_new "dev.ionfusion.fusion.FusionStruct$UnsafeStructPutMProc"))
 
   (define unsafe_struct_puts  // TODO Should this be called `add`?
     '''
@@ -57,7 +57,7 @@ returned, otherwise the `default` is returned as-is.
 Like `unsafe_struct_put`, but if any fields named `key` already exist, they
 will not be replaced, resulting in repeated fields.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionStruct$UnsafeStructPutsProc"))
+    (java_new "dev.ionfusion.fusion.FusionStruct$UnsafeStructPutsProc"))
 
   (define unsafe_struct_puts_m  // TODO Should this be called `add_m`?
     '''
@@ -66,7 +66,7 @@ will not be replaced, resulting in repeated fields.
 Like `unsafe_struct_put_m`, but if any fields named `key` already exist, they
 will not be replaced, resulting in repeated fields.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionStruct$UnsafeStructPutsMProc"))
+    (java_new "dev.ionfusion.fusion.FusionStruct$UnsafeStructPutsMProc"))
 
   (define unsafe_struct_iterator
     '''
@@ -76,7 +76,7 @@ Returns an iterator over the content of `struct`. Calls to `iterator_next` will
 return two results representing a single field: the field's name (as a symbol)
 and the field's value.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionStruct$UnsafeStructIteratorProc"))
+    (java_new "dev.ionfusion.fusion.FusionStruct$UnsafeStructIteratorProc"))
 
 
   (define is_struct_field_name

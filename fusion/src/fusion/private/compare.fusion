@@ -21,7 +21,7 @@ offset.  Annotations are ignored.
 `-inf`, and `nan`.
 See [FUSION-249](issue:FUSION-249).
     '''
-    (java_new "dev.ion_fusion.fusion.FusionCompare$LessThanProc"))
+    (java_new "dev.ionfusion.fusion.FusionCompare$LessThanProc"))
 
 
   (define_values (>)
@@ -37,7 +37,7 @@ offset.  Annotations are ignored.
 `-inf`, and `nan`.
 See [FUSION-249](issue:FUSION-249).
     '''
-    (java_new "dev.ion_fusion.fusion.FusionCompare$GreaterThanProc"))
+    (java_new "dev.ionfusion.fusion.FusionCompare$GreaterThanProc"))
 
 
   (define_values (<=)
@@ -53,7 +53,7 @@ offset.  Annotations are ignored.
 `-inf`, and `nan`.
 See [FUSION-249](issue:FUSION-249).
     '''
-    (java_new "dev.ion_fusion.fusion.FusionCompare$LessThanOrEqualToProc"))
+    (java_new "dev.ionfusion.fusion.FusionCompare$LessThanOrEqualToProc"))
 
 
   (define_values (>=)
@@ -69,6 +69,6 @@ offset.  Annotations are ignored.
 `-inf`, and `nan`.
 See [FUSION-249](issue:FUSION-249).
     '''
-    (java_new "dev.ion_fusion.fusion.FusionCompare$GreaterThanOrEqualToProc"))
+    (java_new "dev.ionfusion.fusion.FusionCompare$GreaterThanOrEqualToProc"))
 
 )

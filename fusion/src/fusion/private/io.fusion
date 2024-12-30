@@ -16,10 +16,10 @@
 
 
   (define_values (make_buffer)
-    (java_new "dev.ion_fusion.fusion.FusionIo$MakeOutputBufferProc"))
+    (java_new "dev.ionfusion.fusion.FusionIo$MakeOutputBufferProc"))
 
   (define_values (buffer_to_string)
-    (java_new "dev.ion_fusion.fusion.FusionIo$OutputBufferToStringProc"))
+    (java_new "dev.ionfusion.fusion.FusionIo$OutputBufferToStringProc"))
 
 
   // TODO PERF: This unnecessarily transcodes to and from UTF-8.

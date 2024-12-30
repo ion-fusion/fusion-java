@@ -109,7 +109,7 @@ Each `name` is a non-empty string or symbol denoting a field name, and the
 following `value` is the field's value.  Names may be repeated to produce
 repeated (multi-mapped) fields.
     '''
-    "dev.ion_fusion.fusion.FusionStruct$StructProc")
+    "dev.ionfusion.fusion.FusionStruct$StructProc")
 
   (defpub_j mutable_struct
     '''
@@ -120,7 +120,7 @@ Each `name` is a non-empty string or symbol denoting a field name, and the
 following `value` is the field's value.  Names may be repeated to produce
 repeated (multi-mapped) fields.
     '''
-    "dev.ion_fusion.fusion.FusionStruct$MutableStructProc")
+    "dev.ionfusion.fusion.FusionStruct$MutableStructProc")
 
   (defpub_j struct_zip
     '''
@@ -136,7 +136,7 @@ The names must be non-empty strings or symbols.
     (struct_zip ["f", "f"] [1, 2])  => {f:1,f:2}
     (struct_zip ["f"] [1, 2])       => {f:1}
     '''
-    "dev.ion_fusion.fusion.FusionStruct$StructZipProc")
+    "dev.ionfusion.fusion.FusionStruct$StructZipProc")
 
   (defpub_j mutable_struct_zip
     '''
@@ -152,7 +152,7 @@ The names must be non-empty strings or symbols.
     (struct_zip ["f", "f"] [1, 2])  => {f:1,f:2}
     (struct_zip ["f"] [1, 2])       => {f:1}
     '''
-    "dev.ion_fusion.fusion.FusionStruct$MutableStructZipProc")
+    "dev.ionfusion.fusion.FusionStruct$MutableStructZipProc")
 
   (defpub_j is_immutable_struct
     '''
@@ -160,7 +160,7 @@ The names must be non-empty strings or symbols.
 
 Determines whether `value` is an immutable struct, returning `true` or `false`.
     '''
-    "dev.ion_fusion.fusion.FusionStruct$IsImmutableStructProc")
+    "dev.ionfusion.fusion.FusionStruct$IsImmutableStructProc")
 
   (defpub_j is_mutable_struct
     '''
@@ -168,7 +168,7 @@ Determines whether `value` is an immutable struct, returning `true` or `false`.
 
 Determines whether `value` is a mutable struct, returning `true` or `false`.
     '''
-    "dev.ion_fusion.fusion.FusionStruct$IsMutableStructProc")
+    "dev.ionfusion.fusion.FusionStruct$IsMutableStructProc")
 
   (defpub_j remove_keys
     '''
@@ -178,7 +178,7 @@ Returns a struct derived from `struct` without fields with the given `name`s.
 If the input is `null.struct` then the result is `null.struct`.  The result
 will have the same annotations as `struct`.
     '''
-    "dev.ion_fusion.fusion.FusionStruct$RemoveKeysProc")
+    "dev.ionfusion.fusion.FusionStruct$RemoveKeysProc")
 
   (defpub_j remove_keys_m
     '''
@@ -189,7 +189,7 @@ The result may share structure with the input, which may be mutated.
 If the input is `null.struct` then the result is `null.struct`.  The result
 will have the same annotations as `struct`.
     '''
-    "dev.ion_fusion.fusion.FusionStruct$RemoveKeysMProc")
+    "dev.ionfusion.fusion.FusionStruct$RemoveKeysMProc")
 
   (defpub_j retain_keys
     '''
@@ -199,7 +199,7 @@ Returns a struct derived from `struct` with _only_ fields with the given
 `name`s.  If the input is `null.struct` then the result is `null.struct`.  The
 result will have the same annotations as `struct`.
     '''
-    "dev.ion_fusion.fusion.FusionStruct$RetainKeysProc")
+    "dev.ionfusion.fusion.FusionStruct$RetainKeysProc")
 
   (defpub_j retain_keys_m
     '''
@@ -210,7 +210,7 @@ Returns a struct similar to `struct` with _only_ fields with the given
 If the input is `null.struct` then the result is `null.struct`. The result
 will have the same annotations as `struct`.
     '''
-    "dev.ion_fusion.fusion.FusionStruct$RetainKeysMProc")
+    "dev.ionfusion.fusion.FusionStruct$RetainKeysMProc")
 
   (defpub_j struct_merge
     '''
@@ -223,7 +223,7 @@ has repeats. The result has the same type as the first argument.
     (struct_merge {a:1} {a:1}) ==> {a:1, a:1}
     (struct_merge {a:1} {b:2}) ==> {a:1, b:2}
     '''
-    "dev.ion_fusion.fusion.FusionStruct$StructMergeProc")
+    "dev.ionfusion.fusion.FusionStruct$StructMergeProc")
 
   (defpub_j struct_merge_m
     '''
@@ -234,7 +234,7 @@ mutating the first argument when possible. This will result in repeated fields
 if the names overlap or if one of the arguments has repeats.  The result has
 the same type as the first argument.
     '''
-    "dev.ion_fusion.fusion.FusionStruct$StructMergeMProc")
+    "dev.ionfusion.fusion.FusionStruct$StructMergeMProc")
 
 
 

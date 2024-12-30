@@ -32,7 +32,7 @@ containing quoted datum.
 
 As with `unquote`, `unsyntax` forms only escape one "level" of quasiquotation.
     '''
-    (java_new "dev.ion_fusion.fusion.QuasiSyntaxForm"
+    (java_new "dev.ionfusion.fusion.QuasiSyntaxForm"
               (quote_syntax quasisyntax)
               (quote_syntax unsyntax)))
 )

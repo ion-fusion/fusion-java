@@ -38,7 +38,7 @@ Operations on numbers (int, decimal, and float).
 Returns the sum of the `num`bers, which must be int or decimal.  With no
 arguments, returns integer 0.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionNumber$SumProc"))
+    (java_new "dev.ionfusion.fusion.FusionNumber$SumProc"))
 
 
   (define -
@@ -49,7 +49,7 @@ With two or more int or decimal `num`bers, returns their difference,
 associating to the left.  With one int or decimal argument, returns its
 negation.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionNumber$DifferenceProc"))
+    (java_new "dev.ionfusion.fusion.FusionNumber$DifferenceProc"))
 
 
   (define *
@@ -59,7 +59,7 @@ negation.
 Returns the product of the `num`bers, which must be int or decimal.  With no
 arguments, returns integer 1.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionNumber$ProductProc"))
+    (java_new "dev.ionfusion.fusion.FusionNumber$ProductProc"))
 
 
   (define /
@@ -70,7 +70,7 @@ Returns a decimal whose numeric value is `(dividend / divisor)`.  Both
 arguments must be decimals.  An exception is thrown if the result cannot be
 represented exactly.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionNumber$DivideProc"))
+    (java_new "dev.ionfusion.fusion.FusionNumber$DivideProc"))
 
 
   (define is_int
@@ -79,7 +79,7 @@ represented exactly.
 
 Determines whether a `value` is of type `int`, returning `true` or `false`.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionNumber$IsIntProc"))
+    (java_new "dev.ionfusion.fusion.FusionNumber$IsIntProc"))
 
 
   (define is_decimal
@@ -88,7 +88,7 @@ Determines whether a `value` is of type `int`, returning `true` or `false`.
 
 Determines whether a `value` is of type `decimal`, returning `true` or `false`.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionNumber$IsDecimalProc"))
+    (java_new "dev.ionfusion.fusion.FusionNumber$IsDecimalProc"))
 
 
   (define is_float
@@ -97,7 +97,7 @@ Determines whether a `value` is of type `decimal`, returning `true` or `false`.
 
 Determines whether a `value` is of type `float`, returning `true` or `false`.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionNumber$IsFloatProc"))
+    (java_new "dev.ionfusion.fusion.FusionNumber$IsFloatProc"))
 
 
   (define ceiling
@@ -108,7 +108,7 @@ Returns the smallest int greater than or equal to `number` (that is, truncate
 toward positive infinity). The input must be a non-null int or decimal, and
 the result is an int.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionNumber$CeilingProc"))
+    (java_new "dev.ionfusion.fusion.FusionNumber$CeilingProc"))
 
 
   (define floor
@@ -119,7 +119,7 @@ Returns the largest int less than or equal to `number` (that is, truncate
 toward negative infinity). The input must be a non-null int or decimal, and the
 result is an int.
     '''
-    (java_new "dev.ion_fusion.fusion.FusionNumber$FloorProc"))
+    (java_new "dev.ionfusion.fusion.FusionNumber$FloorProc"))
 
 
   (define int_to_string
@@ -128,7 +128,7 @@ result is an int.
 
 Converts an int to a string.  Returns `null.string` when given `null.int`.
     '''
-    (java_new "dev.ion_fusion.fusion.IntToStringProc"))
+    (java_new "dev.ionfusion.fusion.IntToStringProc"))
 
 
   (define string_to_int
@@ -140,7 +140,7 @@ Converts a string to an int.  The string must contain an optional minus sign
 `null.int` when given `null.string`.  An exception is raised if the string is
 of invalid format.
     '''
-    (java_new "dev.ion_fusion.fusion.StringToIntProc"))
+    (java_new "dev.ionfusion.fusion.StringToIntProc"))
 
 
   (define decimal
@@ -161,7 +161,7 @@ Examples:
     (decimal 4.2 1)      // 42.
     (decimal 1234 -2)    // 12.34
     '''
-    (java_new "dev.ion_fusion.fusion.FusionNumber$DecimalProc"))
+    (java_new "dev.ionfusion.fusion.FusionNumber$DecimalProc"))
 
 
   (define random
@@ -179,5 +179,5 @@ Examples:
     (random)    // Returns a decimal value: 0.0 <= value < 1.0
     (random 45) // Returns an int value:    0   <= value < 45
     '''
-    (java_new "dev.ion_fusion.fusion.FusionNumber$RandomProc"))
+    (java_new "dev.ionfusion.fusion.FusionNumber$RandomProc"))
 )

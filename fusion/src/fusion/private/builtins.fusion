@@ -81,7 +81,7 @@ containing quoted datum.
 
     ==> (a (quasiquote (b (unquote v) (unquote 1))))
     '''
-    (java_new "dev.ion_fusion.fusion.QuasiQuoteForm"
+    (java_new "dev.ionfusion.fusion.QuasiQuoteForm"
               (quote_syntax quasiquote)
               (quote_syntax unquote)))
 )

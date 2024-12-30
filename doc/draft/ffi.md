@@ -21,7 +21,7 @@ to patch your code.
 ## **UNSTABLE**
 
 Use of the FFI require use of internal features (classes, methods, constants, etc.) of FusionJava,
-and you'll have to write code in the `dev.ion_fusion.fusion` package to gain access to them.
+and you'll have to write code in the `dev.ionfusion.fusion` package to gain access to them.
 *All* such features must be considered unstable: you should *assume* that they *will* change in the
 future. The runtime implementation *will* change (most notably in order to generate JVM bytecode for
 improved performance) and the APIs will change accordingly. Until the runtime internals are stable,
@@ -48,7 +48,7 @@ things are unclear. That way we can get the docs improved (since they'll eventua
 The FFI consists of exactly one capability: installing a Fusion procedure that's implemented in
 Java. There's two parts to that:
 
-1. Write a class that extends `dev.ion_fusion.fusion.Procedure`.
+1. Write a class that extends `dev.ionfusion.fusion.Procedure`.
 2. Bind an instance of that class to a name in a Fusion module.
 
 Your best learning resource in this process is the FusionJava code itself. There are dozens of
@@ -64,7 +64,7 @@ You'll see a bunch of Java class names and can then look at the corresponding Ja
 ## **Implementing a Procedure**
 
 In the vast majority of cases, you will write a `Procedure` class and then instantiate that class
-exactly once. Your class will need to be in the `dev.ion_fusion.fusion` Java package in order to have
+exactly once. Your class will need to be in the `dev.ionfusion.fusion` Java package in order to have
 access to the internal APIs.
 Within your Procedure, you'll implement the `doApply` method.
 
