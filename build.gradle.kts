@@ -246,8 +246,7 @@ tasks.javadoc {
         overview = "$projectDir/src/com/amazon/fusion/overview.html"
 
         header = "FusionJava API Reference"
-        bottom = "<center>Copyright &#169; 2012-2024 " +
-                "Amazon.com. All Rights Reserved.</center>"
+        bottom = "<center>Copyright Ion Fusion contributors. All Rights Reserved.</center>"
     }
 }
 
