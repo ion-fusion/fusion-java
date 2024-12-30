@@ -171,6 +171,14 @@ jacoco {
 //    toolVersion = "0.8.12"
 }
 
+tasks.test {
+    configure<JacocoTaskExtension> {
+        // When running in IDEA, JaCoCo instruments HTMLUnit (and fails).
+        // I don't know why it's instrumenting libraries, but this avoids it.
+        includes = listOf("com.amazon.fusion.*")
+    }
+}
+
 tasks.jacocoTestReport {
     // We don't dependOn distTest; that tests the packaging not the product.
     dependsOn(tasks.test)
