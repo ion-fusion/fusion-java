@@ -15,5 +15,5 @@ Returns the name of `v` if it has one, otherwise void.
 At present, only procedures bound by `define` have names, which are symbols.
 In general, not all object names are symbols.
     '''
-    (java_new "com.amazon.fusion.ObjectNameProc"))
+    (java_new "dev.ion_fusion.fusion.ObjectNameProc"))
 )

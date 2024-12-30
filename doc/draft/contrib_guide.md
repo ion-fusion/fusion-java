@@ -113,7 +113,7 @@ Ensure there’s test coverage for failure modes, and that the new procedure beh
 * New `Procedure` subclasses should generally be nested within the Java class that mirrors the
   Fusion module where the procedure is `provide`d. For example, numeric procedures are generally
   provided by `/fusion/number` and underlying Java code should be in the
-  `com.amazon.fusion.FusionNumber` class.
+  `dev.ion_fusion.fusion.FusionNumber` class.
 
 ### Use the fixed-arity base classes
 

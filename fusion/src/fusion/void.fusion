@@ -79,7 +79,7 @@ Along with all nulls and `false`, the void value is [untruthy][]:
 
 Determines whether a `value` is the Fusion void value.
     '''
-    (java_new "com.amazon.fusion.FusionVoid$IsVoidProc"))
+    (java_new "dev.ion_fusion.fusion.FusionVoid$IsVoidProc"))
 
 
   (define_values (void)
@@ -88,6 +88,6 @@ Determines whether a `value` is the Fusion void value.
 
 Returns the singular void value, ignoring all `arg`s.
     '''
-    (java_new "com.amazon.fusion.FusionVoid$VoidProc"))
+    (java_new "dev.ion_fusion.fusion.FusionVoid$VoidProc"))
 
 )

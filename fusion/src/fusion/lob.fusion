@@ -37,7 +37,7 @@ The result is a non-null blob.
 
 Supported algorithms are `"SHA-256"` and `"SHA-512"`.
     '''
-    (java_new "com.amazon.fusion.FusionLob$LobDigestProc"))
+    (java_new "dev.ion_fusion.fusion.FusionLob$LobDigestProc"))
 
 
   (define (lob_to_hex lob)

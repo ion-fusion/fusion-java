@@ -17,7 +17,7 @@ fields. Mappings from `struct2` will replace those from `struct1` with the
 same key. If there are repeated fields, one is selected arbitrarily.
 The result has the same type as the first argument.
     '''
-    "com.amazon.fusion.FusionStruct$StructMerge1Proc")
+    "dev.ion_fusion.fusion.FusionStruct$StructMerge1Proc")
 
   (defpub_j struct_merge1_m
     '''
@@ -29,5 +29,5 @@ replace those from `struct1` with the same key.  If there are repeated fields,
 one is selected arbitrarily. The result has the same type as the first
 argument.
     '''
-    "com.amazon.fusion.FusionStruct$StructMerge1MProc")
+    "dev.ion_fusion.fusion.FusionStruct$StructMerge1MProc")
 )

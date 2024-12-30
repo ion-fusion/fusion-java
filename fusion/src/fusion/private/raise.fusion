@@ -23,7 +23,7 @@ Passes the value to the thread's current exception handler.  Any type of value
 can the raised, but most application code should use the `raise_*_error`
 procedures to raise subtypes of `exn`.
     '''
-    (java_new "com.amazon.fusion.RaiseProc"))
+    (java_new "dev.ion_fusion.fusion.RaiseProc"))
 
   (define_syntax assert
     '''
@@ -32,7 +32,7 @@ procedures to raise subtypes of `exn`.
 Evaluates the `expr`, throwing an exception if the result isn't truthy.
 The exception `display`s the `message`s, which are only evaluated on failure.
     '''
-    (java_new "com.amazon.fusion.AssertForm"))
+    (java_new "dev.ion_fusion.fusion.AssertForm"))
 
   (define_values (raise_argument_error)
     '''
@@ -48,7 +48,7 @@ The `value`s are the arguments passed to the procedure.
 
 Note that an `argument_error` IS-A `contract_error`.
     '''
-    (java_new "com.amazon.fusion.RaiseArgumentErrorProc"))
+    (java_new "dev.ion_fusion.fusion.RaiseArgumentErrorProc"))
 
   (define_values (raise_arity_error)
     '''
@@ -62,7 +62,7 @@ The `actual_arg`s are the values passed to the procedure.
 
 Note that an `arity_error` IS-A `contract_error`.
     '''
-    (java_new "com.amazon.fusion.RaiseArityErrorProc"))
+    (java_new "dev.ion_fusion.fusion.RaiseArityErrorProc"))
 
   (define_values (raise_contract_error)
     '''
@@ -72,7 +72,7 @@ Raises a `contract_error` denoting a general contract failure.
 The `name` text (string or symbol) identifies the procedure.
 The `message` string describes the relevant contract failure.
     '''
-    (java_new "com.amazon.fusion.RaiseContractErrorProc"))
+    (java_new "dev.ion_fusion.fusion.RaiseContractErrorProc"))
 
   (define_values (raise_result_error)
     '''
@@ -86,6 +86,6 @@ The `value` is the faulty result.
 
 Note that a `result_error` IS-A `contract_error`.
     '''
-    (java_new "com.amazon.fusion.RaiseResultErrorProc"))
+    (java_new "dev.ion_fusion.fusion.RaiseResultErrorProc"))
 
 )

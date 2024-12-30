@@ -30,7 +30,7 @@ The semantics of Fusion timestamp values are identical to [Ion timestamps][ts].
 Determines whether a `value` is of type `timestamp`, returning `true` or
 `false`.
     '''
-    "com.amazon.fusion.FusionTimestamp$IsTimestampProc")
+    "dev.ion_fusion.fusion.FusionTimestamp$IsTimestampProc")
 
   (defpub_j string_to_timestamp
     '''
@@ -43,7 +43,7 @@ Returns `null.timestamp` when given `null.string`.
     (string_to_timestamp "2013-11-13T")      ==> 2013-11-13
     (string_to_timestamp "null.timestamp")   ==> ERROR
     '''
-    "com.amazon.fusion.FusionTimestamp$StringToTimestampProc")
+    "dev.ion_fusion.fusion.FusionTimestamp$StringToTimestampProc")
 
   (defpub_j timestamp_now
     '''
@@ -52,7 +52,7 @@ Returns `null.timestamp` when given `null.string`.
 Returns a timestamp representing "now".  At present the local offset is
 unspecified, but that may change in the future.
     '''
-    "com.amazon.fusion.FusionTimestamp$TimestampNowProc")
+    "dev.ion_fusion.fusion.FusionTimestamp$TimestampNowProc")
 
   (defpub_j epoch_millis_to_timestamp
     '''
@@ -61,7 +61,7 @@ unspecified, but that may change in the future.
 Returns a timestamp for the point in time given as the number of milliseconds
 since 1970-01-01T00:00Z. The `epoch_millis` may be a decimal or int.
     '''
-    "com.amazon.fusion.FusionTimestamp$EpochMillisToTimestampProc")
+    "dev.ion_fusion.fusion.FusionTimestamp$EpochMillisToTimestampProc")
 
   (defpub_j timestamp_to_epoch_millis
     '''
@@ -70,7 +70,7 @@ since 1970-01-01T00:00Z. The `epoch_millis` may be a decimal or int.
 Given a non-null timestamp, returns the same point in time represented as the
 number of milliseconds since 1970-01-01T00:00Z.  The result is a decimal.
     '''
-    "com.amazon.fusion.FusionTimestamp$TimestampToEpochMillisProc")
+    "dev.ion_fusion.fusion.FusionTimestamp$TimestampToEpochMillisProc")
 
   (defpub_j timestamp_to_string
     '''
@@ -82,7 +82,7 @@ Returns `null.string` when given `null.timestamp`.
     (timestamp_to_string null.timestamp)   ==> null.string
     (timestamp_to_string 2013-11-13T)      ==> "2013-11-13"
     '''
-    "com.amazon.fusion.FusionTimestamp$TimestampToStringProc")
+    "dev.ion_fusion.fusion.FusionTimestamp$TimestampToStringProc")
 
 
   (defpub_j timestamp
@@ -119,7 +119,7 @@ For example:
 
 [ts]: https://amzn.github.io/ion-docs/docs/spec.html#timestamp
     '''
-    "com.amazon.fusion.FusionTimestamp$TimestampProc")
+    "dev.ion_fusion.fusion.FusionTimestamp$TimestampProc")
 
 
   (defpub_j timestamp_year
@@ -128,7 +128,7 @@ For example:
 
 Returns the year of `ts` in its local time.
     '''
-    "com.amazon.fusion.FusionTimestamp$TimestampYearProc")
+    "dev.ion_fusion.fusion.FusionTimestamp$TimestampYearProc")
 
 
   (defpub_j timestamp_month
@@ -137,7 +137,7 @@ Returns the year of `ts` in its local time.
 
 Returns the month of `ts` in its local time if its precision is `MONTH` or finer, returns void otherwise.
     '''
-    "com.amazon.fusion.FusionTimestamp$TimestampMonthProc")
+    "dev.ion_fusion.fusion.FusionTimestamp$TimestampMonthProc")
 
 
   (defpub_j timestamp_day
@@ -146,7 +146,7 @@ Returns the month of `ts` in its local time if its precision is `MONTH` or finer
 
 Returns the day of `ts` in its local time if its precision is `DAY` or finer, returns void otherwise.
     '''
-    "com.amazon.fusion.FusionTimestamp$TimestampDayProc")
+    "dev.ion_fusion.fusion.FusionTimestamp$TimestampDayProc")
 
 
   (defpub_j timestamp_hour
@@ -155,7 +155,7 @@ Returns the day of `ts` in its local time if its precision is `DAY` or finer, re
 
 Returns the hour in the day of `ts` in its local time if its precision is `MINUTE` or finer, returns void otherwise.
     '''
-    "com.amazon.fusion.FusionTimestamp$TimestampHourProc")
+    "dev.ion_fusion.fusion.FusionTimestamp$TimestampHourProc")
 
 
   (defpub_j timestamp_minute
@@ -164,7 +164,7 @@ Returns the hour in the day of `ts` in its local time if its precision is `MINUT
 
 Returns the number of minutes past the hour of `ts` in its local time if its precision is `MINUTE` or finer, returns void otherwise.
     '''
-    "com.amazon.fusion.FusionTimestamp$TimestampMinuteProc")
+    "dev.ion_fusion.fusion.FusionTimestamp$TimestampMinuteProc")
 
 
   (defpub_j timestamp_second
@@ -173,7 +173,7 @@ Returns the number of minutes past the hour of `ts` in its local time if its pre
 
 Returns the number of seconds past the minute in `ts` in its local time if its precision is `SECOND`, returns void otherwise.
     '''
-    "com.amazon.fusion.FusionTimestamp$TimestampSecondProc")
+    "dev.ion_fusion.fusion.FusionTimestamp$TimestampSecondProc")
 
 
   (defpub_j timestamp_offset
@@ -182,7 +182,7 @@ Returns the number of seconds past the minute in `ts` in its local time if its p
 
 Returns the local offset of `ts` as an integer in minutes if its offset is known, returns void otherwise.
     '''
-    "com.amazon.fusion.FusionTimestamp$TimestampOffsetProc")
+    "dev.ion_fusion.fusion.FusionTimestamp$TimestampOffsetProc")
 
 
   (defpub (timestamp_at_year ts)
@@ -245,20 +245,20 @@ Returns a timestamp at the same point-in-time as `ts`, but with local offset equ
 The returned timestamp may have different time fields to maintain the same point-in-time.
 Expects `ts` to have precision `MINUTE` or finer.
     '''
-    "com.amazon.fusion.FusionTimestamp$TimestampWithOffsetProc")
+    "dev.ion_fusion.fusion.FusionTimestamp$TimestampWithOffsetProc")
 
   (define unsafe_adjust_year
-    (java_new "com.amazon.fusion.FusionTimestamp$UnsafeTimestampAddYearProc"))
+    (java_new "dev.ion_fusion.fusion.FusionTimestamp$UnsafeTimestampAddYearProc"))
   (define unsafe_adjust_month
-    (java_new "com.amazon.fusion.FusionTimestamp$UnsafeTimestampAddMonthProc"))
+    (java_new "dev.ion_fusion.fusion.FusionTimestamp$UnsafeTimestampAddMonthProc"))
   (define unsafe_adjust_day
-    (java_new "com.amazon.fusion.FusionTimestamp$UnsafeTimestampAddDayProc"))
+    (java_new "dev.ion_fusion.fusion.FusionTimestamp$UnsafeTimestampAddDayProc"))
   (define unsafe_adjust_hour
-    (java_new "com.amazon.fusion.FusionTimestamp$UnsafeTimestampAddHourProc"))
+    (java_new "dev.ion_fusion.fusion.FusionTimestamp$UnsafeTimestampAddHourProc"))
   (define unsafe_adjust_minute
-    (java_new "com.amazon.fusion.FusionTimestamp$UnsafeTimestampAddMinuteProc"))
+    (java_new "dev.ion_fusion.fusion.FusionTimestamp$UnsafeTimestampAddMinuteProc"))
   (define unsafe_adjust_second
-    (java_new "com.amazon.fusion.FusionTimestamp$UnsafeTimestampAddSecondProc"))
+    (java_new "dev.ion_fusion.fusion.FusionTimestamp$UnsafeTimestampAddSecondProc"))
 
 
   (define (safe_add name unsafe_proc ts period)

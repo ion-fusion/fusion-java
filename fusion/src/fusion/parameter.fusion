@@ -72,7 +72,7 @@ are changed to their results for the dynamic extent of the `body`.
 The `body` may be one or more forms; the result of the last form is the result
 of the entire expression.
     '''
-    (java_new "com.amazon.fusion.ParameterizeForm"))
+    (java_new "dev.ion_fusion.fusion.ParameterizeForm"))
 
 
   (define (make_parameter value)
@@ -80,5 +80,5 @@ of the entire expression.
 Makes a new dynamic parameter procedure. The initial value of the parameter is
 `value`.
     '''
-    (java_new "com.amazon.fusion.DynamicParameter" value))
+    (java_new "dev.ion_fusion.fusion.DynamicParameter" value))
 )

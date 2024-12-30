@@ -48,7 +48,7 @@ All arguments must be actual strings or symbols, not null.
 
 If no arguments are supplied, the result is `""`.
     '''
-    (java_new "com.amazon.fusion.FusionString$AppendProc"))
+    (java_new "dev.ion_fusion.fusion.FusionString$AppendProc"))
 
   (define_values (string_to_lower)
     '''
@@ -56,7 +56,7 @@ If no arguments are supplied, the result is `""`.
 
 Converts all the characters in a `string` to lower-case letters.
     '''
-    (java_new "com.amazon.fusion.FusionString$ToLowerProc"))
+    (java_new "dev.ion_fusion.fusion.FusionString$ToLowerProc"))
 
   (define_values (string_to_upper)
     '''
@@ -64,7 +64,7 @@ Converts all the characters in a `string` to lower-case letters.
 
 Converts all the characters in a `string` to upper-case letters.
     '''
-    (java_new "com.amazon.fusion.FusionString$ToUpperProc"))
+    (java_new "dev.ion_fusion.fusion.FusionString$ToUpperProc"))
 
   (define_values (string_to_symbol)
     '''
@@ -74,7 +74,7 @@ Converts a `string` to a symbol with the same text.  Returns `null.symbol` when
 given `null.string`.
     '''
     // TODO This should preserve annotations.
-    (java_new "com.amazon.fusion.FusionString$ToSymbolProc"))
+    (java_new "dev.ion_fusion.fusion.FusionString$ToSymbolProc"))
 
 
   (define_values (symbol_append)
@@ -98,7 +98,7 @@ Converts a `symbol` to a string with the same text. Returns `null.string` when
 given `null.symbol`.
     '''
     // TODO This should preserve annotations.
-    (java_new "com.amazon.fusion.FusionSymbol$ToStringProc"))
+    (java_new "dev.ion_fusion.fusion.FusionSymbol$ToStringProc"))
 
   (define_values (string_contains)
     '''
@@ -107,7 +107,7 @@ given `null.symbol`.
 Returns true if and only if `string` contains the `substring`.
 Both arguments must be actual strings.
     '''
-    (java_new "com.amazon.fusion.FusionString$ContainsProc"))
+    (java_new "dev.ion_fusion.fusion.FusionString$ContainsProc"))
 
   (define_values (string_ends_with)
     '''
@@ -116,7 +116,7 @@ Both arguments must be actual strings.
 Returns true if and only if `string` ends with `suffix`.
 Both arguments must be actual strings.
     '''
-    (java_new "com.amazon.fusion.FusionString$EndsWithProc"))
+    (java_new "dev.ion_fusion.fusion.FusionString$EndsWithProc"))
 
   (define_values (string_is_lower)
     '''
@@ -126,7 +126,7 @@ Returns whether `string` contains only lower-case code points.
 
 A list of lower-case code points can be found [online](http://www.fileformat.info/info/unicode/category/Ll/list.htm).
     '''
-    (java_new "com.amazon.fusion.FusionString$IsLowerCaseProc"))
+    (java_new "dev.ion_fusion.fusion.FusionString$IsLowerCaseProc"))
 
   (define_values (string_is_upper)
     '''
@@ -136,7 +136,7 @@ Returns whether `string` contains only upper-case code points.
 
 A list of upper-case code points can be found [online](http://www.fileformat.info/info/unicode/category/Lu/list.htm).
     '''
-    (java_new "com.amazon.fusion.FusionString$IsUpperCaseProc"))
+    (java_new "dev.ion_fusion.fusion.FusionString$IsUpperCaseProc"))
 
   (define_values (string_join)
     '''
@@ -149,7 +149,7 @@ All arguments must be actual strings or symbols.
 No `separator` is added before or after the result.
 If no `part`s are supplied, the result is `""`.
     '''
-    (java_new "com.amazon.fusion.FusionString$JoinProc"))
+    (java_new "dev.ion_fusion.fusion.FusionString$JoinProc"))
 
   (define_values (string_replace)
     '''
@@ -167,7 +167,7 @@ Replacement when `from` is an empty string will insert `to` before, between, and
 after each character in `string`. For example `(string_replace "aa" "" "b")` will
 evaluate to "babab". If `string` is also `""` a string equal to `to` is returned.
     '''
-    (java_new "com.amazon.fusion.FusionString$ReplaceProc"))
+    (java_new "dev.ion_fusion.fusion.FusionString$ReplaceProc"))
 
   (define_values (string_split)
     '''
@@ -200,7 +200,7 @@ dependency on the Java language or library.
 [FusionJavaRegexp]: wiki:FusionJavaRegexp
 [ssn]: fusion/experimental/string.html#string_split_noregexp
     '''
-    (java_new "com.amazon.fusion.FusionString$SplitProc"))
+    (java_new "dev.ion_fusion.fusion.FusionString$SplitProc"))
 
   (define_values (string_starts_with)
     '''
@@ -209,7 +209,7 @@ dependency on the Java language or library.
 Returns true if and only if `string` begins with `prefix`.
 Both arguments must be actual strings.
     '''
-    (java_new "com.amazon.fusion.FusionString$StartsWithProc"))
+    (java_new "dev.ion_fusion.fusion.FusionString$StartsWithProc"))
 
 
   (define_values (text_to_string)

@@ -29,7 +29,7 @@ Return the `java.lang.Class` instance for the given fully-qualified class name.
 
 Equivalent to the Java code `Class.forName(name)`.
     '''
-    (java_new "com.amazon.fusion.JavaClassProc"))
+    (java_new "dev.ion_fusion.fusion.JavaClassProc"))
 
 
   (define_values (java_instance_of)
@@ -46,5 +46,5 @@ are implemented by Java objects:
 
     (java_instance_of anything (java_class "java.lang.Object"))
     '''
-    (java_new "com.amazon.fusion.JavaInstanceOfProc"))
+    (java_new "dev.ion_fusion.fusion.JavaInstanceOfProc"))
 )

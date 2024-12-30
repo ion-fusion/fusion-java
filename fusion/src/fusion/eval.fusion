@@ -106,7 +106,7 @@ the bindings visible in the namespace.  The form is expanded, compiled, and
 evaluated, and its result is returned.  Any side effects made to the namespace
 will be visible to later evaluations.
     '''
-    "com.amazon.fusion.FusionEval$EvalProc")
+    "dev.ion_fusion.fusion.FusionEval$EvalProc")
 
   (defpub_j expand
     '''
@@ -117,6 +117,6 @@ Expands a top-level form to core syntax, using the bindings of the
 
 The `top_level_form` may be a syntax object or another datum.
     '''
-    "com.amazon.fusion.FusionEval$ExpandProc")
+    "dev.ion_fusion.fusion.FusionEval$ExpandProc")
 
 )

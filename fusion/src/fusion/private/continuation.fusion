@@ -17,5 +17,5 @@
 Returns an sexp containing the marks for `key` in the current continuation.
 The innermost mark is first.
     '''
-    (java_new "com.amazon.fusion.DynamicParameter$CurrentMarkSexp"))
+    (java_new "dev.ion_fusion.fusion.DynamicParameter$CurrentMarkSexp"))
 )

@@ -49,7 +49,7 @@ The `text` arguments must be non-null strings or symbols.
 To extract annotations from a value, use
 [`annotations`](fusion.html#annotations).
     '''
-    (java_new "com.amazon.fusion.AnnotateProc"))
+    (java_new "dev.ion_fusion.fusion.AnnotateProc"))
 
 
   (define_values (annotations)
@@ -64,7 +64,7 @@ annotations on the `value`.
 
 To put annotations onto a value, use [`annotate`](fusion.html#annotate).
     '''
-    (java_new "com.amazon.fusion.TypeAnnotationsProc"))
+    (java_new "dev.ion_fusion.fusion.TypeAnnotationsProc"))
 
 
   (define_values (apply)
@@ -77,7 +77,7 @@ to the elements of `sequence`.  The `proc` is called in tail position.
     (apply + [1, 2])             =>  3
     (apply + 10 11 (sexp 1 2))   =>  24
     '''
-    (java_new "com.amazon.fusion.ApplyProc"))
+    (java_new "dev.ion_fusion.fusion.ApplyProc"))
 
 
   (define_values (exit)
@@ -85,7 +85,7 @@ to the elements of `sequence`.  The `proc` is called in tail position.
     (exit)
 Exits the running Fusion program.
     '''
-    (java_new "com.amazon.fusion.ExitProc"))
+    (java_new "dev.ion_fusion.fusion.ExitProc"))
 
 
   (define_syntax if
@@ -104,7 +104,7 @@ in tail position.
 For cases that need only one outcome, use [`when`](fusion/bool.html#when) or
 [`unless`](fusion/bool.html#unless).
     '''
-    (java_new "com.amazon.fusion.IfForm"))
+    (java_new "dev.ion_fusion.fusion.IfForm"))
 
 
   (define_values (is_blob)
@@ -113,7 +113,7 @@ For cases that need only one outcome, use [`when`](fusion/bool.html#when) or
 
 Determines whether a `value` is of type `blob`, returning `true` or `false`.
     '''
-    (java_new "com.amazon.fusion.FusionBlob$IsBlobProc"))
+    (java_new "dev.ion_fusion.fusion.FusionBlob$IsBlobProc"))
 
 
   (define_values (is_bool)
@@ -122,7 +122,7 @@ Determines whether a `value` is of type `blob`, returning `true` or `false`.
 
 Determines whether a `value` is of type `bool`, returning `true` or `false`.
     '''
-    (java_new "com.amazon.fusion.FusionBool$IsBoolProc"))
+    (java_new "dev.ion_fusion.fusion.FusionBool$IsBoolProc"))
 
 
   (define_values (is_clob)
@@ -131,7 +131,7 @@ Determines whether a `value` is of type `bool`, returning `true` or `false`.
 
 Determines whether a `value` is of type `clob`, returning `true` or `false`.
     '''
-    (java_new "com.amazon.fusion.FusionClob$IsClobProc"))
+    (java_new "dev.ion_fusion.fusion.FusionClob$IsClobProc"))
 
 
   (define_values (is_immutable_list)
@@ -140,7 +140,7 @@ Determines whether a `value` is of type `clob`, returning `true` or `false`.
 
 Determines whether `value` is an immutable list, returning `true` or `false`.
     '''
-    (java_new "com.amazon.fusion.FusionList$IsImmutableListProc"))
+    (java_new "dev.ion_fusion.fusion.FusionList$IsImmutableListProc"))
 
 
   (define_values (is_list)
@@ -149,7 +149,7 @@ Determines whether `value` is an immutable list, returning `true` or `false`.
 
 Determines whether `value` is a list, returning `true` or `false`.
     '''
-    (java_new "com.amazon.fusion.FusionList$IsListProc"))
+    (java_new "dev.ion_fusion.fusion.FusionList$IsListProc"))
 
 
   (define_values (is_mutable_list)
@@ -158,7 +158,7 @@ Determines whether `value` is a list, returning `true` or `false`.
 
 Determines whether `value` is a mutable list, returning `true` or `false`.
     '''
-    (java_new "com.amazon.fusion.FusionList$IsMutableListProc"))
+    (java_new "dev.ion_fusion.fusion.FusionList$IsMutableListProc"))
 
 
   (define_values (is_null)
@@ -167,7 +167,7 @@ Determines whether `value` is a mutable list, returning `true` or `false`.
 
 Returns `true` when `value` is _any_ Ion null, `false` otherwise.
      '''
-     (java_new "com.amazon.fusion.IsNullProc"))
+     (java_new "dev.ion_fusion.fusion.IsNullProc"))
 
 
   (define_values (is_null_null)
@@ -176,7 +176,7 @@ Returns `true` when `value` is _any_ Ion null, `false` otherwise.
 
 Determines whether a `value` is `null.null`, returning `true` or `false`.
     '''
-    (java_new "com.amazon.fusion.FusionNull$IsNullNullProc"))
+    (java_new "dev.ion_fusion.fusion.FusionNull$IsNullNullProc"))
 
 
   (define_values (is_pair)
@@ -185,7 +185,7 @@ Determines whether a `value` is `null.null`, returning `true` or `false`.
 
 Determines whether `value` is a pair, returning `true` or `false`.
     '''
-    (java_new "com.amazon.fusion.FusionSexp$IsPairProc"))
+    (java_new "dev.ion_fusion.fusion.FusionSexp$IsPairProc"))
 
 
   (define_values (is_procedure)
@@ -194,7 +194,7 @@ Determines whether `value` is a pair, returning `true` or `false`.
 
 Returns `true` when `value` is a procedure, `false` otherwise.
     '''
-    (java_new "com.amazon.fusion.FusionProcedure$IsProcedureProc"))
+    (java_new "dev.ion_fusion.fusion.FusionProcedure$IsProcedureProc"))
 
 
   (define_values (is_sexp)
@@ -203,7 +203,7 @@ Returns `true` when `value` is a procedure, `false` otherwise.
 
 Determines whether a `value` is a sexp, returning `true` or `false`.
     '''
-    (java_new "com.amazon.fusion.FusionSexp$IsSexpProc"))
+    (java_new "dev.ion_fusion.fusion.FusionSexp$IsSexpProc"))
 
 
   (define_values (is_stretchy_list)
@@ -212,7 +212,7 @@ Determines whether a `value` is a sexp, returning `true` or `false`.
 
 Determines whether `value` is a stretchy list, returning `true` or `false`.
     '''
-    (java_new "com.amazon.fusion.FusionList$IsStretchyListProc"))
+    (java_new "dev.ion_fusion.fusion.FusionList$IsStretchyListProc"))
 
 
   (define_values (is_string)
@@ -221,7 +221,7 @@ Determines whether `value` is a stretchy list, returning `true` or `false`.
 
 Determines whether a `value` is of type `string`, returning `true` or `false`.
     '''
-    (java_new "com.amazon.fusion.FusionString$IsStringProc"))
+    (java_new "dev.ion_fusion.fusion.FusionString$IsStringProc"))
 
 
   (define_values (is_struct)
@@ -230,7 +230,7 @@ Determines whether a `value` is of type `string`, returning `true` or `false`.
 
 Determines whether `value` is a struct, returning `true` or `false`.
     '''
-    (java_new "com.amazon.fusion.FusionStruct$IsStructProc"))
+    (java_new "dev.ion_fusion.fusion.FusionStruct$IsStructProc"))
 
 
   (define_values (is_symbol)
@@ -239,7 +239,7 @@ Determines whether `value` is a struct, returning `true` or `false`.
 
 Determines whether a `value` is of type `symbol`, returning `true` or `false`.
     '''
-    (java_new "com.amazon.fusion.FusionSymbol$IsSymbolProc"))
+    (java_new "dev.ion_fusion.fusion.FusionSymbol$IsSymbolProc"))
 
 
   (define_values (let_values)
@@ -253,7 +253,7 @@ left-to-right, and must return as many values as there are corresponding
 installed the `body` is evaluated.  `body` may be one or more forms; the last
 form is in tail position and its result is the result of the entire expression.
     '''
-    (java_new "com.amazon.fusion.LetValuesForm"))
+    (java_new "dev.ion_fusion.fusion.LetValuesForm"))
 
 
   (define_values (letrec)
@@ -265,7 +265,7 @@ then evaluates `body`. The `expr`s are evaluated left-to-right, and the
 `ident`s are bound in all `expr`s and `body`s. `body` may be one or more forms;
 the result of the last form is the result of the entire expression.
     '''
-    (java_new "com.amazon.fusion.LetrecForm"))
+    (java_new "dev.ion_fusion.fusion.LetrecForm"))
 
 
   (define_values (list)
@@ -274,7 +274,7 @@ the result of the last form is the result of the entire expression.
 
 Makes a fresh, immutable list containing the given `value`s.
     '''
-    (java_new "com.amazon.fusion.FusionList$ImmutableListProc"))
+    (java_new "dev.ion_fusion.fusion.FusionList$ImmutableListProc"))
 
 
   (define_values (mutable_list)
@@ -283,7 +283,7 @@ Makes a fresh, immutable list containing the given `value`s.
 
 Makes a fresh, mutable list containing the given `value`s.
     '''
-    (java_new "com.amazon.fusion.FusionList$MutableListProc"))
+    (java_new "dev.ion_fusion.fusion.FusionList$MutableListProc"))
 
 
   (define_values (not)
@@ -293,7 +293,7 @@ Makes a fresh, mutable list containing the given `value`s.
 Returns `true` if `value` is untruthy, `false` if `value` is truthy. Truthiness
 is as defined by [`if`](fusion/bool.html#if).
     '''
-    (java_new "com.amazon.fusion.NotProc"))
+    (java_new "dev.ion_fusion.fusion.NotProc"))
 
 
   (define_values (pair)
@@ -302,7 +302,7 @@ is as defined by [`if`](fusion/bool.html#if).
 
 Makes a fresh, immutable pair containing the given `head` and `tail`.
     '''
-    (java_new "com.amazon.fusion.FusionSexp$PairProc"))
+    (java_new "dev.ion_fusion.fusion.FusionSexp$PairProc"))
 
 
   (define_values (quote)
@@ -311,7 +311,7 @@ Makes a fresh, immutable pair containing the given `head` and `tail`.
 
 Returns the Ion `datum` as-is, without evaluation.
     '''
-    (java_new "com.amazon.fusion.QuoteForm"))
+    (java_new "dev.ion_fusion.fusion.QuoteForm"))
 
 
   (define_values (quote_syntax)
@@ -320,7 +320,7 @@ Returns the Ion `datum` as-is, without evaluation.
 
 Returns a syntax object retaining the lexical information of `datum`.
     '''
-    (java_new "com.amazon.fusion.QuoteSyntaxForm"))
+    (java_new "dev.ion_fusion.fusion.QuoteSyntaxForm"))
 
 
   (define_syntax set
@@ -329,7 +329,7 @@ Returns a syntax object retaining the lexical information of `datum`.
 
 Mutates the given `var`iable, assigning it the `value`.
     '''
-    (java_new "com.amazon.fusion.SetForm"))
+    (java_new "dev.ion_fusion.fusion.SetForm"))
 
 
   (define_values (sexp)
@@ -338,7 +338,7 @@ Mutates the given `var`iable, assigning it the `value`.
 
 Makes a fresh, immutable sexp containing the given `value`s.
     '''
-    (java_new "com.amazon.fusion.FusionSexp$SexpProc"))
+    (java_new "dev.ion_fusion.fusion.FusionSexp$SexpProc"))
 
 
   (define_values (size)
@@ -352,7 +352,7 @@ an exception is thrown.
 **Warning:** Computing the size of an sexp takes linear time, since it must
 traverse the linked list of pairs to count elements.
     '''
-    (java_new "com.amazon.fusion.FusionCollection$SizeProc"))
+    (java_new "dev.ion_fusion.fusion.FusionCollection$SizeProc"))
 
 
   (define_values (stretchy_list)
@@ -361,7 +361,7 @@ traverse the linked list of pairs to count elements.
 
 Makes a fresh, stretchy list containing the given `value`s.
     '''
-    (java_new "com.amazon.fusion.FusionList$StretchyListProc"))
+    (java_new "dev.ion_fusion.fusion.FusionList$StretchyListProc"))
 
 
   (define_values (type_annotations)
@@ -371,7 +371,7 @@ Makes a fresh, stretchy list containing the given `value`s.
 *DEPRECATED* as of Fusion R20; renamed to
 [`annotations`](fusion.html#annotations).
     '''
-    (java_new "com.amazon.fusion.TypeAnnotationsProc"))
+    (java_new "dev.ion_fusion.fusion.TypeAnnotationsProc"))
 
 
   (define_values (values)
@@ -382,7 +382,7 @@ Produces [multiple results](fusion/procedure.html#results), returning the zero
 or more `value`s. Usually used in conjuction with `let_values` to bind the
 results to names.
     '''
-    (java_new "com.amazon.fusion.ValuesProc"))
+    (java_new "dev.ion_fusion.fusion.ValuesProc"))
 
 
   (define_syntax '#%top'
@@ -396,5 +396,5 @@ module and not locally.
 As suggested by the awkward name, this form is rarely needed by application
 code and is primarily an artifact of the macro-expansion process.
     '''
-    (java_new "com.amazon.fusion.TopForm"))
+    (java_new "dev.ion_fusion.fusion.TopForm"))
 )

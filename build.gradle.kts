@@ -90,10 +90,10 @@ tasks.jar {
 // Tests
 
 tasks.test {
-    // com.amazon.fusion.DocumentationTest checks the generated documentation.
+    // dev.ion_fusion.fusion.DocumentationTest checks the generated documentation.
     dependsOn(fusiondoc)
 
-    // com.amazon.fusion.ClassLoaderModuleRepositoryTest uses ftst-repo.jar.
+    // dev.ion_fusion.fusion.ClassLoaderModuleRepositoryTest uses ftst-repo.jar.
     dependsOn(ftstRepo)
 
     useJUnitPlatform()
@@ -103,7 +103,7 @@ tasks.test {
     jvmArgumentProviders.add {
         if (fcovRunning) {
             logger.lifecycle("Enabling Fusion code coverage instrumentation")
-            listOf("-Dcom.amazon.fusion.coverage.DataDir=" + fcovDataDir.get().asFile.path)
+            listOf("-Ddev.ion_fusion.fusion.coverage.DataDir=" + fcovDataDir.get().asFile.path)
         }
         else {
             listOf()
@@ -175,7 +175,7 @@ tasks.test {
     configure<JacocoTaskExtension> {
         // When running in IDEA, JaCoCo instruments HTMLUnit (and fails).
         // I don't know why it's instrumenting libraries, but this avoids it.
-        includes = listOf("com.amazon.fusion.*")
+        includes = listOf("dev.ion_fusion.*")
     }
 }
 
@@ -219,7 +219,7 @@ val fcovTestReport = tasks.register<JavaExec>("fcovTestReport") {
     description = "Generates Fusion code coverage report"
 
     classpath = sourceSets["main"].runtimeClasspath
-    mainClass = "com.amazon.fusion.cli.Cli"
+    mainClass = "dev.ion_fusion.fusion.cli.Cli"
     args = listOf("report_coverage",
                   fcovDataDir.get().asFile.path,
                   fcovReportDir.asFile.path)
@@ -240,9 +240,9 @@ gradle.taskGraph.whenReady {
 
 tasks.javadoc {
     exclude("**/_Private_*",
-            "com/amazon/fusion/cli",
-            "com/amazon/fusion/util/function/**",
-            "com/amazon/fusion/util/hamt/**")
+            "dev/ion_fusion/fusion/cli",
+            "dev/ion_fusion/fusion/util/function/**",
+            "dev/ion_fusion/fusion/util/hamt/**")
 
     title = "FusionJava API Reference"
 
@@ -251,7 +251,7 @@ tasks.javadoc {
         this as StandardJavadocDocletOptions
 
         docEncoding = "UTF-8"
-        overview = "$projectDir/src/com/amazon/fusion/overview.html"
+        overview = "$projectDir/src/dev/ion_fusion/fusion/overview.html"
 
         header = "FusionJava API Reference"
         bottom = "<center>Copyright Ion Fusion contributors. All Rights Reserved.</center>"
@@ -262,7 +262,7 @@ val fusiondocDir = docsDir.get().dir("fusiondoc")
 
 tasks.register<JavaExec>("fusiondocGen") {
     classpath = sourceSets["main"].runtimeClasspath
-    mainClass = "com.amazon.fusion.cli.Cli"
+    mainClass = "dev.ion_fusion.fusion.cli.Cli"
     args = listOf("document", fusiondocDir.asFile.path, "fusion")
 
     enableAssertions = true
@@ -325,9 +325,9 @@ tasks {
 
 application {
     applicationName = "fusion"
-    mainClass.set("com.amazon.fusion.cli.Cli")
+    mainClass.set("dev.ion_fusion.fusion.cli.Cli")
     // This is unused today, but is likely to be useful and it was hard to do.
-    applicationDefaultJvmArgs = listOf("-Dcom.amazon.fusion.Home={{APP_HOME}}/fusion")
+    applicationDefaultJvmArgs = listOf("-Ddev.ion_fusion.fusion.Home={{APP_HOME}}/fusion")
 }
 
 

@@ -110,7 +110,7 @@ the expected and actual values.
 
 
 
-  (define CheckExn (java_class "com.amazon.fusion.CheckException"))
+  (define CheckExn (java_class "dev.ion_fusion.fusion.CheckException"))
 
   (defpub (is_check_error v)
     '''
@@ -125,7 +125,7 @@ Determines whether a value is a `check_error` exception, a subtype of
 Raises a `check_error`, using the current context stack as populated by the
 dynamically enclosing checks.
     '''
-    (raise (java_new "com.amazon.fusion.CheckException"
+    (raise (java_new "dev.ion_fusion.fusion.CheckException"
              (current_continuation_mark_sexp check_stack_param))))
 
 

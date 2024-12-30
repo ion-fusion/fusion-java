@@ -33,7 +33,7 @@ Returns the number of code points in `string`.
 Since Fusion doesn't define a specific implementation of strings, this procedure
 is not guaranteed to have better than O(_n_) time.
     '''
-    "com.amazon.fusion.FusionString$SizeCodePointsProc")
+    "dev.ion_fusion.fusion.FusionString$SizeCodePointsProc")
 
   (defpub_j string_size_utf8
     '''
@@ -46,7 +46,7 @@ Given `null.string` the result is zero.
 Since Fusion doesn't define a specific implementation of strings, this procedure
 is not guaranteed to have better than O(_n_) time.
     '''
-    "com.amazon.fusion.FusionString$SizeUtf8Proc")
+    "dev.ion_fusion.fusion.FusionString$SizeUtf8Proc")
 
 
   // TODO See TODOs in the implementation before finalizing these procedures.
@@ -57,7 +57,7 @@ is not guaranteed to have better than O(_n_) time.
 Returns a stretchy list of the Unicode scalar values (code points) in the given
 non-null string.
     '''
-    "com.amazon.fusion.FusionString$ExplodeProc")
+    "dev.ion_fusion.fusion.FusionString$ExplodeProc")
 
   (defpub_j string_implode
     '''
@@ -65,7 +65,7 @@ non-null string.
 
 Returns a string filled by the given list of Unicode scalar values.
     '''
-    "com.amazon.fusion.FusionString$ImplodeProc")
+    "dev.ion_fusion.fusion.FusionString$ImplodeProc")
 
   (defpub_j string_index_codepoints
     '''
@@ -79,7 +79,7 @@ Returns void if the substring doesn't occur within the string.
 Since Fusion doesn't define a specific implementation of strings, this procedure
 is not guaranteed to have better than O(_n_) time.
     '''
-    "com.amazon.fusion.FusionString$IndexCodePointsProc")
+    "dev.ion_fusion.fusion.FusionString$IndexCodePointsProc")
 
 
   (defpub_j string_split_noregexp
@@ -99,5 +99,5 @@ code thoroughly.
 
 [FusionJavaRegexp]: wiki:FusionJavaRegexp
     '''
-    "com.amazon.fusion.FusionString$SplitNoRegexpProc")
+    "dev.ion_fusion.fusion.FusionString$SplitNoRegexpProc")
 )

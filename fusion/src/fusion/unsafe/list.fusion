@@ -33,7 +33,7 @@ related operations on lists.
 
 Returns the number of elements in `list`.
     '''
-    (java_new "com.amazon.fusion.FusionList$UnsafeListSizeProc"))
+    (java_new "dev.ion_fusion.fusion.FusionList$UnsafeListSizeProc"))
 
 
   (define_values (unsafe_list_element)
@@ -43,7 +43,7 @@ Returns the number of elements in `list`.
 Returns the element of `list` at (zero-based) position `pos`. The `pos` must be
 a non-null int with a valid value.
     '''
-    (java_new "com.amazon.fusion.FusionList$UnsafeListElementProc"))
+    (java_new "dev.ion_fusion.fusion.FusionList$UnsafeListElementProc"))
 
 
   (define_values (unsafe_list_to_immutable_list)
@@ -53,7 +53,7 @@ a non-null int with a valid value.
 Returns an immutable list with the same content as `list`.
 If `list` is immutable, then it is returned.
     '''
-    (java_new "com.amazon.fusion.FusionList$UnsafeListToImmutableListProc"))
+    (java_new "dev.ion_fusion.fusion.FusionList$UnsafeListToImmutableListProc"))
 
 
   (define_values (unsafe_list_subseq)
@@ -67,7 +67,7 @@ Returns a list holding the elements from `list` between positions `from` and
 
 The result may share structure with `list`.
     '''
-    (java_new "com.amazon.fusion.FusionList$UnsafeListSubseqProc"))
+    (java_new "dev.ion_fusion.fusion.FusionList$UnsafeListSubseqProc"))
 
 
   (define_values (unsafe_list_set)
@@ -77,7 +77,7 @@ The result may share structure with `list`.
 Changes the element of `list` at (zero-based) position `pos`. This assumes that
 the `list` is mutable and that the `pos` is valid.
     '''
-    (java_new "com.amazon.fusion.FusionList$UnsafeListSetProc"))
+    (java_new "dev.ion_fusion.fusion.FusionList$UnsafeListSetProc"))
 
 
   (define_values (unsafe_list_add)
@@ -86,7 +86,7 @@ the `list` is mutable and that the `pos` is valid.
 
 Returns a list similar to `list` with the `value` added to the end.
     '''
-    (java_new "com.amazon.fusion.FusionList$UnsafeListAddProc"))
+    (java_new "dev.ion_fusion.fusion.FusionList$UnsafeListAddProc"))
 
 
   (define_values (unsafe_list_add_m)
@@ -99,7 +99,7 @@ may share structure with the list, which may also be mutated.
 In particular, when given a stretchy list, the input is expanded to contain the
 given value, and the result is the `list` argument.
     '''
-    (java_new "com.amazon.fusion.FusionList$UnsafeListAddMProc"))
+    (java_new "dev.ion_fusion.fusion.FusionList$UnsafeListAddMProc"))
 
 
   (define_values (unsafe_list_iterator)
@@ -108,5 +108,5 @@ given value, and the result is the `list` argument.
 
 Returns an iterator over the content of `list`.
     '''
-    (java_new "com.amazon.fusion.FusionList$UnsafeListIterateProc"))
+    (java_new "dev.ion_fusion.fusion.FusionList$UnsafeListIterateProc"))
 )

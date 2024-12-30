@@ -19,6 +19,6 @@ Helper forms for the REPL.
 
 Prints documentation for the given bindings, if available.
     '''
-    (java_new "com.amazon.fusion._Private_HelpForm"))
+    (java_new "dev.ion_fusion.fusion._Private_HelpForm"))
 
 )

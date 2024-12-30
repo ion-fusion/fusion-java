@@ -40,7 +40,7 @@ There is **NO SUPPORT** for this module.
 Returns the number of fractional digits of the decimal `d`; that is, the
 negation of the value's exponent.
     '''
-    (java_new "com.amazon.fusion.FusionNumber$DecimalScaleProc"))
+    (java_new "dev.ion_fusion.fusion.FusionNumber$DecimalScaleProc"))
 
 
   (defpub decimal_divide
@@ -53,7 +53,7 @@ This is equivalent to the "decimal128" default context of IEEE 754.
 
 In the future this procedure will be replaced with a programmatic math context.
     '''
-    (java_new "com.amazon.fusion.FusionNumber$DecimalDivideProc"))
+    (java_new "dev.ion_fusion.fusion.FusionNumber$DecimalDivideProc"))
 
 
   (defpub decimal_rescale
@@ -66,7 +66,7 @@ removed), the value is rounded using the "half-even" method.
 
 `d` must be a decimal, and `scale` must be an int.
     '''
-    (java_new "com.amazon.fusion.FusionNumber$DecimalRescaleProc"))
+    (java_new "dev.ion_fusion.fusion.FusionNumber$DecimalRescaleProc"))
 
 
   (defpub decimal_divide_rescale
@@ -82,7 +82,7 @@ This function is similar to:
 
 except only a single rounding operation occurs.
     '''
-    (java_new "com.amazon.fusion.FusionNumber$DecimalDivideRescaleProc"))
+    (java_new "dev.ion_fusion.fusion.FusionNumber$DecimalDivideRescaleProc"))
 
 
   (defpub_j decimal_to_string
@@ -90,7 +90,7 @@ except only a single rounding operation occurs.
 Converts a decimal to a string using Ion notation.
 Returns `null.string` when given `null.decimal`.
     '''
-    "com.amazon.fusion.FusionNumber$DecimalToStringProc")
+    "dev.ion_fusion.fusion.FusionNumber$DecimalToStringProc")
 
 
   (defpub_j string_to_decimal
@@ -108,5 +108,5 @@ API to perform string -> decimal parsing. This means it will _not_ handle
 It also _will_ (incorrectly) accept the
 [Java `BigDecimal` exponent notation](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/math/BigDecimal.html#%3Cinit%3E(java.lang.String)).
     '''
-    "com.amazon.fusion.FusionNumber$StringToDecimalProc")
+    "dev.ion_fusion.fusion.FusionNumber$StringToDecimalProc")
 )
