@@ -34,7 +34,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 
 public class CoreTestCase
     extends StdioTestCase
@@ -90,17 +89,10 @@ public class CoreTestCase
         Paths.get("").toAbsolutePath();
 
 
-    private IonSystem mySystem;
-    private FusionRuntimeBuilder myRuntimeBuilder;
-    private FusionRuntime myRuntime;
-    private TopLevel myTopLevel;
-
-    @BeforeEach
-    public void setUp()
-        throws Exception
-    {
-        mySystem = IonSystemBuilder.standard().build();
-    }
+    private final IonSystem            mySystem = IonSystemBuilder.standard().build();
+    private       FusionRuntimeBuilder myRuntimeBuilder;
+    private       FusionRuntime        myRuntime;
+    private       TopLevel             myTopLevel;
 
 
     public static Path fusionBootstrapDirectory()

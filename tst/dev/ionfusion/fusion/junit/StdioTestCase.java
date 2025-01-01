@@ -13,38 +13,22 @@ import java.io.PrintStream;
 import java.io.SequenceInputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
-import org.junit.jupiter.api.BeforeEach;
 
 
 public class StdioTestCase
 {
-    private LinkedList<InputStream> myStdinData;
-    private InputStream             myStdin;
+    private final LinkedList<InputStream> myStdinData = new LinkedList<>();
+    private       InputStream             myStdin;
 
-    private ByteArrayOutputStream myStdoutBytes;
-    private ByteArrayOutputStream myStderrBytes;
+    private final ByteArrayOutputStream myStdoutBytes = new ByteArrayOutputStream();
+    private final ByteArrayOutputStream myStderrBytes = new ByteArrayOutputStream();
 
-    private PrintStream myStdout;
-    private PrintStream myStderr;
-
-
-    @BeforeEach
-    public void setUpStdio()
-    {
-        myStdoutBytes = new ByteArrayOutputStream();
-        myStderrBytes = new ByteArrayOutputStream();
-
-        myStdout = new PrintStream(myStdoutBytes);
-        myStderr = new PrintStream(myStderrBytes);
-    }
+    private final PrintStream myStdout = new PrintStream(myStdoutBytes);
+    private final PrintStream myStderr = new PrintStream(myStderrBytes);
 
 
     protected void supplyInput(InputStream data)
     {
-        if (myStdinData == null)
-        {
-            myStdinData = new LinkedList<>();
-        }
         myStdinData.push(data);
     }
 
@@ -68,14 +52,7 @@ public class StdioTestCase
     {
         if (myStdin == null)
         {
-            if (myStdinData != null)
-            {
-                myStdin = new SequenceInputStream(enumeration(myStdinData));
-            }
-            else
-            {
-                myStdin = new ByteArrayInputStream(new byte[0]);
-            }
+            myStdin = new SequenceInputStream(enumeration(myStdinData));
         }
         return myStdin;
     }
