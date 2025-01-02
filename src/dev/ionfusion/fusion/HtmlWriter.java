@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 import static com.amazon.ion.system.IonTextWriterBuilder.UTF8;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -105,11 +106,23 @@ class HtmlWriter
     }
 
 
-    private void openHead(String title, String baseUrl)
+    void openHtml()
         throws IOException
     {
         myOut.append("<!DOCTYPE html>\n" +
-                     "<head>" +
+                     "<html>\n");
+    }
+
+    void closeHtml()
+        throws IOException
+    {
+        myOut.append("</html>\n");
+    }
+
+    private void openHead(String title, String baseUrl)
+        throws IOException
+    {
+        myOut.append("<head>" +
                      "<meta http-equiv='Content-Type'" +
                      " content='text/html; charset=utf-8'>");
 
@@ -155,6 +168,19 @@ class HtmlWriter
         }
         
         myOut.append("</head>\n");
+    }
+
+
+    void openBody()
+        throws IOException
+    {
+        myOut.append("<body>\n");
+    }
+
+    void closeBody()
+        throws IOException
+    {
+        myOut.append("</body>\n");
     }
 
 

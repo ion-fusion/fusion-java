@@ -3,13 +3,14 @@
 
 package dev.ionfusion.fusion;
 
+import static com.amazon.ion.system.IonTextWriterBuilder.UTF8;
 import static dev.ionfusion.fusion.DocIndex.buildDocIndex;
 import static dev.ionfusion.fusion.FusionUtils.EMPTY_STRING_ARRAY;
 import static dev.ionfusion.fusion.ModuleDoc.buildDocTree;
-import static com.amazon.ion.system.IonTextWriterBuilder.UTF8;
-import dev.ionfusion.fusion.ModuleDoc.Filter;
+
 import com.amazon.ion.Timestamp;
 import com.petebevin.markdown.MarkdownProcessor;
+import dev.ionfusion.fusion.ModuleDoc.Filter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -220,13 +221,21 @@ public final class _Private_ModuleDocumenter
         void renderModule()
             throws IOException
         {
-            String modulePath = myModuleId.absolutePath();
-            renderHead(modulePath, myBaseUrl, "module.css");
+            openHtml();
+            {
+                String modulePath = myModuleId.absolutePath();
+                renderHead(modulePath, myBaseUrl, "module.css");
 
-            renderHeader();
-            renderModuleIntro();
-            renderSubmoduleLinks();
-            renderBindings();
+                openBody();
+                {
+                    renderHeader();
+                    renderModuleIntro();
+                    renderSubmoduleLinks();
+                    renderBindings();
+                }
+                closeBody();
+            }
+            closeHtml();
         }
 
 

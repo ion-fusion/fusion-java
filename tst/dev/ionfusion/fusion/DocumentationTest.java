@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.net.URL;
-import org.htmlunit.IncorrectnessListener;
 import org.htmlunit.WebClient;
 import org.htmlunit.html.HtmlBody;
 import org.htmlunit.html.HtmlHeading1;
@@ -31,14 +30,7 @@ public class DocumentationTest
     @BeforeEach
     public void initWebClient()
     {
-        myWebClient.setIncorrectnessListener(new IncorrectnessListener()
-        {
-            @Override
-            public void notify(String s, Object o)
-            {
-                fail("Incorrectness: " + s);
-            }
-        });
+        myWebClient.setIncorrectnessListener((s, o) -> fail("Incorrectness: " + s));
 
         myWebClient.setHTMLParserListener(new HTMLParserListener()
         {
@@ -53,8 +45,7 @@ public class DocumentationTest
             public void warning(String message, URL url, String html,
                                 int line, int column, String key)
             {
-                // TODO Enable this and fix warnings.
-//              fail("HTML warning at line " + line + ": " + message);
+                fail("HTML warning at line " + line + ": " + message);
             }
         });
     }
