@@ -36,25 +36,6 @@ java {
     withJavadocJar()
 }
 
-sourceSets {
-    main {
-        java {
-            setSrcDirs(listOf("src"))
-        }
-        // We currently commingle non-Java resources like kernel_docs.ion
-        // I'm not sure whether the fusion tree should be here; WRT the jar
-        // those are resources to be included.
-        resources {
-            setSrcDirs(listOf("src"))
-            exclude("**/*.html")   // overview.html, in particular
-        }
-    }
-    test {
-        java {
-            setSrcDirs(listOf("tst"))
-        }
-    }
-}
 
 // Default output paths, hard-coded because the DSL doesn't seem to expose them.
 val docsDir    = layout.buildDirectory.dir("docs")
@@ -132,13 +113,7 @@ val ftstRepo = tasks.register<Jar>("ftstRepo") {
 testing {
     suites {
         // This test suite ensures the distribution is functional.
-        register<JvmTestSuite>("distTest") {
-            sources {
-                java {
-                    setSrcDirs(listOf("distTest"))
-                }
-            }
-
+        register<JvmTestSuite>("testDist") {
             // "Future iterations of the plugin will allow defining multiple
             // targets based other attributes, such as a particular JDK runtime."
             targets {
@@ -156,7 +131,7 @@ testing {
 }
 
 tasks.named("check") {
-    dependsOn(testing.suites.named("distTest"))
+    dependsOn(testing.suites.named("testDist"))
 }
 
 
@@ -251,7 +226,7 @@ tasks.javadoc {
         this as StandardJavadocDocletOptions
 
         docEncoding = "UTF-8"
-        overview = "$projectDir/src/dev/ionfusion/fusion/overview.html"
+        overview = "$projectDir/src/main/java/overview.html"
 
         header = "FusionJava API Reference"
         bottom = "<center>Copyright Ion Fusion contributors. All Rights Reserved.</center>"
