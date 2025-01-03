@@ -17,7 +17,7 @@ encompasses three finer-grained parts:
 
 * _Expansion_ is the process of taking some Fusion source code and transforming all uses of macros
   into intrinsic syntax forms.
-* _Compilation_ is the transformation fully-expanded abstract syntax trees into some executable form
+* _Compilation_ is the transformation of fully-expanded abstract syntax trees into some executable form
   like bytecode.
 * _Execution_ is the invocation of an executable form given some inputs and other context.
 
