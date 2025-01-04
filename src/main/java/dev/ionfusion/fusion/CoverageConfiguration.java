@@ -4,9 +4,13 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.ModuleIdentity.isValidAbsoluteModulePath;
+
 import dev.ionfusion.fusion.util.function.Predicate;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -57,9 +61,9 @@ final class CoverageConfiguration
     final Predicate<ModuleIdentity> myModuleSelector;
 
     /**
-     * All elements must be absolute paths.
+     * Each element is an absolute path to a directory.
      */
-    private Set<String> myIncludedSources;
+    private final Set<Path> myIncludedSourceDirs = new HashSet<>();
 
 
     /**
@@ -120,20 +124,14 @@ final class CoverageConfiguration
             String sources = props.getProperty(PROPERTY_INCLUDED_SOURCES);
             if (sources != null)
             {
-                myIncludedSources = new HashSet<>();
-
-                String pathSeparator = System.getProperty("path.separator");
-                String fileSeparator = System.getProperty("file.separator");
-
-                for (String source : sources.split(pathSeparator))
+                for (String source : sources.split(File.pathSeparator))
                 {
                     if (source.isEmpty()) continue;
 
-                    File f = new File(source);
-                    if (f.isDirectory())
+                    Path p = Paths.get(source).toAbsolutePath();
+                    if (Files.isDirectory(p))
                     {
-                        String path = f.getAbsolutePath() + fileSeparator;
-                        myIncludedSources.add(path);
+                        myIncludedSourceDirs.add(p);
                     }
                     else
                     {
@@ -157,11 +155,11 @@ final class CoverageConfiguration
 
 
     /**
-     * @return may be null, which is the same as empty-set.
+     * @return not null.
      */
-    Set<String> getIncludedSourceDirs()
+    Set<Path> getIncludedSourceDirs()
     {
-        return myIncludedSources;
+        return myIncludedSourceDirs;
     }
 
 
@@ -180,22 +178,9 @@ final class CoverageConfiguration
      *
      * @param file may be null.
      */
-    boolean fileIsSelected(File file)
+    boolean fileIsSelected(Path file)
     {
-        if (file != null)
-        {
-            // We don't cover a file unless it's explicitly included.
-            if (myIncludedSources == null) return false;
-
-            String path = file.getAbsolutePath();
-
-            for (String coverable : myIncludedSources)
-            {
-                if (path.startsWith(coverable)) return true;
-            }
-        }
-
-        return false;
+        return (file != null) && myIncludedSourceDirs.stream().anyMatch(file::startsWith);
     }
 
 
@@ -214,7 +199,7 @@ final class CoverageConfiguration
         if (name == null) return false;
 
         ModuleIdentity id   = name.getModuleIdentity();
-        File           file = name.getFile();
+        Path           file = name.getPath();
 
         return (moduleIsSelected(id) || fileIsSelected(file));
     }

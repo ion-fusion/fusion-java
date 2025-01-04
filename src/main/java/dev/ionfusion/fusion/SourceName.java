@@ -5,6 +5,7 @@ package dev.ionfusion.fusion;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Path;
 
 /**
  * Identifies a source of Fusion code or other data: a file, URL, <em>etc.</em>
@@ -91,6 +92,12 @@ public class SourceName
     public File getFile()
     {
         return null;
+    }
+
+    public Path getPath()
+    {
+        File f = getFile();
+        return f == null ? null : f.toPath();
     }
 
     URL getUrl()

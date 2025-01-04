@@ -6,6 +6,8 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.CoverageDatabase.SRCLOC_COMPARE;
 import static dev.ionfusion.fusion.GlobalState.FUSION_SOURCE_EXTENSION;
 import static java.math.RoundingMode.HALF_EVEN;
+import static java.nio.file.Files.walkFileTree;
+
 import com.amazon.ion.IonReader;
 import com.amazon.ion.IonSystem;
 import com.amazon.ion.IonType;
@@ -19,8 +21,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -180,25 +186,31 @@ public final class _Private_CoverageWriter
     //=========================================================================
     // Metrics Analysis
 
-
-    private void collectSourceFiles(File dir)
+    /**
+     * Populate {@link #mySourceFiles} set with all the {@code .fusion} files
+     * within the configured source directories.
+     */
+    private void collectSourceFiles()
+        throws IOException
     {
-        String[] fileNames = dir.list();
-
-        for (String fileName : fileNames)
-        {
-            File file = new File(dir, fileName);
-            if (file.isDirectory())
+        FileVisitor<Path> visitor = new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path entry, BasicFileAttributes attrs)
             {
-                collectSourceFiles(file);
-            }
-            else if (fileName.endsWith(FUSION_SOURCE_EXTENSION))
-            {
-                if (myConfig.fileIsSelected(file))
+                if (entry.getFileName().toString().endsWith(FUSION_SOURCE_EXTENSION))
                 {
-                    mySourceFiles.add(file);
+                    if (myConfig.fileIsSelected(entry))
+                    {
+                        mySourceFiles.add(entry.toFile());
+                    }
                 }
+                return FileVisitResult.CONTINUE;
             }
+        };
+
+        for (Path dir : myConfig.getIncludedSourceDirs())
+        {
+            walkFileTree(dir, visitor);
         }
     }
 
@@ -221,7 +233,7 @@ public final class _Private_CoverageWriter
     }
 
     /**
-     * Determine the number of leading {@Link Path} name elements common to all
+     * Determine the number of leading {@link Path} name elements common to all
      * files of the given {@link SourceName}s.  We omit this prefix from the
      * directory tree of generated HTML files.
      * <p>
@@ -287,36 +299,19 @@ public final class _Private_CoverageWriter
      * @throws FusionException if an error occurs.
      */
     private void analyze()
-        throws FusionException
+        throws FusionException, IOException
     {
-        Consumer<ModuleIdentity> consumer = new Consumer<ModuleIdentity>()
-        {
-            @Override
-            public void accept(ModuleIdentity t)
-            {
-                myModules.add(t);
-            }
-        };
-
         // Collect all the modules the repositories can discover, so we can find
         // modules that are not used and don't appear in the database.
         for (File f : myDatabase.getRepositories())
         {
             ModuleRepository repo = new FileSystemModuleRepository(f);
-            repo.collectModules(myConfig.myModuleSelector, consumer);
+            repo.collectModules(myConfig.myModuleSelector, myModules::add);
         }
 
         // Now do the same thing for non-repository source trees.
         // TODO Why aren't these dirs recorded in the database like modules?
-        Set<String> includedSourceDirs = myConfig.getIncludedSourceDirs();
-        if (includedSourceDirs != null)
-        {
-            for (String s : includedSourceDirs)
-            {
-                File dir = new File(s);
-                collectSourceFiles(dir);
-            }
-        }
+        collectSourceFiles();
 
         for (SourceLocation loc : myDatabase.locations())
         {
