@@ -855,7 +855,8 @@ public final class FusionIo
             checkArityExact(2, args);
 
             Procedure thunk = checkProcArg(1, args);
-            // TODO FUSION-85 check thunk arity
+            // TODO check thunk arity
+            //  https://github.com/ion-fusion/fusion-java/issues/76
 
             try (IonReader reader = makeReader(eval, args))
             {

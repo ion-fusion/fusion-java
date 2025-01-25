@@ -2,10 +2,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // Used by macro_introduced_bindings.test.fusion
-// TODO FUSION-151 This shouldn't be necessary but we can't define a language
+// TODO This shouldn't be necessary but we can't define a dialect
 //      at top-level since it can't be referenced.
+//  https://github.com/ion-fusion/fusion-java/issues/88
 
 
 (module Language "/fusion"
   (define mib 17316)
-  (provide mib quote require))  // TODO #%module_begin
+  (provide mib quote require))
+
+// TODO #%module_begin
+//  https://github.com/ion-fusion/fusion-java/issues/78

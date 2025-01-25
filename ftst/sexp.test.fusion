@@ -92,8 +92,9 @@
 // pair, head, tail
 
 
-// TODO FUSION-268 is_sexp/is_collection accept any pair, not just proper sexp
-// Need to analyze that before releasing this!
+// is_sexp/is_collection accept any pair, not just proper sexp
+//  https://github.com/ion-fusion/fusion-java/issues/90
+
 (lets [(h (list 1)),
        (t (list 2)),
        (p (pair h t))]

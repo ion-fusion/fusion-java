@@ -274,7 +274,8 @@ final class ModuleNameResolver
         ModuleRegistry reg = eval.findCurrentNamespace().getRegistry();
 
         // Ensure that we don't try to load the module twice simultaneously.
-        // TODO FUSION-73 This is probably far too coarse-grained in general.
+        // TODO This is far too coarse-grained of a lock.
+        //  https://github.com/ion-fusion/fusion-java/issues/80
         synchronized (reg)
         {
             if (reload || ! reg.isLoaded(id))

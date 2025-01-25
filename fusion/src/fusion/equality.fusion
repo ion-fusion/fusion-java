@@ -6,7 +6,7 @@
   '''
 Equality and identity procedures.
 
-<!-- FUSION-185 This comment forces FusionDoc to stop the one-liner here. -->
+<!-- #61 This comment forces FusionDoc to stop the one-liner here. -->
 
 ## Equality Procedures
 
@@ -203,7 +203,7 @@ It's possible this may change in a future release.
 
 **Warning:** The behavior of this procedure is undefined for values `+inf`,
 `-inf`, and `nan`.
-See [FUSION-249](issue:FUSION-249).
+See [issue #64](https://github.com/ion-fusion/fusion-java/issues/64).
     '''
     (java_new "dev.ionfusion.fusion.FusionCompare$LooseEqualProc"))
 
@@ -247,7 +247,7 @@ For example:
 
 **Warning:** The behavior of this procedure is undefined for values `+inf`,
 `-inf`, and `nan`.
-See [FUSION-249](issue:FUSION-249).
+See [issue #64](https://github.com/ion-fusion/fusion-java/issues/64).
     '''
     (java_new "dev.ionfusion.fusion.FusionCompare$TightEqualProc"))
 
@@ -283,7 +283,7 @@ For example:
 
 **Warning:** The behavior of this procedure is undefined for values `+inf`,
 `-inf`, and `nan`.
-See [FUSION-249](issue:FUSION-249).
+See [issue #64](https://github.com/ion-fusion/fusion-java/issues/64).
     '''
     (java_new "dev.ionfusion.fusion.FusionCompare$StrictEqualProc"))
 

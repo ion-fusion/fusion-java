@@ -6,7 +6,7 @@
   '''
 Experimental operators for macros and syntax manipulation.
 
-<!-- FUSION-185 This comment forces FusionDoc to stop the one-liner here. -->
+<!-- #61 This comment forces FusionDoc to stop the one-liner here. -->
 
 ## WARNING
 
@@ -47,7 +47,7 @@ to Racket:
     which primarily means one must generally import a macro from another module
     before using it.
   * Not all [expansion contexts](http://docs.racket-lang.org/reference/syntax-model.html#%28part._expand-context-model%29)
-    are implemented. There’s no internal definitions yet; see [FUSION-36](issue:FUSION-36).
+    are implemented. There’s no internal definitions yet; see [issue #67](https://github.com/ion-fusion/fusion-java/issues/67).
   * Tamper status (aka [tainting](http://docs.racket-lang.org/reference/stxcerts.html))
     is not implemented.
 

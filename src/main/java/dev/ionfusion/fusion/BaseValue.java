@@ -122,7 +122,8 @@ abstract class BaseValue
      * Contained {@link SyntaxValue}s must be left unchanged, so the context
      * is pushed eagerly.
      * <p>
-     * TODO FUSION-242 This needs to do cycle detection.
+     * TODO This needs to do cycle detection.
+     *   https://github.com/ion-fusion/fusion-java/issues/65
      *
      * @return null if something in this datum can't be converted into syntax.
      */

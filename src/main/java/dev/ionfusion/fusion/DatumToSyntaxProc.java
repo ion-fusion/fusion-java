@@ -24,7 +24,8 @@ class DatumToSyntaxProc
 
         if (args.length > 1)
         {
-            // TODO FUSION-329 This should accept arbitrary syntax objects.
+            // TODO This should accept arbitrary syntax objects.
+            //  https://github.com/ion-fusion/fusion-java/issues/68
             if (! isIdentifier(eval, args[1]))
             {
                 throw argFailure("syntax identifier", 1, args);

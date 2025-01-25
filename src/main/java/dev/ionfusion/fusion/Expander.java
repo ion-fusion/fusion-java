@@ -93,9 +93,9 @@ final class Expander
         throws FusionException
     {
         // Handle other cases as per Racket spec. In particular:
-        // TODO FUSION-31  identifier macros
-        // TODO FUSION-136 rename transformers
-        // TODO FUSION-138 #%app
+        // TODO https://github.com/ion-fusion/fusion-java/issues/72 identifier macros
+        // TODO https://github.com/ion-fusion/fusion-java/issues/73 rename transformers
+        // TODO https://github.com/ion-fusion/fusion-java/issues/74 #%app
 
         if (! (stx instanceof SyntaxSexp)) return stx;
 

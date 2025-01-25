@@ -51,7 +51,8 @@ abstract class QuasiBaseForm
                                SyntaxValue stx, int depth)
         throws FusionException
     {
-        // TODO FUSION-225 handle unquote/unsyntax inside structs
+        // TODO handle unquote/unsyntax inside structs
+        //  https://github.com/ion-fusion/fusion-java/issues/62
         if (stx instanceof SyntaxSexp)
         {
             return expand(expander, env, (SyntaxSexp) stx, depth);
@@ -191,7 +192,8 @@ abstract class QuasiBaseForm
                                  SyntaxValue stx, int depth)
         throws FusionException
     {
-        // TODO FUSION-225 handle unquote/unsyntax inside structs
+        // TODO handle unquote/unsyntax inside structs
+        //  https://github.com/ion-fusion/fusion-java/issues/62
         if (stx instanceof SyntaxSexp)
         {
             return compile(comp, env, (SyntaxSexp) stx, depth);

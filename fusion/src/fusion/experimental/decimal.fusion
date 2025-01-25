@@ -6,7 +6,7 @@
   '''
 Experimental operators for decimal arithmetic.
 
-<!-- FUSION-185 This comment forces FusionDoc to stop the one-liner here. -->
+<!-- #61 This comment forces FusionDoc to stop the one-liner here. -->
 
 ## WARNING
 

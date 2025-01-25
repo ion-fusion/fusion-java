@@ -53,8 +53,9 @@ final class LambdaForm
         }
 
         // When there's no args, we can avoid an empty binding rib at runtime.
-        // TODO FUSION-36 This will need changing for internal definitions
+        // TODO This will need changing for internal definitions
         //      since we won't know yet whether the rib will be empty or not.
+        //      https://github.com/ion-fusion/fusion-java/issues/67
         SyntaxWrap localWrap = null;
         if (args.length != 0)
         {
@@ -81,7 +82,8 @@ final class LambdaForm
             children[1] = formals.copyReplacingChildren(eval, args);
         }
 
-        // TODO FUSION-36 Should allow internal definitions
+        // TODO Should allow internal definitions
+        //  https://github.com/ion-fusion/fusion-java/issues/67
         for (int i = bodyStart; i < children.length; i++)
         {
             SyntaxValue bodyForm = children[i];

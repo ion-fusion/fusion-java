@@ -227,7 +227,8 @@ by virtue of being macro-introduced.
 (define_syntax capture  // capture use of 'c'
   (lambda (stx)
     (lets [(arg (syntax_get stx 1)),
-           // TODO FUSION-329 Use entire arg, not first elt, as context
+           // TODO Use entire arg, not first elt, as context
+           //  https://github.com/ion-fusion/fusion-java/issues/68
            (ctx (syntax_get arg 0)),
            (c   (datum_to_syntax (quote c) ctx))]
       (quasisyntax

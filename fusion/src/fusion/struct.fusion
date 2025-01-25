@@ -347,9 +347,7 @@ DEPRECATED: renamed to [`struct_do`](fusion/struct.html#struct_do) for
 consistency with [`do`](fusion/collection.html#do).
 
 **This binding was deprecated in R11 (November 2013) and will be removed in**
-**Q2 2014.**
-Comment on [FUSION-233](issue:FUSION-233) if you
-cannot migrate in time.
+**Q2 2014.**  https://github.com/ion-fusion/fusion-java/issues/66
     '''
     struct_do)
 
@@ -374,7 +372,8 @@ identifiers.
     (unless (is_struct struct)
       (raise_argument_error "struct_unzip" "struct" 0 struct))
     (let [(iter (unsafe_struct_iterator struct))]
-      // TODO FUSION-226 Allocated these lists with the correct size
+      // TODO Allocate these lists with the correct size
+      //  https://github.com/ion-fusion/fusion-java/issues/92
       (let loop [(keys (stretchy_list)),
                  (vals (stretchy_list))]
         (if (iterator_has_next iter)

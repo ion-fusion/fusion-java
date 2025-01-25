@@ -142,7 +142,8 @@ A companion form is [`when`](fusion/bool.html#when).
                 stx)))))))
 
 
-// TODO FUSION-36  Support internal definitions in body sequences.
+// TODO Support internal definitions in body sequences.
+//  https://github.com/ion-fusion/fusion-java/issues/67
 // Shouldn't use begin since that doesn't delimit the new scope that's needed.
 
   (provide cond)

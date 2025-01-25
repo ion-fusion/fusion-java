@@ -58,7 +58,8 @@ final class LetrecForm
         expandedForms[0] = stx.get(eval, 0);
         expandedForms[1] = bindingForms;
 
-        // TODO FUSION-36 Should allow internal definitions
+        // TODO Should allow internal definitions
+        //  https://github.com/ion-fusion/fusion-java/issues/67
         for (int i = 2; i < letrecExprSize; i++)
         {
             SyntaxValue subform = stx.get(eval, i);

@@ -938,7 +938,8 @@ final class FusionSexp
         }
 
         /**
-         * TODO FUSION-242 This needs to do cycle detection.
+         * TODO This needs to do cycle detection.
+         *   https://github.com/ion-fusion/fusion-java/issues/65
          *
          * @return null if an element can't be converted into syntax.
          */
@@ -953,8 +954,9 @@ final class FusionSexp
 
             SyntaxValue stx = SyntaxSexp.make(eval, loc, newPair);
 
-            // TODO FUSION-329 This should retain context, but not push it
+            // TODO This should retain context, but not push it
             //      down to the current children (which already have it).
+            //      https://github.com/ion-fusion/fusion-java/issues/68
             //return Syntax.applyContext(eval, context, stx);
 
             return stx;

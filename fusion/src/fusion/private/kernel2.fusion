@@ -4,7 +4,8 @@
 (module kernel2 "/fusion/private/kernel"
 
   // Pass-through most bindings from kernel
-  // TODO FUSION-76 (provide (all_from_out "/fusion/private/kernel"))
+  // TODO (provide (all_from_out "/fusion/private/kernel"))
+  //  https://github.com/ion-fusion/fusion-java/issues/84
   (provide
     all_defined_out
     begin

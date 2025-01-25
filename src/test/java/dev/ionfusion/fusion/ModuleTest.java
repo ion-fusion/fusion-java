@@ -60,7 +60,8 @@ public class ModuleTest
     @Test
     public void testRelativeLanguageStringInTopLevelModule()
     {
-        // TODO FUSION-151 this isn't well-defined yet and should be rejected.
+        // TODO Allow relative path to dialect?
+        //  https://github.com/ion-fusion/fusion-java/issues/88
         assertEvalThrows(ModuleNotFoundException.class,
                          "(module m \"fusion\" (define x 1))");
     }
@@ -71,7 +72,8 @@ public class ModuleTest
     {
         eval("(module lang '/fusion/base' true)");
 
-        // TODO FUSION-151 this isn't well-defined yet and should be rejected.
+        // TODO Allow relative path to dialect?
+        //  https://github.com/ion-fusion/fusion-java/issues/88
         assertEvalThrows(ModuleNotFoundException.class,
                         "(module m \"lang\" (define x 1))");
     }

@@ -337,7 +337,8 @@ final class SyntaxSymbol
                 assert ! FusionValue.isAnnotated(eval, myDatum);
                 SyntaxSexp topExpr = SyntaxSexp.make(eval, top, this);
 
-                // TODO FUSION-207 tail expand
+                // TODO Eliminate this tail-call.
+                //  https://github.com/ion-fusion/fusion-java/issues/71
                 return expander.expandExpression(env, topExpr);
             }
         }

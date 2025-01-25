@@ -145,7 +145,8 @@ final class ModuleForm
                                 (SyntaxSymbol) source.get(eval, 1),
                                 id, languageId);
 
-        // TODO handle #%module-begin and #%plain-module-begin
+        // TODO Implement #%module-begin and #%plain-module-begin
+        //  https://github.com/ion-fusion/fusion-java/issues/78
         expander = expander.enterModuleContext();
 
 
@@ -647,8 +648,9 @@ final class ModuleForm
 
             for (CompiledForm form : myBody)
             {
-                // TODO FUSION-213 each eval should be wrapped with a prompt.
-                // See Racket reference for `module`.
+                // TODO Each eval should be wrapped with a prompt.
+                //  https://github.com/ion-fusion/fusion-java/issues/79
+                //  See Racket reference for `module`.
                 eval.eval(store, form);
             }
 

@@ -57,7 +57,8 @@ final class MacroForm
     {
         SyntaxValue expanded = expandOnce(expander, stx);
 
-        // TODO FUSION-207 tail expand
+        // TODO Eliminate this tail-call.
+        //  https://github.com/ion-fusion/fusion-java/issues/71
         return expander.expand(env, expanded);
     }
 
@@ -73,9 +74,15 @@ final class MacroForm
         Object expanded;
         try
         {
-            // TODO FUSION-32 This should set current-namespace
-            // See Racket Reference 1.2.3.2
+            // TODO This should set current-namespace
+            //  https://github.com/ion-fusion/fusion-java/issues/77
+            // See Racket Reference 1.2.3.2 says:
+            // "The call to the syntax transformer is parameterized to set
+            // `current-namespace` to a namespace that shares bindings and
+            // variables with the namespace being used to expand, except that
+            // its base phase is one greater."
             // http://docs.racket-lang.org/reference/syntax-model.html#(part._expand-steps)
+
             // But BEWARE: this is called during partial expansion!
             expanded = expander.getEvaluator().callNonTail(myTransformer, stx);
         }

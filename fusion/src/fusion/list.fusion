@@ -186,9 +186,7 @@ thrown if the position is out of bounds.
 DEPRECATED. Renamed to `list_element`.
 
 **This binding was deprecated in R8 (October 2013) and will be removed in**
-**Q2 2014.**
-Comment on [FUSION-232](issue:FUSION-232) if you
-cannot migrate in time.
+**Q2 2014.**  https://github.com/ion-fusion/fusion-java/issues/86
     '''
     list_element)
 

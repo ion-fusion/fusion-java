@@ -19,7 +19,8 @@
 )
 
 (define_check (check_comparisons lo hi)
-//  (check <  lo hi)  TODO FUSION-243 string ordering
+  // TODO string ordering https://github.com/ion-fusion/fusion-java/issues/91
+//  (check <  lo hi)
 //  (check <= lo hi)
   (check_ident lo lo)
   (check_ident hi hi)

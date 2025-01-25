@@ -15,7 +15,7 @@
 (lets ((stx (expand (quote_syntax (if1head3))))
        (expr (syntax_unwrap stx)))
   (when RACKET
-    "TODO FUSION-329"
+    "TODO https://github.com/ion-fusion/fusion-java/issues/68"
     (check_false (syntax_is_original stx)))
   (check_false (syntax_is_original (head expr)))                      "if"
   (check_true  (syntax_is_original (head (tail expr))))               "1"

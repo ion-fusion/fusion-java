@@ -7,7 +7,8 @@ package dev.ionfusion.fusion;
  * A derived parameter that delays initialization until first use.
  * This avoids opening an IonReader over stdin unless we really need to.
  * <p>
- * TODO FUSION-160 This should be built as a derived parameter.
+ * TODO This should be built as a derived parameter.
+ *   https://github.com/ion-fusion/fusion-java/issues/69
  */
 final class CurrentIonReaderParameter
     extends DynamicParameter

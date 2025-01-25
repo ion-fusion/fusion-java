@@ -16,9 +16,9 @@ final class BeginForm
         final Evaluator eval = expander.getEvaluator();
 
         // At module context, we should've spliced this into the module body.
-        assert ! (expander.isModuleContext());
-        // TODO FUSION-33 handle splicing in top-level context
-        // TODO FUSION-36 handle splicing in internal-defn context
+        assert ! (expander.isModuleContext() || expander.isTopLevelContext());
+        // TODO handle splicing in internal-defn context
+        //  https://github.com/ion-fusion/fusion-java/issues/67
 
         int size = stx.size();
 

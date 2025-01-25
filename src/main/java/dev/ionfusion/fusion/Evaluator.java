@@ -264,7 +264,8 @@ class Evaluator
         // ******** Be sure to document types as they are added! ********
 
 
-        // TODO FUSION-206 should handle Timestamp, Object[], ArrayList
+        // TODO should handle Timestamp, Object[], ArrayList, ...
+        //  https://github.com/ion-fusion/fusion-java/issues/70
 
         // TODO this API forces us to use a non-null object for VOID!
         return null;

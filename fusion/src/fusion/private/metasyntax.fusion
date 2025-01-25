@@ -17,7 +17,7 @@ Used as an escape within a `quasisyntax` form; not valid in any other context.
     '''
     (lambda (stx)
       (wrong_syntax stx "must be used inside quasisyntax.  Sorry, but it "
-        "currently doesn't work inside a struct; see FUSION-34."
+        "currently doesn't work inside a struct; see issue #62."
       )))
 
 

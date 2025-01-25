@@ -101,7 +101,8 @@ class Compiler
                         ((SyntaxSymbol) first).resolveSyntaxMaybe(topNs);
                     if (form != null)
                     {
-                        // TODO FUSION-207 Needs tail-call optimization.
+                        // TODO Eliminate this tail-call.
+                        //  https://github.com/ion-fusion/fusion-java/issues/71
                         form.evalCompileTimePart(Compiler.this, topNs, stx);
                     }
                 }
@@ -397,7 +398,8 @@ class Compiler
             @Override
             public Object visit(TopLevelDefinedBinding b) throws FusionException
             {
-                // TODO FUSION-192 This should bind after evaluation, as 'define'.
+                // TODO This should bind after evaluation, as 'define'.
+                //  https://github.com/ion-fusion/fusion-java/issues/75
                 return visit((NsDefinedBinding) b);
             }
         };

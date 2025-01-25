@@ -89,13 +89,15 @@
   (define mib 17316)
   (provide mib quote require))  // TODO #%module_begin
 
+// TODO Dialect should be just Language
+//  https://github.com/ion-fusion/fusion-java/issues/88
 "This works:"
-(module Test2 "/mib_language" // TODO FUSION-151 Should be just Language
+(module Test2 "/mib_language"
   (require HasMacro)
   mib)
 
 "This doesn't work:"
 (expect_syntax_exn
-  (module Test2 "/mib_language" // Language
+  (module Test2 "/mib_language" // TODO Language
     (require HasMacro)
     (reference_mib)))

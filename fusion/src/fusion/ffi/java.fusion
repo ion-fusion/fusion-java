@@ -11,7 +11,7 @@ use cases. While `java_new` allows you to create Java objects and treat them
 as Fusion values, you can't do anything with such values, since the built-in
 operators only support concrete types that are not yet public.
 
-See issue [FUSION-54](issue:FUSION-54).
+See [issue #63](https://github.com/ion-fusion/fusion-java/issues/63).
   '''
 
   (provide

@@ -19,7 +19,7 @@ offset.  Annotations are ignored.
 
 **Warning:** The behavior of this procedure is undefined for values `+inf`,
 `-inf`, and `nan`.
-See [FUSION-249](issue:FUSION-249).
+See [issue #64](https://github.com/ion-fusion/fusion-java/issues/64).
     '''
     (java_new "dev.ionfusion.fusion.FusionCompare$LessThanProc"))
 
@@ -35,7 +35,7 @@ offset.  Annotations are ignored.
 
 **Warning:** The behavior of this procedure is undefined for values `+inf`,
 `-inf`, and `nan`.
-See [FUSION-249](issue:FUSION-249).
+See [issue #64](https://github.com/ion-fusion/fusion-java/issues/64).
     '''
     (java_new "dev.ionfusion.fusion.FusionCompare$GreaterThanProc"))
 
@@ -51,7 +51,7 @@ offset.  Annotations are ignored.
 
 **Warning:** The behavior of this procedure is undefined for values `+inf`,
 `-inf`, and `nan`.
-See [FUSION-249](issue:FUSION-249).
+See [issue #64](https://github.com/ion-fusion/fusion-java/issues/64).
     '''
     (java_new "dev.ionfusion.fusion.FusionCompare$LessThanOrEqualToProc"))
 
@@ -67,7 +67,7 @@ offset.  Annotations are ignored.
 
 **Warning:** The behavior of this procedure is undefined for values `+inf`,
 `-inf`, and `nan`.
-See [FUSION-249](issue:FUSION-249).
+See [issue #64](https://github.com/ion-fusion/fusion-java/issues/64).
     '''
     (java_new "dev.ionfusion.fusion.FusionCompare$GreaterThanOrEqualToProc"))
 

@@ -15,12 +15,12 @@ pairs, there are zero-length sexps --- for example, the result of `(quote ())`
 A _proper sexp_ is one in which the tail of the final pair is a zero-length
 sexp (_not_ `null.sexp`).
 
-At present, pairs and sexps are immutable.  Issue [FUSION-102] covers mutable
+At present, pairs and sexps are immutable.  [Issue #87][] covers mutable
 sexps.
 
   [collection]:     fusion/collection.html
   [sequence]:       fusion/sequence.html
-  [FUSION-102]: issue:FUSION-102
+  [Issue #87]:      https://github.com/ion-fusion/fusion-java/issues/87
   '''
 
   (require "/fusion/private/sexp")

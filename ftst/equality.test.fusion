@@ -264,7 +264,9 @@ annotated variants of each value.
         (* 10  9223372036854775807 ))
       (sexp 19. 19. (+ 9 10.))
       (sexp 19.0 19.0 (+ 9.0 10.0))
-      (sexp 19.e0 19.e0 1.90e1)       // TODO FUSION-248 use arithmetic results
+      // TODO use float-arithmetic results
+      //  https://github.com/ion-fusion/fusion-java/issues/83
+      (sexp 19.e0 19.e0 1.90e1)
       (sexp (quote a::19))
       (sexp (quote a::19.))
       (sexp (quote a::92233720368547758070))

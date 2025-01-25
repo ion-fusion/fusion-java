@@ -97,7 +97,8 @@ final class ProvideForm
                                   SyntaxChecker check)
         throws FusionException
     {
-        // TODO FUSION-139 id.resolve works when the id has the ns in context
+        // TODO id.resolve works when the id has the ns in context
+        //  https://github.com/ion-fusion/fusion-java/issues/82
         // It doesn't work when the ns isn't in context because the
         // provided binding was macro-introduced.
 
@@ -149,10 +150,11 @@ final class ProvideForm
             // at the same time.
             for (NsDefinedBinding binding : moduleNamespace.getDefinedBindings())
             {
-                // TODO FUSION-329 the datum->syntax context should be the sexp
-                // form `(all_defined_out)` not just `all_defined_out` but
-                // we don't currently retain context on SyntaxSexp after
-                // it has been pushed down to children.
+                // TODO the datum->syntax context should be the sexp
+                //  form `(all_defined_out)` not just `all_defined_out` but
+                //  we don't currently retain context on SyntaxSexp after
+                //  it has been pushed down to children.
+                //  https://github.com/ion-fusion/fusion-java/issues/68
                 SyntaxSymbol localized = (SyntaxSymbol)
                     datumToSyntax(eval,
                                   binding.getName(),
@@ -165,7 +167,8 @@ final class ProvideForm
                     expanded.add(localized);
                 }
 
-                // TODO FUSION-136 handle rename-transformers per Racket
+                // TODO handle rename-transformers per Racket
+                //   https://github.com/ion-fusion/fusion-java/issues/73
             }
         }
         else if (b == globalState.myKernelRenameOutBinding)

@@ -201,7 +201,8 @@ For example:
            (proc_name (datum_to_syntax
                           (string_to_symbol
                             (string_append "_" (syntax_unwrap name_stx)))
-                          // TODO FUSION-329 Should use stx as context.
+                          // TODO Should use stx as context.
+                          //  https://github.com/ion-fusion/fusion-java/issues/68
                           // This isn't always correct since the name could
                           // be coming from elsewhere.
                           name_stx))]
