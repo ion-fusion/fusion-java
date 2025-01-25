@@ -33,7 +33,7 @@
 (expect_syntax_exn
   (lambda ('') true))
 
-// These expressions crashed due to FUSION-273:
+// Regression tests for an ancient defect:
 ((lambda (t) ((lambda () t))) 1)
 (let [(t 1)] ((lambda () t)))
 (let [(t 1)] (let_values [] t))

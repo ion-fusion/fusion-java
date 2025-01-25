@@ -239,7 +239,7 @@ public class ListTest
         testAppending("append_m", listMaker, iList);
     }
 
-    /** Trap for FUSION-362 */
+    /** Regression test */
     @Test
     public void testAppendingLazyList()
         throws Exception

@@ -1,11 +1,6 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-/*                       *** WARNING ***
- *
- * There are customer dependencies on this module!  See FUSION-333
- */
-
 (module check "/fusion"
 
   '''
@@ -21,8 +16,6 @@ For examples of these features in action, peruse
 These APIs are inspired by those of
 [RackUnit](http://docs.racket-lang.org/rackunit)
 by Noel Welsh and Ryan Culpepper.
-
-<!-- FUSION-185 This comment forces FusionDoc to stop the one-liner here. -->
 
 ## WARNING
 

@@ -267,7 +267,6 @@ abstract class SyntaxValue
     final SyntaxValue addOrRemoveMark(MarkWrap mark)
         throws FusionException
     {
-        // TODO FUSION-39 Optimize this. Perhaps remove a matching mark?
         // 2014-07-03 Only 32/906 (3.5%) of marks matched the first wrap.
         //            Eliminating those didn't increase that count.
         // 2016-08-17 I bet that's because the mark has usually been pushed.

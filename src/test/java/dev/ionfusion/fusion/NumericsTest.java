@@ -188,7 +188,7 @@ public class NumericsTest
     }
 
     /**
-     * FUSION-319 longs were getting truncated by
+     * Regression test; longs were getting truncated by
      * {@link FusionNumber#checkIntArgToJavaLong(Evaluator, Procedure, int, Object...)}.
      */
     @Test

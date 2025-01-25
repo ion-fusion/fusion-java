@@ -504,7 +504,8 @@
                         (add_m names name)
                         (add_m values value))
                       struct))]
-        // TODO FUSION-88 (check eq result struct)
+        // It returns the input struct, for some reason.
+        (check ident result struct)
         (let [(zipped (struct_zip names values))]
           (check === struct zipped))))))
 

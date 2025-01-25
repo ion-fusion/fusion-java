@@ -150,12 +150,6 @@ final class ModuleForm
 
 
         // Pass 1: locate definitions and install dummy bindings
-
-        // TODO FUSION-38 Imported names scope should be the whole module.
-        // Probably need to have the module-level wrap extended with the
-        // imports, so we don't have to backtrack and add more wraps to
-        // earlier forms.  Or maybe scan for the imports first?
-
         ArrayList<SyntaxSexp>  provideForms      = new ArrayList<>();
         ArrayList<SyntaxValue> otherForms        = new ArrayList<>();
         ArrayList<Boolean>     expandedFormFlags = new ArrayList<>();

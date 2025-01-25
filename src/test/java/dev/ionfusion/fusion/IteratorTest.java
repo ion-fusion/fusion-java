@@ -45,8 +45,7 @@ public class IteratorTest
         expectArityExn("(iterator_choose is_null)");
         expectArityExn("(iterator_choose is_null empty_iterator 1)");
 
-        // TODO FUSION-85 need to check type of the proc
-//      expectContractFailure("(iterator_choose 1 empty_iterator)");
+        expectContractExn("(iterator_choose 1 empty_iterator)");
         expectContractExn("(iterator_choose is_null [])");
     }
 
@@ -60,8 +59,7 @@ public class IteratorTest
 
         eval("(define plus1 (lambda (n) (+ 1 n)))");
 
-        // TODO FUSION-85 need to check type of the proc
-//      expectContractFailure("(iterator_map 1 empty_iterator)");
+        expectContractExn("(iterator_map 1 empty_iterator)");
         expectContractExn("(iterator_map plus1 [])");
     }
 
@@ -73,8 +71,7 @@ public class IteratorTest
         expectArityExn("(iterator_map_splicing value_iterator)");
         expectArityExn("(iterator_map_splicing value_iterator empty_iterator empty_iterator)");
 
-        // TODO FUSION-85 need to check type of the proc
-//      expectContractFailure("(iterator_map_splicing 1 empty_iterator)");
+        expectContractExn("(iterator_map_splicing 1 empty_iterator)");
         expectContractExn("(iterator_map_splicing value_iterator [])");
     }
 

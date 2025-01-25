@@ -1,12 +1,6 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-/*                       *** WARNING ***
- *
- * There may be customer dependencies on this module!  See FUSION-184
- */
-
-
 (module syntax '/fusion/private/kernel2'
 
   '''
