@@ -1,0 +1,390 @@
+// Copyright (c) 2014 Amazon.com, Inc. All rights reserved.
+
+(require
+  "/fusion/experimental/check"
+  "/fusioncontrib/regexp"
+  "/fusion/string")
+
+// regexp
+// (check = (jregexp "[123]") (jregexp "[123]"))
+// Note: regexps are not loosely equivalent with strings. It's not obvious at
+//       this point which makes more sense.
+(check_false (= (jregexp "[123]") "[123]"))
+(check_false (= (jregexp "[123]") null))
+// (check == (jregexp "[123]") (jregexp "[123]"))
+(check_false (== (jregexp "[123]") "[123]"))
+(check_false (== (jregexp "[123]") null))
+// (check === (jregexp "[123]") (jregexp "[123]"))
+(check_false (=== (jregexp "[123]") "[123]"))
+(check_false (=== (jregexp "[123]") null))
+(expect_argument_exn (jregexp "},{"))
+(expect_arity_exn (jregexp))
+(expect_argument_exn (jregexp null))
+
+// is_regexp
+(check_false (is_regexp 1))
+(check_false (is_regexp null))
+(check_false (is_regexp "string"))
+(check_false (is_regexp 1.23))
+(check_false (is_regexp 2014-02-02))
+(check_pred is_regexp (jregexp "foo"))
+(expect_arity_exn (is_regexp))
+(expect_arity_exn
+  (is_regexp
+    (jregexp "foo")
+    (jregexp "bar")))
+(expect_arity_exn (is_regexp 1 2))
+
+// jregexp_quote
+// Note: most regexp libraries will make some attempt at converting the content
+//       to an escaped form. Java punts, and uses \Q and \E to indicate literal
+//       sections. This is incompatible with some regexp implementations
+//       (specifically Ruby and Racket).
+(check_true (let [(x (jregexp_quote "[123]"))]
+              (or (=== x "\\[123\\]")
+                  (=== x "\\Q[123]\\E"))))
+(check_true (let [(x (jregexp_quote "foo"))]
+              (or (=== x "foo")
+                  (=== x "\\Qfoo\\E"))))
+(expect_arity_exn (jregexp_quote))
+(expect_arity_exn (jregexp_quote "foo" "bar"))
+
+// regexp_to_string
+(check === "foo"
+           (regexp_to_string (jregexp "foo")))
+(check === "[123]"
+           (regexp_to_string (jregexp "[123]")))
+(expect_argument_exn (regexp_to_string null))
+(expect_arity_exn (regexp_to_string))
+(expect_arity_exn
+  (regexp_to_string
+    (jregexp "[123]")
+    (jregexp "[456]")))
+(expect_arity_exn (regexp_to_string 1 2))
+
+// regexp_match
+(let
+  // The following test cases come from Racket documentation. They are not
+  // intended to be a comprehensive suite, rather a representative
+  // set.
+  //
+  // regexp_match tests are tuples in the form:
+  //
+  //    (<regexp string> <target> <match>)
+  [(tests (quote (
+            ("a|b" "cat" ["a"])
+            ("[at]" "cat" ["a"])
+            ("ca*[at]" "caaat" ["caaat"])
+            ("ca+[at]" "caaat" ["caaat"])
+            ("ca?t?" "ct" ["ct"])
+            ("ca*?[at]" "caaat" ["ca"])
+            ("ca{2}" "caaat" ["caa"])
+            ("ca{2,}t" "catcaat" ["caat"])
+            // ("ca{,2}t" "caaatcat" ["cat"]), // Java does not support 0-m match syntax
+            ("ca{1,2}t" "caaatcat" ["cat"])
+            ("(c*)(a*)" "caat" ["caa", "c", "aa"])
+            ("[^ca]" "caat" ["t"])
+            (".(.)." "cat" ["cat", "a"])
+            ("^a|^c" "cat" ["c"])
+            ("a$|t$" "cat" ["t"])
+            ("c(.)\\1t" "caat" ["caat", "a"])
+            (".\\b." "cat in hat" ["t "])
+            (".\\B." "cat in hat" ["ca"])
+            ("\\p{Ll}" "Cat" ["a"])
+            ("\\P{Ll}" "cat!" ["!"])
+            ("\\|" "c|t" ["|"])
+            ("[a-f]*" "cat" ["ca"])
+            ("[a-f\\d]*" "1cat" ["1ca"])
+            (" [\\w]" "cat hat" [" h"])
+            ("t[\\s]" "cat\nhat" ["t\n"])
+            // ("[[:lower:]]+" "Cat" ["at"]) // Java does not support [[:.*?:]] character classes
+            // ("[]]" "c]t[" ["]],"]) // Java does not recover from unclosed character sets
+            ("[-]" "c-t" ["-"])
+            // ("[]a[]+" "c[a]t" ["[a]"]) // Java does not like empty character sets
+            ("[a^]+" "ca^t" ["a^"])
+            (".a(?=p)" "cat nap" ["na"])
+            (".a(?!t)" "cat nap" ["na"])
+            ("(?<=n)a." "cat nap" ["ap"])
+            ("(?<!c)a." "cat nap" ["ap"])
+            ("(?i:a)[tp]" "cAT nAp" ["Ap"])
+            // in Racket, an optional group does not need a trailing colon (:)
+            // character. Java, Perl, and Ruby agree that this character is
+            // required (and Racket can handle either)
+
+            ("(?:(?<=c)a|b)+" "cabal" ["ab"])
+          )))]
+
+  (check_true
+    (every (lambda (test)
+      (let [(re (element test 0)),
+            (str (element test 1)),
+            (expected (element test 2))]
+        (=== expected (regexp_match (jregexp re) str))))
+      tests))
+)
+
+(check === ["a"]
+           (regexp_match (jregexp "a|b") "cat"))
+(check === ["ca", "a"]
+           (regexp_match (jregexp "c(a|b)") "cat"))
+(check === ["x4"]
+           (regexp_match (jregexp "x.") "12x4x6"))
+(check === null.list
+           (regexp_match (jregexp "y.") "12x4x6"))
+(check === ["x6"]
+           (regexp_match (jregexp "x.") "12x4x6" 3))
+(check === null.list
+           (regexp_match (jregexp "x.") "12x4x6" 3 4))
+(check === ["-12--345", "-345"]
+           (regexp_match (jregexp "(-[0-9]*)+") "a-12--345b"))
+// original string contains characters with code points > 8-bit and <= 16-bit
+//   "주혁"
+(check === ["주혁", "혁"]
+           (regexp_match (jregexp ".(.)") "주혁"))
+// original string contains characters with code points > 16-bit
+//   "🐶🐮"
+(check === ["🐶🐮", "🐮"]
+           (regexp_match (jregexp ".(.)") "🐶🐮"))
+
+(expect_arity_exn (regexp_match))
+(expect_arity_exn (regexp_match (jregexp ".") "foo" 1 2 3))
+(expect_arity_exn (regexp_match null null null null null))
+
+// regexp_match_g
+// Note: this return type differs from the Racket return type in that it
+//       always returns sequences of lists (much like regexp_match always
+//       returns a list of all match groups. No equivalent functionality
+//       to match-select or gap-select is provided.
+(check === (sexp ["x4"] ["x6"])
+           (regexp_match_g (jregexp "x.") "12x4x6"))
+(check === (quote ([""]
+                   [""]
+                   ["x"]
+                   [""]
+                   ["x"]
+                   [""]
+                   [""]))
+           (regexp_match_g (jregexp "x*") "12x4x6"))
+(check === (sexp ["x4", "4"] ["x6", "6"])
+           (regexp_match_g (jregexp "x(.)") "12x4x6"))
+(check === (quote null.sexp)
+           (regexp_match_g (jregexp "x.") "12x4x6" 3 4))
+(expect_arity_exn (regexp_match_g))
+(expect_arity_exn (regexp_match_g (jregexp ".") "foo" 1 2 3))
+(expect_arity_exn (regexp_match_g null null null null null))
+
+// regexp_match_positions
+(check === [(pair 2 4)]
+           (regexp_match_positions (jregexp "x.") "12x4x6"))
+(check === [(pair 4 6)]
+           (regexp_match_positions (jregexp "x.") "12x4x6" 3))
+(check === null.list
+           (regexp_match_positions (jregexp "x.") "12x4x6" 3 4))
+(check === [(pair 1 9), (pair 5 9)]
+           (regexp_match_positions (jregexp "(-[0-9]*)+") "a-12--345b"))
+(check === [(pair 0 2), (pair 1 2)]
+           (regexp_match_positions (jregexp ".(.)") "주혁"))
+(check === [(pair 0 2), (pair 1 2)]
+           (regexp_match_positions (jregexp ".(.)") "🐶🐮"))
+(expect_arity_exn (regexp_match_positions))
+(expect_arity_exn (regexp_match_positions (jregexp ".") "foo" 1 2 3))
+(expect_arity_exn (regexp_match_positions null null null null null))
+
+// regexp_match_positions_g
+(check === (sexp [(pair 2 4)]
+                 [(pair 4 6)])
+           (regexp_match_positions_g (jregexp "x.") "12x4x6"))
+(check === (sexp [(pair 2 4), (pair 3 4)]
+                 [(pair 4 6), (pair 5 6)])
+           (regexp_match_positions_g (jregexp "x(.)") "12x4x6"))
+(check === (quote null.sexp)
+           (regexp_match_positions_g (jregexp "x.") "12x4x6" 3 4))
+(check === (sexp [(pair 0 1), (pair 0 1)]
+                 [(pair 1 2), (pair 1 2)])
+           (regexp_match_positions_g (jregexp "(.)") "주혁"))
+(check === (sexp [(pair 0 1), (pair 0 1)]
+                 [(pair 1 2), (pair 1 2)])
+           (regexp_match_positions_g (jregexp "(.)") "🐶🐮"))
+(expect_arity_exn (regexp_match_positions_g))
+(expect_arity_exn (regexp_match_positions_g (jregexp ".") "foo" 1 2 3))
+(expect_arity_exn (regexp_match_positions_g null null null null null))
+
+// regexp_matches
+(check_true (regexp_matches (jregexp "a|b") "cat"))
+(check_true (regexp_matches (jregexp "c(a|b)") "cat"))
+(check_true (regexp_matches (jregexp "x.") "12x4x6"))
+(check_false (regexp_matches (jregexp "y.") "12x4x6"))
+(check_true (regexp_matches (jregexp "x.") "12x4x6" 3))
+(check_false (regexp_matches (jregexp "x.") "12x4x6" 3 4))
+(check_true (regexp_matches (jregexp "(-[0-9]*)+") "a-12--345b"))
+(expect_arity_exn (regexp_matches))
+(expect_arity_exn (regexp_matches (jregexp ".") "foo" 1 2 3))
+(expect_arity_exn (regexp_matches null null null null null))
+
+// regexp_matches_exact
+(check_false (regexp_matches_exact (jregexp "x.") "12x4x6"))
+(check_true (regexp_matches_exact (jregexp "1.*x.") "12x4x6"))
+(expect_arity_exn (regexp_matches_exact))
+(expect_arity_exn (regexp_matches_exact (jregexp ".") "foo" "bar"))
+(expect_arity_exn (regexp_matches_exact null null null))
+
+// regexp_split
+(check === (sexp "12" "34")
+           (regexp_split (jregexp " +") "12  34"))
+// Note: regexp_split diverges from Racket when the match character matches all
+//       characters in the input. Racket would emit an empty string for each
+//       match boundary, but Java, Perl, and Ruby all treat consecutive matching
+//       split characters as a single split. Since Fusion will generally be
+//       defined in terms of one of these languages, inheriting the host
+//       behavior reduces the cost of implementation.
+(check === (sexp)
+           (regexp_split (jregexp ".") "12  34"))
+// Note: like the above test Racket's behavior differs from Java, Perl, and
+//       Ruby for the next two tests. Racket matches the end of the string,
+//       emitting one additional empty string at the end of these collections.
+//
+//       Racket also emits a leading empty string for these cases, which is
+//       different from Perl, Ruby, and Java 8+ which do not treat the start
+//       anchor and the first string as splittable. (Java 7 does emit a
+//       leading empty string but it's EOL and not expected to be used at
+//       runtime anymore, so these tests cover the Java 8 behavior, and this
+//       package builds for Java 8+).
+(check === (quote ("1" "2" " " " " "3" "4"))
+           (regexp_split (jregexp "") "12  34"))
+(check === (quote ("1" "2" "" "3" "4"))
+           (regexp_split (jregexp " *") "12  34"))
+(check === (quote ("12" ", " "13" " " "and" " " "14" "."))
+           (regexp_split (jregexp "\\b") "12, 13 and 14."))
+(check === (quote (""))
+           (regexp_split (jregexp " +") ""))
+// Note: hohle@ thinks this is funny behavior, but he's also never wanted to
+//       perform a regexp split in the middle of a string. This is consistent
+//       with Racket.
+(check === (quote ("2" "3" "4" "5"))
+           (regexp_split (jregexp ",") "1,2,3,4,5" 2))
+(check === (quote ("2"))
+           (regexp_split (jregexp ",") "1,2,3,4,5" 2 4))
+(expect_arity_exn (regexp_split))
+(expect_arity_exn (regexp_split (jregexp ".") "foo" 1 2 4))
+(expect_arity_exn (regexp_split null null null null null))
+
+// regexp_replace
+// Note: Java and Perl use dollar signs ($) to identify capture groups in
+//       replacements, while Ruby and Racket use escaped numbers. Eventually
+//       Fusion should be biased in one way or another, but for the time
+//       being, dollar signs will be used.
+(check === "su casa"
+           (regexp_replace (jregexp "mi") "mi casa" "su"))
+(check === "My Casa"
+           (regexp_replace (jregexp "([Mm])i ([a-zA-Z]*)") "Mi Casa" "$1y $2"))
+(check === "my cerveza Mi Mi Mi"
+           (regexp_replace
+             (jregexp "([Mm])i ([a-zA-Z]*)")
+             "mi cerveza Mi Mi Mi"
+             "$1y $2"))
+(check === "12\\4x6"
+           (regexp_replace (jregexp "x") "12x4x6" "\\\\"))
+(check === "MI casa"
+           (regexp_replace (jregexp "mi") "mi casa" (lambda (s) (string_to_upper s))))
+(check ===  "MI casa"
+           (regexp_replace (jregexp "mi") "mi casa" string_to_upper))
+// Note: all captures can be bound to variables. They are bound in the
+//       order of the capture group. The first argument to the proc is
+//       always the entire match.
+(check === "bar foo"
+           (regexp_replace
+             (jregexp "^(\\w*)\\s*(\\w*)$")
+             "foo bar"
+             (lambda (ignored first second)
+               (string_append second " " first))))
+(expect_argument_exn (regexp_replace (jregexp "") "foo" null))
+(check === "bar"
+           (regexp_replace (jregexp "foo") "bar" "baz"))
+(expect_arity_exn (regexp_replace))
+(expect_arity_exn (regexp_replace (jregexp "foo") "bar" "baz" "car"))
+
+// regexp_replace_g
+(check === "my cerveza My Mi Mi"
+           (regexp_replace_g (jregexp "([Mm])i ([a-zA-Z]*)") "mi cerveza Mi Mi Mi" "$1y $2"))
+(check === "myCERVEZA myMI Mi"
+           (regexp_replace_g
+             (jregexp "([Mm])i ([a-zA-Z]*)")
+             "mi cerveza Mi Mi Mi"
+             (lambda (all one two)
+               (string_append (string_to_lower one) "y"
+                              (string_to_upper two)))))
+(check === "hellO WORLD"
+           (regexp_replace_g (jregexp "\\w") "hello world" string_to_upper 4))
+(check === "HELLO world"
+           (regexp_replace_g (jregexp "\\w") "hello world" string_to_upper 0 5))
+(check === "12\\4\\6"
+           (regexp_replace_g (jregexp "x") "12x4x6" "\\\\"))
+(expect_argument_exn (regexp_replace_g (jregexp "") "foo" null))
+(check === "bar"
+           (regexp_replace_g (jregexp "foo") "bar" "baz"))
+(expect_arity_exn (regexp_replace_g))
+(expect_arity_exn (regexp_replace_g (jregexp "foo") "bar" "baz" 0 1 null))
+
+// regexp_replaces
+(check === "is_zero_or_more"
+           (regexp_replaces
+             "zero-or-more?"
+             (sexp (pair (jregexp "-") "_")
+                   (pair (jregexp "(.*)\\?$") "is_$1"))))
+(check === "is_zero_or_more"
+           (regexp_replaces
+             "zero-or-more?"
+             [[(jregexp "-"), "_"],
+              [(jregexp "(.*)\\?$"), "is_$1"]]))
+(check === "zooroo-oor-mooroo?"
+           (regexp_replaces
+             "zero-or-more?"
+             (sexp (pair (jregexp "e") "o")
+                   (pair (jregexp "o") "oo"))))
+(check === "zooroo-oor-mooroo?"
+           (regexp_replaces
+             "zero-or-more?"
+             [[(jregexp "e"), "o"],
+              [(jregexp "o"), "oo"]]))
+(check === "zOrO-Or-mOrO?"
+           (regexp_replaces
+             "zero-or-more?"
+             (sexp (pair (jregexp "e") "o")
+                   (pair (jregexp "o") string_to_upper))))
+(check === "zOrO-Or-mOrO?"
+           (regexp_replaces
+             "zero-or-more?"
+             [[(jregexp "e"), "o"],
+              [(jregexp "o"), string_to_upper]]))
+(check === "foo"
+           (regexp_replaces "foo" []))
+(check === "foo"
+           (regexp_replaces "foo" (sexp)))
+
+// TODO: the (lambda (args...+) body...) form does not do automatic arity
+//       checking and regex_replaces is not doing arity checking manually.
+//       one of those should change ;-)
+//(expect_arity_exn (regexp_replaces))
+//(expect_arity_exn (regexp_replaces (jregex ".")))
+//(expect_arity_exn (regexp_replaces (jregex ".") "foo"))
+//(expect_arity_exn (regexp_replaces (jregex ".") "foo") (sexp) null)
+
+// regexp_replace_quote
+(check === "$0 Lunch!"
+           (regexp_replace (jregexp "Free") "Free Lunch!" (regexp_replace_quote "$0")))
+(check === "End of the String$"
+           (regexp_replace (jregexp "$") "End of the String" (regexp_replace_quote "$")))
+(check === "a \\\\backslash"
+           (regexp_replace_quote "a \\backslash"))
+(check === "a backslash: \\\\"
+           (regexp_replace_quote "a backslash: \\"))
+(check === "a safe string"
+           (regexp_replace_quote "a safe string"))
+(expect_argument_exn (regexp_replace_quote null))
+(expect_argument_exn (regexp_replace_quote 1))
+(expect_argument_exn (regexp_replace_quote true))
+(expect_argument_exn (regexp_replace_quote {}))
+(expect_argument_exn (regexp_replace_quote (sexp)))
+(expect_arity_exn (regexp_replace_quote))
+(expect_arity_exn (regexp_replace_quote "foo" "bar"))
+(expect_arity_exn (regexp_replace_quote 1 2))

@@ -1,0 +1,405 @@
+// Copyright (c) 2014 Amazon.com, Inc. All rights reserved.
+
+(module regexp "/fusion"
+
+  '''
+This module contains procedures for creating regular expression values,
+matching strings against regular expressions, splitting strings, and creating
+new strings by replacing content matched by regular expression.
+
+> Some people, when confronted with a problem, think "I know, I'll use
+> regular expressions." Now they have two problems.
+>
+— JWZ
+
+Here's some things you might want to do with regular expressions:
+
+        (require "/fusioncontrib/regexp")
+
+        // find a single match in a string
+        (regexp_match (jregexp ".a.") "foobarbaz")        ==> ("bar")
+        (regexp_match (jregexp ".(a.)") "foobarbaz")      ==> ("bar" "ar")
+        (regexp_match (jregexp "(.(a.))") "foobarbaz")    ==> ("bar" "bar" "ar")
+
+        // find all matches in a string
+        (regexp_match_g (jregexp "(.(a.))") "foobarbaz")  ==>
+            (["bar", "bar", "ar"] ["baz", "baz", "az"])
+
+        // determine whether a string matches a pattern
+        (regexp_matches (jregexp "(.(a.))") "foobarbaz")  ==> true
+
+        // or wether the entire string matches the pattern
+        (regexp_matches_exactly (jregexp "(.(a.))")
+                                "foobarbaz")              ==> false
+        (regexp_matches_exactly (jregexp "(.(..)*)")
+                                "foobarbaz")              ==> true
+
+        // create a new string with modified contents
+        // based on a match
+        (regexp_replace (jregexp "(.)a(.)")
+                        "foobarbaz"
+                        "$1u$2")                          ==> "fooburbaz"
+        // create a new string with all matching
+        // changed
+        (regexp_replace_g (jregexp "(.)a(.)")
+                          "foobarbaz"
+                          "$1u$2")                        ==> "fooburbuz"
+
+        // find a match, apply a transformation to that
+        // match, and create a new string with the
+        // match replaced with transformed value
+        (regexp_replace (jregexp ".a.")
+                        "foobarbaz"
+                        string_to_upper)                  ==> "fooBARbaz"
+
+        // or apply to all matches
+        (regexp_replace_g (jregexp ".a.")
+                          "foobarbaz"
+                          string_to_upper)                ==> "fooBARBAZ"
+
+Conventions
+===========
+
+`regexp` procedures operates on Unicode strings. Keep this in mind when
+constructing a regular expression which might match a
+portion of a multi-byte Unicode character. You may be able to write an
+expression which matches against partial values of a surrogate pair, however,
+the behavior of operations on such expressions is undefined. Any positions
+accepted or returned by procedures in this module refer to code point positions
+and not UTF-16 offsets.
+
+All regular expressions must be compiled as valid patterns before use. See
+_Construction_ for more information on constructing
+regular expression values.
+
+`/fusioncontrib/regexp` closely follows the design of
+[Racket's Regexp](http://docs.racket-lang.org/reference/regexp.html) module. Any
+undocumented behavior which differs from Racket's behavior should
+be considered a bug and reported or patched.
+
+Procedures which end in `_g` operate globally on the input string. This is
+similar to the `g` option in many regular expression libraries. Generally this
+means they behave the same as their non-`_g`'d counterparts and take the same
+parameters, but return a `sexp` of results instead of a single result.
+
+Construction
+============
+
+The `regexp` module does not define its own syntax for regular expressions at
+this time. Instead, it relies on the underlying Fusion implementation to supply
+a regular expression library native to its own runtime. In this initial
+implementation that means regular expression syntax and capabilities are tied
+closely to the features provided by the Java standard library.
+
+The [`jregexp`](./fusioncontrib/regexp.html#jregexp) procedure is used to create
+regular expression values bound to Java's
+[Pattern class](http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html).
+Consult Pattern's documentation for information on supported regular expression
+syntax and features. As mentioned above, unlike most operations on Java regular
+expressions, however, the `regexp` module always operates on full Unicode code
+points and not UTF-16 `char` data.
+
+All regular expressions must be compiled as valid patterns before use. This is
+accomplished by passing a `string` to `jregexp`. `jregexp` returns a compiled
+regular expression which can then be used to match (using any of the
+`regexp_match…` forms), split (using
+[`regexp_split`](./fusioncontrib/regexp.html#regexp_split)), or replace (using
+any of the `regexp_replace…` forms). Future or alternate implementations of this
+module may provide regular expression value constructors bound to other regular
+expression libraries or syntaxes, however, outside of construction, all other
+`regexp…` procedures should be expected to operate equivalently, on any Fusion
+implementation.
+
+Matching
+========
+
+Matching procedures provide methods of testing string content and extracting
+data from strings.
+
+[`regexp_matches`](./fusioncontrib/regexp.html#regexp_matches) and
+[`regexp_matches_exact`](./fusioncontrib/regexp.html#regexp_matches_exact) can
+be used to determine whether a regular expression pattern is found within part
+or all of a string, respectively. `regexp_matches` can also test a range within
+a string. Because `regexp_matches_exact` implies the entire string matches and
+therefore does not take positional arguments.
+
+`regexp_match` finds substrings in a string which match a supplied regular
+expression value. It returns a `list` of capture groups of the first match
+found, otherwise, returns a `null.list`. Optionally, positional arguments can be
+used to limit the tested range. The entire match is available in match group
+`0`. Named match groups are not supported.
+
+[`regexp_match_g`](./fusioncontrib/regexp.html#regexp_match_g) operates like
+`regexp_match`, but finds all matches in a string, returning `sexp` of `list`s
+of all match groups.
+
+[`regexp_match_positions`](./fusioncontrib/regexp.html#regexp_match_positions)
+and [`regexp_match_positions_g`](./fusioncontrib/regexp.html#regexp_match_positions_g)
+operate similarly to `regexp_match` and `regexp_match_g` respectively, but
+return ranges within the input string as `pair`s of `int`s.
+
+Splitting
+=========
+
+[`regexp_split`](./fusioncontrib/regexp.html#regexp_split) is used to create a
+sequence of substrings from an input string.
+
+Substitution
+============
+
+New strings can be constructed by replacing regular expression matches with
+substitution strings or the result of a procedure.
+
+[`regexp_replace`](./fusioncontrib/regexp.html#regexp_replace) replaces the
+first match in an input string with a replacement string or the result of a
+procedure. Replacement strings may contain placeholders for any match groups
+captured by the regular expression. Placedholders are specified as character
+sequences beginning with a `$` and are followed by the group number.
+
+In place of a replacement string a procedure may be provided which is passed all
+match groups as arguments to the procedure. This procedure must return a string
+which will be used as the replacement text. This string wil lbe used verbatim
+(no capture group markers will be used).
+
+[`regexp_replace_g`](./fusioncontrib/regexp.html#regexp_replace_g) provides the
+same functionality as `regexp_replace` globally throughout a string.
+
+[`regexp_replaces`](./fusioncontrib/regexp.html#regexp_replaces) takes a
+sequence of pairs of expressions and replacements and applies them to the string
+in order.
+
+There may be cases where your string contains characters which may not be safe
+to use in a replacement (or you don't know whether or not your string contains
+such characters). You can use
+[`regexp_replace_quote`](./fusioncontrib/regexp.html#regexp_replace_quote) to
+ensure that a string is safe to be used in a replacement, and when used as
+replacement text will appear verbatim in the created string.
+  '''
+
+  (require
+    "/fusion/collection"
+    "/fusion/experimental/defines"
+    "/fusion/experimental/syntax"
+    "/fusion/private/control"
+    "/fusion/sequence"
+    "/fusion/unsafe/sexp")
+
+  //
+  // Regexp Construction
+  //
+
+  (defpub_j jregexp
+    '''
+    (jregexp str) ==> regexp
+
+Takes a `string` representation of a regular expression and compiles it into a
+regexp value. If `str` is not a valid regular expression, an exception is
+thrown.
+
+The syntax of Regular Expression accepted by `jregexp` are closely bound to
+[the Pattern class](http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html).
+As in Java, the matching behavior of the regular expression may be changed
+with an empty, non-capturing group which specifies the flags to enable or
+disable, or with a non-capturing group which contains an expression:
+
+    (jregexp "(?i)foo")  // matches "foo", "xFOOy", etc.
+    (jregexp "(?i:foo)") // same as above
+    '''
+    "com.amazon.fusion.FusionRegExp$RegExpProc")
+
+  (defpub_j is_regexp
+    '''
+    (is_regexp var) ==> boolean
+
+Determines whether a `value` is a regexp, returning `true` or `false`.
+    '''
+    "com.amazon.fusion.FusionRegExp$IsRegExpProc")
+
+  (defpub_j jregexp_quote
+    '''
+    (jregexp_quote regexp) ==> string
+
+Takes a string which may contain characters with special meaning in a regular
+expression, and escapes all characters so that the string is safe to use
+within a regular expression.
+
+    (jregexp_quote "foo")     ==> "foo"
+    (jregexp_quote "([\\n])") ==> "\\(\\[\\\\n\\]\\)\"
+    '''
+    "com.amazon.fusion.FusionRegExp$QuoteProc")
+
+  (defpub_j regexp_to_string
+    '''
+    (regexp_to_string regexp) ==> string
+
+Takes a regexp and returns its string equivalent pattern.
+
+    (regexp_to_string (jregexp "foo\"))     ==> "foo"
+    (regexp_to_string (jregexp "([\\n])")) ==> "([\\n])"
+    '''
+    "com.amazon.fusion.FusionRegExp$ToStringProc")
+
+  //
+  // Regexp Matching
+  //
+
+  (defpub_j regexp_match
+    '''
+    (regexp_match regexp string [start_pos [end_pos]]) ==> match/nil
+
+Attempts to match the regexp against a string returning string match for each
+match group or a `null.list` if no matches were found.
+    '''
+    "com.amazon.fusion.FusionRegExp$MatchProc")
+
+  (defpub_j regexp_match_g
+    '''
+    (regexp_match_g regexp str [start_pos [end_pos]]) ==> seq. of match/nil
+
+Like [`regexp_match`](./fusioncontrib/regexp.html#regexp_match), but finds all
+matches `regexp` matches in `str`, returning a sequence of sequences of match
+groups or a `null.sexp` if no matches were found. If `start_pos` and `end_pos`
+are specified, only the characters between those positions will be considered.
+    '''
+    "com.amazon.fusion.FusionRegExp$MatchGlobalProc")
+
+  (defpub_j regexp_match_positions
+    '''
+    (regexp_match_positions regexp str [start_pos [end_pos]]) ==> match_pos/nil
+
+Attempts to match the regexp against a string returning pairs of start and
+end positions for each match group or `null.list` if no matches were found.
+The end position returned is exclusive. If `start_pos` and `end_pos` are
+specified, only the characters (code points) between those positions will be
+considered.
+    '''
+    "com.amazon.fusion.FusionRegExp$MatchPositionsProc")
+
+  (defpub_j regexp_match_positions_g
+    '''
+    (regexp match_positions_g regexp str [start_pos [end_pos]]) ==> seq. of match_pos/nil
+
+Like [`regexp_match_positions`](./fusioncontrib/regexp.html#regexp_match_positions),
+but finds all matches `regexp` matches in `str`, returning a sequence of
+sequences of pairs of start and end positions for each match group. The end
+position is exclusive. If `start_pos` and `end_pos` are specified, only the
+characters between those positions will be considered.
+    '''
+    "com.amazon.fusion.FusionRegExp$MatchPositionsGlobalProc")
+
+  (defpub_j regexp_matches
+    '''
+    (regexp_matches regexp str [start_pos [end_pos]]) ==> boolean
+
+Like [`regexp_match`](./fusioncontrib/regexp.html#regexp_match), except it
+returns `true` if a match is found or `false` otherwise.
+    '''
+    "com.amazon.fusion.FusionRegExp$IsMatchProc")
+
+  (defpub_j regexp_matches_exact
+    '''
+    (regexp_matches_exact regexp str) ==> boolean
+
+Like [`regexp_is_match`](./fusioncontrib/regexp.html#regexp_is_match), except it
+only returns `true` if `str` matches in its entirety. Returns`false` otherwise.
+    '''
+    "com.amazon.fusion.FusionRegExp$IsMatchExactProc")
+
+  //
+  // Regexp Splitting
+  //
+
+  (defpub_j regexp_split
+    '''
+    (regexp_split regexp str [start_pos [end_pos]]) ==> seq. of string
+
+Splits `str` based on the supplied regexp.
+    '''
+    "com.amazon.fusion.FusionRegExp$SplitProc")
+
+  //
+  // Regexp Substitution
+  //
+
+  (defpub_j regexp_replace
+    '''
+    (regexp_replace regexp input insert) ==> string
+
+Performs a match using `regexp` on `input`, replacing the first matching
+occurance with `insert`. `insert` may either be a string or a `procedure`.
+If `insert` is a procedure, all match groups will be passed as arguments, and
+the result of the expression will be used as the replacement `string`.
+    '''
+    "com.amazon.fusion.FusionRegExp$ReplaceProc")
+
+  (defpub_j regexp_replace_g
+    '''
+    (regexp_replace_g regexp input insert) ==> string
+
+Like [`regexp_replace`](regexp_replace], but replaces all of the matching
+occurances with `insert`.
+    '''
+    "com.amazon.fusion.FusionRegExp$ReplaceGlobalProc")
+
+  (define __unsafe_rest
+    '''
+    (__unsafe_rest [0, 1, 2, 3])   ==> [1, 2, 3]
+    (__unsafe_rest (sexp 0 1 2 3)) ==> (sexp 1 2 3)
+
+Returns every element but the first from a sequence. If the sequence is a `sexp`
+this operation is done in constant time and is equivalent to `tail`. If the
+sequence is a list, a copy is made. The incoming sequence must have at least
+one element.
+    '''
+    (lambda (seq)
+      (if (is_sexp seq)
+        (tail seq)
+        (subseq seq 1 (size seq)))))
+
+  (define __unsafe_seq_tail
+    '''
+    (__unsafe_seq_tail [0, 1])     ==> 1
+    (__unsafe_seq_tail (pair 0 1)) ==> 1
+
+When dealing with sequences which could be either a `pair` or a `list`, `elt` or
+`element` won't grab the second element in a pair, so it needs to be checked
+explicitly. `__unsafe_seq_tail` will return the second element in either a
+`pair` or `list`.
+    '''
+    (lambda (seq)
+      (if (is_pair seq)
+        (tail seq)
+        (elt seq 1))))
+
+  (provide regexp_replaces)
+  (define regexp_replaces
+    '''
+    (regexp_replaces input (sexp (pair re str)...)) ==> string
+    (regexp_replaces input [[re, str]...]) ==> string
+
+Performs multiple [`regexp_replace`](./fusioncontrib/regexp.html#regexp_replace)
+operations on `input` based on a collection of pairs containing a regexp as the
+first element and the replacement operation as the second element.
+
+The modified input is passed along to each subsequent replacement. Like
+`regexp_replace`, a `proc` can be passed as the second value in the replacement
+pair.
+    '''
+    (lambda (input replacements)
+      (if (is_empty replacements)
+        input
+        (lets [(replacement (first replacements)),
+               (remaining (__unsafe_rest replacements)),
+               (re (elt replacement 0)),
+               (str (__unsafe_seq_tail replacement))]
+            (regexp_replaces (regexp_replace_g re input str) remaining)))))
+
+  (defpub_j regexp_replace_quote
+    '''
+    (regexp_replace_quote str) ==> string
+
+Returns a `string` which can be safely used as a replacement in
+[`regexp_replace`](./fusioncontrib/regexp.html#regexp_replace) without any replacements.
+    '''
+    "com.amazon.fusion.FusionRegExp$ReplaceQuoteProc")
+)
