@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Copyright Ion Fusion contributors. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
 set -o errexit  # Exit if any statement returns a non-true return value.
 set -o nounset  # Exit if any uninitialized variable is used.
 set -o pipefail # Exit if commands fail as part of a pipeline.
