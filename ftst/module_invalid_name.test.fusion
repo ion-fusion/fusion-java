@@ -1,0 +1,14 @@
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(require "/fusion/experimental/check")
+
+
+// Not a symbol
+(expect_syntax_exn (module null  "/fusion" "body"))
+(expect_syntax_exn (module 12    "/fusion" "body"))
+
+// Symbol with invalid content
+(expect_syntax_exn (module null.symbol "/fusion" "body"))
+(expect_syntax_exn (module ''          "/fusion" "body"))
+(expect_syntax_exn (module $name       "/fusion" "body"))

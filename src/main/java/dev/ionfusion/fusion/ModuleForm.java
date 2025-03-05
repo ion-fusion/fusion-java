@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion;
 
+import static com.amazon.ion.util.IonTextUtils.printQuotedSymbol;
 import static dev.ionfusion.fusion.BindingDoc.COLLECT_DOCS_MARK;
 import static dev.ionfusion.fusion.FusionSexp.isPair;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
@@ -14,8 +15,9 @@ import static dev.ionfusion.fusion.FusionSyntax.unsafeSyntaxUnwrap;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.GlobalState.PROVIDE;
 import static dev.ionfusion.fusion.ModuleIdentity.isValidAbsoluteModulePath;
+import static dev.ionfusion.fusion.ModuleIdentity.isValidModuleName;
 import static dev.ionfusion.fusion.ModuleIdentity.isValidModulePath;
-import static com.amazon.ion.util.IonTextUtils.printQuotedSymbol;
+
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.ModuleNamespace.ProvidedBinding;
 import java.util.ArrayList;
@@ -70,16 +72,13 @@ final class ModuleForm
             throw check.failure("Malformed module declaration");
         }
 
-        SyntaxSymbol moduleNameSymbol =
-            check.requiredIdentifier("module name", 1);
-        ModuleIdentity.validateLocalName(moduleNameSymbol);
-
         ModuleRegistry registry = eval.findCurrentNamespace().getRegistry();
 
         ModuleIdentity id;
         try
         {
-            id = determineIdentity(eval, envOutsideModule, moduleNameSymbol);
+            SyntaxSymbol name = check.requiredIdentifier("module name", 1);
+            id = determineIdentity(eval, envOutsideModule, name);
         }
         catch (FusionException e)
         {
@@ -440,6 +439,13 @@ final class ModuleForm
                                              SyntaxSymbol moduleNameSymbol)
         throws FusionException
     {
+        if (! isValidModuleName(moduleNameSymbol.stringValue()))
+        {
+            throw new SyntaxException("declared module name",
+                                      "Expected a valid module name",
+                                      moduleNameSymbol);
+        }
+
         ModuleIdentity id;
         String current = myCurrentModuleDeclareName.asString(eval);
         if (current != null)
@@ -454,7 +460,7 @@ final class ModuleForm
             assert outsideNs == eval.findCurrentNamespace();
 
             String declaredName = moduleNameSymbol.stringValue();
-            id = ModuleIdentity.forLocalName(outsideNs, declaredName);
+            id = ModuleIdentity.forChild(outsideNs.getModuleId(), declaredName);
         }
         return id;
     }

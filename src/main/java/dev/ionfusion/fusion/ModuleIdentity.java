@@ -22,12 +22,6 @@ class ModuleIdentity
     static final String TOP_LEVEL_MODULE_PREFIX =
         "/fusion/private/toplevel/";
 
-    static final String LOCAL_NAME_EXPECTATION =
-        "Expected an Ion identifier";
-
-    static final String BUILTIN_NAME_EXPECTATION =
-        "Expected an absolute module path";
-
     /**
      * Access to this map must be synchronized on it!
      */
@@ -49,6 +43,17 @@ class ModuleIdentity
     private static final Pattern PATH_PATTERN =
         Pattern.compile("(/(" + NAME_PATTERN + "))+");
 
+
+    /**
+     * Checks whether a string can be used as a module name.
+     * <p>
+     * A valid module name starts with an ASCII letter, followed by zero or
+     * more letters, digits, and underscores.
+     *
+     * @param name may be null.
+     *
+     * @return true iff the string is a valid module name.
+     */
     static boolean isValidModuleName(String name)
     {
         return name != null && NAME_PATTERN.matcher(name).matches();
@@ -62,22 +67,6 @@ class ModuleIdentity
     static boolean isValidModulePath(String path)
     {
         return isValidModuleName(path) || isValidAbsoluteModulePath(path);
-    }
-
-    static boolean isValidLocalName(String name)
-    {
-        return isValidModuleName(name);
-    }
-
-    static void validateLocalName(SyntaxSymbol name)
-        throws FusionException
-    {
-        String text = name.stringValue();
-        if (! isValidLocalName(text))
-        {
-            throw new SyntaxException("local module name",
-                                      LOCAL_NAME_EXPECTATION, name);
-        }
     }
 
 
@@ -94,19 +83,6 @@ class ModuleIdentity
         }
     }
 
-
-    /**
-     * @param name must be a valid local module name (not a general path).
-     * @return not null.
-     *
-     * @see #isValidLocalName(String)
-     */
-    static ModuleIdentity forLocalName(Namespace ns, String name)
-    {
-        assert isValidLocalName(name) : name;
-        String path = ns.getModuleId().absolutePath() + '/' + name;
-        return doIntern(path);
-    }
 
     /**
      * @param path must be an absolute module path.
@@ -130,7 +106,7 @@ class ModuleIdentity
      */
     static ModuleIdentity forChild(ModuleIdentity parent, String name)
     {
-        assert isValidLocalName(name);
+        assert isValidModuleName(name);
         String path = (parent != null
                            ? parent.absolutePath() + '/' + name
                            : '/' + name);
@@ -140,14 +116,15 @@ class ModuleIdentity
 
     /**
      * @param baseModule must not be null if the path is relative.
-     * @param path may be absolute or relative.
+     * @param path must be a valid absolute or relative module path.
      */
     static ModuleIdentity forPath(ModuleIdentity baseModule, String path)
     {
         if (! isValidAbsoluteModulePath(path))
         {
-            // Relative path
-            assert isValidLocalName(path);  // For now...
+            // Relative path; currently only a simple name, but eventually
+            // things like "../uncle"
+            assert isValidModuleName(path);
             String basePath = baseModule.relativeBasePath();
             path = basePath + path;
         }
