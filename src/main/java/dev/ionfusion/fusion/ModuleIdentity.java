@@ -133,24 +133,6 @@ class ModuleIdentity
 
 
     /**
-     * WORKAROUND for not being able to put ModuleIdentity as the value of
-     * current_module_declare_name or as a syntax property on `module` forms.
-     *
-     * @param path must be the result of {@link #absolutePath()}.
-     * @return not null.
-     */
-    static ModuleIdentity reIntern(String path)
-    {
-        synchronized (ourInternedIdentities)
-        {
-            ModuleIdentity interned = ourInternedIdentities.get(path);
-            assert interned != null;
-            return interned;
-        }
-    }
-
-
-    /**
      * Creates a <em>non-interned</em> identity for a top-level namespace.
      *
      * @return a fresh, non-interned identity.

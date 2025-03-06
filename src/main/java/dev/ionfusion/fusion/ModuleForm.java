@@ -447,10 +447,10 @@ final class ModuleForm
         }
 
         ModuleIdentity id;
-        String current = myCurrentModuleDeclareName.asString(eval);
-        if (current != null)
+        Object current = myCurrentModuleDeclareName.currentValue(eval);
+        if (current instanceof ModuleIdentity)
         {
-            id = ModuleIdentity.reIntern(current);
+            id = (ModuleIdentity) current;
         }
         else
         {

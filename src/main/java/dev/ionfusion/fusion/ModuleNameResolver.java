@@ -3,14 +3,14 @@
 
 package dev.ionfusion.fusion;
 
+import static com.amazon.ion.util.IonTextUtils.printString;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
 import static dev.ionfusion.fusion.FusionSexp.unsafeSexpToJavaList;
-import static dev.ionfusion.fusion.FusionString.makeString;
 import static dev.ionfusion.fusion.FusionText.isText;
 import static dev.ionfusion.fusion.FusionText.unsafeTextToJavaString;
 import static dev.ionfusion.fusion.ModuleIdentity.isValidModulePath;
-import static com.amazon.ion.util.IonTextUtils.printString;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -282,12 +282,10 @@ final class ModuleNameResolver
             {
                 checkForCycles(eval, id);
 
-                Object idString = makeString(eval, id.absolutePath());
-
                 Evaluator loadEval =
                     eval.markedContinuation(new Object[]{ myCurrentModuleDeclareName,
                                                           MODULE_LOADING_MARK },
-                                            new Object[]{ idString, id });
+                                            new Object[]{ id, id });
                 myLoadHandler.loadModule(loadEval, id, loc);
                 // Evaluation of 'module' declares it, but doesn't instantiate.
                 // It also calls-back to registerDeclaredModule().
