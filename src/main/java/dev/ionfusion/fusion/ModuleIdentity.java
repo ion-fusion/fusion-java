@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 public class ModuleIdentity
     implements Comparable<ModuleIdentity>
 {
-    static final String TOP_LEVEL_MODULE_PREFIX =
+    private static final String TOP_LEVEL_MODULE_PREFIX =
         "/fusion/private/toplevel/";
 
     /**
@@ -184,6 +184,16 @@ public class ModuleIdentity
 
         return new ModuleIdentity(path)
         {
+            /**
+             * Inside a top-level, bare module names denote "children" of the
+             * synthetic top-level module, not siblings of the current module
+             * as is the default at module-level.
+             * The latter is arguably a mistake; see #166.
+             * <p>
+             * If we can't change that, we could eliminate the difference by
+             * adding "/$synthetic" (eg) to these paths so bare-name can
+             * resolve as siblings everywhere.
+             */
             @Override
             String relativeBasePath()
             {
@@ -245,6 +255,11 @@ public class ModuleIdentity
      */
     String relativeBasePath()
     {
+        // TODO https://github.com/ion-fusion/fusion-java/issues/166
+        //  Starting a relative path at the parent module will result in
+        //  future inconsistency referencing nested modules, compared to
+        //  referencing modules declared at top-level.
+
         String path = myPath;
         int slashIndex = path.lastIndexOf('/');
         assert slashIndex >= 0;

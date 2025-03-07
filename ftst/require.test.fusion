@@ -25,7 +25,7 @@
 (require M1 M2)
 (check === 2 one)
 
-(expect_syntax_exn
+(expect_syntax_exn   // Ambiguous binding of `one`
   (module Fail "/fusion"
     (require M1 M2)))
 
