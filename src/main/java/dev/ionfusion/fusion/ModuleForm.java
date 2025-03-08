@@ -56,8 +56,9 @@ final class ModuleForm
                        SyntaxSexp source)
         throws FusionException
     {
-        final Evaluator   eval    = expander.getEvaluator();
-        final GlobalState globals = eval.getGlobalState();
+        final Evaluator      eval     = expander.getEvaluator();
+        final GlobalState    globals  = eval.getGlobalState();
+        final ModuleRegistry registry = eval.findCurrentNamespace().getRegistry();
 
         SyntaxChecker check = check(eval, source);
         if (! expander.isTopLevelContext())
@@ -72,22 +73,8 @@ final class ModuleForm
             throw check.failure("Malformed module declaration");
         }
 
-        ModuleRegistry registry = eval.findCurrentNamespace().getRegistry();
-
-        ModuleIdentity id;
-        try
-        {
-            SyntaxSymbol name = check.requiredIdentifier("module name", 1);
-            id = determineIdentity(eval, envOutsideModule, name);
-        }
-        catch (FusionException e)
-        {
-            String message =
-                "Error determining module identity: " + e.getMessage();
-            SyntaxException ex = check.failure(message);
-            ex.initCause(e);
-            throw ex;
-        }
+        SyntaxSymbol name = check.requiredIdentifier("module name", 1);
+        ModuleIdentity id = determineIdentity(eval, envOutsideModule, name);
         source = (SyntaxSexp)
             source.copyWithProperty(eval, STX_PROP_MODULE_IDENTITY, id);
 
@@ -437,7 +424,7 @@ final class ModuleForm
     private ModuleIdentity determineIdentity(Evaluator eval,
                                              Environment envOutsideModule,
                                              SyntaxSymbol moduleNameSymbol)
-        throws FusionException
+        throws SyntaxException
     {
         if (! isValidModuleName(moduleNameSymbol.stringValue()))
         {
@@ -446,23 +433,24 @@ final class ModuleForm
                                       moduleNameSymbol);
         }
 
-        ModuleIdentity id;
+        // When the module name resolver loads a module from a repository, as
+        // with `require`, it sets this parameter with the resolved identity.
+        // In such cases, we ignore the declared name.
         Object current = myCurrentModuleDeclareName.currentValue(eval);
         if (current instanceof ModuleIdentity)
         {
-            id = (ModuleIdentity) current;
+            return (ModuleIdentity) current;
         }
-        else
-        {
-            Namespace outsideNs = envOutsideModule.namespace();
 
-            // current_namespace should be the top-level we're evaluating in.
-            assert outsideNs == eval.findCurrentNamespace();
+        // Otherwise, we must be evaluating the `module` form at namespace-level,
+        // in which case we treat it as a child module of the current namespace.
+        Namespace outsideNs = envOutsideModule.namespace();
 
-            String declaredName = moduleNameSymbol.stringValue();
-            id = ModuleIdentity.forChild(outsideNs.getModuleId(), declaredName);
-        }
-        return id;
+        // current_namespace should be the top-level we're evaluating in.
+        assert outsideNs == eval.findCurrentNamespace();
+
+        String declaredName = moduleNameSymbol.stringValue();
+        return ModuleIdentity.forChild(outsideNs.getModuleId(), declaredName);
     }
 
 

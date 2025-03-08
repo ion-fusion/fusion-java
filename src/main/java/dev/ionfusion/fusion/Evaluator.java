@@ -18,6 +18,7 @@ import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionTimestamp.makeTimestamp;
 import static dev.ionfusion.fusion.FusionUtils.friendlyIndex;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
+
 import com.amazon.ion.IonBool;
 import com.amazon.ion.IonDatagram;
 import com.amazon.ion.IonDecimal;
@@ -47,23 +48,21 @@ class Evaluator
     private final GlobalState myGlobalState;
     private final IonSystem mySystem;
     private final Evaluator myOuterFrame;
-    private final Map<Object, Object> myContinuationMarks;
+    private final Map<Object, Object> myContinuationMarks = new HashMap<>();
 
 
     Evaluator(GlobalState globalState)
     {
         myGlobalState = globalState;
         mySystem      = globalState.myIonSystem;
-        myOuterFrame = null;
-        myContinuationMarks = null;
+        myOuterFrame  = null;
     }
 
     Evaluator(Evaluator outerBindings)
     {
-        myGlobalState     = outerBindings.myGlobalState;
-        mySystem          = outerBindings.mySystem;
-        myOuterFrame      = outerBindings;
-        myContinuationMarks = new HashMap<>();
+        myGlobalState = outerBindings.myGlobalState;
+        mySystem      = outerBindings.mySystem;
+        myOuterFrame  = outerBindings;
     }
 
 
@@ -501,13 +500,10 @@ class Evaluator
             sexp = emptySexp(this);
         }
 
-        if (myContinuationMarks != null)
+        Object value = myContinuationMarks.get(key);
+        if (value != null)
         {
-            Object value = myContinuationMarks.get(key);
-            if (value != null)
-            {
-                sexp = pair(this, value, sexp);
-            }
+            sexp = pair(this, value, sexp);
         }
 
         return sexp;
@@ -574,7 +570,7 @@ class Evaluator
     Namespace findCurrentNamespace()
     {
         DynamicParameter param = getGlobalState().myCurrentNamespaceParam;
-        return (Namespace) param.currentValue(this);
+        return param.currentValue(this);
     }
 
 
