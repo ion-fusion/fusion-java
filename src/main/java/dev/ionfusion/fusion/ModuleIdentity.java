@@ -9,14 +9,17 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
 
 /**
- * A unique identifier for modules available to the Fusion runtime system.
+ * An identifier for modules within the Fusion runtime system.
  * This plays the same role as Racket's "resolved module path", except it does
  * not contain location information about the source of the module.
  * <p>
  * Instances are interned because identity comparisons are extremely common
  * during compilation.
+ * <p>
+ * These identities may not uniquely map to module <em>instances</em>, since
+ * a module may be instantiated in multiple registries and/or expansion phases.
  */
-class ModuleIdentity
+public class ModuleIdentity
     implements Comparable<ModuleIdentity>
 {
     static final String TOP_LEVEL_MODULE_PREFIX =
@@ -27,6 +30,8 @@ class ModuleIdentity
      */
     private static final Map<String,ModuleIdentity> ourInternedIdentities =
         new HashMap<>();
+    // TODO https://github.com/ion-fusion/fusion-java/issues/164
+    //   This should be a weak-reference table with all identities.
 
     /**
      * Counts the number of synthetic top-level module identities that have
@@ -54,17 +59,39 @@ class ModuleIdentity
      *
      * @return true iff the string is a valid module name.
      */
-    static boolean isValidModuleName(String name)
+    public static boolean isValidModuleName(String name)
     {
         return name != null && NAME_PATTERN.matcher(name).matches();
     }
 
-    static boolean isValidAbsoluteModulePath(String path)
+
+    /**
+     * Checks whether a string can be used as an absolute module path.
+     * <p>
+     * A valid absolute module path starts with a slash {@code "/"}, followed
+     * by one or more module names, separated by slashes.
+     *
+     * @param path may be null.
+     *
+     * @return true iff the string is a valid absolute module path.
+     */
+    public static boolean isValidAbsoluteModulePath(String path)
     {
         return path != null && PATH_PATTERN.matcher(path).matches();
     }
 
-    static boolean isValidModulePath(String path)
+
+    /**
+     * Checks whether a string can be used as a module path.
+     * <p>
+     * A valid module path consists of an optional slash {@code "/"}, followed
+     * by one or more module names, separated by slashes.
+     *
+     * @param path may be null.
+     *
+     * @return true iff the string is a valid module path.
+     */
+    public static boolean isValidModulePath(String path)
     {
         return isValidModuleName(path) || isValidAbsoluteModulePath(path);
     }
@@ -85,12 +112,14 @@ class ModuleIdentity
 
 
     /**
+     * Produces an identity for the given absolute module path.
+     *
      * @param path must be an absolute module path.
      * @return not null.
      *
      * @see #isValidAbsoluteModulePath(String)
      */
-    static ModuleIdentity forAbsolutePath(String path)
+    public static ModuleIdentity forAbsolutePath(String path)
     {
         assert isValidAbsoluteModulePath(path);
         return doIntern(path);
@@ -98,13 +127,16 @@ class ModuleIdentity
 
 
     /**
-     * Returns an identity for a child module.
+     * Produces an identity for a child module.
      *
      * @param parent may be null, in which case the result will be a root
      * module path.
      * @param name must be a valid module name (not a general path).
+     * @return not null.
+     *
+     * @see #isValidModuleName(String)
      */
-    static ModuleIdentity forChild(ModuleIdentity parent, String name)
+    public static ModuleIdentity forChild(ModuleIdentity parent, String name)
     {
         assert isValidModuleName(name);
         String path = (parent != null
@@ -115,10 +147,15 @@ class ModuleIdentity
 
 
     /**
+     * Produces an identity for a given module path, relative to a given module.
+     *
      * @param baseModule must not be null if the path is relative.
      * @param path must be a valid absolute or relative module path.
+     * @return not null.
+     *
+     * @see #isValidModulePath(String)
      */
-    static ModuleIdentity forPath(ModuleIdentity baseModule, String path)
+    public static ModuleIdentity forPath(ModuleIdentity baseModule, String path)
     {
         if (! isValidAbsoluteModulePath(path))
         {
@@ -139,7 +176,9 @@ class ModuleIdentity
      */
     static ModuleIdentity forTopLevel()
     {
-        // TODO In a long-running service this could overflow.
+        // TODO https://github.com/ion-fusion/fusion-java/issues/164
+        //  These should be interned, since child modules are interned.
+
         String path =
             TOP_LEVEL_MODULE_PREFIX + ourTopLevelCounter.incrementAndGet();
 
@@ -173,8 +212,6 @@ class ModuleIdentity
     /**
      * Returns the absolute path of this identity.  The result can be turned
      * back into an (interned) identity via {@link #forAbsolutePath(String)}.
-     * <p>
-     * TODO NIO: Consider returning a Path here, for tighter modeling.
      *
      * @return a non-empty string starting (but not ending) with {@code '/'}.
      */
@@ -184,8 +221,17 @@ class ModuleIdentity
     }
 
 
+    /**
+     * Returns the name of the identified module; that is, the last name of its
+     * path.
+     *
+     * @return not null.
+     */
     public String baseName()
     {
+        // TODO Should this be `moduleName()`?
+        //  That makes more sense, but doesn't work for unresolvable identities
+
         int slashIndex = myPath.lastIndexOf('/');
         if (slashIndex == -1) return myPath;
         return myPath.substring(slashIndex + 1);
@@ -216,9 +262,11 @@ class ModuleIdentity
 
 
     /**
+     * Returns the identity of this module's parent.
+     *
      * @return null if there's no parent; eg if this is "/foo".
      */
-    ModuleIdentity parent()
+    public ModuleIdentity parent()
     {
         String path = myPath;
         int slashIndex = path.lastIndexOf('/');
@@ -248,7 +296,7 @@ class ModuleIdentity
     {
         // Since we are interning instances, it would be nice to use reference
         // equality here. However we don't intern local IDs, so that's not
-        // correct.
+        // correct. See https://github.com/ion-fusion/fusion-java/issues/164
 
         if (this == obj) return true;
         if (obj == null) return false;
