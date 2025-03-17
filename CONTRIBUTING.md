@@ -46,7 +46,7 @@ thoroughly.
       early feedback. It's best to get the high-level details right—particularly the terminology and
       contract—before digging into details.
 3. Code it! Don’t forget the unit tests.
-4. Post a pull review, and iterate as necessary. **Review early, review often!**
+4. Post a pull request, and iterate as necessary. **Review early, review often!**
 5. Upon approval, your PR will be merged by a team member, and in most cases the change will be part
    of the next release.
 
