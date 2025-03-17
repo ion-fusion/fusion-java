@@ -7,7 +7,7 @@ domain-specific custom syntax. Among its interesting characteristics:
 
 * Fusion source code is Ion data, and the Fusion type system is a superset of the Ion data model.
   This reduces glue code such as object binding, and eliminates lossy type conversions.
-* While Fusion facilitates general-purpose use, you can use syntactic abstractions to create 
+* While Fusion facilitates general-purpose use, you can use syntactic abstractions to create
 custom syntax forms and Domain-Specific Languages, even those that are not as general as the core.
 
 Linguistically, Fusion is a dialect of Scheme, adapted to the Ion notation. Here's a quick sample:
@@ -16,18 +16,19 @@ Linguistically, Fusion is a dialect of Scheme, adapted to the Ion notation. Here
 (for [(value (in_port))]                 // Read each Ion value from stdin into local var `value`
   (writeln (. value "marketplace_id")))  //   and write its marketplace_id field to stdout
 ```
-Fusion has an interactive command console for experimentation, and a "batch" mode for running 
+
+Fusion has an interactive command console for experimentation, and a "batch" mode for running
 scripts and pipelining data. It can also be embedded into Java applications and services, with
 some support for sandboxing untrusted code.
 
-Ion Fusion started inside Amazon in 2012, and has been used in production for over a 
-decade, driving numerous data processing, workflow management, and analytics systems. 
+Ion Fusion started inside Amazon in 2012, and has been used in production for over a
+decade, driving numerous data processing, workflow management, and analytics systems.
 It is now an independent Apache-licensed project led by current and former Amazonians.
 
 > [!IMPORTANT]
-> This repository is under active development, preparing for a public release. The language 
-> itself is largely stable, but expect significant changes to Java APIs and packaging as we 
-> renovate everything for public development and use. 
+> This repository is under active development, preparing for a public consumption. The language
+> itself is largely stable, but expect significant changes to Java APIs and packaging as we
+> renovate everything for public development and use.
 
 
 # Support
