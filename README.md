@@ -26,7 +26,7 @@ decade, driving numerous data processing, workflow management, and analytics sys
 It is now an independent Apache-licensed project led by current and former Amazonians.
 
 > [!IMPORTANT]
-> This repository is under active development, preparing for a public consumption. The language
+> This repository is under active development, preparing for public consumption. The language
 > itself is largely stable, but expect significant changes to Java APIs and packaging as we
 > renovate everything for public development and use.
 
