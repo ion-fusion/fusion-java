@@ -26,14 +26,14 @@ decade, driving numerous data processing, workflow management, and analytics sys
 It is now an independent Apache-licensed project led by current and former Amazonians.
 
 > [!IMPORTANT]
-> This repository is under active development, preparing for public consumption. The language
+> This repository is under active development, preparing for a 1.0 open source release. The language
 > itself is largely stable, but expect significant changes to Java APIs and packaging as we
 > renovate everything for public development and use.
 
 
 # Support
 
-This product is not supported by Amazon or AWS, but by a small group of volunteers.
+This product is not owned or supported by Amazon or AWS, but by a small group of volunteers.
 At this time we cannot promise any particular SLA for responding to issues.
 
 Please submit bug reports and feature requests via [GitHub issues][issues].
