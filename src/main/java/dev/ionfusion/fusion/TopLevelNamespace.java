@@ -4,11 +4,12 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
+
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.ModuleNamespace.ProvidedBinding;
-import dev.ionfusion.fusion.util.function.Function;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.function.Function;
 
 
 /**

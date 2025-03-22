@@ -4,8 +4,9 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.GlobalState.FUSION_SOURCE_EXTENSION;
-import dev.ionfusion.fusion.util.function.Predicate;
+
 import java.net.URL;
+import java.util.function.Predicate;
 
 final class ClassLoaderModuleRepository
     extends ModuleRepository

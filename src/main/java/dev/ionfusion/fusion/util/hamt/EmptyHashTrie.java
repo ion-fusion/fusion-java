@@ -3,9 +3,9 @@
 
 package dev.ionfusion.fusion.util.hamt;
 
-import dev.ionfusion.fusion.util.function.BiFunction;
 import java.util.Collections;
 import java.util.Set;
+import java.util.function.BiFunction;
 
 final class EmptyHashTrie<K, V>
     extends FunctionalHashTrie<K, V>

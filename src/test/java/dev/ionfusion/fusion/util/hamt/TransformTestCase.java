@@ -13,13 +13,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.fail;
-import dev.ionfusion.fusion.util.function.BiFunction;
+
 import dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.Changes;
 import dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.TrieNode;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.BiFunction;
 import org.junit.jupiter.api.Test;
 
 /**

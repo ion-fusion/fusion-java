@@ -9,12 +9,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import dev.ionfusion.fusion.util.function.BiFunction;
+
 import dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.BitMappedNode;
 import dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.Changes;
 import dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.HashArrayMappedNode;
 import dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.TrieNode;
 import java.util.List;
+import java.util.function.BiFunction;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 

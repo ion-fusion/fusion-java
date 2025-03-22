@@ -3,13 +3,13 @@
 
 package dev.ionfusion.fusion.util.hamt;
 
-import dev.ionfusion.fusion.util.function.BiFunction;
-import dev.ionfusion.fusion.util.function.BiPredicate;
 import dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.TrieNode;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 
 /**
  * A {@link MultiHashTrie} that has at most one entry per key.

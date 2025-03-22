@@ -3,13 +3,13 @@
 
 package dev.ionfusion.fusion.util.hamt;
 
-import dev.ionfusion.fusion.util.function.BiFunction;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.function.BiFunction;
 
 /**
  * Implementation of the Hash Array Mapped Trie data structure, as described in the paper

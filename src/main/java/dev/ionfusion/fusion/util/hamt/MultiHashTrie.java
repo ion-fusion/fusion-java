@@ -4,8 +4,7 @@
 package dev.ionfusion.fusion.util.hamt;
 
 import static dev.ionfusion.fusion.util.hamt.EmptyHashTrie.EMPTY;
-import dev.ionfusion.fusion.util.function.BiFunction;
-import dev.ionfusion.fusion.util.function.BiPredicate;
+
 import dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.TrieNode;
 import java.util.AbstractSet;
 import java.util.Collection;
@@ -13,6 +12,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 
 /**
  * A persistent hash map based on {@link HashArrayMappedTrie}, allowing multiple

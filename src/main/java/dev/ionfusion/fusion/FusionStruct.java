@@ -33,8 +33,6 @@ import dev.ionfusion.fusion.FusionCollection.BaseCollection;
 import dev.ionfusion.fusion.FusionCompare.EqualityTier;
 import dev.ionfusion.fusion.FusionIterator.AbstractIterator;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
-import dev.ionfusion.fusion.util.function.BiFunction;
-import dev.ionfusion.fusion.util.function.BiPredicate;
 import dev.ionfusion.fusion.util.hamt.MultiHashTrie;
 import java.io.IOException;
 import java.util.Collections;
@@ -42,6 +40,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 
 
 @SuppressWarnings({"unused", "RedundantThrows", "DuplicateThrows"})

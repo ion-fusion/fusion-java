@@ -7,17 +7,18 @@ import static dev.ionfusion.fusion.BindingSite.makeDefineBindingSite;
 import static dev.ionfusion.fusion.BindingSite.makeImportBindingSite;
 import static dev.ionfusion.fusion.FusionIo.safeWriteToString;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
+
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.ModuleNamespace.ModuleDefinedBinding;
 import dev.ionfusion.fusion.ModuleNamespace.ProvidedBinding;
 import dev.ionfusion.fusion.TopLevelNamespace.TopLevelDefinedBinding;
-import dev.ionfusion.fusion.util.function.Function;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 /**
  * Expand- and compile-time environment for all top-level sequences, and

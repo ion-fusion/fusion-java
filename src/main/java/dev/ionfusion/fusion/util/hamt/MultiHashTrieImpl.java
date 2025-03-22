@@ -4,8 +4,7 @@
 package dev.ionfusion.fusion.util.hamt;
 
 import static dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.NOTHING;
-import dev.ionfusion.fusion.util.function.BiFunction;
-import dev.ionfusion.fusion.util.function.BiPredicate;
+
 import dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.TrieNode;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Arrays;
@@ -13,6 +12,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 
 /**
  * A persistent, immutable hash table allowing multiple entries for the same key.

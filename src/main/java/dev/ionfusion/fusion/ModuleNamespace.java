@@ -5,13 +5,14 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.BindingSite.makeExportBindingSite;
 import static dev.ionfusion.fusion.GlobalState.REQUIRE;
+
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
-import dev.ionfusion.fusion.util.function.Function;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
 
 /**

@@ -5,7 +5,6 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.ModuleIdentity.isValidAbsoluteModulePath;
 
-import dev.ionfusion.fusion.util.function.Predicate;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,6 +13,7 @@ import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * Holds configuration for code-coverage metrics collection and reporting.

@@ -4,7 +4,7 @@
 package dev.ionfusion.fusion;
 
 
-import dev.ionfusion.fusion.util.function.Predicate;
+import java.util.function.Predicate;
 
 /**
  * Provides access to module source code in some (usually persistent) store.
