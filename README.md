@@ -39,5 +39,12 @@ At this time we cannot promise any particular SLA for responding to issues.
 Please submit bug reports and feature requests via [GitHub issues][issues].
 If you have questions, feel free to reach out on our [Slack workspace][slack].
 
+
+# Contributing
+
+Contributions of all kinds are welcome! Our [Contributor's Guide](CONTRIBUTING.md) can help you get 
+going.  We are deeply grateful to our many [contributors](CONTRIBUTORS.md).
+
+
 [issues]: https://github.com/ion-fusion/fusion-java/issues
 [slack]:  https://join.slack.com/t/ion-fusion/shared_invite/zt-2y0jr8vh2-bZLa66hdyZ3ykHcgOcYkcA

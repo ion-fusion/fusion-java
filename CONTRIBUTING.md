@@ -2,6 +2,7 @@
 
 Thank you for considering a contribution!  We love contributions of all kinds to the Ion Fusion
 ecosystem and community, including the language, runtime, tools, documentation, and infrastructure.
+This project would not exist without its [contributors](CONTRIBUTORS.md)!
 
 > [!IMPORTANT]
 > This document is a work in progress. If you have a question that's not addressed here,
