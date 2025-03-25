@@ -46,5 +46,14 @@ Contributions of all kinds are welcome! Our [Contributor's Guide](CONTRIBUTING.m
 going.  We are deeply grateful to our many [contributors](CONTRIBUTORS.md).
 
 
+# License
+
+Ion Fusion components are licensed under the [Apache License 2.0](LICENSE). Unless required by
+applicable law or agreed to in writing, software distributed under the License is distributed on
+an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+[License](LICENSE) for the specific language governing permissions and limitations under the
+License.
+
+
 [issues]: https://github.com/ion-fusion/fusion-java/issues
 [slack]:  https://join.slack.com/t/ion-fusion/shared_invite/zt-2y0jr8vh2-bZLa66hdyZ3ykHcgOcYkcA
