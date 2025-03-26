@@ -33,8 +33,8 @@ public website. Assistance and expertise with the above would be most helpful.
 
 Of course, contributions to the core language and libraries are also welcome and encouraged!
 Please be aware that there is a high bar in terms of design, terminology, consistency, style,
-documentation, and testing. Not everything will "fit" into the core, and most features can reside
-elsewhere without problems.
+documentation, and testing. Not everything will "fit" into the language or standard library, and 
+many features can reside in user modules without problems.
 
 Documentation is the easiest thing to contribute, and offers a good route to getting to know the
 code base and the language’s library and internals.
