@@ -9,9 +9,13 @@ This project would not exist without its [contributors](CONTRIBUTORS.md)!
 > please open an issue so we know what needs improvement.
 
 <!-- TODO Add issue-creation link to the above. -->
-
-<!-- TODO Code of Conduct https://github.com/ion-fusion/fusion-java/issues/5 -->
 <!-- TODO Style guides (Java code; Fusion code; commit messages; documentation) --> 
+
+
+## Code of Conduct
+
+Please read our [Code of Conduct](https://github.com/ion-fusion/fusion-java#coc-ov-file) and help us
+build a welcoming and respectful community. By participating, you are expected to uphold this code.
 
 
 ## What can I contribute?
