@@ -20,9 +20,21 @@ build a welcoming and respectful community. By participating, you are expected t
 
 ## What can I contribute?
 
-Contributions to the core language and libraries are welcome and encouraged! Please be aware that
-there is a high bar in terms of design, terminology, consistency, style, documentation, and testing.
-Not everything will "fit" into the core, and most features can reside elsewhere without problems.
+> [!TIP]
+> Check out the issues labeled [`good first issue`][good] or [`help wanted`][help] for suggestions!
+
+[good]: https://github.com/ion-fusion/fusion-java/labels/good%20first%20issue
+[help]: https://github.com/ion-fusion/fusion-java/labels/help%20wanted
+
+At present, we are focusing on building out our infrastructure, QA tooling, release processes,
+distribution packaging, and so on, all functions that historically were provided by Amazon's
+internal developer toolchain. Additionally, we are refreshing our documentation and launching a
+public website. Assistance and expertise with the above would be most helpful.
+
+Of course, contributions to the core language and libraries are also welcome and encouraged!
+Please be aware that there is a high bar in terms of design, terminology, consistency, style,
+documentation, and testing. Not everything will "fit" into the core, and most features can reside
+elsewhere without problems.
 
 Documentation is the easiest thing to contribute, and offers a good route to getting to know the
 code base and the language’s library and internals.
