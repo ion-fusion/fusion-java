@@ -178,16 +178,19 @@ public class ModuleIdentity
     /**
      * Produces a unique, unresolvable identity that is a child "scope" of the
      * given parent. Child modules added within the scope cannot resolve
-     * relative paths to reach outside the scope.
+     * relative paths to reach outside the scope. Further, code outside a scope
+     * cannot resolve paths to modules within it.
      * <p>
      * The {@linkplain #baseName name} of the resulting path is unique within
      * the parent, but is not a valid module name.
      * The syntax of the name is unspecified and subject to change.
      *
-     * @param parent must not be null.
+     * @param parent the base path for the new scope. In general, the intent is
+     * to use the same parent for all scopes of the same nature.
+     * Must not be null.
      *
-     * @return a unique module identity; the resulting absolute path is _not_
-     *     a valid module path.
+     * @return a unique module identity; the resulting absolute path is
+     * <em>not</em> a valid module path.
      */
     public static ModuleIdentity forUniqueScope(ModuleIdentity parent)
     {
