@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion;
 
+import static com.amazon.ion.util.IonTextUtils.printString;
 import static dev.ionfusion.fusion.FusionSexp.isPair;
 import static dev.ionfusion.fusion.FusionSexp.isSexp;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
@@ -12,7 +13,7 @@ import static dev.ionfusion.fusion.FusionSyntax.syntaxTrackOrigin;
 import static dev.ionfusion.fusion.FusionText.isText;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.GlobalState.REQUIRE;
-import static com.amazon.ion.util.IonTextUtils.printString;
+
 import dev.ionfusion.fusion.Namespace.RequireRenameMapping;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -253,7 +254,7 @@ final class RequireForm
         // the form is immediately evaluated. I don't want to think about what
         // would happen if resolving at runtime gave a different result.
 
-        ModuleIdentity baseModule = env.namespace().getModuleId();
+        ModuleIdentity baseModule = env.namespace().getResolutionBase();
         int arity = stx.size();
 
         SyntaxChecker check = new SyntaxChecker(eval, REQUIRE, stx);
@@ -283,6 +284,9 @@ final class RequireForm
         return new CompiledRequire(compiledSpecs);
     }
 
+    /**
+     * @param baseModule the starting point for relative references; not null.
+     */
     private CompiledRequireSpec compileSpec(Evaluator eval,
                                             Environment env,
                                             ModuleIdentity baseModule,

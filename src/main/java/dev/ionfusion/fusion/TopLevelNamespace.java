@@ -25,6 +25,10 @@ import java.util.function.Function;
 final class TopLevelNamespace
     extends Namespace
 {
+    private static final ModuleIdentity TOP_LEVEL_MODULE_PREFIX =
+        ModuleIdentity.forAbsolutePath("/fusion/private/toplevel");
+
+
     /**
      * Denotes a binding added into a top-level namespace via {@code define}.
      */
@@ -178,7 +182,7 @@ final class TopLevelNamespace
      */
     TopLevelNamespace(ModuleRegistry registry)
     {
-        super(registry, ModuleIdentity.forTopLevel(),
+        super(registry, ModuleIdentity.forUniqueScope(TOP_LEVEL_MODULE_PREFIX),
               new Function<Namespace, SyntaxWraps>()
               {
                   @Override

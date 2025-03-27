@@ -342,6 +342,15 @@ abstract class Namespace
     }
 
     /**
+     * Returns a base module to use with {@link ModuleIdentity#forPath} to
+     * resolve relative paths.
+     */
+    ModuleIdentity getResolutionBase()
+    {
+        return myModuleId;
+    }
+
+    /**
      * How many namespace-level definitions do we have?
      * This doesn't count imports.
      */

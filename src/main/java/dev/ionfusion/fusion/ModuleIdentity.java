@@ -22,24 +22,21 @@ import java.util.regex.Pattern;
 public class ModuleIdentity
     implements Comparable<ModuleIdentity>
 {
-    private static final String TOP_LEVEL_MODULE_PREFIX =
-        "/fusion/private/toplevel/";
-
     /**
      * Access to this map must be synchronized on it!
      */
     private static final Map<String,ModuleIdentity> ourInternedIdentities =
         new HashMap<>();
     // TODO https://github.com/ion-fusion/fusion-java/issues/164
-    //   This should be a weak-reference table with all identities.
+    //   This should be a weak-reference table.
 
     /**
-     * Counts the number of synthetic top-level module identities that have
+     * Counts the number of synthetic-scope module identities that have
      * been created.
      *
-     * @see #forTopLevel()
+     * @see #forUniqueScope(ModuleIdentity)
      */
-    private static final AtomicLong ourTopLevelCounter = new AtomicLong();
+    private static final AtomicLong ourScopeCounter = new AtomicLong();
 
 
     private static final Pattern NAME_PATTERN =
@@ -162,44 +159,41 @@ public class ModuleIdentity
             // Relative path; currently only a simple name, but eventually
             // things like "../uncle"
             assert isValidModuleName(path);
-            String basePath = baseModule.relativeBasePath();
-            path = basePath + path;
+
+            // We resolve simple names as children of the base module, which
+            // aligns with the desired behavior at top-level. However, at
+            // module-level, simple names currently denote *siblings* of the
+            // current module. This is arguably a mistake; see #166.
+
+            // This works by conspiring with Namespace#getResolutionBase()
+            // which, for modules, returns the parent of the requesting module.
+
+            String basePath = baseModule.absolutePath();
+            path = basePath + "/" + path;
         }
         return doIntern(path);
     }
 
 
     /**
-     * Creates a <em>non-interned</em> identity for a top-level namespace.
+     * Produces a unique, unresolvable identity that is a child "scope" of the
+     * given parent. Child modules added within the scope cannot resolve
+     * relative paths to reach outside the scope.
+     * <p>
+     * The {@linkplain #baseName name} of the resulting path is unique within
+     * the parent, but is not a valid module name.
+     * The syntax of the name is unspecified and subject to change.
      *
-     * @return a fresh, non-interned identity.
+     * @param parent must not be null.
+     *
+     * @return a unique module identity; the resulting absolute path is _not_
+     *     a valid module path.
      */
-    static ModuleIdentity forTopLevel()
+    public static ModuleIdentity forUniqueScope(ModuleIdentity parent)
     {
-        // TODO https://github.com/ion-fusion/fusion-java/issues/164
-        //  These should be interned, since child modules are interned.
-
-        String path =
-            TOP_LEVEL_MODULE_PREFIX + ourTopLevelCounter.incrementAndGet();
-
-        return new ModuleIdentity(path)
-        {
-            /**
-             * Inside a top-level, bare module names denote "children" of the
-             * synthetic top-level module, not siblings of the current module
-             * as is the default at module-level.
-             * The latter is arguably a mistake; see #166.
-             * <p>
-             * If we can't change that, we could eliminate the difference by
-             * adding "/$synthetic" (eg) to these paths so bare-name can
-             * resolve as siblings everywhere.
-             */
-            @Override
-            String relativeBasePath()
-            {
-                return absolutePath() + "/";
-            }
-        };
+        long   scopeId = ourScopeCounter.incrementAndGet();
+        String path    = parent.absolutePath() + '/' + scopeId;
+        return doIntern(path);
     }
 
 
@@ -249,34 +243,6 @@ public class ModuleIdentity
 
 
     /**
-     * Returns a base path to which a relative path can be appended.
-     *
-     * @return a string starting and ending with {@code '/'}.
-     */
-    String relativeBasePath()
-    {
-        // TODO https://github.com/ion-fusion/fusion-java/issues/166
-        //  Starting a relative path at the parent module will result in
-        //  future inconsistency referencing nested modules, compared to
-        //  referencing modules declared at top-level.
-
-        String path = myPath;
-        int slashIndex = path.lastIndexOf('/');
-        assert slashIndex >= 0;
-        if (slashIndex == 0)
-        {
-            path = "/";
-        }
-        else
-        {
-            path = path.substring(0, slashIndex + 1);
-        }
-
-        return path;
-    }
-
-
-    /**
      * Returns the identity of this module's parent.
      *
      * @return null if there's no parent; eg if this is "/foo".
@@ -292,8 +258,9 @@ public class ModuleIdentity
         }
         else
         {
+            // We assume that this prefix is a well-formed path.
             path = path.substring(0, slashIndex);
-            return forAbsolutePath(path);
+            return doIntern(path);
         }
     }
 
@@ -309,12 +276,11 @@ public class ModuleIdentity
     @Override
     public boolean equals(Object obj)
     {
-        // Since we are interning instances, it would be nice to use reference
-        // equality here. However we don't intern local IDs, so that's not
-        // correct. See https://github.com/ion-fusion/fusion-java/issues/164
+        // We could use reference equality, since all instances are interned.
+        // However, we need to store these in a weak map (see #164), in which
+        // case we'll need this. See ActualSymbol#equals() for similar code.
 
         if (this == obj) return true;
-        if (obj == null) return false;
         if (obj instanceof ModuleIdentity)
         {
             ModuleIdentity other = (ModuleIdentity) obj;

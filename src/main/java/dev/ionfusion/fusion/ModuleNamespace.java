@@ -510,6 +510,18 @@ final class ModuleNamespace
     }
 
 
+
+    @Override
+    ModuleIdentity getResolutionBase()
+    {
+        // TODO https://github.com/ion-fusion/fusion-java/issues/166
+        //  Starting a relative path at the parent module will result in
+        //  future inconsistency referencing nested modules, compared to
+        //  referencing modules declared at top-level.
+
+        return getModuleId().parent();
+    }
+
     @Override
     Object visit(Visitor v) throws FusionException
     {
