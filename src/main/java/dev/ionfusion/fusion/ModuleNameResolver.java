@@ -9,6 +9,7 @@ import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
 import static dev.ionfusion.fusion.FusionSexp.unsafeSexpToJavaList;
 import static dev.ionfusion.fusion.FusionText.isText;
 import static dev.ionfusion.fusion.FusionText.unsafeTextToJavaString;
+import static dev.ionfusion.fusion.ModuleIdentity.isValidAbsoluteModulePath;
 import static dev.ionfusion.fusion.ModuleIdentity.isValidModulePath;
 
 import java.util.HashSet;
@@ -135,8 +136,7 @@ final class ModuleNameResolver
 
 
     /**
-     * @return null if the referenced module couldn't be located in the current
-     * registry or any repository.
+     * @return null if the referenced module couldn't be located in any repository.
      */
     private ModuleLocation locate(Evaluator eval,
                                   ModuleIdentity id,
@@ -197,8 +197,14 @@ final class ModuleNameResolver
         StringBuilder buf = new StringBuilder();
         buf.append("A module named ");
         buf.append(printString(modulePath));
-        buf.append(" could not be found in the registered repositories.");
-        buf.append(" The repositories are:\n");
+        buf.append(" could not be found");
+        if (! isValidAbsoluteModulePath(modulePath) && baseModule != null)
+        {
+            buf.append(" relative to ");
+            buf.append(baseModule.absolutePath());
+        }
+        buf.append('\n');
+        buf.append("These repositories were searched:\n");
         for (ModuleRepository repo : myRepositories)
         {
             buf.append("  * ");
@@ -207,14 +213,7 @@ final class ModuleNameResolver
         }
         String message = buf.toString();
 
-        if (stxForErrors == null)
-        {
-            throw new ModuleNotFoundException(message);
-        }
-        else
-        {
-            throw new ModuleNotFoundException(message, stxForErrors);
-        }
+        throw new ModuleNotFoundException(message, stxForErrors);
     }
 
 
