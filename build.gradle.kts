@@ -81,6 +81,9 @@ tasks.test {
 
     // Collect Fusion coverage data IFF a report is being generated.
     mustRunAfter(fcovConfigure)
+
+    inputs.dir(layout.projectDirectory.dir("ftst"))
+
     jvmArgumentProviders.add {
         if (fcovRunning) {
             logger.lifecycle("Enabling Fusion code coverage instrumentation")
