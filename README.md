@@ -70,12 +70,12 @@ That should print `3`.  What's not obvious is that the evaluator is printing the
 Amazon Ion format.  We can use a more interesting expression to demonstrate:
 
 ```shell
-fusion eval '[null, (+ 1 2)]'
+fusion eval '[null, (timestamp_at_day 2025-03-28T02:09-07:00)]'
 ```
 
-That should print `[null, 3]` using Ion's notation for a list. You can see that the list in the 
-input expression evaluates to list, and each element of the list is likewise evaluated as an 
-expression. Fusion makes it easy to construct data very directly. This applies to Ion structs 
+That should print `[null, 2025-03-28]`, using Ion's notation for a timestamp. You can see that the
+list in the input expression evaluates to list, and each element of the list is likewise evaluated
+as an expression. Fusion makes it easy to construct data very directly. This applies to Ion structs
 (JSON objects) as well:
 
 ```shell
