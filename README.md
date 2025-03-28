@@ -1,16 +1,18 @@
 <!-- Copyright Ion Fusion contributors. All rights reserved. -->
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 
-**Ion Fusion** is a programmable programming language for working with JSON and Amazon Ion data.
-Its goal is to simplify data processing by eliminating impedance mismatch and enabling
+**Ion Fusion** is a programmable programming language for working with JSON and [Amazon Ion][ion]
+data. Its goal is to simplify data processing by eliminating impedance mismatch and enabling
 domain-specific custom syntax. Among its interesting characteristics:
 
-* Fusion source code is Ion data, and the Fusion type system is a superset of the Ion data model.
-  This reduces glue code such as object binding, and eliminates lossy type conversions.
-* While Fusion facilitates general-purpose use, you can use syntactic abstractions to create
-custom syntax forms and Domain-Specific Languages, even those that are not as general as the core.
+* Fusion source code is Ion data, and the Fusion type system is a superset of the
+  [Ion data model][data]. This reduces glue code such as object binding, and eliminates lossy type
+  conversions.
+* While Fusion facilitates general-purpose use, you can use syntactic abstractions to create custom
+  syntax forms and Domain-Specific Languages, even those that are not as general as the core.
 
-Linguistically, Fusion is a dialect of Scheme, adapted to the Ion notation. Here's a quick sample:
+Linguistically, Fusion is a dialect of [Racket][], adapted to the Ion notation. Here's a quick 
+sample:
 
 ```
 (for [(value (in_port))]                 // Read each Ion value from stdin into local var `value`
@@ -84,15 +86,10 @@ That should print `{name:"John Doe", date:2001-03-27, score:21}` (though the whi
 order may differ).
 
 > [!TIP]
-> Ion Fusion uses the Amazon Ion data format as its concrete syntax. Put another way, Fusion source 
-> code _is_ Ion data. In general, when a data element isn't an Ion S-expression or symbol, it 
-> evaluates to itself!
-
-```shell
-fusion load <<EOF
-(+ 1 2)
-EOF
-```
+> Ion Fusion uses the Amazon Ion data format as its concrete syntax, leveraging Ion's [symbol][] 
+> and [S-expression][sexp] types in a Lisp-like style. Put another way, Fusion source code _is_
+> Ion data. In general, when a data element isn't an Ion S-expression or symbol, it evaluates to 
+> itself!
 
 As our last example for now, we'll demonstrate a nontrivial Fusion script: generate a list of 
 authors to this repository, in chronological order. This real-world example was used to generate the
@@ -173,5 +170,10 @@ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express o
 License.
 
 
+[data]:   https://amazon-ion.github.io/ion-docs/docs/spec.html
+[ion]:    https://amazon-ion.github.io/ion-docs/index.html
 [issues]: https://github.com/ion-fusion/fusion-java/issues
+[Racket]: https://racket-lang.org/
+[sexp]:   https://amazon-ion.github.io/ion-docs/docs/spec.html#sexp
 [slack]:  https://join.slack.com/t/ion-fusion/shared_invite/zt-2y0jr8vh2-bZLa66hdyZ3ykHcgOcYkcA
+[symbol]: https://amazon-ion.github.io/ion-docs/docs/spec.html#symbol
