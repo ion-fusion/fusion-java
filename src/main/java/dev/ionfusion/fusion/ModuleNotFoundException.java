@@ -16,6 +16,9 @@ public final class ModuleNotFoundException
         super(message != null ? message : "Module not found");
     }
 
+    /**
+     * @param location may be null to indicate an unknown location.
+     */
     ModuleNotFoundException(String message, SyntaxValue location)
     {
         this(message);
