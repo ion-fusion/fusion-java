@@ -95,7 +95,7 @@ As our last example for now, we'll demonstrate a nontrivial Fusion script: gener
 authors to this repository, in chronological order. This real-world example was used to generate the
 list in our [CONTRIBUTORS page](CONTRIBUTORS.md).
 
-First, copy this content into a file named `authers.fusion`:
+First, copy this content into a file named `authors.fusion`:
 
 ```
 (define all_names
