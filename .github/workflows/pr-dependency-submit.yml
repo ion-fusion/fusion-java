@@ -3,16 +3,22 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 #
-# This workflow will download and submit a dependency graph of a Java project with Gradle
-# for another workflow to use to verify dependency safety. This split is needed because
-# PR-triggered workflows from forked repositories cannot have 'write' permissions.
+# This workflow will:
+#   * download a Gradle dependency graph file from workflow artifact storage
+#   * submit it to GitHub's Dependency Graph API for review
 #
-# See: https://github.com/gradle/actions/blob/main/docs/dependency-submission.md#usage-with-pull-requests-from-public-forked-repositories
+# We must generate and submit dependencies in separate workflows because PR workflows from forked
+# repositories do not have 'write' permission to submit the dependency graph.
+#
+# See:
+#   * https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#workflows-in-forked-repositories
+#   * https://github.com/gradle/actions/blob/main/docs/dependency-submission.md#usage-with-pull-requests-from-public-forked-repositories
+
 name: PR Submit Dependency Graph
 
 on:
   workflow_run:
-    workflows: ['PR Build and Generate Dependency Graph']
+    workflows: ['PR Build and Record Dependencies']
     types: [completed]
 
 permissions:
@@ -23,7 +29,7 @@ jobs:
   submit-dependency-graph:
     runs-on: ubuntu-latest
     steps:
-    - name: Download and submit dependency graph
+    - name: Submit dependency graph
       uses: gradle/actions/dependency-submission@v4
       with:
         dependency-graph: download-and-submit

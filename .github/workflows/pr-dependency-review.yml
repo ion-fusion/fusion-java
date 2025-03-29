@@ -1,9 +1,17 @@
-# Generates a dependency review on a pull request based on the result
-# of the uploaded dependency graph. Idle waits for secondary workflows
-# triggered by the PR to generate, and then submit the graph.
+# Performs a GitHub dependency review on a pull request, based on data inferred by GitHub and/or
+# submitted by the "PR Submit Dependency Graph" workflow.
 #
-# See: https://github.com/gradle/actions/blob/main/docs/dependency-submission.md#usage-with-pull-requests-from-public-forked-repositories
-name: PR Review Dependency Graph
+# This workflow will:
+#   * wait for other workflows triggered by the PR to submit a graph snapshot
+#   * analyze the graph using GitHub's Dependency Review API
+#
+# By default, the dependency review will fail if it discovers any vulnerable packages.
+#
+# See:
+#   * https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/about-dependency-review
+#   * https://github.com/gradle/actions/blob/main/docs/dependency-submission.md#usage-with-pull-requests-from-public-forked-repositories
+
+name: PR Dependency Review
 
 on:
   pull_request:
