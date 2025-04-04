@@ -1,0 +1,21 @@
+# CODEOWNERS achieves two things:
+#   * Code owners are automatically requested for review when someone opens a
+#     pull request that modifies code that they own.
+#   * Repository Rulesets require at least one owner's approval before merging.
+
+# Documentation for this file:
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Order is important; the last matching pattern takes the most
+# precedence.
+
+
+# These owners will be the default owners for everything in the repo.
+# Unless a later match takes precedence, these users will be requested for
+# review when someone opens a pull request.
+
+* @toddjonker @SharkBaitDLS
+
+
+# 🛑 Keep this rule last, to protect this file. 🛑
+/.github/CODEOWNERS @toddjonker @SharkBaitDLS @rationull
