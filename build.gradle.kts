@@ -244,6 +244,7 @@ tasks.register<JavaExec>("fusiondocGen") {
 
     enableAssertions = true
 
+    inputs.dir(layout.projectDirectory.dir("fusion"))
     outputs.dir(fusiondocDir)
 }
 
