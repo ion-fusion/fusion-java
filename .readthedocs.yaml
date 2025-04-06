@@ -1,0 +1,28 @@
+# Read the Docs configuration file
+# See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
+
+version: 2
+
+build:
+    os: ubuntu-24.04
+
+    # We don't need this, but RtD requires at least one tool.
+    tools:
+        python: "3.10"
+
+    apt_packages:
+        - openjdk-8-jdk-headless
+
+    jobs:
+        # This is just here to log the shell environment.
+        post_system_dependencies:
+            - env
+            - which -a java
+            - java --version
+        build:
+            html:
+                - ./gradlew fusiondoc javadoc
+                # TODO Perform this work in Gradle
+                - mkdir -p "${READTHEDOCS_OUTPUT}/html"
+                - mv build/docs/fusiondoc/* "${READTHEDOCS_OUTPUT}/html"
+                - mv build/docs/javadoc "${READTHEDOCS_OUTPUT}/html"
