@@ -219,7 +219,6 @@ gradle.taskGraph.whenReady {
 tasks.javadoc {
     exclude("**/_Private_*",
             "dev/ionfusion/fusion/cli",
-            "dev/ionfusion/fusion/util/function/**",
             "dev/ionfusion/fusion/util/hamt/**")
 
     title = "FusionJava API Reference"
