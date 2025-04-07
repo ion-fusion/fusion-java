@@ -279,8 +279,13 @@ distributions {
                 dependsOn("fusiondoc", "javadoc")
             }
 
+            // TODO JavaDocs should be beside, not inside, the Fusion docs.
+            //  https://github.com/ion-fusion/fusion-java/issues/204
             into("docs") {
-                from(docsDir)
+                from(fusiondocDir)
+            }
+            into("docs") {
+                from(docsDir).include("javadoc/**")
             }
         }
     }

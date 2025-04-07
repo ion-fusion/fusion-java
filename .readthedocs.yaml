@@ -21,8 +21,6 @@ build:
             - java --version
         build:
             html:
-                - ./gradlew fusiondoc javadoc
-                # TODO Perform this work in Gradle
-                - mkdir -p "${READTHEDOCS_OUTPUT}/html"
-                - mv build/docs/fusiondoc/* "${READTHEDOCS_OUTPUT}/html"
-                - mv build/docs/javadoc "${READTHEDOCS_OUTPUT}/html"
+                - ./gradlew installDist
+                - mkdir -p "${READTHEDOCS_OUTPUT}"
+                - mv build/install/fusion/docs "${READTHEDOCS_OUTPUT}/html"
