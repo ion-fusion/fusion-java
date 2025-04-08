@@ -83,6 +83,8 @@ With these basic examples at hand, we recommend browsing the
 [Ion Fusion Language Reference](fusion.html) to learn more about the operators used in the 
 preceding examples.
 
+[About the `fusion` CLI](about_cli.html) explains the interface in more detail.
+
 
 [CONTRIBUTORS]: https://github.com/ion-fusion/fusion-java/blob/main/CONTRIBUTORS.md
 [sexp]:   https://amazon-ion.github.io/ion-docs/docs/spec.html#sexp

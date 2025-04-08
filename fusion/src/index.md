@@ -26,7 +26,7 @@ questions, requests, or other feedback, please post to our [Discussion boards][d
 
 ## Explanation
 
-> TODO
+* [About the `fusion` CLI](about_cli.html)
 
 
 ## Reference
