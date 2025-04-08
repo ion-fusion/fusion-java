@@ -43,7 +43,7 @@ class Require
         if (args.length != 1) throw usage();
 
         String moduleName = args[0];
-        if (moduleName.length() == 0) throw usage();
+        if (moduleName.isEmpty()) throw usage();
 
         return new Executor(globals, moduleName);
     }

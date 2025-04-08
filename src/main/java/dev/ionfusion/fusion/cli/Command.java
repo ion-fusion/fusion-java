@@ -49,7 +49,7 @@ abstract class Command
 
     /**
      * Sets the help text for this command.
-     *
+     * <p>
      * Nomenclature: this is called "put" to hide it from the
      * BeanUtils.copyProperty call in extractOptions
      *
@@ -62,7 +62,7 @@ abstract class Command
      */
     void putHelpText(String oneLiner, String usage, String body)
     {
-        assert oneLiner != null && oneLiner.length() > 0;
+        assert oneLiner != null && !oneLiner.isEmpty();
         assert usage != null && usage.startsWith(myCommand);
         assert body != null && !body.endsWith("\n");
 
@@ -132,6 +132,14 @@ abstract class Command
      *      --key = value
      *  </pre>
      *   The option <code>"key"</code> will have the value <code>"="</code>.
+     * <p>
+     * The set of options to recognize is determined by the JavaBeans-style
+     * properties of the given {@code target}.
+     *
+     * @param target an object that both defines the applicable options and
+     * receives any associated values among the command line {@code args}.
+     *
+     * @return a copy of the {@code args} with any options removed.
      */
     static String[] extractOptions(Object target, String[] args,
                                    boolean stopAtNonOption)
@@ -179,8 +187,7 @@ abstract class Command
                     }
                 }
 
-                PropertyDescriptor desc =
-                    getPropertyDescriptor(propDescs, key);
+                PropertyDescriptor desc = seekWriteableProperty(propDescs, key);
                 if (desc == null)
                 {
                     throw new UsageException("Invalid option: " + arg);
@@ -219,6 +226,7 @@ abstract class Command
             }
             else
             {
+                // Not stopping at a "real" argument; keep looking for options.
                 result.add(arg);
             }
         }
@@ -227,8 +235,17 @@ abstract class Command
     }
 
 
+    /**
+     * Looks for a writeable property with a given name amongst the given
+     * property descriptors.
+     *
+     * @param propDescs the descriptors to search.
+     * @param propName the desired property name.
+     *
+     * @return the first descriptor with the given name, else null.
+     */
     private static PropertyDescriptor
-    getPropertyDescriptor(PropertyDescriptor[] propDescs, String propName)
+    seekWriteableProperty(PropertyDescriptor[] propDescs, String propName)
     {
         for (PropertyDescriptor descriptor : propDescs)
         {
@@ -304,6 +321,7 @@ abstract class Command
      *
      * @return null if there are no command options.
      */
+    final  // TODO See comment in prepare() before adding a command w/ options
     Object makeOptions(GlobalOptions globals)
     {
         return null;
@@ -332,6 +350,9 @@ abstract class Command
         // so any options we find will cause an error.
         if (options == null) options = new Object();
 
+        // TODO The `false` here causes the parser to accept options mingled
+        //  within the arguments. I don't think that's a good idea, but so far
+        //  no command has options, so it doesn't matter.
         args = extractOptions(options, args, false);
 
         return makeExecutor(globals, options, args);

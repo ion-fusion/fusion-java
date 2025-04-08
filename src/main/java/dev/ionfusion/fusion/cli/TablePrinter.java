@@ -54,12 +54,8 @@ class TablePrinter
                 if (col+1 != row.length)
                 {
                     int paddingNeeded = columnWidths[col] - cell.length();
-                    if (col < row.length)
-                    {
-                        paddingNeeded += myGutterWidth;
-                    }
 
-                    renderBlanks(paddingNeeded, out);
+                    renderBlanks(paddingNeeded + myGutterWidth, out);
                 }
             }
 
@@ -71,7 +67,7 @@ class TablePrinter
     private int[] computeColumnWidths()
     {
         // This assumes that there is at least one row, and that the first
-        // row is the longest.  This should usually be the case with headers.
+        // row has the most columns.  This should usually be the case with headers.
         int columnCount = myRows.get(0).length;
 
         int[] columnWidths = new int[columnCount];

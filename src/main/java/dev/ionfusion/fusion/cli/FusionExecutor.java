@@ -5,6 +5,7 @@ package dev.ionfusion.fusion.cli;
 
 import static dev.ionfusion.fusion.FusionIo.write;
 import static dev.ionfusion.fusion.FusionVoid.isVoid;
+
 import dev.ionfusion.fusion.ExitException;
 import dev.ionfusion.fusion.FusionException;
 import dev.ionfusion.fusion.FusionRuntime;
@@ -12,7 +13,8 @@ import dev.ionfusion.fusion.TopLevel;
 import java.io.PrintWriter;
 
 /**
- *
+ * Command executor that uses a shared {@link FusionRuntime} from the
+ * {@link GlobalOptions}.
  */
 abstract class FusionExecutor
     extends StdioExecutor

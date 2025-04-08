@@ -38,7 +38,7 @@ class Eval
         if (args.length != 1) throw usage();
 
         String evalText = args[0];
-        if (evalText.length() == 0) throw usage();
+        if (evalText.isEmpty()) throw usage();
 
         return new Executor(globals, evalText);
     }

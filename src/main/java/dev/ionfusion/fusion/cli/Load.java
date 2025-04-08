@@ -38,7 +38,7 @@ class Load
         if (args.length != 1) throw usage();
 
         String fileName = args[0];
-        if (fileName.length() == 0) throw usage();
+        if (fileName.isEmpty()) throw usage();
 
         File file = new File(fileName);
         if (! (file.canRead() && file.isFile()))

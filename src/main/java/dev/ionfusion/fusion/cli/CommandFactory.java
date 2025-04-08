@@ -30,8 +30,7 @@ class CommandFactory
 
     public static Command[] getAllCommands()
     {
-        Command[] commands =
-            new Command[]
+        return new Command[]
             {
                 new Repl(),
                 new Load(),
@@ -43,8 +42,6 @@ class CommandFactory
                 new Version(),
                 new Document(),
             };
-
-        return commands;
     }
 
 
@@ -126,7 +123,7 @@ class CommandFactory
     public static Executor makeExecutor(GlobalOptions globals,
                                         Command  command,
                                         String[] commandLine)
-        throws Exception
+        throws UsageException
     {
         // Strip off the leading command name, leaving the options and args.
         int argCount = commandLine.length - 1;
@@ -154,6 +151,8 @@ class CommandFactory
         {
             commandLine = Command.extractOptions(globals, commandLine, true);
 
+            // Eagerly parse all commands and their args so that any errors can
+            // be reported before executing anything.
             List<Executor> execs = makeExecutors(globals, commandLine);
             for (Executor exec : execs)
             {
@@ -213,6 +212,13 @@ class CommandFactory
 
 
     /**
+     * Parses a segment of the command line into its command, options, and
+     * arguments, producing an {@link Executor} that implements the command.
+     *
+     * @param start the position within {@code commandLine} at which to start
+     * the segment.
+     * @param len the number of words in the segment.
+     *
      * @return an error code, zero meaning success.
      */
     private static Executor makeExecutor(GlobalOptions globals,
@@ -221,12 +227,12 @@ class CommandFactory
                                          int len)
         throws Exception
     {
-        String[] partial = new String[len];
-        System.arraycopy(commandLine, start, partial, 0, len);
+        String[] segment = new String[len];
+        System.arraycopy(commandLine, start, segment, 0, len);
 
-        Command command = matchCommand(globals, partial);
+        Command command = matchCommand(globals, segment);
 
-        return makeExecutor(globals, command, partial);
+        return makeExecutor(globals, command, segment);
     }
 
 
