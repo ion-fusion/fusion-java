@@ -35,6 +35,34 @@ To see the possible commands, use the `help` command:
       help             Describe the usage of this program or its commands.
       version          Writes version information about this program.
 
+...and so on.
+
+
+## Passing Options
+
+As shown above, the CLI follows the command/subcommand pattern common in modern projects. To tune
+behavior, it supports options following both the `fusion` executable name (so-called "global
+options"), affecting the entire execution, and following an individual command, affecting just that
+segment.
+
+Options start with `"--"`, and come in three forms:
+
+    --key=value
+    --key value
+    --key
+ 
+The first two forms are used for all non-boolean option types. The third form is used for boolean 
+options, which are always set to `true` when present on the command line.
+
+When using the first form above, the entire form must be a single word (from the perspective of your
+shell), without whitespace around the `"="`.
+
+No sanity checking is performed on the value, so if you type...
+
+    --key = value
+
+...the option named `"key"` will get the value `"="`.
+
 
 ## Running a Script
 
