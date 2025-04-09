@@ -234,6 +234,9 @@ bound to the name [`eof`](fusion/io.html#eof).
 
 Outputs an Ion text representation of `value` to the current output port,
 throwing an exception if the value contains any non-Ionizable data like closures.
+
+See [`write`](fusion/io.html#write) for an alternative that doesn't fail an
+non-Ionizable inputs.
     '''
     (java_new "dev.ionfusion.fusion.FusionIo$IonizeProc" current_output_port))
 
@@ -290,6 +293,8 @@ Outputs a text representation of `value` to the current output port, following
 Ion syntax where possible.
 The result will be unreadable (by the Fusion and Ion readers) if the value
 contains any non-Ionizable data like closures.
+Contrast this with [`ionize`](fusion/io.html#ionize), which throws an exception
+in such cases.
     '''
     (java_new "dev.ionfusion.fusion.FusionIo$WriteProc" current_output_port))
 
