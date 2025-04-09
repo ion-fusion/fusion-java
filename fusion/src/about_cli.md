@@ -64,11 +64,38 @@ No sanity checking is performed on the value, so if you type...
 ...the option named `"key"` will get the value `"="`.
 
 
+## Evaluating an Inline Expression
+
+The most straightforward use case for the CLI is to evaluate some code provided on the command line.
+The command for this is `eval`, mirroring the Fusion procedure [`eval`](fusion/eval.html#eval).
+Here's a trivial example:
+
+    % fusion eval '(+ 1 2)'
+    3
+
+The output (to stdout) of an `eval` command is the value returned by its final expression, using the
+format defined by [`write`](fusion/io.html#write), which renders non-Ion data using a non-Ion but
+human-understandable syntax:
+
+    % fusion eval "{ first: first, last: (quote last) }"
+    {first:{{{procedure 'first'}}},last:last}
+
+While `eval` only accepts a single argument, that argument string can contain multiple top-level
+syntax forms:
+
+    % fusion eval '(define now (timestamp_now)) (displayln "The year is " (timestamp_year now))'
+    The year is 2025
+
+If the final result is [void](fusion/void.html), it is ignored. That's the case above: the output is
+emitted by [`displayln`](fusion/io.html#displayln), which returns void so nothing else is rendered.
+
+
 ## Running a Script
 
-The most common use of the CLI is to evaluate a script on the local file system. The command 
-for this is `load`, mirroring [the Fusion procedure of the same name](fusion/eval.html#load). 
-Suppose you have a script in the current directory called `script.fusion`:
+Since it's awkward to pass nontrivial code to `eval` through the command line, it is perhaps more
+common to evaluate a script on the local file system. The command for this is `load`, mirroring
+[the Fusion procedure of the same name](fusion/eval.html#load). Suppose you have a script in the 
+current directory called `script.fusion`:
 
     % cat script.fusion
     (define (add1 num)
@@ -94,11 +121,6 @@ a time:
 
     % echo 41 | fusion load add1.fusion
     42
-
-
-## Evaluating an Inline Expression
-
-[TODO](https://github.com/orgs/ion-fusion/discussions/213)
 
 
 ## Running Multiple Commands
