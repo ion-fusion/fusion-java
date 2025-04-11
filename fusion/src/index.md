@@ -10,7 +10,7 @@ questions, requests, or other feedback, please post to our [Discussion boards][d
 [create a GitHub issue][new-issue] so we can keep improving.
 
 [discuss]:   https://github.com/orgs/ion-fusion/discussions
-[home]:      https://github.com/ion-fusion/fusion-java
+[home]:      https://ion-fusion.dev/
 [new-issue]: https://github.com/ion-fusion/fusion-java/issues/new
 
 

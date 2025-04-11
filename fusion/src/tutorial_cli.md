@@ -7,7 +7,7 @@ Here we'll walk through some basic use cases with Ion Fusion's command-line inte
 
 > **Prerequisites:** At present, you'll need to [build the CLI from source](howto_build.html).
 
-The `fusion` CLI has threeGe modes of operation: an interactive REPL, script execution, and direct
+The `fusion` CLI has three modes of operation: an interactive REPL, script execution, and direct
 evaluation of expressions. We'll start with the latter:
 
     fusion eval '(+ 1 2)'

@@ -123,5 +123,5 @@ TopLevel top = b.build();
 [Sandboxed Evaluation]: https://docs.racket-lang.org/reference/Sandboxed_Evaluation.html
 [Security Guards]:      https://docs.racket-lang.org/reference/securityguards.html
 
-[FFI]:      https://github.com/ion-fusion/fusion-java/blob/main/fusion/src/fusion/ffi/java.fusion
-[TopLevel]: https://github.com/ion-fusion/fusion-java/blob/main/src/com/amazon/fusion/TopLevel.java
+[FFI]:      https://docs.ion-fusion.dev/latest/fusion/ffi.html
+[TopLevel]: https://docs.ion-fusion.dev/latest/javadoc/dev/ionfusion/fusion/TopLevel.html
