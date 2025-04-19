@@ -18,7 +18,7 @@ jobs:
 
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
 
     steps:
     # https://github.com/actions/checkout
@@ -39,6 +39,36 @@ jobs:
     - name: Build with Gradle Wrapper
       run: ./gradlew release
 
+    - name: Upload release
+      if: github.repository == 'ion-fusion/fusion-java'
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        # Define release tag and name.
+        RELEASE_TAG="latest"
+        RELEASE_TITLE="Latest build"
+
+        # Pick the target branch. Otherwise, this would default to main (which would be OK, but doesn't adapt to
+        # running or testing this script elsewhere).
+        CURRENT_BRANCH=$(git branch --show-current)
+
+        # Delete the existing release if it exists.
+        EXISTING_RELEASE=$(gh release list --repo ${{ github.repository }} --json tagName --jq ".[] | select(.tagName==\"$RELEASE_TAG\")")
+        if [ -n "$EXISTING_RELEASE" ]; then
+          gh release delete --repo ${{ github.repository }} \
+            "$RELEASE_TAG" \
+            --yes \
+            --cleanup-tag
+        fi
+
+        # Create the release and upload the distribution files (this will include a zip and a tarball).
+        gh release create --repo ${{ github.repository }} \
+          "$RELEASE_TAG" \
+          --title "$RELEASE_TITLE" \
+          --notes "Latest build" \
+          --prerelease \
+          --target "$CURRENT_BRANCH" \
+          build/distributions/*
 
   dependency-submission:
     if: github.repository == 'ion-fusion/fusion-java'
