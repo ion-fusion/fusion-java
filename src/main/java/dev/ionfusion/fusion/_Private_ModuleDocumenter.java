@@ -171,7 +171,7 @@ public final class _Private_ModuleDocumenter
 
         try (HtmlWriter writer = new HtmlWriter(outputFile))
         {
-            writer.renderHead(title, baseUrl, "doc.css");
+            writer.renderHead(title, baseUrl, "common.css", "doc.css");
             writer.append(HEADER_LINKS);
             writer.append(html);
         }
@@ -238,7 +238,7 @@ public final class _Private_ModuleDocumenter
             openHtml();
             {
                 String modulePath = myModuleId.absolutePath();
-                renderHead(modulePath, myBaseUrl, "module.css");
+                renderHead(modulePath, myBaseUrl, "common.css", "module.css");
 
                 openBody();
                 {
@@ -491,7 +491,7 @@ public final class _Private_ModuleDocumenter
         void renderIndex(DocIndex index)
             throws IOException
         {
-            renderHead("Fusion Binding Index", null, "index.css");
+            renderHead("Fusion Binding Index", null, "common.css", "index.css");
 
             append("<div class='indexlink'>" +
                    "<a href='index.html'>Top</a> " +
@@ -651,7 +651,7 @@ public final class _Private_ModuleDocumenter
         {
             permute();
 
-            renderHead("Fusion Binding Index (Permuted)", null, "index.css");
+            renderHead("Fusion Binding Index (Permuted)", null, "common.css", "index.css");
 
             append("<div class='indexlink'>" +
                    "<a href='index.html'>Top</a> " +

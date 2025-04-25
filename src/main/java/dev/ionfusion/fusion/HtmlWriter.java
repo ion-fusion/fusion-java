@@ -153,20 +153,22 @@ class HtmlWriter
 
 
     /**
-     * @param style may be null
+     * Renders a {@code <head>} block, using the given title and style sheets.
+     *
+     * @param cssUrls are relative to the {@code baseUrl}; may be empty.
      */
-    void renderHead(String title, String baseUrl, String style)
+    void renderHead(String title, String baseUrl, String... cssUrls)
         throws IOException
     {
         openHead(title, baseUrl);
 
-        if (style != null)
+        for (String cssUrl : cssUrls)
         {
             myOut.append("<link href='");
-            escape(style);
+            escape(cssUrl);
             myOut.append("' rel='stylesheet' type='text/css'></link>\n");
         }
-        
+
         myOut.append("</head>\n");
     }
 
