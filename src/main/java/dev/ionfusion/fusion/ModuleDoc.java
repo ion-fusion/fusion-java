@@ -5,6 +5,7 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionUtils.EMPTY_STRING_ARRAY;
 import static dev.ionfusion.fusion.GlobalState.FUSION_SOURCE_EXTENSION;
+
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 
 
 final class ModuleDoc
@@ -28,7 +30,8 @@ final class ModuleDoc
     private Map<String,BindingDoc> myBindings;
 
 
-    public static ModuleDoc buildDocTree(FusionRuntime runtime, Filter filter,
+    public static ModuleDoc buildDocTree(FusionRuntime runtime,
+                                         Predicate<ModuleIdentity> filter,
                                          File repoDir)
         throws IOException, FusionException
     {
@@ -138,7 +141,7 @@ final class ModuleDoc
     private void addBindings(ModuleInstance module)
     {
         Set<BaseSymbol> names = module.providedNames();
-        if (names.size() == 0) return;
+        if (names.isEmpty()) return;
 
         myBindings = new HashMap<>(names.size());
 
@@ -154,7 +157,8 @@ final class ModuleDoc
     /**
      * @return null if the submodule is to be excluded from documentation.
      */
-    private ModuleDoc addSubmodule(Filter filter, String name)
+    private ModuleDoc addSubmodule(Predicate<ModuleIdentity> filter,
+                                   String name)
         throws FusionException
     {
         ModuleIdentity id;
@@ -169,7 +173,7 @@ final class ModuleDoc
             id = ModuleIdentity.forAbsolutePath(submodulePath(name));
         }
 
-        if (! filter.accept(id)) return null;
+        if (! filter.test(id)) return null;
 
         ModuleInstance moduleInstance =
             myRuntime.getDefaultRegistry().instantiate(evaluator(), id);
@@ -202,7 +206,8 @@ final class ModuleDoc
      * Adds a submodule doc if and only if it doesn't already exist.
      * @return null if the submodule is to be excluded from documentation.
      */
-    private ModuleDoc addImplicitSubmodule(Filter filter, String name)
+    private ModuleDoc addImplicitSubmodule(Predicate<ModuleIdentity> filter,
+                                           String name)
         throws FusionException
     {
         if (mySubmodules != null)
@@ -219,7 +224,7 @@ final class ModuleDoc
     /**
      * Adds all modules that we can discover within a directory.
      */
-    private void addModules(Filter filter, File dir)
+    private void addModules(Predicate<ModuleIdentity> filter, File dir)
         throws IOException, FusionException
     {
         String[] fileNames = dir.list();
@@ -277,18 +282,6 @@ final class ModuleDoc
     }
 
     //========================================================================
-
-
-    static final class Filter
-    {
-        boolean accept(ModuleIdentity id)
-        {
-            String path = id.absolutePath();
-            if (path.endsWith("/private")) return false;
-            if (path.contains("/private/")) return false;
-            return true;
-        }
-    }
 
 
     /**

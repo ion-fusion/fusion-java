@@ -10,7 +10,6 @@ import static dev.ionfusion.fusion.ModuleDoc.buildDocTree;
 
 import com.amazon.ion.Timestamp;
 import com.petebevin.markdown.MarkdownProcessor;
-import dev.ionfusion.fusion.ModuleDoc.Filter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -22,6 +21,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,7 +38,11 @@ public final class _Private_ModuleDocumenter
                                      File repoDir)
         throws IOException, FusionException
     {
-        Filter filter = new Filter();
+        Predicate<ModuleIdentity> filter = id -> {
+            String path = id.absolutePath();
+            boolean isPrivate = path.endsWith("/private") || path.contains("/private/");
+            return !isPrivate;
+        };
 
         log("Building module docs");
         ModuleDoc doc = buildDocTree(runtime, filter, repoDir);
@@ -60,7 +64,7 @@ public final class _Private_ModuleDocumenter
     }
 
 
-    private static void writeModuleTree(Filter filter,
+    private static void writeModuleTree(Predicate<ModuleIdentity> filter,
                                         File outputDir,
                                         String baseUrl,
                                         ModuleDoc doc)
@@ -82,7 +86,7 @@ public final class _Private_ModuleDocumenter
     }
 
 
-    private static void writeModuleFile(Filter filter,
+    private static void writeModuleFile(Predicate<ModuleIdentity> filter,
                                         File outputDir,
                                         String baseUrl,
                                         ModuleDoc doc)
@@ -98,7 +102,7 @@ public final class _Private_ModuleDocumenter
     }
 
 
-    private static void writeIndexFile(Filter filter,
+    private static void writeIndexFile(Predicate<ModuleIdentity> filter,
                                        File outputDir,
                                        DocIndex index)
         throws IOException
@@ -112,7 +116,7 @@ public final class _Private_ModuleDocumenter
     }
 
 
-    private static void writePermutedIndexFile(Filter filter,
+    private static void writePermutedIndexFile(Predicate<ModuleIdentity> filter,
                                                File outputDir,
                                                DocIndex index)
         throws IOException
@@ -135,6 +139,12 @@ public final class _Private_ModuleDocumenter
     private static final Pattern TITLE_PATTERN =
         Pattern.compile(TITLE_REGEX, Pattern.MULTILINE);
 
+    /**
+     * Transforms a single Markdown file into HTML.
+     * <p>
+     * The page title is taken from the first H1, assumed to be authored using
+     * the atx syntax: {@code # <Title content>}.
+     */
     private static void writeMarkdownPage(File   outputFile,
                                           String baseUrl,
                                           File   inputFile)
@@ -199,13 +209,13 @@ public final class _Private_ModuleDocumenter
     private static final class ModuleWriter
         extends HtmlWriter
     {
-        private final Filter            myFilter;
-        private final String            myBaseUrl;
-        private final ModuleDoc         myDoc;
-        private final ModuleIdentity    myModuleId;
-        private final MarkdownProcessor myMarkdown = new MarkdownProcessor();
+        private final Predicate<ModuleIdentity> myFilter;
+        private final String                    myBaseUrl;
+        private final ModuleDoc                 myDoc;
+        private final ModuleIdentity            myModuleId;
+        private final MarkdownProcessor         myMarkdown = new MarkdownProcessor();
 
-        public ModuleWriter(Filter    filter,
+        public ModuleWriter(Predicate<ModuleIdentity> filter,
                             File      outputFile,
                             String    baseUrl,
                             ModuleDoc doc)
@@ -426,7 +436,7 @@ public final class _Private_ModuleDocumenter
                 boolean printedOne = false;
                 for (ModuleIdentity id : ids)
                 {
-                    if (id != myModuleId && myFilter.accept(id))
+                    if (id != myModuleId && myFilter.test(id))
                     {
                         if (printedOne)
                         {
@@ -468,10 +478,10 @@ public final class _Private_ModuleDocumenter
     private static final class IndexWriter
         extends HtmlWriter
     {
-        private final Filter myFilter;
+        private final Predicate<ModuleIdentity> myFilter;
 
 
-        public IndexWriter(Filter filter, File outputFile)
+        public IndexWriter(Predicate<ModuleIdentity> filter, File outputFile)
             throws IOException
         {
             super(outputFile);
@@ -503,7 +513,7 @@ public final class _Private_ModuleDocumenter
                 boolean printedOne = false;
                 for (ModuleIdentity id : entry.getValue())
                 {
-                    if (myFilter.accept(id))
+                    if (myFilter.test(id))
                     {
                         if (printedOne)
                         {
@@ -527,8 +537,8 @@ public final class _Private_ModuleDocumenter
     private static final class PermutedIndexWriter
         extends HtmlWriter
     {
-        private final Filter   myFilter;
-        private final DocIndex myIndex;
+        private final Predicate<ModuleIdentity> myFilter;
+        private final DocIndex                  myIndex;
 
         /** Maps keywords to the lines in which they exist. */
         private final TreeSet<Line> myLines;
@@ -598,7 +608,8 @@ public final class _Private_ModuleDocumenter
         }
 
 
-        public PermutedIndexWriter(Filter filter, DocIndex index,
+        public PermutedIndexWriter(Predicate<ModuleIdentity> filter,
+                                   DocIndex index,
                                    File outputFile)
             throws IOException
         {
@@ -666,7 +677,7 @@ public final class _Private_ModuleDocumenter
                 boolean printedOne = false;
                 for (ModuleIdentity id : line.modules())
                 {
-                    if (myFilter.accept(id))
+                    if (myFilter.test(id))
                     {
                         if (printedOne)
                         {
