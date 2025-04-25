@@ -30,6 +30,14 @@ import java.util.regex.Pattern;
  */
 public final class _Private_ModuleDocumenter
 {
+    /** HTML content for the masthead links */
+    private static final String HEADER_LINKS =
+        "<div class='indexlink'>" +
+        "<a href='index.html'>Top</a> " +
+        "<a href='binding-index.html'>Binding Index</a> " +
+        "(<a href='permuted-index.html'>Permuted</a>)" +
+        "</div>\n";
+
     private _Private_ModuleDocumenter() {}
 
 
@@ -158,7 +166,8 @@ public final class _Private_ModuleDocumenter
 
         try (HtmlWriter writer = new HtmlWriter(outputFile))
         {
-            writer.renderHead(title, baseUrl, null /*style*/);
+            writer.renderHead(title, baseUrl, "doc.css");
+            writer.append(HEADER_LINKS);
             writer.append(html);
         }
     }
@@ -266,12 +275,7 @@ public final class _Private_ModuleDocumenter
         private void renderHeader()
             throws IOException
         {
-            append("<div class='indexlink'>" +
-                   "<a href='index.html'>Top</a> " +
-                   "<a href='binding-index.html'>Binding Index</a> " +
-                   "(<a href='permuted-index.html'>Permuted</a>)" +
-                   "</div>\n");
-
+            append(HEADER_LINKS);
             append("<h1>Module ");
             renderModulePathWithLinks(myModuleId);
             append("</h1>");
