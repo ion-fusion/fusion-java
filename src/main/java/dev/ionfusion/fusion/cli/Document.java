@@ -4,8 +4,11 @@
 package dev.ionfusion.fusion.cli;
 
 import static dev.ionfusion.fusion._Private_ModuleDocumenter.writeHtmlTree;
+
+import dev.ionfusion.fusion.ModuleIdentity;
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.function.Predicate;
 
 
 class Document
@@ -92,7 +95,14 @@ class Document
         {
             // TODO send log messages to the output PrintWriter, not System.out
             File srcDir = new File(myRepoDir, "src");
-            writeHtmlTree(runtime(), myOutputDir, srcDir);
+
+            Predicate<ModuleIdentity> filter = id -> {
+                String path = id.absolutePath();
+                boolean isPrivate = path.endsWith("/private") || path.contains("/private/");
+                return !isPrivate;
+            };
+
+            writeHtmlTree(runtime(), myOutputDir, srcDir, filter);
             return 0;
         }
     }

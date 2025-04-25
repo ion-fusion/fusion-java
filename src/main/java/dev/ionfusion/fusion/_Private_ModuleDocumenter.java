@@ -35,15 +35,10 @@ public final class _Private_ModuleDocumenter
 
     public static void writeHtmlTree(FusionRuntime runtime,
                                      File outputDir,
-                                     File repoDir)
+                                     File repoDir,
+                                     Predicate<ModuleIdentity> filter)
         throws IOException, FusionException
     {
-        Predicate<ModuleIdentity> filter = id -> {
-            String path = id.absolutePath();
-            boolean isPrivate = path.endsWith("/private") || path.contains("/private/");
-            return !isPrivate;
-        };
-
         log("Building module docs");
         ModuleDoc doc = buildDocTree(runtime, filter, repoDir);
 
