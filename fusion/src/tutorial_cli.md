@@ -1,11 +1,18 @@
 <!-- Copyright Ion Fusion contributors. All rights reserved. -->
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 
-# Tutorial: the Fusion CLI
+# Tutorial: Exploring the Fusion CLI
 
 Here we'll walk through some basic use cases with Ion Fusion's command-line interface.
 
-> **Prerequisites:** At present, you'll need to [build the CLI from source](howto_build.html).
+> **Prerequisites:** 
+>
+> * Install a Java runtime, version 8 or later. We recommend [Amazon Corretto][].
+> * Ensure that `java` is on your shell's `PATH`.
+> * Download the [Ion Fusion SDK][SDK], unpack it somewhere, and add its
+>   `bin` directory to your `PATH`.
+>
+> Alternatively, you can [build the CLI from source](howto_build.html).
 
 The `fusion` CLI has three modes of operation: an interactive REPL, script execution, and direct
 evaluation of expressions. We'll start with the latter:
@@ -86,6 +93,8 @@ preceding examples.
 [About the `fusion` CLI](about_cli.html) explains the interface in more detail.
 
 
+[Amazon Corretto]: https://aws.amazon.com/corretto
 [CONTRIBUTORS]: https://github.com/ion-fusion/fusion-java/blob/main/CONTRIBUTORS.md
+[SDK]:          https://github.com/ion-fusion/fusion-java/releases
 [sexp]:   https://amazon-ion.github.io/ion-docs/docs/spec.html#sexp
 [symbol]: https://amazon-ion.github.io/ion-docs/docs/spec.html#symbol

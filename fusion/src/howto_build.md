@@ -3,8 +3,13 @@
 
 # Building Ion Fusion
 
-While we work toward a public distro, you'll need to build from source to run Fusion. 
-This should be straightforward:
+> **Prerequisites:**
+>
+> * Install a Java runtime, version 8 or later. We recommend [Amazon Corretto][].
+> * Install [Git][].
+> * Ensure that `java` and `git` are on your shell's `PATH`.
+
+Building from source should be straightforward:
 
     git clone https://github.com/ion-fusion/fusion-java.git
     cd fusion-java
@@ -28,5 +33,9 @@ That should give you an overview of the CLI's subcommands.
 
 ## What's Next?
 
-With the `fusion` CLI ready to go, you can follow the [CLI tutorial](tutorial_cli.html) to use 
-it to run code!
+With the `fusion` CLI ready to go, you can follow the [CLI tutorial](tutorial_cli.html) and run
+some code!
+
+
+[Amazon Corretto]: https://aws.amazon.com/corretto
+[Git]: https://git-scm.com/
