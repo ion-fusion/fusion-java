@@ -37,7 +37,6 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     testImplementation("org.hamcrest:hamcrest:3.0")
-    testImplementation("org.htmlunit:htmlunit:4.6.0")
 }
 
 java {
@@ -83,9 +82,6 @@ tasks.jar {
 // Tests
 
 tasks.test {
-    // dev.ionfusion.fusion.DocumentationTest checks the generated documentation.
-    dependsOn(fusiondoc)
-
     // dev.ionfusion.fusion.ClassLoaderModuleRepositoryTest uses ftst-repo.jar.
     dependsOn(ftstRepo)
 
@@ -129,6 +125,15 @@ testing {
     suites {
         // This test suite ensures the distribution is functional.
         register<JvmTestSuite>("testDist") {
+            dependencies {
+                // Docs claim that Jupiter is configured by default, but these
+                // are all necessary.
+                implementation(platform("org.junit:junit-bom:5.11.3"))
+                implementation("org.junit.jupiter:junit-jupiter")
+                implementation("org.hamcrest:hamcrest:3.0")
+                implementation("org.htmlunit:htmlunit:4.12.0")
+            }
+
             // "Future iterations of the plugin will allow defining multiple
             // targets based other attributes, such as a particular JDK runtime."
             targets {

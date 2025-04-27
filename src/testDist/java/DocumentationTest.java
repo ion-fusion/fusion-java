@@ -1,8 +1,6 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,6 +19,9 @@ import org.junit.jupiter.api.AutoClose;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Verifies the documentation tree in the distribution.
+ */
 public class DocumentationTest
 {
     /** Not thread-safe */
@@ -54,7 +55,7 @@ public class DocumentationTest
     private HtmlPage loadModule(String modulePath)
         throws IOException
     {
-        String   url  = "file:build/docs/fusiondoc" + modulePath + ".html";
+        String   url  = "file:build/install/fusion/docs" + modulePath + ".html";
         HtmlPage page = myWebClient.getPage(url);
         assertEquals(modulePath, page.getTitleText());
 
