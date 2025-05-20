@@ -13,7 +13,7 @@ a functional manner. That is, Fusion procedures may or may not cause side
 effects, and the language carefully avoids the term "function" except when
 describing code known to be free of side effects.
 
-## Multiple Results <a id="results"/>
+## Multiple Results <a id="results"></a>
 
 As expected, procedures accept arguments and return values. But you may not
 expect that a procedure can return _multiple_ values. This feature is distinct

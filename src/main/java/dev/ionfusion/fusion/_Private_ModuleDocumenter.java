@@ -171,9 +171,17 @@ public final class _Private_ModuleDocumenter
 
         try (HtmlWriter writer = new HtmlWriter(outputFile))
         {
-            writer.renderHead(title, baseUrl, "common.css", "doc.css");
-            writer.append(HEADER_LINKS);
-            writer.append(html);
+            writer.openHtml();
+            {
+                writer.renderHead(title, baseUrl, "common.css", "doc.css");
+                writer.openBody();
+                {
+                    writer.append(HEADER_LINKS);
+                    writer.append(html);
+                }
+                writer.closeBody();
+            }
+            writer.closeHtml();
         }
     }
 
@@ -384,11 +392,12 @@ public final class _Private_ModuleDocumenter
             append(escapedName);
             append("'><span class='name'>");
             append(escapedName);
+            // FIXME The </a> below is spurious, but unit tests don't flag it.
             append("</a></span>");   // binding div is still open
 
             if (doc == null)
             {
-                append("<p class='nodoc'>No documentation available.<p>\n\n");
+                append("<p class='nodoc'>No documentation available.</p>\n\n");
             }
             else
             {
@@ -491,41 +500,49 @@ public final class _Private_ModuleDocumenter
         void renderIndex(DocIndex index)
             throws IOException
         {
-            renderHead("Fusion Binding Index", null, "common.css", "index.css");
-
-            append("<div class='indexlink'>" +
-                   "<a href='index.html'>Top</a> " +
-                   "<a href='permuted-index.html'>Permuted Index</a>" +
-                   "</div>\n");
-
-            renderHeader1("Binding Index");
-
-            append("<table>");
-            for (Entry<String, Set<ModuleIdentity>> entry
-                    : index.getNameMap().entrySet())
+            openHtml();
             {
-                String escapedName = escapeString(entry.getKey());
-                append("<tr><td class='bound'>");
-                append(escapedName);
-                append("</td><td>");
+                renderHead("Fusion Binding Index", null, "common.css", "index.css");
 
-                boolean printedOne = false;
-                for (ModuleIdentity id : entry.getValue())
+                openBody();
                 {
-                    if (myFilter.test(id))
-                    {
-                        if (printedOne)
-                        {
-                            append(", ");
-                        }
-                        linkToBindingAsModulePath(id, escapedName);
-                        printedOne = true;
-                    }
-                }
+                    append("<div class='indexlink'>" +
+                           "<a href='index.html'>Top</a> " +
+                           "<a href='permuted-index.html'>Permuted Index</a>" +
+                           "</div>\n");
 
-                append("</td>\n");
+                    renderHeader1("Binding Index");
+
+                    append("<table><tbody>");
+                    for (Entry<String, Set<ModuleIdentity>> entry
+                        : index.getNameMap().entrySet())
+                    {
+                        String escapedName = escapeString(entry.getKey());
+                        append("<tr><td class='bound'>");
+                        append(escapedName);
+                        append("</td><td>");
+
+                        boolean printedOne = false;
+                        for (ModuleIdentity id : entry.getValue())
+                        {
+                            if (myFilter.test(id))
+                            {
+                                if (printedOne)
+                                {
+                                    append(", ");
+                                }
+                                linkToBindingAsModulePath(id, escapedName);
+                                printedOne = true;
+                            }
+                        }
+
+                        append("</td></tr>\n");
+                    }
+                    append("</tbody></table>\n");
+                }
+                closeBody();
             }
-            append("</table>\n");
+            closeHtml();
         }
     }
 
@@ -651,45 +668,53 @@ public final class _Private_ModuleDocumenter
         {
             permute();
 
-            renderHead("Fusion Binding Index (Permuted)", null, "common.css", "index.css");
-
-            append("<div class='indexlink'>" +
-                   "<a href='index.html'>Top</a> " +
-                   "<a href='binding-index.html'>Alphabetical Index</a>" +
-                   "</div>\n");
-
-            renderHeader1("Permuted Binding Index");
-
-            append("<table>");
-            for (Line line : myLines)
+            openHtml();
             {
-                String escapedName = escapeString(line.bindingName());
+                renderHead("Fusion Binding Index (Permuted)", null, "common.css", "index.css");
 
-                append("<tr><td class='prefix'>");
-                escape(line.prefix());
-                append("</td><td class='tail'><span class='keyword'>");
-                escape(line.keyword());
-                append("</span>");
-                escape(line.suffix());
-                append("</td><td>");
-
-                boolean printedOne = false;
-                for (ModuleIdentity id : line.modules())
+                openBody();
                 {
-                    if (myFilter.test(id))
-                    {
-                        if (printedOne)
-                        {
-                            append(", ");
-                        }
-                        linkToBindingAsModulePath(id, escapedName);
-                        printedOne = true;
-                    }
-                }
+                    append("<div class='indexlink'>" +
+                           "<a href='index.html'>Top</a> " +
+                           "<a href='binding-index.html'>Alphabetical Index</a>" +
+                           "</div>\n");
 
-                append("</td>\n");
+                    renderHeader1("Permuted Binding Index");
+
+                    append("<table><tbody>");
+                    for (Line line : myLines)
+                    {
+                        String escapedName = escapeString(line.bindingName());
+
+                        append("<tr><td class='prefix'>");
+                        escape(line.prefix());
+                        append("</td><td class='tail'><span class='keyword'>");
+                        escape(line.keyword());
+                        append("</span>");
+                        escape(line.suffix());
+                        append("</td><td>");
+
+                        boolean printedOne = false;
+                        for (ModuleIdentity id : line.modules())
+                        {
+                            if (myFilter.test(id))
+                            {
+                                if (printedOne)
+                                {
+                                    append(", ");
+                                }
+                                linkToBindingAsModulePath(id, escapedName);
+                                printedOne = true;
+                            }
+                        }
+
+                        append("</td></tr>\n");
+                    }
+                    append("</tbody></table>\n");
+                }
+                closeBody();
             }
-            append("</table>\n");
+            closeHtml();
         }
     }
 

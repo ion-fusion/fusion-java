@@ -140,7 +140,7 @@ exports two small procedures:
         (element seq (- (size seq) 2))))
 
 
-## Module References <a id="ref"/>
+## Module References <a id="ref"></a>
 
 When `require`ing a module, you use a _module reference_ to identify the target
 module.  These references are syntactic forms that the compiler resolves to a
@@ -204,7 +204,7 @@ and `".."` segments are not allowed in paths from a top-level `require`, since
 the top-level is not a module and does not have a parent module.
 
 
-## Naming Modules <a id="nm"/>
+## Naming Modules <a id="nm"></a>
 
 Like Java, Fusion arranges code in a hierarchy. Unlike Java, that hierarchy is
 intended to be active in providing metadata around access protection, security,

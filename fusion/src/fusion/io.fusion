@@ -7,7 +7,7 @@
 Basic input/output features.  At present these are generally Ion-oriented.
 
 
-## Reading Ion Data <a id="input"/>
+## Reading Ion Data <a id="input"></a>
 
 The _current Ion input port_ is an internal [parameter][] that is the default
 source for reading Ion data.  If it is not parameterized
@@ -65,7 +65,7 @@ For example, this procedure reads a file into a list of top-level values:
           (series_to_list (in_port)))))
 
 
-## Output <a id="output"/>
+## Output <a id="output"></a>
 
 There are three "styles" of output:
 

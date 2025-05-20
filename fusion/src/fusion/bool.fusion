@@ -35,7 +35,7 @@ or [`unless`][unless]:
 Both examples either display a line of text or do nothing.
 
 
-## Truthiness <a id="truthiness"/>
+## Truthiness <a id="truthiness"></a>
 
 Fusion's conditional expressions branch based on the "truthiness" of the
 condition value, which means the result of the condition expression
