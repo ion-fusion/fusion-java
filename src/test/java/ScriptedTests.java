@@ -3,17 +3,12 @@
 
 import static dev.ionfusion.fusion.CoreTestCase.ftstRepositoryDirectory;
 import static dev.ionfusion.fusion.CoreTestCase.fusionBootstrapDirectory;
-import static org.junit.jupiter.api.DynamicContainer.dynamicContainer;
-import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+
 import dev.ionfusion.fusion.FusionException;
 import dev.ionfusion.fusion.FusionRuntime;
 import dev.ionfusion.fusion.FusionRuntimeBuilder;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import dev.ionfusion.fusion.junit.TreeWalker;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicNode;
@@ -40,7 +35,10 @@ public class ScriptedTests
     {
         FusionRuntime runtime = makeRuntimeBuilder().build();
 
-        return forDir(Paths.get("ftst"), runtime);
+        return TreeWalker.walk(Paths.get("ftst"),
+                               dir -> true,
+                               file -> file.getFileName().toString().endsWith(".test.fusion"),
+                               file -> runtime.makeTopLevel().load(file.toFile()));
     }
 
 
@@ -69,38 +67,5 @@ public class ScriptedTests
         b.addRepositoryDirectory(ftstRepositoryDirectory().toFile());
 
         return b.immutable();
-    }
-
-
-    private Stream<DynamicNode> forDir(Path dir, FusionRuntime runtime)
-    {
-        String[] fileNames = dir.toFile().list();
-        assert fileNames != null : "Not a directory: " + dir.toAbsolutePath();
-
-        // Sort the fileNames so they are listed in order.
-        // This is not a functional requirement, but it helps humans scanning
-        // the output looking for a specific file.
-        Arrays.sort(fileNames);
-
-        return Arrays.stream(fileNames)
-                     .map(n -> forChild(dir.resolve(n), runtime))
-                     .filter(Objects::nonNull);
-    }
-
-
-    private DynamicNode forChild(Path file, FusionRuntime runtime)
-    {
-        String name = file.getFileName().toString();
-        URI    uri  = file.toUri();
-
-        if (Files.isDirectory(file))
-        {
-            return dynamicContainer(name + "/", uri, forDir(file, runtime));
-        }
-        else if (name.endsWith(".test.fusion"))
-        {
-            return dynamicTest(name, uri, () -> runtime.makeTopLevel().load(file.toFile()));
-        }
-        return null;
     }
 }
