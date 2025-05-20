@@ -7,8 +7,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import dev.ionfusion.fusion.junit.TreeWalker;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
 import org.htmlunit.WebClient;
 import org.htmlunit.html.HtmlBody;
 import org.htmlunit.html.HtmlHeading1;
@@ -17,7 +20,10 @@ import org.htmlunit.html.HtmlParagraph;
 import org.htmlunit.html.parser.HTMLParserListener;
 import org.junit.jupiter.api.AutoClose;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 
 /**
  * Verifies the documentation tree in the distribution.
@@ -80,5 +86,15 @@ public class DocumentationTest
         HtmlParagraph p = body.getFirstByXPath("p");
         assertNotNull(p, "missing first <p>");
         assertThat(p.getTextContent(), startsWith("The main Fusion language."));
+    }
+
+    @TestFactory
+    @DisplayName("docs/")
+    Stream<DynamicNode> testAllHtmlPages()
+    {
+        return TreeWalker.walk(Paths.get("build/install/fusion/docs"),
+                               dir  -> !dir.startsWith("javadoc"),
+                               file -> file.getFileName().toString().endsWith(".html"),
+                               file -> myWebClient.getPage(file.toUri().toURL()));
     }
 }

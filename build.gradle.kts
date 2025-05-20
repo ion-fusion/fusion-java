@@ -32,6 +32,7 @@ dependencies {
     //  generate their docs.  That should be handled by a plugin instead.
     implementation("org.markdownj:markdownj:0.3.0-1.0.2b4")
 
+    // https://junit.org/junit5/docs/current/user-guide/#running-tests-build-gradle-bom
     testImplementation(platform("org.junit:junit-bom:5.11.3"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
@@ -132,6 +133,9 @@ testing {
                 implementation("org.junit.jupiter:junit-jupiter")
                 implementation("org.hamcrest:hamcrest:3.0")
                 implementation("org.htmlunit:htmlunit:4.12.0")
+
+                // Provide access to utility classes from src/test
+                implementation(sourceSets.test.get().runtimeClasspath)
             }
 
             // "Future iterations of the plugin will allow defining multiple
