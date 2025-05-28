@@ -12,7 +12,7 @@ Here we'll walk through some basic use cases with Ion Fusion's command-line inte
 > * Download the [Ion Fusion SDK][SDK], unpack it somewhere, and add its
 >   `bin` directory to your `PATH`.
 >
-> Alternatively, you can [build the CLI from source](howto_build.html).
+> Alternatively, you can [build Ion Fusion from source](howto_build.html).
 
 The `fusion` CLI has three modes of operation: an interactive REPL, script execution, and direct
 evaluation of expressions. We'll start with the latter:
