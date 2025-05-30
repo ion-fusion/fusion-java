@@ -575,6 +575,9 @@ class Evaluator
 
 
     /**
+     * Returns an evaluator with {@code current_namespace} parameterized to a
+     * given namespace.
+     *
      * @param ns may be null, having no effect.
      * @return a parameterized evaluator.
      */

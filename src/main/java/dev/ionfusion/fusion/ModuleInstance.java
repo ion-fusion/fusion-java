@@ -55,6 +55,7 @@ final class ModuleInstance
 
     /**
      * Creates a module that {@code provide}s the given bindings.
+     * This is for use by the {@link ModuleBuilder}.
      */
     ModuleInstance(ModuleIdentity identity, ModuleStore namespace,
                    Collection<NsDefinedBinding> bindings)

@@ -65,8 +65,11 @@ final class ModuleRegistry
 
 
     /**
-     * @return null if the module has not been instantiated and has not been
-     * declared.
+     * Instantiates a previously declared module, or returns its existing
+     * instantiation within this registry.
+     *
+     * @return null if the module has not been declared (and thus cannot be
+     * instantiated).
      */
     synchronized ModuleInstance instantiate(Evaluator eval,
                                             ModuleIdentity identity)
