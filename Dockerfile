@@ -71,13 +71,15 @@ RUN dnf --assumeyes install java-1.8.0-openjdk-headless
 
 FROM ${BASE_JDK} AS build
 WORKDIR /opt/fusion
+# avoid javadoc build errors due to encoding issues:
+ENV LC_ALL="C.UTF-8" LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8"
 # install gradle via the wrapper:
-COPY --parents ./gradle ./gradlew ./build.gradle.kts ./settings.gradle.kts .
+COPY --parents gradle/ gradlew build.gradle.kts settings.gradle.kts .
 RUN ./gradlew --version
+# copy in all remaining source files:
+COPY --parents doc/ ftst/ fusion/ rkt/ src/ tst-data/ .
 # run the gradle build, then clean up build dependencies:
-COPY . .
-RUN ./gradlew --no-daemon --console=plain --stacktrace release && \
-    rm -rf ~/.gradle
+RUN ./gradlew --no-daemon --console=plain --stacktrace release && rm -rf ~/.gradle
 
 
 # Ion Fusion SDK image
