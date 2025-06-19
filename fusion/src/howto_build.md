@@ -36,8 +36,7 @@ After a successful release build, you'll have a basic Ion Fusion SDK under
 
 * `bin/fusion`, the Ion Fusion command-line interface (CLI) utility.
 * `docs/fusiondoc/fusion.html`, the documentation for the Ion Fusion language.
-* `docs/javadoc/index.html`, the documentation for the Ion Fusion library
-  interface, for integrating Ion Fusion into your application.
+* `docs/javadoc/index.html`, the documentation for the `fusion-java` API, for integrating Ion Fusion into your Java application.
 * `lib/`, with the Ion Fusion JAR files required for integration.
 
 To experiment with the CLI, you can add the `bin` directory to your PATH:
