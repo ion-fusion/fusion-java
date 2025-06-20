@@ -5,11 +5,12 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionString.makeString;
 import static dev.ionfusion.fusion.FusionValue.UNDEF;
-import dev.ionfusion.fusion.ModuleNamespace.ModuleDefinedBinding;
+
 import com.amazon.ion.IonReader;
 import com.amazon.ion.IonStruct;
 import com.amazon.ion.IonSystem;
 import com.amazon.ion.system.IonReaderBuilder;
+import dev.ionfusion.fusion.ModuleNamespace.ModuleDefinedBinding;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -48,6 +49,7 @@ final class GlobalState
     final LoadHandler                myLoadHandler;
     final _Private_CoverageCollector myCoverageCollector;
 
+    final DynamicParameter myCollectDocsParam;
     final DynamicParameter myCurrentIonReaderParam;
     final DynamicParameter myCurrentNamespaceParam;
     final DynamicParameter myCurrentOutputPortParam;
@@ -66,12 +68,12 @@ final class GlobalState
     final Binding myKernelRequireBinding;
 
     private GlobalState(IonSystem                  ionSystem,
+                        FusionRuntimeBuilder       builder,
                         IonReaderBuilder           ionReaderBuilder,
                         FileSystemSpecialist       fileSystemSpecialist,
                         ModuleInstance             kernel,
                         ModuleNameResolver         resolver,
-                        LoadHandler                loadHandler,
-                        _Private_CoverageCollector coverageCollector)
+                        LoadHandler                loadHandler)
     {
         myIonSystem             = ionSystem;
         myIonReaderBuilder      = ionReaderBuilder;
@@ -79,7 +81,9 @@ final class GlobalState
         myKernelModule          = kernel;
         myModuleNameResolver    = resolver;
         myLoadHandler           = loadHandler;
-        myCoverageCollector     = coverageCollector;
+        myCoverageCollector     = builder.getCoverageCollector();
+
+        myCollectDocsParam          = new DynamicParameter(builder.isDocumenting());
 
         myCurrentIonReaderParam     = kernelValue("current_ion_reader");
         myCurrentNamespaceParam     = kernelValue("current_namespace");
@@ -175,8 +179,7 @@ final class GlobalState
         ModuleInstance kernel = registry.lookup(KERNEL_MODULE_IDENTITY);
 
         GlobalState globals =
-            new GlobalState(system, readerBuilder, fs, kernel, resolver, loadHandler,
-                            builder.getCoverageCollector());
+            new GlobalState(system, builder, readerBuilder, fs, kernel, resolver, loadHandler);
         return globals;
     }
 

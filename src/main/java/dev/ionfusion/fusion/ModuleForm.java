@@ -4,7 +4,6 @@
 package dev.ionfusion.fusion;
 
 import static com.amazon.ion.util.IonTextUtils.printQuotedSymbol;
-import static dev.ionfusion.fusion.BindingDoc.COLLECT_DOCS_MARK;
 import static dev.ionfusion.fusion.FusionSexp.isPair;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
@@ -363,7 +362,7 @@ final class ModuleForm
             {
                 // We're gonna call this documentation!
                 moduleDatum = unsafePairTail(eval, moduleDatum);
-                if (eval.firstContinuationMark(COLLECT_DOCS_MARK) != null)
+                if (comp.isDocCollectingEnabled())
                 {
                     docs = unsafeStringToJavaString(eval, maybeDoc);
                 }

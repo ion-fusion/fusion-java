@@ -11,9 +11,6 @@ final class BindingDoc
 {
     static final BindingDoc[] EMPTY_ARRAY = new BindingDoc[0];
 
-    /** Private continuation mark to trigger documentation collection. */
-    static final Object COLLECT_DOCS_MARK = new DynamicParameter(null);
-
     enum Kind { PROCEDURE, SYNTAX, CONSTANT }
 
     private String myName;

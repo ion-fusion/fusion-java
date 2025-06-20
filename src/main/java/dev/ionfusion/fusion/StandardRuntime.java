@@ -3,12 +3,10 @@
 
 package dev.ionfusion.fusion;
 
-import static dev.ionfusion.fusion.BindingDoc.COLLECT_DOCS_MARK;
-import static dev.ionfusion.fusion.FusionUtils.EMPTY_OBJECT_ARRAY;
 import static dev.ionfusion.fusion.GlobalState.KERNEL_MODULE_IDENTITY;
 import static dev.ionfusion.fusion.ModuleIdentity.forAbsolutePath;
 import static dev.ionfusion.fusion.ModuleIdentity.isValidAbsoluteModulePath;
-import static java.lang.Boolean.TRUE;
+
 import com.amazon.ion.IonCatalog;
 import com.amazon.ion.IonReader;
 import com.amazon.ion.IonSystem;
@@ -48,12 +46,7 @@ final class StandardRuntime
             myGlobalState =
                 GlobalState.initialize(ionSystem, builder, myRegistry, topNs);
 
-            Object[] parameterization =
-                (builder.isDocumenting()
-                     ? new Object[]{ COLLECT_DOCS_MARK, TRUE }
-                     : EMPTY_OBJECT_ARRAY);
-
-            myTopLevel = makeTopLevel(topNs, myDefaultLanguage, parameterization);
+            myTopLevel = makeTopLevel(topNs, myDefaultLanguage);
         }
         catch (FusionException e)
         {

@@ -3,7 +3,6 @@
 
 package dev.ionfusion.fusion;
 
-import static dev.ionfusion.fusion.BindingDoc.COLLECT_DOCS_MARK;
 import static dev.ionfusion.fusion.FusionIo.safeWrite;
 import static dev.ionfusion.fusion.FusionList.immutableList;
 import static dev.ionfusion.fusion.FusionList.unsafeListElement;
@@ -19,6 +18,7 @@ import static dev.ionfusion.fusion.FusionValue.isAnyNull;
 import static dev.ionfusion.fusion.FusionVoid.isVoid;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.LetValuesForm.compilePlainLet;
+
 import dev.ionfusion.fusion.BindingDoc.Kind;
 import dev.ionfusion.fusion.FusionStruct.StructFieldVisitor;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
@@ -53,10 +53,14 @@ class Compiler
         internSymbol("#%plain_app retain arg locations");
 
     private final Evaluator myEval;
+    private final boolean   myDocCollectingEnabled;
 
     Compiler(Evaluator eval)
     {
         myEval = eval;
+
+        DynamicParameter param = eval.getGlobalState().myCollectDocsParam;
+        myDocCollectingEnabled = param.currentValue(eval);
     }
 
 
@@ -73,6 +77,11 @@ class Compiler
     final ModuleInstance getKernel()
     {
         return myEval.findKernel();
+    }
+
+    boolean isDocCollectingEnabled()
+    {
+        return myDocCollectingEnabled;
     }
 
 
@@ -350,7 +359,7 @@ class Compiler
         }
 
         // Collect documentation when necessary.
-        if (arity != 3 && myEval.firstContinuationMark(COLLECT_DOCS_MARK) != null)
+        if (arity != 3 && isDocCollectingEnabled())
         {
             SyntaxSequence docSeq = (SyntaxSequence) stx.get(myEval, 2);
 
@@ -406,8 +415,7 @@ class Compiler
 
         CompiledForm compiled = (CompiledForm) binding.visit(v);
 
-        if (arity != 3
-            && myEval.firstContinuationMark(COLLECT_DOCS_MARK) != null)
+        if (arity != 3 && isDocCollectingEnabled())
         {
             // We have documentation. Sort of.
             Object docString = stx.get(myEval, 2).unwrap(myEval);
