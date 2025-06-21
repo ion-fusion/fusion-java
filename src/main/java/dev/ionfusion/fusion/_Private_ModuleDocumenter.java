@@ -5,16 +5,14 @@ package dev.ionfusion.fusion;
 
 import static com.amazon.ion.system.IonTextWriterBuilder.UTF8;
 import static dev.ionfusion.fusion.DocIndex.buildDocIndex;
-import static dev.ionfusion.fusion.FusionUtils.EMPTY_STRING_ARRAY;
 import static dev.ionfusion.fusion.ModuleDoc.buildDocTree;
 
 import com.amazon.ion.Timestamp;
 import com.petebevin.markdown.MarkdownProcessor;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
@@ -150,17 +148,12 @@ public final class _Private_ModuleDocumenter
      */
     private static void writeMarkdownPage(File   outputFile,
                                           String baseUrl,
-                                          File   inputFile)
+                                          Path   inputFile)
         throws IOException
     {
-        String markdownContent;
-        try (FileInputStream inStream = new FileInputStream(inputFile))
-        {
-            try (Reader inReader = new InputStreamReader(inStream, UTF8))
-            {
-                markdownContent = FusionUtils.loadReader(inReader);
-            }
-        }
+        // TODO Java11: use Files.readString
+        byte[] bytes = Files.readAllBytes(inputFile);
+        String markdownContent = new String(bytes, UTF8);
 
         Matcher matcher = TITLE_PATTERN.matcher(markdownContent);
         String title =
@@ -204,7 +197,7 @@ public final class _Private_ModuleDocumenter
             {
                 String docName = fileName.substring(0, fileName.length() - 2);
                 File outputFile = new File(outputDir, docName + "html");
-                writeMarkdownPage(outputFile, baseUrl, repoFile);
+                writeMarkdownPage(outputFile, baseUrl, repoFile.toPath());
             }
             else if (repoFile.isDirectory())
             {
@@ -311,7 +304,7 @@ public final class _Private_ModuleDocumenter
 
             renderHeader2("Submodules");
 
-            String[] names = submodules.keySet().toArray(EMPTY_STRING_ARRAY);
+            String[] names = submodules.keySet().toArray(new String[0]);
             Arrays.sort(names);
 
             append("<ul class='submodules'>");

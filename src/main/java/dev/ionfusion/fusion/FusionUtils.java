@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.net.URL;
 import java.util.Properties;
 
@@ -143,23 +142,6 @@ final class FusionUtils
                                          + file);
             }
         }
-    }
-
-
-    public static String loadReader(Reader in)
-        throws IOException
-    {
-        StringBuilder buf = new StringBuilder(2048);
-
-        char[] chars = new char[2048];
-
-        int len;
-        while ((len = in.read(chars)) != -1)
-        {
-            buf.append(chars, 0, len);
-        }
-
-        return buf.toString();
     }
 
 
