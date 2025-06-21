@@ -57,7 +57,7 @@ public final class _Private_CoverageCollectorImpl
         throws FusionException, IOException
     {
         myConfig   = new CoverageConfiguration(dataDir);
-        myDatabase = new CoverageDatabase(dataDir);
+        myDatabase = new CoverageDatabase(dataDir.toPath());
     }
 
 

@@ -13,12 +13,12 @@ import com.amazon.ion.IonWriter;
 import com.amazon.ion.system.IonReaderBuilder;
 import com.amazon.ion.system.IonTextWriterBuilder;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -84,19 +84,19 @@ class CoverageDatabase
     //=========================================================================
 
 
-    private final File myCoverageFile;
+    private final Path myStorageFile;
 
     private final Set<File> myRepositories = new HashSet<>();
 
     private final Map<SourceLocation,Boolean> myLocations = new HashMap<>();
 
 
-    public CoverageDatabase(File dataDir)
+    public CoverageDatabase(Path dataDir)
         throws IOException
     {
-        myCoverageFile = new File(dataDir, "coverage.ion");
+        myStorageFile = dataDir.resolve("coverage.ion");
 
-        if (myCoverageFile.exists())
+        if (Files.exists(myStorageFile))
         {
             read();
         }
@@ -340,8 +340,8 @@ class CoverageDatabase
     synchronized void write()
         throws IOException
     {
-        FusionUtils.createParentDirs(myCoverageFile);
-        try (OutputStream out = new FileOutputStream(myCoverageFile))
+        Files.createDirectories(myStorageFile.getParent());
+        try (OutputStream out = Files.newOutputStream(myStorageFile))
         {
             IonTextWriterBuilder builder =
                 IonTextWriterBuilder.minimal()
@@ -551,7 +551,7 @@ class CoverageDatabase
     private void read()
         throws IOException
     {
-        try (InputStream is = new FileInputStream(myCoverageFile))
+        try (InputStream is = Files.newInputStream(myStorageFile))
         {
             try (IonReader ir = IonReaderBuilder.standard().build(is))
             {

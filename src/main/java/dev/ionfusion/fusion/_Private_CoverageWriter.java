@@ -169,7 +169,7 @@ public final class _Private_CoverageWriter
     public _Private_CoverageWriter(File dataDir)
         throws FusionException, IOException
     {
-        myDatabase = new CoverageDatabase(dataDir);
+        myDatabase = new CoverageDatabase(dataDir.toPath());
         myConfig   = new CoverageConfiguration(dataDir);
 
         myModules                 = new HashSet<>();

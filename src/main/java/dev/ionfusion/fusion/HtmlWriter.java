@@ -7,11 +7,12 @@ import static com.amazon.ion.system.IonTextWriterBuilder.UTF8;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 class HtmlWriter
     implements AutoCloseable
@@ -22,10 +23,12 @@ class HtmlWriter
     HtmlWriter(File outputFile)
         throws IOException
     {
-        FusionUtils.createParentDirs(outputFile);
+        Path outputPath = outputFile.toPath();
+        Files.createDirectories(outputPath.getParent());
 
-        myOutStream = new FileOutputStream(outputFile);
+        myOutStream = Files.newOutputStream(outputPath);
 
+        // FIXME OutputStream will not be closed if this fails:
         myOut = new BufferedWriter(new OutputStreamWriter(myOutStream, UTF8));
     }
 
