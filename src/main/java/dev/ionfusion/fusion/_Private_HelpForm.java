@@ -5,6 +5,7 @@ package dev.ionfusion.fusion;
 
 import dev.ionfusion.fusion.ModuleNamespace.CompiledImportedVariableReference;
 import dev.ionfusion.fusion.TopLevelNamespace.CompiledTopLevelVariableReference;
+import dev.ionfusion.fusion._private.doc.model.BindingDoc;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;

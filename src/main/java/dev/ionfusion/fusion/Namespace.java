@@ -12,6 +12,7 @@ import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.ModuleNamespace.ModuleDefinedBinding;
 import dev.ionfusion.fusion.ModuleNamespace.ProvidedBinding;
 import dev.ionfusion.fusion.TopLevelNamespace.TopLevelDefinedBinding;
+import dev.ionfusion.fusion._private.doc.model.BindingDoc;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;

@@ -3,11 +3,12 @@
 
 package dev.ionfusion.fusion;
 
-import dev.ionfusion.fusion.BindingDoc.Kind;
-import dev.ionfusion.fusion.Namespace.NsDefinedBinding;
 import com.amazon.ion.IonString;
 import com.amazon.ion.IonStruct;
 import com.amazon.ion.IonValue;
+import dev.ionfusion.fusion.Namespace.NsDefinedBinding;
+import dev.ionfusion.fusion._private.doc.model.BindingDoc;
+import dev.ionfusion.fusion._private.doc.model.BindingDoc.Kind;
 import java.util.Collection;
 
 

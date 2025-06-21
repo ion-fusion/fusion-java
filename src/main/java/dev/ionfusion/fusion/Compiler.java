@@ -19,7 +19,6 @@ import static dev.ionfusion.fusion.FusionVoid.isVoid;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.LetValuesForm.compilePlainLet;
 
-import dev.ionfusion.fusion.BindingDoc.Kind;
 import dev.ionfusion.fusion.FusionStruct.StructFieldVisitor;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.LambdaForm.CompiledLambdaBase;
@@ -43,6 +42,8 @@ import dev.ionfusion.fusion.TopLevelNamespace.CompiledTopDefine;
 import dev.ionfusion.fusion.TopLevelNamespace.CompiledTopDefineValues;
 import dev.ionfusion.fusion.TopLevelNamespace.CompiledTopLevelVariableReference;
 import dev.ionfusion.fusion.TopLevelNamespace.TopLevelDefinedBinding;
+import dev.ionfusion.fusion._private.doc.model.BindingDoc;
+import dev.ionfusion.fusion._private.doc.model.BindingDoc.Kind;
 
 /**
  * "Registers" used during compilation.

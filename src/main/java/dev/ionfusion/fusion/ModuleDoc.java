@@ -7,6 +7,7 @@ import static dev.ionfusion.fusion.FusionUtils.EMPTY_STRING_ARRAY;
 import static dev.ionfusion.fusion.GlobalState.FUSION_SOURCE_EXTENSION;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+import dev.ionfusion.fusion._private.doc.model.BindingDoc;
 import java.io.File;
 import java.io.IOException;
 import java.text.BreakIterator;

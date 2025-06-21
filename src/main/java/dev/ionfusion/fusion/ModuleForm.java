@@ -19,6 +19,7 @@ import static dev.ionfusion.fusion.ModuleIdentity.isValidModulePath;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.ModuleNamespace.ProvidedBinding;
+import dev.ionfusion.fusion._private.doc.model.BindingDoc;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.Iterator;

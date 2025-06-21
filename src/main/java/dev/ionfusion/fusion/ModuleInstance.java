@@ -8,6 +8,7 @@ import dev.ionfusion.fusion.ModuleNamespace.DefinedProvidedBinding;
 import dev.ionfusion.fusion.ModuleNamespace.ModuleDefinedBinding;
 import dev.ionfusion.fusion.ModuleNamespace.ProvidedBinding;
 import dev.ionfusion.fusion.Namespace.NsDefinedBinding;
+import dev.ionfusion.fusion._private.doc.model.BindingDoc;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;

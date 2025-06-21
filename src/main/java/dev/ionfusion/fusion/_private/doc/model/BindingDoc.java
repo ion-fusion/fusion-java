@@ -1,17 +1,18 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion;
+package dev.ionfusion.fusion._private.doc.model;
 
+import dev.ionfusion.fusion.ModuleIdentity;
 import java.util.HashSet;
 import java.util.Set;
 
 
-final class BindingDoc
+public final class BindingDoc
 {
-    static final BindingDoc[] EMPTY_ARRAY = new BindingDoc[0];
+    public static final BindingDoc[] EMPTY_ARRAY = new BindingDoc[0];
 
-    enum Kind { PROCEDURE, SYNTAX, CONSTANT }
+    public enum Kind { PROCEDURE, SYNTAX, CONSTANT }
 
     private String myName;
     private Kind   myKind;
@@ -23,7 +24,7 @@ final class BindingDoc
     private final HashSet<ModuleIdentity> myProvidingModules = new HashSet<>();
 
 
-    BindingDoc(String name, Kind kind, String usage, String body)
+    public BindingDoc(String name, Kind kind, String usage, String body)
     {
         myName = name;
         myKind = kind;
@@ -32,31 +33,31 @@ final class BindingDoc
     }
 
 
-    String getName()
+    public String getName()
     {
         return myName;
     }
 
-    void setName(String name)
+    public void setName(String name)
     {
         assert myName == null;
         myName = name;
     }
 
 
-    Kind getKind()
+    public Kind getKind()
     {
         return myKind;
     }
 
-    void setKind(Kind kind)
+    public void setKind(Kind kind)
     {
         assert myKind == null;
         myKind = kind;
     }
 
 
-    String getUsage()
+    public String getUsage()
     {
         if (myUsage != null
             && ! (myUsage.startsWith("(") && myUsage.endsWith(")")))
@@ -64,7 +65,7 @@ final class BindingDoc
             StringBuilder buf = new StringBuilder();
             buf.append('(');
             buf.append(myName == null ? "_" : myName);
-            if (myUsage.length() != 0)
+            if (! myUsage.isEmpty())
             {
                 if (! myUsage.startsWith(" ")) buf.append(' ');
                 buf.append(myUsage);
@@ -84,18 +85,18 @@ final class BindingDoc
     }
 
 
-    String getBody()
+    public String getBody()
     {
         return myBody;
     }
 
 
-    Set<ModuleIdentity> getProvidingModules()
+    public Set<ModuleIdentity> getProvidingModules()
     {
         return myProvidingModules;
     }
 
-    void addProvidingModule(ModuleIdentity id)
+    public void addProvidingModule(ModuleIdentity id)
     {
         myProvidingModules.add(id);
     }

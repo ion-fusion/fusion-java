@@ -239,6 +239,7 @@ gradle.taskGraph.whenReady {
 
 tasks.javadoc {
     exclude("**/_Private_*",
+            "**/_private/**",
             "dev/ionfusion/fusion/cli",
             "dev/ionfusion/fusion/util/hamt/**")
 

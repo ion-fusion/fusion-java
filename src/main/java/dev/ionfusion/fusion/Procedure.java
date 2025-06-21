@@ -11,8 +11,10 @@ import static dev.ionfusion.fusion.FusionNumber.checkNullableIntArg;
 import static dev.ionfusion.fusion.FusionNumber.checkRequiredIntArg;
 import static dev.ionfusion.fusion.FusionSequence.checkNullableSequenceArg;
 import static dev.ionfusion.fusion.FusionStruct.checkNullableStructArg;
-import dev.ionfusion.fusion.BindingDoc.Kind;
+
 import com.amazon.ion.util.IonTextUtils;
+import dev.ionfusion.fusion._private.doc.model.BindingDoc;
+import dev.ionfusion.fusion._private.doc.model.BindingDoc.Kind;
 import java.io.IOException;
 import java.math.BigInteger;
 

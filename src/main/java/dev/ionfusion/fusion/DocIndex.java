@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion;
 
+import dev.ionfusion.fusion._private.doc.model.BindingDoc;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;

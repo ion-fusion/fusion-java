@@ -9,6 +9,7 @@ import static dev.ionfusion.fusion.ModuleDoc.buildDocTree;
 
 import com.amazon.ion.Timestamp;
 import com.petebevin.markdown.MarkdownProcessor;
+import dev.ionfusion.fusion._private.doc.model.BindingDoc;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
