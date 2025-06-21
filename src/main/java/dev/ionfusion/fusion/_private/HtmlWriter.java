@@ -1,10 +1,11 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion;
+package dev.ionfusion.fusion._private;
 
 import static com.amazon.ion.system.IonTextWriterBuilder.UTF8;
 
+import dev.ionfusion.fusion.ModuleIdentity;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -14,13 +15,13 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-class HtmlWriter
+public class HtmlWriter
     implements AutoCloseable
 {
     private final OutputStream myOutStream;
     private final Writer myOut;
 
-    HtmlWriter(File outputFile)
+    public HtmlWriter(File outputFile)
         throws IOException
     {
         Path outputPath = outputFile.toPath();
@@ -32,7 +33,7 @@ class HtmlWriter
         myOut = new BufferedWriter(new OutputStreamWriter(myOutStream, UTF8));
     }
 
-    HtmlWriter(File outputDir, String fileName)
+    public HtmlWriter(File outputDir, String fileName)
         throws IOException
     {
         this(new File(outputDir, fileName));
@@ -50,7 +51,7 @@ class HtmlWriter
     /**
      * Writes UTF-8 bytes, escaping HTML as necessary.
      */
-    final void write(byte[] buffer, int off, int len)
+    public final void write(byte[] buffer, int off, int len)
         throws IOException
     {
         myOut.flush();
@@ -77,20 +78,20 @@ class HtmlWriter
     }
 
 
-    final void append(char escapedContent)
+    public final void append(char escapedContent)
         throws IOException
     {
         myOut.append(escapedContent);
     }
 
-    final void append(String escapedContent)
+    public final void append(String escapedContent)
         throws IOException
     {
         myOut.append(escapedContent);
     }
 
 
-    final String escapeString(String text)
+    public final String escapeString(String text)
         throws IOException
     {
         text = text.replace("&", "&amp;");
@@ -101,7 +102,7 @@ class HtmlWriter
         return text;
     }
 
-    final void escape(String text)
+    protected final void escape(String text)
         throws IOException
     {
         text = escapeString(text);
@@ -109,14 +110,14 @@ class HtmlWriter
     }
 
 
-    void openHtml()
+    public void openHtml()
         throws IOException
     {
         myOut.append("<!DOCTYPE html>\n" +
                      "<html>\n");
     }
 
-    void closeHtml()
+    public void closeHtml()
         throws IOException
     {
         myOut.append("</html>\n");
@@ -142,7 +143,7 @@ class HtmlWriter
     }
 
 
-    void renderHeadWithInlineCss(String title, String css)
+    public void renderHeadWithInlineCss(String title, String css)
         throws IOException
     {
         openHead(title, null);
@@ -160,7 +161,7 @@ class HtmlWriter
      *
      * @param cssUrls are relative to the {@code baseUrl}; may be empty.
      */
-    void renderHead(String title, String baseUrl, String... cssUrls)
+    public void renderHead(String title, String baseUrl, String... cssUrls)
         throws IOException
     {
         openHead(title, baseUrl);
@@ -176,20 +177,20 @@ class HtmlWriter
     }
 
 
-    void openBody()
+    public void openBody()
         throws IOException
     {
         myOut.append("<body>\n");
     }
 
-    void closeBody()
+    public void closeBody()
         throws IOException
     {
         myOut.append("</body>\n");
     }
 
 
-    final void renderHeader1(String text)
+    protected final void renderHeader1(String text)
         throws IOException
     {
         myOut.append("<h1>");
@@ -197,7 +198,7 @@ class HtmlWriter
         myOut.append("</h1>\n");
     }
 
-    final void renderHeader2(String text)
+    protected final void renderHeader2(String text)
         throws IOException
     {
         myOut.append("<h2>");
@@ -209,7 +210,7 @@ class HtmlWriter
     /**
      * Renders a link to a module, using the given link text.
      */
-    final void linkToModule(ModuleIdentity id, String escapedLinkText)
+    protected final void linkToModule(ModuleIdentity id, String escapedLinkText)
         throws IOException
     {
         String escapedId = escapeString(id.absolutePath());
@@ -226,8 +227,7 @@ class HtmlWriter
      * Renders a link to a binding in a module, using the binding name
      * as the link text.
      */
-    final void linkToBindingAsName(ModuleIdentity id,
-                                   String escapedName)
+    protected final void linkToBindingAsName(ModuleIdentity id, String escapedName)
         throws IOException
     {
         String escapedId = escapeString(id.absolutePath());
@@ -246,8 +246,7 @@ class HtmlWriter
      * Renders a link to a binding in a module, using the full module path
      * as the link text.
      */
-    final void linkToBindingAsModulePath(ModuleIdentity id,
-                                         String escapedName)
+    protected final void linkToBindingAsModulePath(ModuleIdentity id, String escapedName)
         throws IOException
     {
         String escapedId = escapeString(id.absolutePath());

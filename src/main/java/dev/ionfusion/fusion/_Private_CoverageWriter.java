@@ -15,6 +15,7 @@ import com.amazon.ion.Span;
 import com.amazon.ion.SpanProvider;
 import com.amazon.ion.Timestamp;
 import com.amazon.ion.system.IonReaderBuilder;
+import dev.ionfusion.fusion._private.HtmlWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
