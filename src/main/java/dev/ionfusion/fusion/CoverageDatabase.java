@@ -6,11 +6,11 @@ package dev.ionfusion.fusion;
 import static com.amazon.ion.IonType.LIST;
 import static com.amazon.ion.IonType.STRING;
 import static com.amazon.ion.IonType.STRUCT;
+
 import com.amazon.ion.IonReader;
-import com.amazon.ion.IonSystem;
 import com.amazon.ion.IonType;
 import com.amazon.ion.IonWriter;
-import com.amazon.ion.system.IonSystemBuilder;
+import com.amazon.ion.system.IonReaderBuilder;
 import com.amazon.ion.system.IonTextWriterBuilder;
 import java.io.File;
 import java.io.FileInputStream;
@@ -551,10 +551,9 @@ class CoverageDatabase
     private void read()
         throws IOException
     {
-        IonSystem system = IonSystemBuilder.standard().build();
         try (InputStream is = new FileInputStream(myCoverageFile))
         {
-            try (IonReader ir = system.newReader(is))
+            try (IonReader ir = IonReaderBuilder.standard().build(is))
             {
                 readRepositories(ir);
 

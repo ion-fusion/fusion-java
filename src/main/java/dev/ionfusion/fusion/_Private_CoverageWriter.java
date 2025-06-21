@@ -9,13 +9,12 @@ import static java.math.RoundingMode.HALF_EVEN;
 import static java.nio.file.Files.walkFileTree;
 
 import com.amazon.ion.IonReader;
-import com.amazon.ion.IonSystem;
 import com.amazon.ion.IonType;
 import com.amazon.ion.OffsetSpan;
 import com.amazon.ion.Span;
 import com.amazon.ion.SpanProvider;
 import com.amazon.ion.Timestamp;
-import com.amazon.ion.system.IonSystemBuilder;
+import com.amazon.ion.system.IonReaderBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -161,7 +160,6 @@ public final class _Private_CoverageWriter
     private       long             myUnloadedEntries;
 
     // For rendering highlighted source files
-    private final IonSystem mySystem = IonSystemBuilder.standard().build();
     private static final int BUFFER_SIZE = 2048;
     private final byte[] myCopyBuffer = new byte[BUFFER_SIZE];
     private long myIonBytesRead;
@@ -486,7 +484,7 @@ public final class _Private_CoverageWriter
         {
             myIonBytesRead = 0;
 
-            try (IonReader ionReader = mySystem.newReader(readSource(name)))
+            try (IonReader ionReader = IonReaderBuilder.standard().build(readSource(name)))
             {
                 SpanProvider spanProvider =
                     ionReader.asFacet(SpanProvider.class);
