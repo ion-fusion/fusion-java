@@ -3,7 +3,6 @@
 
 package dev.ionfusion.fusion;
 
-import static dev.ionfusion.fusion.FusionUtils.EMPTY_STRING_ARRAY;
 import static dev.ionfusion.fusion.GlobalState.FUSION_SOURCE_EXTENSION;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
@@ -11,10 +10,8 @@ import dev.ionfusion.fusion._private.doc.model.BindingDoc;
 import java.io.File;
 import java.io.IOException;
 import java.text.BreakIterator;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -111,17 +108,6 @@ final class ModuleDoc
     Map<String, BindingDoc> bindingMap()
     {
         return myBindings;
-    }
-
-    String[] sortedExportedNames()
-    {
-        String[] names = EMPTY_STRING_ARRAY;
-        if (myBindings != null)
-        {
-            names = myBindings.keySet().toArray(EMPTY_STRING_ARRAY);
-            Arrays.sort(names, new BindingComparator());
-        }
-        return names;
     }
 
     Map<String, ModuleDoc> submoduleMap()
@@ -280,35 +266,5 @@ final class ModuleDoc
         throws FusionException
     {
         return myRuntime.getDefaultTopLevel().getEvaluator();
-    }
-
-    //========================================================================
-
-
-    /**
-     * Customer comparator to hide ugly #% bindings down at the bottom of
-     * binding lists. Otherwise they tend to show up early, which is silly
-     * since most people don't care about them and shouldn't use them.
-     */
-    private static final class BindingComparator
-        implements Comparator<String>
-    {
-        @Override
-        public int compare(String arg0, String arg1)
-        {
-            if (arg0.startsWith("#%"))
-            {
-                if (! arg1.startsWith("#%"))
-                {
-                    return 1;
-                }
-            }
-            else if (arg1.startsWith("#%"))
-            {
-                return -1;
-            }
-
-            return arg0.compareTo(arg1);
-        }
     }
 }

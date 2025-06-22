@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -350,11 +351,12 @@ public final class _Private_ModuleDocumenter
             throws IOException
         {
             Map<String, BindingDoc> bindings = myDoc.bindingMap();
-            if (bindings == null) return;
+            if (bindings == null || bindings.isEmpty()) return;
 
             renderHeader2("Exported Bindings");
 
-            String[] names = myDoc.sortedExportedNames();
+            String[] names = bindings.keySet().toArray(new String[0]);
+            Arrays.sort(names, new BindingComparator());
 
             renderBindingIndex(names);
 
@@ -718,5 +720,36 @@ public final class _Private_ModuleDocumenter
         System.out.print(Timestamp.now());
         System.out.print(" ");
         System.out.println(message);
+    }
+
+
+    //========================================================================
+
+
+    /**
+     * Customer comparator to hide ugly #% bindings down at the bottom of
+     * binding lists. Otherwise, they tend to show up early, which is silly
+     * since most people don't care about them and shouldn't use them.
+     */
+    private static final class BindingComparator
+        implements Comparator<String>
+    {
+        @Override
+        public int compare(String arg0, String arg1)
+        {
+            if (arg0.startsWith("#%"))
+            {
+                if (! arg1.startsWith("#%"))
+                {
+                    return 1;
+                }
+            }
+            else if (arg1.startsWith("#%"))
+            {
+                return -1;
+            }
+
+            return arg0.compareTo(arg1);
+        }
     }
 }
