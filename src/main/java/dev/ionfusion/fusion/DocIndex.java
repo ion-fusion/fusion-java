@@ -4,7 +4,7 @@
 package dev.ionfusion.fusion;
 
 import dev.ionfusion.fusion._private.doc.model.BindingDoc;
-import java.util.Collection;
+import dev.ionfusion.fusion._private.doc.model.ModuleDocs;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -39,44 +39,35 @@ final class DocIndex
 
     private void addEntriesForTree(ModuleDoc doc)
     {
-        // Skip the (anonymous) repo root and "modules" that are directories
-        if (doc.myModuleId != null)
-        {
-            addEntriesForModule(doc);
-        }
+        addEntriesForModule(doc.getModuleDocs());
 
-        Collection<ModuleDoc> submodules = doc.submodules();
-        for (ModuleDoc submodule : submodules)
+        for (ModuleDoc submodule : doc.submodules())
         {
             addEntriesForTree(submodule);
         }
     }
 
 
-    private void addEntriesForModule(ModuleDoc doc)
+    private void addEntriesForModule(ModuleDocs model)
     {
-        Map<String, BindingDoc> bindingMap = doc.bindingMap();
-        if (bindingMap != null)
-        {
-            for (Map.Entry<String, BindingDoc> entry : bindingMap.entrySet())
-            {
-                String name = entry.getKey();
-                Set<ModuleIdentity> ids = myNameMap.get(name);
-                if (ids == null)
-                {
-                    ids = new TreeSet<>();
-                    myNameMap.put(name, ids);
-                }
+        if (model == null) return;
 
-                BindingDoc bindingDoc = entry.getValue();
-                if (bindingDoc == null)
-                {
-                    ids.add(doc.myModuleId);
-                }
-                else
-                {
-                    ids.addAll(bindingDoc.getProvidingModules());
-                }
+        ModuleIdentity id = model.getIdentity();
+
+        Map<String, BindingDoc> bindingMap = model.getBindingDocs();
+        for (Map.Entry<String, BindingDoc> entry : bindingMap.entrySet())
+        {
+            String name = entry.getKey();
+            Set<ModuleIdentity> ids = myNameMap.computeIfAbsent(name, k -> new TreeSet<>());
+
+            BindingDoc bindingDoc = entry.getValue();
+            if (bindingDoc == null)
+            {
+                ids.add(id);
+            }
+            else
+            {
+                ids.addAll(bindingDoc.getProvidingModules());
             }
         }
     }

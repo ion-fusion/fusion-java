@@ -11,6 +11,7 @@ import com.amazon.ion.Timestamp;
 import com.petebevin.markdown.MarkdownProcessor;
 import dev.ionfusion.fusion._private.HtmlWriter;
 import dev.ionfusion.fusion._private.doc.model.BindingDoc;
+import dev.ionfusion.fusion._private.doc.model.ModuleDocs;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -220,6 +221,7 @@ public final class _Private_ModuleDocumenter
         private final Predicate<ModuleIdentity> myFilter;
         private final String                    myBaseUrl;
         private final ModuleDoc                 myDoc;
+        private final ModuleDocs                myDocModel;
         private final ModuleIdentity            myModuleId;
         private final MarkdownProcessor         myMarkdown = new MarkdownProcessor();
 
@@ -233,7 +235,8 @@ public final class _Private_ModuleDocumenter
             myFilter  = filter;
             myBaseUrl = baseUrl;
             myDoc = doc;
-            myModuleId = doc.myModuleId;
+            myDocModel = doc.getModuleDocs();
+            myModuleId = myDocModel.getIdentity();
         }
 
         void renderModule()
@@ -293,9 +296,10 @@ public final class _Private_ModuleDocumenter
         private void renderModuleIntro()
             throws IOException
         {
-            if (myDoc.myIntroDocs != null)
+            String overview = myDocModel.getOverview();
+            if (overview != null)
             {
-                markdown(myDoc.myIntroDocs);
+                markdown(overview);
             }
         }
 
@@ -303,7 +307,7 @@ public final class _Private_ModuleDocumenter
             throws IOException
         {
             Map<String, ModuleDoc> submodules = myDoc.submoduleMap();
-            if (submodules == null) return;
+            if (submodules == null || submodules.isEmpty()) return;
 
             renderHeader2("Submodules");
 
@@ -313,13 +317,13 @@ public final class _Private_ModuleDocumenter
             append("<ul class='submodules'>");
             for (String name : names)
             {
-                ModuleDoc sub = submodules.get(name);
+                ModuleDocs model = submodules.get(name).getModuleDocs();
 
                 String escapedName = escapeString(name);
                 append("<li>");
-                linkToModule(sub.myModuleId, escapedName);
+                linkToModule(model.getIdentity(), escapedName);
 
-                String oneLiner = sub.oneLiner();
+                String oneLiner = model.getOneLiner();
                 if (oneLiner != null)
                 {
                     append(" &ndash; <span class='oneliner'>");
@@ -351,7 +355,7 @@ public final class _Private_ModuleDocumenter
         private void renderBindings()
             throws IOException
         {
-            Map<String, BindingDoc> bindings = myDoc.bindingMap();
+            Map<String, BindingDoc> bindings = myDocModel.getBindingDocs();
             if (bindings == null || bindings.isEmpty()) return;
 
             renderHeader2("Exported Bindings");

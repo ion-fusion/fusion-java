@@ -7,9 +7,9 @@ import static dev.ionfusion.fusion.GlobalState.FUSION_SOURCE_EXTENSION;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion._private.doc.model.BindingDoc;
+import dev.ionfusion.fusion._private.doc.model.ModuleDocs;
 import java.io.File;
 import java.io.IOException;
-import java.text.BreakIterator;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,11 +21,9 @@ import java.util.function.Predicate;
 final class ModuleDoc
 {
     private final StandardRuntime myRuntime;
-    final ModuleIdentity myModuleId;
-    final String myIntroDocs;
-
-    private Map<String,ModuleDoc>  mySubmodules;
-    private Map<String,BindingDoc> myBindings;
+    private final ModuleIdentity        myModuleId;
+    private final ModuleDocs            myModuleDocs;
+    private       Map<String,ModuleDoc> mySubmodules;
 
 
     public static ModuleDoc buildDocTree(FusionRuntime runtime,
@@ -50,7 +48,7 @@ final class ModuleDoc
     {
         myRuntime = runtime;
         myModuleId = null;
-        myIntroDocs = null;
+        myModuleDocs = null;
     }
 
 
@@ -59,14 +57,21 @@ final class ModuleDoc
      */
     private ModuleDoc(StandardRuntime runtime,
                       ModuleIdentity id,
-                      String introDocs)
+                      ModuleDocs docModel)
         throws FusionException
     {
         assert id != null;
+        assert docModel != null;
 
         myRuntime = runtime;
         myModuleId = id;
-        myIntroDocs = introDocs;
+        myModuleDocs = docModel;
+    }
+
+
+    ModuleIdentity getModuleId()
+    {
+        return myModuleId;
     }
 
 
@@ -90,24 +95,9 @@ final class ModuleDoc
     }
 
 
-    String oneLiner()
+    ModuleDocs getModuleDocs()
     {
-        if (myIntroDocs == null) return null;
-
-        // TODO pick a better locale?
-        BreakIterator breaks = BreakIterator.getSentenceInstance();
-        breaks.setText(myIntroDocs);
-        int start = breaks.first();
-        int end = breaks.next();
-        if (end == BreakIterator.DONE) return null;
-
-        return myIntroDocs.substring(start, end);
-    }
-
-
-    Map<String, BindingDoc> bindingMap()
-    {
-        return myBindings;
+        return myModuleDocs;
     }
 
     Map<String, ModuleDoc> submoduleMap()
@@ -125,19 +115,27 @@ final class ModuleDoc
     }
 
 
-    private void addBindings(ModuleInstance module)
+    private ModuleDocs instantiateModuleDocModel(ModuleIdentity id)
+        throws FusionException
     {
-        Set<BaseSymbol> names = module.providedNames();
-        if (names.isEmpty()) return;
+        ModuleInstance module =
+            myRuntime.getDefaultRegistry().instantiate(evaluator(), id);
+        if (module == null) return null;
 
-        myBindings = new HashMap<>(names.size());
+        Set<BaseSymbol> names = module.providedNames();
+        Map<String, BindingDoc> bindings =
+            (names.isEmpty()
+                 ? Collections.emptyMap()
+                 : new HashMap<>(names.size()));
 
         for (BaseSymbol name : names)
         {
             String text = name.stringValue();
             BindingDoc doc = module.documentProvidedName(text);
-            myBindings.put(text, doc);
+            bindings.put(text, doc);
         }
+
+        return new ModuleDocs(id, module.getDocs(), bindings);
     }
 
 
@@ -154,28 +152,19 @@ final class ModuleDoc
             id = resolveModulePath(submodulePath(name));
             assert id.baseName().equals(name);
         }
+        // FIXME This can happen for modules required by the one requested.
         catch (ModuleNotFoundException e)
         {
-            // This can happen for implicit modules with no stub .fusion file.
+            // This can happen for implicit modules, that is, directories with
+            // no corresponding .fusion file.
             id = ModuleIdentity.forAbsolutePath(submodulePath(name));
         }
 
         if (! filter.test(id)) return null;
 
-        ModuleInstance moduleInstance =
-            myRuntime.getDefaultRegistry().instantiate(evaluator(), id);
+        ModuleDocs model = instantiateModuleDocModel(id);
 
-        ModuleDoc doc;
-        if (moduleInstance != null)
-        {
-            doc = new ModuleDoc(myRuntime, id, moduleInstance.getDocs());
-            doc.addBindings(moduleInstance);
-        }
-        else
-        {
-            // This is an implicit module with no code.
-            doc = new ModuleDoc(myRuntime, id, null);
-        }
+        ModuleDoc doc = new ModuleDoc(myRuntime, id, model);
 
         if (mySubmodules == null)
         {
