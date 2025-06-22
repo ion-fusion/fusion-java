@@ -1,13 +1,16 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion;
+package dev.ionfusion.fusion._private.doc.model;
 
-import static dev.ionfusion.fusion.GlobalState.FUSION_SOURCE_EXTENSION;
 import static dev.ionfusion.fusion._Private_Trampoline.instantiateModuleDocs;
 import static dev.ionfusion.fusion._Private_Trampoline.loadModule;
 
-import dev.ionfusion.fusion._private.doc.model.ModuleDocs;
+import dev.ionfusion.fusion.FusionException;
+import dev.ionfusion.fusion.FusionRuntime;
+import dev.ionfusion.fusion.ModuleIdentity;
+import dev.ionfusion.fusion.ModuleNotFoundException;
+import dev.ionfusion.fusion.TopLevel;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -17,20 +20,26 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 
-final class ModuleDoc
+public final class DocTreeNode
 {
-    private final TopLevel               myTopLevel;
-    private final ModuleIdentity         myModuleId;
-    private final ModuleDocs             myModuleDocs;
-    private       Map<String, ModuleDoc> mySubmodules;
+    /**
+     * This was copied from {@code GlobalState} due to access constraints.
+     * TODO Deduplicate this constant.
+     */
+    private static final String FUSION_SOURCE_EXTENSION = ".fusion";
+
+    private final TopLevel                 myTopLevel;
+    private final ModuleIdentity           myModuleId;
+    private final ModuleDocs               myModuleDocs;
+    private       Map<String, DocTreeNode> mySubmodules;
 
 
-    public static ModuleDoc buildDocTree(FusionRuntime runtime,
-                                         Predicate<ModuleIdentity> filter,
-                                         File repoDir)
+    public static DocTreeNode buildDocTree(FusionRuntime runtime,
+                                           Predicate<ModuleIdentity> filter,
+                                           File repoDir)
         throws IOException, FusionException
     {
-        ModuleDoc doc = new ModuleDoc(runtime.makeTopLevel());
+        DocTreeNode doc = new DocTreeNode(runtime.makeTopLevel());
         doc.addModules(filter, repoDir);
         return doc;
     }
@@ -42,7 +51,7 @@ final class ModuleDoc
     /**
      * Constructs the documentation root as a pseudo-module.
      */
-    private ModuleDoc(TopLevel top)
+    private DocTreeNode(TopLevel top)
         throws FusionException
     {
         myTopLevel = top;
@@ -54,9 +63,9 @@ final class ModuleDoc
     /**
      * Constructs docs for a real or implicit top-level module or submodule.
      */
-    private ModuleDoc(TopLevel       top,
-                      ModuleIdentity id,
-                      ModuleDocs docModel)
+    private DocTreeNode(TopLevel       top,
+                        ModuleIdentity id,
+                        ModuleDocs docModel)
         throws FusionException
     {
         assert id != null;
@@ -68,7 +77,7 @@ final class ModuleDoc
     }
 
 
-    String baseName()
+    public String baseName()
     {
         return (myModuleId == null ? null : myModuleId.baseName());
     }
@@ -88,17 +97,17 @@ final class ModuleDoc
     }
 
 
-    ModuleDocs getModuleDocs()
+    public ModuleDocs getModuleDocs()
     {
         return myModuleDocs;
     }
 
-    Map<String, ModuleDoc> submoduleMap()
+    public Map<String, DocTreeNode> submoduleMap()
     {
         return mySubmodules;
     }
 
-    Collection<ModuleDoc> submodules()
+    public Collection<DocTreeNode> submodules()
     {
         if (mySubmodules == null)
         {
@@ -111,8 +120,8 @@ final class ModuleDoc
     /**
      * @return null if the submodule is to be excluded from documentation.
      */
-    private ModuleDoc addSubmodule(Predicate<ModuleIdentity> filter,
-                                   String name)
+    private DocTreeNode addSubmodule(Predicate<ModuleIdentity> filter,
+                                     String name)
         throws FusionException
     {
         ModuleIdentity id;
@@ -135,7 +144,7 @@ final class ModuleDoc
 
         ModuleDocs model = instantiateModuleDocs(myTopLevel, id);
 
-        ModuleDoc doc = new ModuleDoc(myTopLevel, id, model);
+        DocTreeNode doc = new DocTreeNode(myTopLevel, id, model);
 
         if (mySubmodules == null)
         {
@@ -153,13 +162,13 @@ final class ModuleDoc
      * Adds a submodule doc if and only if it doesn't already exist.
      * @return null if the submodule is to be excluded from documentation.
      */
-    private ModuleDoc addImplicitSubmodule(Predicate<ModuleIdentity> filter,
-                                           String name)
+    private DocTreeNode addImplicitSubmodule(Predicate<ModuleIdentity> filter,
+                                             String name)
         throws FusionException
     {
         if (mySubmodules != null)
         {
-            ModuleDoc doc = mySubmodules.get(name);
+            DocTreeNode doc = mySubmodules.get(name);
 
             if (doc != null) return doc;
         }
@@ -195,7 +204,7 @@ final class ModuleDoc
             File testFile = new File(dir, fileName);
             if (testFile.isDirectory())
             {
-                ModuleDoc d = addImplicitSubmodule(filter, fileName);
+                DocTreeNode d = addImplicitSubmodule(filter, fileName);
                 if (d != null)
                 {
                     d.addModules(filter, testFile);

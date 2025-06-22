@@ -1,9 +1,11 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion;
+package dev.ionfusion.fusion._private.doc.tool;
 
+import dev.ionfusion.fusion.ModuleIdentity;
 import dev.ionfusion.fusion._private.doc.model.BindingDoc;
+import dev.ionfusion.fusion._private.doc.model.DocTreeNode;
 import dev.ionfusion.fusion._private.doc.model.ModuleDocs;
 import java.util.Map;
 import java.util.Set;
@@ -29,7 +31,7 @@ final class DocIndex
     //========================================================================
 
 
-    static DocIndex buildDocIndex(ModuleDoc doc)
+    static DocIndex buildDocIndex(DocTreeNode doc)
     {
         DocIndex index = new DocIndex();
         index.addEntriesForTree(doc);
@@ -37,11 +39,11 @@ final class DocIndex
     }
 
 
-    private void addEntriesForTree(ModuleDoc doc)
+    private void addEntriesForTree(DocTreeNode doc)
     {
         addEntriesForModule(doc.getModuleDocs());
 
-        for (ModuleDoc submodule : doc.submodules())
+        for (DocTreeNode submodule : doc.submodules())
         {
             addEntriesForTree(submodule);
         }

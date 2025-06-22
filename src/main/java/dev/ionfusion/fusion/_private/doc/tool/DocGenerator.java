@@ -1,23 +1,26 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion;
+package dev.ionfusion.fusion._private.doc.tool;
 
 import static com.amazon.ion.system.IonTextWriterBuilder.UTF8;
-import static dev.ionfusion.fusion.DocIndex.buildDocIndex;
-import static dev.ionfusion.fusion.ModuleDoc.buildDocTree;
+import static dev.ionfusion.fusion._private.doc.model.DocTreeNode.buildDocTree;
+import static dev.ionfusion.fusion._private.doc.tool.DocIndex.buildDocIndex;
 
 import com.amazon.ion.Timestamp;
 import com.petebevin.markdown.MarkdownProcessor;
+import dev.ionfusion.fusion.FusionException;
+import dev.ionfusion.fusion.FusionRuntime;
+import dev.ionfusion.fusion.ModuleIdentity;
 import dev.ionfusion.fusion._private.HtmlWriter;
 import dev.ionfusion.fusion._private.doc.model.BindingDoc;
+import dev.ionfusion.fusion._private.doc.model.DocTreeNode;
 import dev.ionfusion.fusion._private.doc.model.ModuleDocs;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -30,7 +33,7 @@ import java.util.regex.Pattern;
 /**
  * NOT FOR APPLICATION USE
  */
-public final class _Private_ModuleDocumenter
+public final class DocGenerator
 {
     /** HTML content for the masthead links */
     private static final String HEADER_LINKS =
@@ -40,7 +43,7 @@ public final class _Private_ModuleDocumenter
         "(<a href='permuted-index.html'>Permuted</a>)" +
         "</div>\n";
 
-    private _Private_ModuleDocumenter() {}
+    private DocGenerator() {}
 
 
     public static void writeHtmlTree(FusionRuntime runtime,
@@ -50,7 +53,7 @@ public final class _Private_ModuleDocumenter
         throws IOException, FusionException
     {
         log("Building module docs");
-        ModuleDoc doc = buildDocTree(runtime, filter, repoDir);
+        DocTreeNode doc = buildDocTree(runtime, filter, repoDir);
 
         log("Writing module docs");
         writeModuleTree(filter, outputDir, ".", doc);
@@ -72,7 +75,7 @@ public final class _Private_ModuleDocumenter
     private static void writeModuleTree(Predicate<ModuleIdentity> filter,
                                         File outputDir,
                                         String baseUrl,
-                                        ModuleDoc doc)
+                                        DocTreeNode doc)
         throws IOException
     {
         String name = doc.baseName();
@@ -83,8 +86,7 @@ public final class _Private_ModuleDocumenter
             baseUrl = baseUrl + "/..";
         }
 
-        Collection<ModuleDoc> submodules = doc.submodules();
-        for (ModuleDoc submodule : submodules)
+        for (DocTreeNode submodule : doc.submodules())
         {
             writeModuleTree(filter, outputDir, baseUrl, submodule);
         }
@@ -94,7 +96,7 @@ public final class _Private_ModuleDocumenter
     private static void writeModuleFile(Predicate<ModuleIdentity> filter,
                                         File outputDir,
                                         String baseUrl,
-                                        ModuleDoc doc)
+                                        DocTreeNode doc)
         throws IOException
     {
         File outputFile = new File(outputDir, doc.baseName() + ".html");
@@ -220,23 +222,23 @@ public final class _Private_ModuleDocumenter
     {
         private final Predicate<ModuleIdentity> myFilter;
         private final String                    myBaseUrl;
-        private final ModuleDoc                 myDoc;
-        private final ModuleDocs                myDocModel;
+        private final DocTreeNode               myDocTreeNode;
+        private final ModuleDocs                myModuleDocs;
         private final ModuleIdentity            myModuleId;
         private final MarkdownProcessor         myMarkdown = new MarkdownProcessor();
 
         public ModuleWriter(Predicate<ModuleIdentity> filter,
                             File      outputFile,
                             String    baseUrl,
-                            ModuleDoc doc)
+                            DocTreeNode doc)
             throws IOException
         {
             super(outputFile);
             myFilter  = filter;
             myBaseUrl = baseUrl;
-            myDoc = doc;
-            myDocModel = doc.getModuleDocs();
-            myModuleId = myDocModel.getIdentity();
+            myDocTreeNode = doc;
+            myModuleDocs = doc.getModuleDocs();
+            myModuleId = myModuleDocs.getIdentity();
         }
 
         void renderModule()
@@ -296,7 +298,7 @@ public final class _Private_ModuleDocumenter
         private void renderModuleIntro()
             throws IOException
         {
-            String overview = myDocModel.getOverview();
+            String overview = myModuleDocs.getOverview();
             if (overview != null)
             {
                 markdown(overview);
@@ -306,7 +308,7 @@ public final class _Private_ModuleDocumenter
         private void renderSubmoduleLinks()
             throws IOException
         {
-            Map<String, ModuleDoc> submodules = myDoc.submoduleMap();
+            Map<String, DocTreeNode> submodules = myDocTreeNode.submoduleMap();
             if (submodules == null || submodules.isEmpty()) return;
 
             renderHeader2("Submodules");
@@ -317,13 +319,13 @@ public final class _Private_ModuleDocumenter
             append("<ul class='submodules'>");
             for (String name : names)
             {
-                ModuleDocs model = submodules.get(name).getModuleDocs();
+                ModuleDocs module = submodules.get(name).getModuleDocs();
 
                 String escapedName = escapeString(name);
                 append("<li>");
-                linkToModule(model.getIdentity(), escapedName);
+                linkToModule(module.getIdentity(), escapedName);
 
-                String oneLiner = model.getOneLiner();
+                String oneLiner = module.getOneLiner();
                 if (oneLiner != null)
                 {
                     append(" &ndash; <span class='oneliner'>");
@@ -355,7 +357,7 @@ public final class _Private_ModuleDocumenter
         private void renderBindings()
             throws IOException
         {
-            Map<String, BindingDoc> bindings = myDocModel.getBindingDocs();
+            Map<String, BindingDoc> bindings = myModuleDocs.getBindingDocs();
             if (bindings == null || bindings.isEmpty()) return;
 
             renderHeader2("Exported Bindings");

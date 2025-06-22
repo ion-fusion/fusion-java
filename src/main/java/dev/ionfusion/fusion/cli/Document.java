@@ -3,7 +3,7 @@
 
 package dev.ionfusion.fusion.cli;
 
-import static dev.ionfusion.fusion._Private_ModuleDocumenter.writeHtmlTree;
+import static dev.ionfusion.fusion._private.doc.tool.DocGenerator.writeHtmlTree;
 
 import dev.ionfusion.fusion.ModuleIdentity;
 import java.io.File;
