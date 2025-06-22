@@ -9,9 +9,11 @@ import dev.ionfusion.fusion.ModuleNamespace.ModuleDefinedBinding;
 import dev.ionfusion.fusion.ModuleNamespace.ProvidedBinding;
 import dev.ionfusion.fusion.Namespace.NsDefinedBinding;
 import dev.ionfusion.fusion._private.doc.model.BindingDoc;
+import dev.ionfusion.fusion._private.doc.model.ModuleDocs;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -102,11 +104,6 @@ final class ModuleInstance
         return myStore;
     }
 
-    String getDocs()
-    {
-        return myDocs;
-    }
-
     //========================================================================
 
     Collection<ProvidedBinding> providedBindings()
@@ -137,10 +134,31 @@ final class ModuleInstance
     }
 
 
+    //========================================================================
+    // Documentation metadata
+
+    ModuleDocs getDocs()
+    {
+        Set<BaseSymbol> names = providedNames();
+        Map<String, BindingDoc> bindings =
+            (names.isEmpty()
+                ? Collections.emptyMap()
+                : new HashMap<>(names.size()));
+
+        for (BaseSymbol name : names)
+        {
+            String text = name.stringValue();
+            BindingDoc doc = documentProvidedName(text);
+            bindings.put(text, doc);
+        }
+
+        return new ModuleDocs(myIdentity, myDocs, bindings);
+    }
+
     /**
      * @return may be null.
      */
-    BindingDoc documentProvidedName(String name)
+    private BindingDoc documentProvidedName(String name)
     {
         ModuleDefinedBinding binding = resolveProvidedName(name).target();
 
@@ -177,7 +195,7 @@ final class ModuleInstance
         return doc;
     }
 
-    BindingDoc documentProvidedName(ModuleDefinedBinding binding)
+    private BindingDoc documentProvidedName(ModuleDefinedBinding binding)
     {
         BindingDoc doc;
 
