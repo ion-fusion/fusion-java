@@ -35,11 +35,10 @@ It is now an independent Apache-licensed project led by current and former Amazo
 
 # Getting Started
 
-To learn more about this project, browse our documentation at <https://docs.ion-fusion.dev>.
+To learn more about Ion Fusion, see the website: <https://ion-fusion.dev/>
 
-To try out the Fusion CLI, you'll need to build from source (sorry!).  
-See [Building Ion Fusion](https://docs.ion-fusion.dev/howto_build.html) for instructions and 
-some introductory tutorials.
+For more details on building the Ion Fusion SDK, the `fusion` utility, and the Ion Fusion container
+images, see the documentation on [building Ion Fusion](fusion/src/howto_build.md).
 
 
 # Support
