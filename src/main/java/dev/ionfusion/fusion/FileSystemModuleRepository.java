@@ -18,12 +18,11 @@ final class FileSystemModuleRepository
     private final File mySrcDir;
 
     /**
-     * @param repoDir must be absolute.
+     * @param repoDir is converted to absolute if it's not already.
      */
     FileSystemModuleRepository(File repoDir)
     {
-        assert repoDir.isAbsolute();
-        myRepoDir = repoDir;
+        myRepoDir = repoDir.getAbsoluteFile();
 
         File src = new File(repoDir, "src");
         mySrcDir = (src.isDirectory() ? src : null);
@@ -106,9 +105,7 @@ final class FileSystemModuleRepository
             }
         }
 
-        // TODO I don't think this needs to be two passes, but I'm keeping it
-        // parallel to code in ModuleDoc until determining whether that can
-        // use this new approach.
+        // TODO I don't think this needs to be two passes
     }
 
 

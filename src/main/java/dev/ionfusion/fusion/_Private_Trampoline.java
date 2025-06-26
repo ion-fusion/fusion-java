@@ -4,6 +4,9 @@
 package dev.ionfusion.fusion;
 
 import dev.ionfusion.fusion._private.doc.model.ModuleDocs;
+import java.nio.file.Path;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * NOT FOR APPLICATION USE
@@ -18,6 +21,17 @@ public class _Private_Trampoline
     {
         rb.setDocumenting(documenting);
     }
+
+
+    public static void discoverModulesInRepository(Path repoDir,
+                                                   Predicate<ModuleIdentity> selector,
+                                                   Consumer<ModuleIdentity> results)
+        throws FusionException
+    {
+        ModuleRepository repo = new FileSystemModuleRepository(repoDir.toFile());
+        repo.collectModules(selector, results);
+    }
+
 
     public static ModuleIdentity loadModule(TopLevel top, String modulePath)
         throws FusionInterruptedException, FusionException

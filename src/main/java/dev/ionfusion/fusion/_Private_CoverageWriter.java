@@ -5,6 +5,7 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.CoverageDatabase.SRCLOC_COMPARE;
 import static dev.ionfusion.fusion.GlobalState.FUSION_SOURCE_EXTENSION;
+import static dev.ionfusion.fusion._Private_Trampoline.discoverModulesInRepository;
 import static java.math.RoundingMode.HALF_EVEN;
 import static java.nio.file.Files.walkFileTree;
 
@@ -304,8 +305,7 @@ public final class _Private_CoverageWriter
         // modules that are not used and don't appear in the database.
         for (File f : myDatabase.getRepositories())
         {
-            ModuleRepository repo = new FileSystemModuleRepository(f);
-            repo.collectModules(myConfig.myModuleSelector, myModules::add);
+            discoverModulesInRepository(f.toPath(), myConfig.myModuleSelector, myModules::add);
         }
 
         // Now do the same thing for non-repository source trees.
