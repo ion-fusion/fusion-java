@@ -7,6 +7,7 @@ import static dev.ionfusion.fusion.GlobalState.FUSION_SOURCE_EXTENSION;
 import static dev.ionfusion.fusion.ModuleIdentity.isValidModuleName;
 
 import java.io.File;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 

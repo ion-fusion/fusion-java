@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
@@ -23,7 +24,7 @@ abstract class ModuleRepository
     /**
      * Attempts to locate a module within this repository, without forcing its
      * loading or instantiation.
-     * 
+     *
      * @return the location of a module with the given identity, or null.
      */
     abstract ModuleLocation locateModule(Evaluator eval, ModuleIdentity id)
