@@ -94,7 +94,6 @@ class Document
             throws Exception
         {
             // TODO send log messages to the output PrintWriter, not System.out
-            File srcDir = new File(myRepoDir, "src");
 
             Predicate<ModuleIdentity> filter = id -> {
                 String path = id.absolutePath();
@@ -102,7 +101,7 @@ class Document
                 return !isPrivate;
             };
 
-            writeHtmlTree(runtime(), myOutputDir, srcDir, filter);
+            writeHtmlTree(runtime(), myOutputDir, myRepoDir, filter);
             return 0;
         }
     }
