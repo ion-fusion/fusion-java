@@ -4,9 +4,9 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.GlobalState.FUSION_SOURCE_EXTENSION;
+import static dev.ionfusion.fusion._Private_Trampoline.instantiateModuleDocs;
+import static dev.ionfusion.fusion._Private_Trampoline.loadModule;
 
-import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
-import dev.ionfusion.fusion._private.doc.model.BindingDoc;
 import dev.ionfusion.fusion._private.doc.model.ModuleDocs;
 import java.io.File;
 import java.io.IOException;
@@ -14,16 +14,15 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Predicate;
 
 
 final class ModuleDoc
 {
-    private final StandardRuntime myRuntime;
-    private final ModuleIdentity        myModuleId;
-    private final ModuleDocs            myModuleDocs;
-    private       Map<String,ModuleDoc> mySubmodules;
+    private final TopLevel               myTopLevel;
+    private final ModuleIdentity         myModuleId;
+    private final ModuleDocs             myModuleDocs;
+    private       Map<String, ModuleDoc> mySubmodules;
 
 
     public static ModuleDoc buildDocTree(FusionRuntime runtime,
@@ -31,7 +30,7 @@ final class ModuleDoc
                                          File repoDir)
         throws IOException, FusionException
     {
-        ModuleDoc doc = new ModuleDoc((StandardRuntime) runtime);
+        ModuleDoc doc = new ModuleDoc(runtime.makeTopLevel());
         doc.addModules(filter, repoDir);
         return doc;
     }
@@ -43,10 +42,10 @@ final class ModuleDoc
     /**
      * Constructs the documentation root as a pseudo-module.
      */
-    private ModuleDoc(StandardRuntime runtime)
+    private ModuleDoc(TopLevel top)
         throws FusionException
     {
-        myRuntime = runtime;
+        myTopLevel = top;
         myModuleId = null;
         myModuleDocs = null;
     }
@@ -55,7 +54,7 @@ final class ModuleDoc
     /**
      * Constructs docs for a real or implicit top-level module or submodule.
      */
-    private ModuleDoc(StandardRuntime runtime,
+    private ModuleDoc(TopLevel       top,
                       ModuleIdentity id,
                       ModuleDocs docModel)
         throws FusionException
@@ -63,15 +62,9 @@ final class ModuleDoc
         assert id != null;
         assert docModel != null;
 
-        myRuntime = runtime;
+        myTopLevel = top;
         myModuleId = id;
         myModuleDocs = docModel;
-    }
-
-
-    ModuleIdentity getModuleId()
-    {
-        return myModuleId;
     }
 
 
@@ -115,30 +108,6 @@ final class ModuleDoc
     }
 
 
-    private ModuleDocs instantiateModuleDocModel(ModuleIdentity id)
-        throws FusionException
-    {
-        ModuleInstance module =
-            myRuntime.getDefaultRegistry().instantiate(evaluator(), id);
-        if (module == null) return null;
-
-        Set<BaseSymbol> names = module.providedNames();
-        Map<String, BindingDoc> bindings =
-            (names.isEmpty()
-                 ? Collections.emptyMap()
-                 : new HashMap<>(names.size()));
-
-        for (BaseSymbol name : names)
-        {
-            String text = name.stringValue();
-            BindingDoc doc = module.documentProvidedName(text);
-            bindings.put(text, doc);
-        }
-
-        return new ModuleDocs(id, module.getDocs(), bindings);
-    }
-
-
     /**
      * @return null if the submodule is to be excluded from documentation.
      */
@@ -149,7 +118,9 @@ final class ModuleDoc
         ModuleIdentity id;
         try
         {
-            id = resolveModulePath(submodulePath(name));
+            // This constructs the ModuleIdentity (which we could do manually)
+            // and also loads the module in the registry of the top-level.
+            id = loadModule(myTopLevel, submodulePath(name));
             assert id.baseName().equals(name);
         }
         // FIXME This can happen for modules required by the one requested.
@@ -162,9 +133,9 @@ final class ModuleDoc
 
         if (! filter.test(id)) return null;
 
-        ModuleDocs model = instantiateModuleDocModel(id);
+        ModuleDocs model = instantiateModuleDocs(myTopLevel, id);
 
-        ModuleDoc doc = new ModuleDoc(myRuntime, id, model);
+        ModuleDoc doc = new ModuleDoc(myTopLevel, id, model);
 
         if (mySubmodules == null)
         {
@@ -231,29 +202,5 @@ final class ModuleDoc
                 }
             }
         }
-    }
-
-
-    private ModuleIdentity resolveModulePath(String modulePath)
-        throws FusionException
-    {
-        assert modulePath.startsWith("/");
-
-        Evaluator eval = evaluator();
-        ModuleNameResolver resolver =
-            eval.getGlobalState().myModuleNameResolver;
-
-        return resolver.resolveModulePath(eval,
-                                          null,       // baseModule
-                                          modulePath,
-                                          true,       // load the module
-                                          null);      // syntax form for errors
-    }
-
-
-    private Evaluator evaluator()
-        throws FusionException
-    {
-        return myRuntime.getDefaultTopLevel().getEvaluator();
     }
 }

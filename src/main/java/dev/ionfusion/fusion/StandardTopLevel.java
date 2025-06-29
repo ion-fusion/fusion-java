@@ -3,11 +3,12 @@
 
 package dev.ionfusion.fusion;
 
+import static com.amazon.ion.util.IonTextUtils.printQuotedSymbol;
 import static dev.ionfusion.fusion.FusionIo.safeWriteToString;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.ModuleIdentity.isValidAbsoluteModulePath;
 import static dev.ionfusion.fusion.StandardReader.readSyntax;
-import static com.amazon.ion.util.IonTextUtils.printQuotedSymbol;
+
 import com.amazon.ion.IonReader;
 import java.io.File;
 import java.io.IOException;
@@ -189,6 +190,22 @@ final class StandardTopLevel
         try
         {
             return myNamespace.resolveAndLoadModule(myEvaluator, modulePath);
+        }
+        catch (FusionInterrupt e)
+        {
+            throw new FusionInterruptedException(e);
+        }
+    }
+
+    /**
+     * Get the instance of a previously loaded module.
+     */
+    ModuleInstance instantiateLoadedModule(ModuleIdentity id)
+        throws FusionInterruptedException, FusionException
+    {
+        try
+        {
+            return getRegistry().instantiate(myEvaluator, id);
         }
         catch (FusionInterrupt e)
         {
