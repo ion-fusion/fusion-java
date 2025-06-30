@@ -3,7 +3,9 @@
 
 package dev.ionfusion.fusion;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
@@ -242,6 +244,18 @@ public class ModuleIdentity
         int slashIndex = myPath.lastIndexOf('/');
         if (slashIndex == -1) return myPath;
         return myPath.substring(slashIndex + 1);
+    }
+
+
+    /**
+     * Iterates the name components of this identity.
+     *
+     * @return not null.
+     */
+    public Iterator<String> iterate()
+    {
+        // Skip the leading slash, otherwise the first component will be "".
+        return Arrays.asList(myPath.substring(1).split("/")).iterator();
     }
 
 
