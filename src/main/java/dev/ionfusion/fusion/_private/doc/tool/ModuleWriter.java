@@ -5,9 +5,7 @@ package dev.ionfusion.fusion._private.doc.tool;
 
 import static java.util.stream.Collectors.toList;
 
-import com.petebevin.markdown.MarkdownProcessor;
 import dev.ionfusion.fusion.ModuleIdentity;
-import dev.ionfusion.fusion._private.HtmlWriter;
 import dev.ionfusion.fusion._private.doc.model.BindingDoc;
 import dev.ionfusion.fusion._private.doc.model.ModuleDocs;
 import dev.ionfusion.fusion._private.doc.model.ModuleEntity;
@@ -20,14 +18,13 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 final class ModuleWriter
-    extends HtmlWriter
+    extends MarkdownWriter
 {
     private final Predicate<ModuleIdentity> myFilter;
     private final String                    myBaseUrl;
     private final ModuleEntity              myModuleEntity;
     private final ModuleDocs                myModuleDocs;
     private final ModuleIdentity            myModuleId;
-    private final MarkdownProcessor         myMarkdown = new MarkdownProcessor();
 
     public ModuleWriter(Predicate<ModuleIdentity> filter,
                         File outputFile,
@@ -271,13 +268,5 @@ final class ModuleWriter
         }
 
         append("</div>\n"); // binding
-    }
-
-
-    private void markdown(String text)
-        throws IOException
-    {
-        String md = myMarkdown.markdown(text);
-        append(md);
     }
 }

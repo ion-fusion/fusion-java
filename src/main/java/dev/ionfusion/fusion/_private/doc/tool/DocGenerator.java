@@ -3,26 +3,19 @@
 
 package dev.ionfusion.fusion._private.doc.tool;
 
-import static com.amazon.ion.system.IonTextWriterBuilder.UTF8;
 import static dev.ionfusion.fusion._private.doc.tool.DocIndex.buildDocIndex;
 
 import com.amazon.ion.Timestamp;
-import com.petebevin.markdown.MarkdownProcessor;
 import dev.ionfusion.fusion.FusionException;
 import dev.ionfusion.fusion.FusionRuntime;
 import dev.ionfusion.fusion.ModuleIdentity;
-import dev.ionfusion.fusion._private.HtmlWriter;
 import dev.ionfusion.fusion._private.doc.model.ModuleEntity;
 import dev.ionfusion.fusion._private.doc.model.RepoEntity;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * NOT FOR APPLICATION USE
@@ -140,53 +133,6 @@ public final class DocGenerator
     }
 
 
-    //========================================================================
-
-
-    private static final String TITLE_REGEX =
-        "^#\\s+(\\p{Print}+)\\s*$";
-    private static final Pattern TITLE_PATTERN =
-        Pattern.compile(TITLE_REGEX, Pattern.MULTILINE);
-
-    /**
-     * Transforms a single Markdown file into HTML.
-     * <p>
-     * The page title is taken from the first H1, assumed to be authored using
-     * the atx syntax: {@code # <Title content>}.
-     */
-    private static void writeMarkdownPage(File   outputFile,
-                                          String baseUrl,
-                                          Path   inputFile)
-        throws IOException
-    {
-        // TODO Java11: use Files.readString
-        byte[] bytes = Files.readAllBytes(inputFile);
-        String markdownContent = new String(bytes, UTF8);
-
-        Matcher matcher = TITLE_PATTERN.matcher(markdownContent);
-        String title =
-            (matcher.find() ? matcher.group(1) : "Fusion Documentation");
-
-        final MarkdownProcessor markdowner = new MarkdownProcessor();
-        String html = markdowner.markdown(markdownContent);
-
-        try (HtmlWriter writer = new HtmlWriter(outputFile))
-        {
-            writer.openHtml();
-            {
-                writer.renderHead(title, baseUrl, "common.css", "doc.css");
-                writer.openBody();
-                {
-                    writer.append(HEADER_LINKS);
-                    writer.append(html);
-                }
-                writer.closeBody();
-            }
-            writer.closeHtml();
-        }
-    }
-
-
     /**
      * Recursively discover {@code .md} files and transform to {@code .html}.
      */
@@ -205,7 +151,12 @@ public final class DocGenerator
             {
                 String docName = fileName.substring(0, fileName.length() - 2);
                 File outputFile = new File(outputDir, docName + "html");
-                writeMarkdownPage(outputFile, baseUrl, repoFile.toPath());
+
+                try (MarkdownPageWriter writer =
+                         new MarkdownPageWriter(outputFile.toPath(), baseUrl, repoFile.toPath()))
+                {
+                    writer.render();
+                }
             }
             else if (repoFile.isDirectory())
             {
