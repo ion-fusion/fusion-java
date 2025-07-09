@@ -10,7 +10,6 @@ import static dev.ionfusion.fusion._Private_Trampoline.loadModule;
 import dev.ionfusion.fusion.FusionException;
 import dev.ionfusion.fusion.ModuleIdentity;
 import dev.ionfusion.fusion.TopLevel;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,23 +22,33 @@ import java.util.function.Predicate;
  */
 public class RepoEntity
 {
-    private final Map<ModuleIdentity, ModuleEntity> myModules = new HashMap<>();
+    private final Path                              myRepoDir;
+    private final Predicate<ModuleIdentity>         mySelector;
+    private final TopLevel                          myTopLevel;
+    private       Map<ModuleIdentity, ModuleEntity> myModules;
 
 
     public RepoEntity(Path repoDir, Predicate<ModuleIdentity> selector, TopLevel top)
-        throws FusionException, IOException
+    {
+        this.myRepoDir = repoDir;
+        this.mySelector = selector;
+        this.myTopLevel = top;
+    }
+
+    private void discoverModules()
+        throws FusionException
     {
         // Discover everything first; the Consumer won't propagate exceptions.
         Set<ModuleIdentity> moduleIds = new HashSet<>();
-        discoverModulesInRepository(repoDir, selector, moduleIds::add);
+        discoverModulesInRepository(myRepoDir, mySelector, moduleIds::add);
 
         for (ModuleIdentity id : moduleIds)
         {
             // TODO Handle exceptions.
-            ModuleIdentity loadedId = loadModule(top, id.absolutePath());
+            ModuleIdentity loadedId = loadModule(myTopLevel, id.absolutePath());
             assert id.equals(loadedId);
 
-            ModuleDocs docs = instantiateModuleDocs(top, id);
+            ModuleDocs docs = instantiateModuleDocs(myTopLevel, id);
             assert docs != null;
 
             addModuleDocs(docs);
@@ -69,13 +78,15 @@ public class RepoEntity
         entity.setModuleDocs(module);
     }
 
-    public ModuleEntity getModule(ModuleIdentity id)
-    {
-        return myModules.get(id);
-    }
-
     public Set<ModuleEntity> getModules()
+        throws FusionException
     {
+        if (myModules == null)
+        {
+            myModules = new HashMap<>();
+            discoverModules();
+        }
+
         HashSet<ModuleEntity> set = new HashSet<>(myModules.values());
         assert set.size() == myModules.size();
         return set;
