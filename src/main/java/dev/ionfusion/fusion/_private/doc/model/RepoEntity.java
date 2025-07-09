@@ -78,6 +78,14 @@ public class RepoEntity
         entity.setModuleDocs(module);
     }
 
+
+    /**
+     * Returns the modules selected from this repository.
+     *
+     * @return not null.
+     *
+     * @throws FusionException if there's a problem during discovery.
+     */
     public Set<ModuleEntity> getModules()
         throws FusionException
     {

@@ -102,7 +102,17 @@ public class HtmlWriter
         if (baseUrl != null)
         {
             myOut.append("<base href='");
-            escape(baseUrl);
+            if (baseUrl.isEmpty() || baseUrl.equals("."))
+            {
+                myOut.append('.');
+            }
+            else
+            {
+                // TODO Remove this prefix. It is not necessary but prevents
+                //  the output from changing at this time.
+                myOut.append("./");
+                escape(baseUrl);
+            }
             myOut.append("'>");
         }
 

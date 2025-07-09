@@ -10,12 +10,9 @@ import dev.ionfusion.fusion.FusionException;
 import dev.ionfusion.fusion.FusionRuntime;
 import dev.ionfusion.fusion.ModuleIdentity;
 import dev.ionfusion.fusion._private.StreamWriter;
-import dev.ionfusion.fusion._private.doc.model.ModuleEntity;
 import dev.ionfusion.fusion._private.doc.model.RepoEntity;
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Set;
 import java.util.function.Predicate;
 
 /**
@@ -42,9 +39,10 @@ public final class DocGenerator
     {
         log("Building module docs");
         RepoEntity repo = new RepoEntity(repoDir.toPath(), filter, runtime.makeTopLevel());
+        SiteBuilder site = new SiteBuilder(repo, filter);
 
-        log("Writing module docs");
-        writeModules(repo.getModules(), filter, outputDir);
+        log("Discovering module docs");
+        site.placeModules();
 
         log("Building indices");
         DocIndex index = buildDocIndex(repo.getModules());
@@ -57,49 +55,10 @@ public final class DocGenerator
         // TODO Path extension is messy magic.
         writeMarkdownPages(outputDir, ".", new File(repoDir, "src"));
 
+        log("Writing HTML pages");
+        site.build().generate(outputDir.toPath());
+
         log("DONE writing HTML docs to " + outputDir);
-    }
-
-
-    private static void writeModules(Set<ModuleEntity> modules,
-                                     Predicate<ModuleIdentity> filter,
-                                     File siteDir)
-        throws IOException
-    {
-        for (ModuleEntity module : modules)
-        {
-            ModuleIdentity id = module.getIdentity();
-
-            StringBuilder baseUrl   = new StringBuilder(".");
-            File          moduleDir = siteDir;
-            for (Iterator<String> i = id.iterate(); i.hasNext(); )
-            {
-                String name = i.next();
-
-                if (i.hasNext())
-                {
-                    baseUrl.append("/..");
-                    moduleDir = new File(moduleDir, name);
-                }
-            }
-
-            writeModuleFile(filter, moduleDir, baseUrl.toString(), module);
-        }
-    }
-
-
-    private static void writeModuleFile(Predicate<ModuleIdentity> filter,
-                                        File outputDir,
-                                        String baseUrl,
-                                        ModuleEntity doc)
-        throws IOException
-    {
-        ModuleIdentity id = doc.getIdentity();
-
-        try (StreamWriter writer = new StreamWriter(outputDir, id.baseName() + ".html"))
-        {
-            new ModuleWriter(filter, writer, baseUrl, doc).renderModule();
-        }
     }
 
 
