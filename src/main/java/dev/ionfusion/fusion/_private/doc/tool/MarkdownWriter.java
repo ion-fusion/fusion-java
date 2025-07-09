@@ -11,6 +11,7 @@ import java.io.IOException;
 public class MarkdownWriter
     extends HtmlWriter
 {
+    // WARNING: These are stateful.
     private final MarkdownProcessor myMarkdown = new MarkdownProcessor();
 
     public MarkdownWriter(StreamWriter out)
@@ -18,7 +19,8 @@ public class MarkdownWriter
         super(out);
     }
 
-    protected void markdown(String text)
+
+    public void markdown(String text)
         throws IOException
     {
         String md = myMarkdown.markdown(text);

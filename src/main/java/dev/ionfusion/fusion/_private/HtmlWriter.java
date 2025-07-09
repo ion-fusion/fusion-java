@@ -15,12 +15,6 @@ public class HtmlWriter
         myOut = out;
     }
 
-    public HtmlWriter(HtmlWriter out)
-    {
-        myOut = out.myOut;
-    }
-
-
 
     /**
      * Writes UTF-8 bytes, escaping HTML as necessary.
@@ -73,7 +67,7 @@ public class HtmlWriter
         return text;
     }
 
-    protected final void escape(String text)
+    public final void escape(String text)
         throws IOException
     {
         text = escapeString(text);
@@ -168,7 +162,7 @@ public class HtmlWriter
     //========================================================================
 
 
-    protected final void renderHeader1(String text)
+    public final void renderHeader1(String text)
         throws IOException
     {
         myOut.append("<h1>");
@@ -176,7 +170,7 @@ public class HtmlWriter
         myOut.append("</h1>\n");
     }
 
-    protected final void renderHeader2(String text)
+    public final void renderHeader2(String text)
         throws IOException
     {
         myOut.append("<h2>");
@@ -191,7 +185,7 @@ public class HtmlWriter
     /**
      * Renders a link to a module, using the given link text.
      */
-    protected final void linkToModule(ModuleIdentity id, String escapedLinkText)
+    public final void linkToModule(ModuleIdentity id, String escapedLinkText)
         throws IOException
     {
         String escapedId = escapeString(id.absolutePath());
@@ -208,7 +202,7 @@ public class HtmlWriter
      * Renders a link to a binding in a module, using the binding name
      * as the link text.
      */
-    protected final void linkToBindingAsName(ModuleIdentity id, String escapedName)
+    public final void linkToBindingAsName(ModuleIdentity id, String escapedName)
         throws IOException
     {
         String escapedId = escapeString(id.absolutePath());
@@ -227,7 +221,7 @@ public class HtmlWriter
      * Renders a link to a binding in a module, using the full module path
      * as the link text.
      */
-    protected final void linkToBindingAsModulePath(ModuleIdentity id, String escapedName)
+    public final void linkToBindingAsModulePath(ModuleIdentity id, String escapedName)
         throws IOException
     {
         String escapedId = escapeString(id.absolutePath());
