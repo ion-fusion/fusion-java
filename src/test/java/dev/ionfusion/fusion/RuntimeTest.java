@@ -9,6 +9,7 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -64,36 +65,67 @@ public class RuntimeTest
     }
 
 
-    @Test
-    public void testIonize()
+    //========================================================================
+    // Ionization
+
+    IonValue ion(String data)
+    {
+        return system().singleValue(data);
+    }
+
+    IonValue ionize(String expr)
         throws Exception
     {
-        Object fv = eval("12");
-        IonValue iv = runtime().ionizeMaybe(fv, system());
-        assertEquals(12, ((IonInt)iv).intValue());
-        iv = runtime().ionize(fv, system());
-        assertEquals(12, ((IonInt)iv).intValue());
+        Object fv = eval(expr);
+        return runtime().ionize(fv, system());
+    }
 
-        fv = eval("(lambda () 12)");
-        assertSame(null, runtime().ionizeMaybe(fv, system()));
+    IonValue ionizeMaybe(String expr)
+        throws Exception
+    {
+        Object fv = eval(expr);
+        return runtime().ionizeMaybe(fv, system());
+    }
+
+
+    void assertFullIonization(String expectedData, String expr)
+        throws Exception
+    {
+        IonValue expected = ion(expectedData);
+        assertEquals(expected, ionize(expr));
+        assertEquals(expected, ionizeMaybe(expr));
+    }
+
+
+    void assertFailedIonization(String expr)
+        throws Exception
+    {
+        assertThrows(FusionException.class, () -> ionize(expr));
+        assertNull(ionizeMaybe(expr));
+    }
+
+
+    @Test
+    public void ionizationHandlesIon()
+        throws Exception
+    {
+        assertFullIonization("12", "12");
+        assertFullIonization("12.", "12.");
+        assertFullIonization("12.3e4", "12.3e4");
+
+        assertFullIonization("[12,(     {{\"abc\"}}),{a:null.int,b:[12.34]}]",
+                             "[12,(sexp {{\"abc\"}}),{a:null.int,b:[12.34]}]");
     }
 
     @Test
-    public void testBadIonizeProcedure()
+    public void ionizationFailsForNonIon()
         throws Exception
     {
-        Object fv = eval("(lambda () 12)");
-        assertThrows(FusionException.class,
-                     () -> runtime().ionize(fv, system()));
-    }
-
-    @Test
-    public void testBadIonizeVoid()
-        throws Exception
-    {
-        Object fv = eval("(void)");
-        assertThrows(FusionException.class,
-                     () -> runtime().ionize(fv, system()));
+        assertFailedIonization("(void)");
+        assertFailedIonization("(lambda () 0)");
+        assertFailedIonization("[(void)]");
+        assertFailedIonization("[(sexp [[], (void)])]");
+        assertFailedIonization("{a:(void)}");
     }
 
 
