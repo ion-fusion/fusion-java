@@ -132,7 +132,7 @@ public interface FusionRuntime
      * Creates a fresh {@code IonValue} DOM from a Fusion value, using the
      * default ionization strategy.
      *
-     * @param fusionValue the value to print; must not be null.
+     * @param fusionValue the value to transform; must not be null.
      * @param factory must not be null.
      *
      * @return a fresh instance, without a container.
@@ -146,13 +146,14 @@ public interface FusionRuntime
 
     /**
      * Creates a fresh {@code IonValue} DOM from a Fusion value, using the
-     * default ionization strategy.
+     * default ionization strategy, returning null if ionization fails.
      *
-     * @param fusionValue the value to print.
+     * @param fusionValue the value to transform.
      * @param factory must not be null.
      *
-     * @return a fresh instance, without a container, or null if the value is
-     * not handled by the default ionization strategy.
+     * @return a fresh instance, without a container, or null if the value
+     * (or any part of the value) is not handled by the default ionization
+     * strategy.
      *
      * @throws FusionException if something goes wrong during ionization.
      */
