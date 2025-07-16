@@ -5,8 +5,8 @@ package dev.ionfusion.fusion._private.doc.tool;
 
 import dev.ionfusion.fusion.ModuleIdentity;
 import dev.ionfusion.fusion._private.doc.model.BindingDoc;
-import dev.ionfusion.fusion._private.doc.model.DocTreeNode;
 import dev.ionfusion.fusion._private.doc.model.ModuleDocs;
+import dev.ionfusion.fusion._private.doc.model.ModuleEntity;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -31,22 +31,15 @@ final class DocIndex
     //========================================================================
 
 
-    static DocIndex buildDocIndex(DocTreeNode doc)
+    static DocIndex buildDocIndex(Set<ModuleEntity> modules)
     {
         DocIndex index = new DocIndex();
-        index.addEntriesForTree(doc);
+
+        modules.stream()
+                .map(ModuleEntity::getModuleDocs)
+                .forEach(index::addEntriesForModule);
+
         return index;
-    }
-
-
-    private void addEntriesForTree(DocTreeNode doc)
-    {
-        addEntriesForModule(doc.getModuleDocs());
-
-        for (DocTreeNode submodule : doc.submodules())
-        {
-            addEntriesForTree(submodule);
-        }
     }
 
 

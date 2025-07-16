@@ -4,7 +4,6 @@
 package dev.ionfusion.fusion._private.doc.tool;
 
 import static com.amazon.ion.system.IonTextWriterBuilder.UTF8;
-import static dev.ionfusion.fusion._private.doc.model.DocTreeNode.buildDocTree;
 import static dev.ionfusion.fusion._private.doc.tool.DocIndex.buildDocIndex;
 
 import com.amazon.ion.Timestamp;
@@ -13,11 +12,14 @@ import dev.ionfusion.fusion.FusionException;
 import dev.ionfusion.fusion.FusionRuntime;
 import dev.ionfusion.fusion.ModuleIdentity;
 import dev.ionfusion.fusion._private.HtmlWriter;
-import dev.ionfusion.fusion._private.doc.model.DocTreeNode;
+import dev.ionfusion.fusion._private.doc.model.ModuleEntity;
+import dev.ionfusion.fusion._private.doc.model.RepoEntity;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,42 +47,49 @@ public final class DocGenerator
         throws IOException, FusionException
     {
         log("Building module docs");
-        DocTreeNode doc = buildDocTree(runtime, filter, repoDir);
+        RepoEntity repo = new RepoEntity(repoDir.toPath(), filter, runtime.makeTopLevel());
 
         log("Writing module docs");
-        writeModuleTree(filter, outputDir, ".", doc);
+        writeModules(repo.getModules(), filter, outputDir);
 
         log("Building indices");
-        DocIndex index = buildDocIndex(doc);
+        DocIndex index = buildDocIndex(repo.getModules());
 
         log("Writing indices");
         writeIndexFile(filter, outputDir, index);
         writePermutedIndexFile(filter, outputDir, index);
 
         log("Writing Markdown pages");
-        writeMarkdownPages(outputDir, ".", repoDir);
+        // TODO Path extension is messy magic.
+        writeMarkdownPages(outputDir, ".", new File(repoDir, "src"));
 
         log("DONE writing HTML docs to " + outputDir);
     }
 
 
-    private static void writeModuleTree(Predicate<ModuleIdentity> filter,
-                                        File outputDir,
-                                        String baseUrl,
-                                        DocTreeNode doc)
+    private static void writeModules(Set<ModuleEntity> modules,
+                                     Predicate<ModuleIdentity> filter,
+                                     File siteDir)
         throws IOException
     {
-        String name = doc.baseName();
-        if (name != null)
+        for (ModuleEntity module : modules)
         {
-            writeModuleFile(filter, outputDir, baseUrl, doc);
-            outputDir = new File(outputDir, name);
-            baseUrl = baseUrl + "/..";
-        }
+            ModuleIdentity id = module.getIdentity();
 
-        for (DocTreeNode submodule : doc.submodules())
-        {
-            writeModuleTree(filter, outputDir, baseUrl, submodule);
+            StringBuilder baseUrl   = new StringBuilder(".");
+            File          moduleDir = siteDir;
+            for (Iterator<String> i = id.iterate(); i.hasNext(); )
+            {
+                String name = i.next();
+
+                if (i.hasNext())
+                {
+                    baseUrl.append("/..");
+                    moduleDir = new File(moduleDir, name);
+                }
+            }
+
+            writeModuleFile(filter, moduleDir, baseUrl.toString(), module);
         }
     }
 
@@ -88,10 +97,11 @@ public final class DocGenerator
     private static void writeModuleFile(Predicate<ModuleIdentity> filter,
                                         File outputDir,
                                         String baseUrl,
-                                        DocTreeNode doc)
+                                        ModuleEntity doc)
         throws IOException
     {
-        File outputFile = new File(outputDir, doc.baseName() + ".html");
+        ModuleIdentity id = doc.getIdentity();
+        File outputFile = new File(outputDir, id.baseName() + ".html");
 
         try (ModuleWriter writer =
                  new ModuleWriter(filter, outputFile, baseUrl, doc))

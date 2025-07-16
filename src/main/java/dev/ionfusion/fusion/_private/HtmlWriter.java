@@ -251,6 +251,7 @@ public class HtmlWriter
     {
         String escapedId = escapeString(id.absolutePath());
 
+        // TODO if we don't have a page for the module, don't link it.
         append("<a href='.");
         append(escapedId);     // starts with a slash
         append(".html#");

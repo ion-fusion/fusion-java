@@ -3,16 +3,20 @@
 
 package dev.ionfusion.fusion._private.doc.tool;
 
+import static java.util.stream.Collectors.toList;
+
 import com.petebevin.markdown.MarkdownProcessor;
 import dev.ionfusion.fusion.ModuleIdentity;
 import dev.ionfusion.fusion._private.HtmlWriter;
 import dev.ionfusion.fusion._private.doc.model.BindingDoc;
-import dev.ionfusion.fusion._private.doc.model.DocTreeNode;
 import dev.ionfusion.fusion._private.doc.model.ModuleDocs;
+import dev.ionfusion.fusion._private.doc.model.ModuleEntity;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 
 final class ModuleWriter
@@ -20,7 +24,7 @@ final class ModuleWriter
 {
     private final Predicate<ModuleIdentity> myFilter;
     private final String                    myBaseUrl;
-    private final DocTreeNode               myDocTreeNode;
+    private final ModuleEntity              myModuleEntity;
     private final ModuleDocs                myModuleDocs;
     private final ModuleIdentity            myModuleId;
     private final MarkdownProcessor         myMarkdown = new MarkdownProcessor();
@@ -28,15 +32,15 @@ final class ModuleWriter
     public ModuleWriter(Predicate<ModuleIdentity> filter,
                         File outputFile,
                         String baseUrl,
-                        DocTreeNode doc)
+                        ModuleEntity module)
         throws IOException
     {
         super(outputFile);
         myFilter = filter;
         myBaseUrl = baseUrl;
-        myDocTreeNode = doc;
-        myModuleDocs = doc.getModuleDocs();
-        myModuleId = myModuleDocs.getIdentity();
+        myModuleEntity = module;
+        myModuleDocs = myModuleEntity.getModuleDocs();
+        myModuleId = myModuleEntity.getIdentity();
     }
 
     void renderModule()
@@ -106,24 +110,23 @@ final class ModuleWriter
     private void renderSubmoduleLinks()
         throws IOException
     {
-        Map<String, DocTreeNode> submodules = myDocTreeNode.submoduleMap();
-        if (submodules == null || submodules.isEmpty()) { return; }
+        Set<String> submoduleNames = myModuleEntity.getChildNames();
+        if (submoduleNames.isEmpty()) return;
 
         renderHeader2("Submodules");
 
-        String[] names = submodules.keySet().toArray(new String[0]);
-        Arrays.sort(names);
+        List<String> names = submoduleNames.stream().sorted().collect(toList());
 
         append("<ul class='submodules'>");
         for (String name : names)
         {
-            ModuleDocs module = submodules.get(name).getModuleDocs();
+            ModuleEntity module = myModuleEntity.getChild(name);
 
             String escapedName = escapeString(name);
             append("<li>");
             linkToModule(module.getIdentity(), escapedName);
 
-            String oneLiner = module.getOneLiner();
+            String oneLiner = module.getModuleDocs().getOneLiner();
             if (oneLiner != null)
             {
                 append(" &ndash; <span class='oneliner'>");
