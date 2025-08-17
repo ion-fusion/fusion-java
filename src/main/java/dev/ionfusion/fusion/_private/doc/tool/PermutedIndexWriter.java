@@ -5,7 +5,7 @@ package dev.ionfusion.fusion._private.doc.tool;
 
 import dev.ionfusion.fusion.ModuleIdentity;
 import dev.ionfusion.fusion._private.HtmlWriter;
-import java.io.File;
+import dev.ionfusion.fusion._private.StreamWriter;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
@@ -88,10 +88,9 @@ final class PermutedIndexWriter
     }
 
 
-    public PermutedIndexWriter(Predicate<ModuleIdentity> filter, DocIndex index, File outputFile)
-        throws IOException
+    public PermutedIndexWriter(Predicate<ModuleIdentity> filter, DocIndex index, StreamWriter out)
     {
-        super(outputFile);
+        super(out);
 
         myFilter = filter;
         myIndex = index;

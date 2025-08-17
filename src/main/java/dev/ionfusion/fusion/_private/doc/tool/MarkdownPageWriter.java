@@ -8,6 +8,7 @@ import static dev.ionfusion.fusion._private.doc.tool.DocGenerator.HEADER_LINKS;
 import static java.util.regex.Pattern.MULTILINE;
 import static java.util.regex.Pattern.compile;
 
+import dev.ionfusion.fusion._private.StreamWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,10 +31,10 @@ class MarkdownPageWriter
     private final String myBaseUrl;
     private final Path   myMarkdownFile;
 
-    MarkdownPageWriter(Path outputFile, String baseUrl, Path markdownFile)
+    MarkdownPageWriter(StreamWriter out, String baseUrl, Path markdownFile)
         throws IOException
     {
-        super(outputFile.toFile());
+        super(out);
         myBaseUrl = baseUrl;
         myMarkdownFile = markdownFile;
     }

@@ -6,10 +6,10 @@ package dev.ionfusion.fusion._private.doc.tool;
 import static java.util.stream.Collectors.toList;
 
 import dev.ionfusion.fusion.ModuleIdentity;
+import dev.ionfusion.fusion._private.StreamWriter;
 import dev.ionfusion.fusion._private.doc.model.BindingDoc;
 import dev.ionfusion.fusion._private.doc.model.ModuleDocs;
 import dev.ionfusion.fusion._private.doc.model.ModuleEntity;
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -27,12 +27,11 @@ final class ModuleWriter
     private final ModuleIdentity            myModuleId;
 
     public ModuleWriter(Predicate<ModuleIdentity> filter,
-                        File outputFile,
+                        StreamWriter out,
                         String baseUrl,
                         ModuleEntity module)
-        throws IOException
     {
-        super(outputFile);
+        super(out);
         myFilter = filter;
         myBaseUrl = baseUrl;
         myModuleEntity = module;

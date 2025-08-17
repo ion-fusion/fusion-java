@@ -3,47 +3,21 @@
 
 package dev.ionfusion.fusion._private;
 
-import static com.amazon.ion.system.IonTextWriterBuilder.UTF8;
-
 import dev.ionfusion.fusion.ModuleIdentity;
-import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class HtmlWriter
-    implements AutoCloseable
 {
-    private final OutputStream myOutStream;
-    private final Writer myOut;
+    protected final StreamWriter myOut;
 
-    public HtmlWriter(File outputFile)
-        throws IOException
+    public HtmlWriter(StreamWriter out)
     {
-        Path outputPath = outputFile.toPath();
-        Files.createDirectories(outputPath.getParent());
-
-        myOutStream = Files.newOutputStream(outputPath);
-
-        // FIXME OutputStream will not be closed if this fails:
-        myOut = new BufferedWriter(new OutputStreamWriter(myOutStream, UTF8));
+        myOut = out;
     }
 
-    public HtmlWriter(File outputDir, String fileName)
-        throws IOException
+    public HtmlWriter(HtmlWriter out)
     {
-        this(new File(outputDir, fileName));
-    }
-
-    @Override
-    public void close()
-        throws IOException
-    {
-        myOut.close();
+        myOut = out.myOut;
     }
 
 
@@ -54,27 +28,24 @@ public class HtmlWriter
     public final void write(byte[] buffer, int off, int len)
         throws IOException
     {
-        myOut.flush();
-
         int end = off + len;
         int curr_start = off;
         for (int i = off; i < end; ++i) {
             char c = (char) buffer[i];
             if (c == '&' || c == '<' || c == '>')
             {
-                myOutStream.write(buffer, curr_start, i - curr_start);
+                myOut.write(buffer, curr_start, i - curr_start);
 
                 switch (c) {
                     case '&': append("&amp;"); break;
                     case '<': append("&lt;");  break;
                     case '>': append("&gt;");  break;
                 }
-                myOut.flush();
 
                 curr_start = i + 1;
             }
         }
-        myOutStream.write(buffer, curr_start, end - curr_start);
+        myOut.write(buffer, curr_start, end - curr_start);
     }
 
 
@@ -108,6 +79,10 @@ public class HtmlWriter
         text = escapeString(text);
         myOut.append(text);
     }
+
+
+    // ========================================================================
+    // Outermost HTML document structure
 
 
     public void openHtml()
@@ -190,6 +165,9 @@ public class HtmlWriter
     }
 
 
+    //========================================================================
+
+
     protected final void renderHeader1(String text)
         throws IOException
     {
@@ -206,6 +184,9 @@ public class HtmlWriter
         myOut.append("</h2>\n");
     }
 
+
+    // ========================================================================
+    // Fusion-specific things
 
     /**
      * Renders a link to a module, using the given link text.

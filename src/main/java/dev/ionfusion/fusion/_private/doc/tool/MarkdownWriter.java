@@ -5,7 +5,7 @@ package dev.ionfusion.fusion._private.doc.tool;
 
 import com.petebevin.markdown.MarkdownProcessor;
 import dev.ionfusion.fusion._private.HtmlWriter;
-import java.io.File;
+import dev.ionfusion.fusion._private.StreamWriter;
 import java.io.IOException;
 
 public class MarkdownWriter
@@ -13,10 +13,9 @@ public class MarkdownWriter
 {
     private final MarkdownProcessor myMarkdown = new MarkdownProcessor();
 
-    public MarkdownWriter(File outputFile)
-        throws IOException
+    public MarkdownWriter(StreamWriter out)
     {
-        super(outputFile);
+        super(out);
     }
 
     protected void markdown(String text)

@@ -17,6 +17,7 @@ import com.amazon.ion.SpanProvider;
 import com.amazon.ion.Timestamp;
 import com.amazon.ion.system.IonReaderBuilder;
 import dev.ionfusion.fusion._private.HtmlWriter;
+import dev.ionfusion.fusion._private.StreamWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -580,9 +581,9 @@ public final class _Private_CoverageWriter
         for (SourceName name : myDatabase.sourceNames())
         {
             String relativeName = relativeName(name);
-            try (HtmlWriter sourceHtml = new HtmlWriter(outputDir, relativeName))
+            try (StreamWriter sourceHtml = new StreamWriter(outputDir, relativeName))
             {
-                renderSource(sourceHtml, name);
+                renderSource(new HtmlWriter(sourceHtml), name);
             }
         }
     }
@@ -662,8 +663,9 @@ public final class _Private_CoverageWriter
     private void renderIndex(File outputDir)
         throws IOException
     {
-        try (HtmlWriter indexHtml = new HtmlWriter(outputDir, "index.html"))
+        try (StreamWriter out = new StreamWriter(outputDir, "index.html"))
         {
+            HtmlWriter indexHtml = new HtmlWriter(out);
             indexHtml.renderHeadWithInlineCss("Fusion Code Coverage", CSS);
 
             indexHtml.append("<p>Report generated at ");

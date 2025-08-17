@@ -5,7 +5,7 @@ package dev.ionfusion.fusion._private.doc.tool;
 
 import dev.ionfusion.fusion.ModuleIdentity;
 import dev.ionfusion.fusion._private.HtmlWriter;
-import java.io.File;
+import dev.ionfusion.fusion._private.StreamWriter;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
@@ -17,10 +17,9 @@ final class IndexWriter
     private final Predicate<ModuleIdentity> myFilter;
 
 
-    public IndexWriter(Predicate<ModuleIdentity> filter, File outputFile)
-        throws IOException
+    public IndexWriter(Predicate<ModuleIdentity> filter, StreamWriter out)
     {
-        super(outputFile);
+        super(out);
         myFilter = filter;
     }
 

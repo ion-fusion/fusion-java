@@ -9,6 +9,7 @@ import com.amazon.ion.Timestamp;
 import dev.ionfusion.fusion.FusionException;
 import dev.ionfusion.fusion.FusionRuntime;
 import dev.ionfusion.fusion.ModuleIdentity;
+import dev.ionfusion.fusion._private.StreamWriter;
 import dev.ionfusion.fusion._private.doc.model.ModuleEntity;
 import dev.ionfusion.fusion._private.doc.model.RepoEntity;
 import java.io.File;
@@ -94,12 +95,10 @@ public final class DocGenerator
         throws IOException
     {
         ModuleIdentity id = doc.getIdentity();
-        File outputFile = new File(outputDir, id.baseName() + ".html");
 
-        try (ModuleWriter writer =
-                 new ModuleWriter(filter, outputFile, baseUrl, doc))
+        try (StreamWriter writer = new StreamWriter(outputDir, id.baseName() + ".html"))
         {
-            writer.renderModule();
+            new ModuleWriter(filter, writer, baseUrl, doc).renderModule();
         }
     }
 
@@ -109,11 +108,9 @@ public final class DocGenerator
                                        DocIndex index)
         throws IOException
     {
-        File outputFile = new File(outputDir, "binding-index.html");
-
-        try (IndexWriter writer = new IndexWriter(filter, outputFile))
+        try (StreamWriter writer = new StreamWriter(outputDir, "binding-index.html"))
         {
-            writer.renderIndex(index);
+            new IndexWriter(filter, writer).renderIndex(index);
         }
     }
 
@@ -123,12 +120,9 @@ public final class DocGenerator
                                                DocIndex index)
         throws IOException
     {
-        File outputFile = new File(outputDir, "permuted-index.html");
-
-        try (PermutedIndexWriter writer =
-                 new PermutedIndexWriter(filter, index, outputFile))
+        try (StreamWriter writer = new StreamWriter(outputDir, "permuted-index.html"))
         {
-            writer.renderIndex();
+            new PermutedIndexWriter(filter, index, writer).renderIndex();
         }
     }
 
@@ -150,12 +144,10 @@ public final class DocGenerator
             if (fileName.endsWith(".md"))
             {
                 String docName = fileName.substring(0, fileName.length() - 2);
-                File outputFile = new File(outputDir, docName + "html");
 
-                try (MarkdownPageWriter writer =
-                         new MarkdownPageWriter(outputFile.toPath(), baseUrl, repoFile.toPath()))
+                try (StreamWriter writer = new StreamWriter(outputDir, docName + "html"))
                 {
-                    writer.render();
+                    new MarkdownPageWriter(writer, baseUrl, repoFile.toPath()).render();
                 }
             }
             else if (repoFile.isDirectory())
