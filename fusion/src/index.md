@@ -14,19 +14,25 @@ questions, requests, or other feedback, please post to our [Discussion boards][d
 [new-issue]: https://github.com/ion-fusion/fusion-java/issues/new
 
 
+## Getting Started
+
+* **[CLI Quick Start](cli_quickstart.html)** - Get productive with Fusion in minutes
+* **[Installation Guide](howto_build.html)** - Install Ion Fusion on your system
+
 ## Tutorials
 
-* Get started by trying out [the `fusion` CLI](tutorial_cli.html).
-
+* **[CLI Tutorial](tutorial_cli.html)** - Comprehensive guide to using the Fusion CLI
+* **[Language Tutorial](fusion.html)** - Learn the Fusion programming language
 
 ## How-to Guides
 
-* [How to Build Ion Fusion](howto_build.html)
-
+* **[CLI Reference](cli_reference.html)** - Complete command-line reference
+* **[CLI Troubleshooting](cli_troubleshooting.html)** - Solve common CLI issues
+* **[Installation Guide](howto_build.html)** - Build and install from source
 
 ## Explanation
 
-* [About the `fusion` CLI](about_cli.html)
+* **[About the CLI](about_cli.html)** - Understanding the Fusion command-line interface
 
 
 ## Reference
