@@ -4,12 +4,16 @@
 <!-- MarkdownJ can't handle backticks in headers -->
 # About the <code>fusion</code> CLI
 
-The `fusion` command-line interface is intended to support evaluation of Fusion code across a 
-variety of use cases.  It provides a number of commands that can be composed in a sequence of 
-steps within a single execution of the CLI.
+The `fusion` command-line interface is a powerful tool for evaluating Fusion code across a variety of use cases. It provides multiple commands that can be composed in sequences to build complex data processing workflows.
 
-> ⚠️ This document is a work in progress! We'd love to hear your feedback in 
-> [this Discussion thread](https://github.com/orgs/ion-fusion/discussions/213).
+> **📚 Looking for comprehensive CLI documentation?**
+> 
+> * **[CLI Quick Start](cli_quickstart.html)** - Get started in minutes
+> * **[CLI Tutorial](tutorial_cli.html)** - Step-by-step learning guide  
+> * **[CLI Reference](cli_reference.html)** - Complete command documentation
+> * **[CLI Troubleshooting](cli_troubleshooting.html)** - Common issues and solutions
+
+This document provides an overview of CLI concepts and design principles.
 
 The `fusion` executable requires at least one argument: a command to perform.
 
