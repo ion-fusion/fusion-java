@@ -36,8 +36,8 @@ fusion version
 ### Method 1: Build from Source (Recommended)
 
 **Prerequisites:**
-- Java 8 or later ([Amazon Corretto][] recommended)
-- [Git][]
+- Java 8 or later ([Corretto](https://aws.amazon.com/corretto/) recommended)
+- [Git](https://git-scm.com/)
 - Internet connection (for downloading dependencies)
 
 **Advantages:**
@@ -163,7 +163,7 @@ export JAVA_HOME=/path/to/java8
 
 **Java Requirements:**
 - **Version:** Java 8 or later (Java 11+ recommended for better performance)
-- **Distribution:** Any OpenJDK distribution (Amazon Corretto, AdoptOpenJDK, etc.)
+- **Distribution:** Any OpenJDK distribution (Corretto, AdoptOpenJDK, etc.)
 
 ### Build Troubleshooting
 
@@ -369,7 +369,3 @@ With Ion Fusion installed, you're ready to start coding:
 - **[Discussions](https://github.com/orgs/ion-fusion/discussions)** - Questions and help
 
 Happy coding with Ion Fusion!
-
-
-[Amazon Corretto]: https://aws.amazon.com/corretto
-[Git]: https://git-scm.com/

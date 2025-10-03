@@ -70,12 +70,21 @@ Error: Could not find or load main class dev.ionfusion.fusion.cli.Cli
 
 2. **Ensure Java 8 or later is installed:**
    ```bash
-   # Install Amazon Corretto (recommended)
+   # Install Corretto (recommended)
    # macOS with Homebrew:
    brew install --cask corretto8
    
-   # Ubuntu/Debian:
+   # macOS with MacPorts:
+   sudo port install openjdk8-corretto
+   
+   # Ubuntu/Debian (OpenJDK):
    sudo apt-get install openjdk-8-jdk
+   
+   # Ubuntu/Debian (Corretto):
+   wget -O- https://apt.corretto.aws/corretto.key | sudo apt-key add -
+   sudo add-apt-repository 'deb https://apt.corretto.aws stable main'
+   sudo apt-get update
+   sudo apt-get install java-1.8.0-amazon-corretto-jdk
    ```
 
 3. **Check JAVA_HOME environment variable:**
@@ -375,16 +384,22 @@ Data processing is slower than expected.
 
 **Solutions:**
 
-1. **Use Ion binary format:**
+1. **Use efficient Fusion operations:**
    ```bash
-   # Convert to binary for faster processing
-   fusion eval '(ionize_to_blob data)' > data.10n
+   # Use struct lookups with elt over nested access
+   fusion eval '(elt data "field")' # instead of (. data "field")
    ```
 
-2. **Optimize algorithms:**
+2. **Avoid deeply nested loops:**
    ```bash
    # Use built-in functions when possible
    fusion require '/fusion/list' ';' eval '(map process-fn data)'
+   ```
+
+3. **Optimize algorithms:**
+   ```bash
+   # Use performant operations like struct lookups
+   fusion require '/fusion/struct' ';' eval '(struct_get data "key")'
    ```
 
 3. **Profile with coverage tools:**

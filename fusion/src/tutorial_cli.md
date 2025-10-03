@@ -35,7 +35,7 @@ export PATH=$PATH:$PWD/build/install/fusion/bin
 - Unpack and add `bin` directory to your `PATH`
 
 **Requirements:**
-- Java runtime, version 8 or later ([Amazon Corretto][] recommended)
+- Java runtime, version 8 or later ([Corretto][] recommended)
 - `java` must be on your shell's `PATH`
 
 **Verify Installation:**
@@ -453,7 +453,7 @@ Consider using Fusion for:
 Happy coding with Ion Fusion!
 
 
-[Amazon Corretto]: https://aws.amazon.com/corretto
+[Corretto]: https://aws.amazon.com/corretto
 [CONTRIBUTORS]: https://github.com/ion-fusion/fusion-java/blob/main/CONTRIBUTORS.md
 [SDK]:          https://github.com/ion-fusion/fusion-java/releases
 [sexp]:   https://amazon-ion.github.io/ion-docs/docs/spec.html#sexp

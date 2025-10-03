@@ -10,7 +10,7 @@ Get up and running with the Ion Fusion CLI in minutes. This guide covers install
 ### Option 1: Build from Source (Recommended)
 
 **Prerequisites:**
-- Java 8 or later ([Amazon Corretto](https://aws.amazon.com/corretto/) recommended)
+- Java 8 or later ([Corretto](https://aws.amazon.com/corretto/) recommended)
 - Git
 
 **Steps:**
@@ -114,7 +114,7 @@ fusion repl
 
 ### Data Processing
 ```bash
-# Process JSON-like data
+# Process Ion data
 echo '{"count": 5}' | fusion eval '(define data (read)) (+ (. data "count") 10)'
 ```
 
@@ -142,7 +142,7 @@ echo "21" | fusion load process.fusion
 ## Key Concepts
 
 ### Ion Data Format
-Fusion uses Amazon Ion as its data format:
+Fusion uses [Amazon Ion](https://ion-fusion.dev/) as its data format:
 ```fusion
 null                    ; Null value
 true false             ; Booleans  
@@ -210,9 +210,7 @@ fusion help <command>          # Detailed command help
 ```
 
 ### Community
-- [GitHub Issues](https://github.com/ion-fusion/fusion-java/issues) - Bug reports and feature requests
-- [Discussions](https://github.com/orgs/ion-fusion/discussions) - Questions and community help
-- [Slack](https://join.slack.com/t/ion-fusion/shared_invite/zt-2y0jr8vh2-bZLa66hdyZ3ykHcgOcYkcA) - Real-time chat
+Visit the [Ion Fusion Community](https://ion-fusion.dev/community/) page for support resources, discussions, and ways to get involved.
 
 ### Documentation
 - [CLI Reference](cli_reference.html) - Complete command reference

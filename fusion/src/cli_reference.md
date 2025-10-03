@@ -462,7 +462,7 @@ OutOfMemoryError
 **Large Data Processing:**
 - Use streaming operations when possible
 - Process data in chunks rather than loading everything into memory
-- Consider using Ion binary format for better performance
+- Use efficient operations like struct lookups with `elt` over nested access with `.`
 
 **Module Loading:**
 - Organize modules efficiently to minimize loading time
