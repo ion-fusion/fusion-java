@@ -9,7 +9,7 @@ This project would not exist without its [contributors](CONTRIBUTORS.md)!
 > please open an issue so we know what needs improvement.
 
 <!-- TODO Add issue-creation link to the above. -->
-<!-- TODO Style guides (Java code; Fusion code; commit messages; documentation) --> 
+<!-- TODO Style guides (Java code; Fusion code; commit messages; documentation) -->
 
 
 ## Code of Conduct
@@ -33,11 +33,12 @@ public website. Assistance and expertise with the above would be most helpful.
 
 Of course, contributions to the core language and libraries are also welcome and encouraged!
 Please be aware that there is a high bar in terms of design, terminology, consistency, style,
-documentation, and testing. Not everything will "fit" into the language or standard library, and 
+documentation, and testing. Not everything will "fit" into the language or standard library, and
 many features can reside in user modules without problems.
 
 Documentation is the easiest thing to contribute, and offers a good route to getting to know the
 code base and the language’s library and internals.
+<!-- TODO Link to info focused on contributing documentation (as opposed to code). -->
 
 Standard-library procedures are usually straightforward, especially those that can be implemented in
 Fusion with reasonable efficiency. If Java code is required, it’s somewhat more complicated (and
@@ -54,7 +55,9 @@ thoroughly.
    raise the topic. This is a quick way to ensure that there’s not already a reasonable solution,
    that the feature fits within the scope and aims of the language and library, and to gather
    general feedback on the idea.
-2. Get a design review. Draft documentation for the proposed feature and post it as a PR. In most
+2. Create a GitHub fork of this repository. You'll push changes to it in order to create pull
+   requests.
+3. Get a design review. Draft documentation for the proposed feature and post it as a PR. In most
    cases, this should basically be the documentation for the procedure you’re adding. This allows
    experts to ensure the proposed behavior is well-designed and well-defined, to suggest test cases,
    and so on, before you invest time in implementation.
@@ -62,9 +65,9 @@ thoroughly.
       if your efforts go down the wrong path. Writing docs first is a lightweight way for you to get
       early feedback. It's best to get the high-level details right—particularly the terminology and
       contract—before digging into details.
-3. Code it! Don’t forget the unit tests.
-4. Post a pull request, and iterate as necessary. **Review early, review often!**
-5. Upon approval, your PR will be merged by a team member, and in most cases the change will be part
+4. Code it! Don’t forget the unit tests.
+5. Post a pull request, and iterate as necessary. **Review early, review often!**
+6. Upon approval, your PR will be merged by a code owner, and in most cases the change will be part
    of the next release.
 
 ### Issue Management
@@ -87,7 +90,7 @@ general kind of work required (like `infrastructure` or `documentation`).
 [types]:      https://github.com/organizations/ion-fusion/settings/issue-types
 
 <!--
-TODO Expand on this. 
+TODO Expand on this.
 See https://github.com/atom/atom/blob/master/CONTRIBUTING.md#issue-and-pull-request-labels
 -->
 
@@ -123,29 +126,29 @@ Fusion library module that includes the proposed documentation.
 
 ### Syntax
 
-The documentation of the Fusion language and libraries is primarily expressed as 
-code inside the production modules in the `fusion` directory.  HTML is generated at build time 
+The documentation of the Fusion language and libraries is primarily expressed as
+code inside the production modules in the `fusion` directory.  HTML is generated at build time
 in a manner very similar to JavaDoc; we refer to this as "fdoc" or "fusiondoc".
 
 > [!WARNING]
 > The specifics of this mechanism are at present unstable and undocumented from the
-> perspective of code outside this repository. 
+> perspective of code outside this repository.
 
-Similar to JavaDoc, prose can be attached to each module overall, and to individual bindings 
+Similar to JavaDoc, prose can be attached to each module overall, and to individual bindings
 provided by the module.  The former is accomplished by inserting a string literal immediately after
 the module's dialect declaration:
 
 ```ion
 (module M "/fusion"
   '''
-This is the overview documentation for module `M`.  Using Ion's triple-quoted long strings makes it 
-easy to write long passeges of prose with reasonable formatting.  
+This is the overview documentation for module `M`.  Using Ion's triple-quoted long strings makes it
+easy to write long passeges of prose with reasonable formatting.
   '''
-  
+
   (define something ...
 ```
 
-To document a binding, insert a string literal into `define` just after the name or signature 
+To document a binding, insert a string literal into `define` just after the name or signature
 subform:
 
 ```ion
@@ -160,8 +163,8 @@ Returns the square of number `n`.
     (* n n))
 ```
 
-When the `define` uses implicit-`lambda` syntax as in the latter example, the signature is 
-automatically copied into the front of the documentation as a code block.  In other words, that 
+When the `define` uses implicit-`lambda` syntax as in the latter example, the signature is
+automatically copied into the front of the documentation as a code block.  In other words, that
 example is equivalent to:
 
 ```ion
