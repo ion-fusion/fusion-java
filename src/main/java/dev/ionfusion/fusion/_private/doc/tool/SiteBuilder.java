@@ -3,13 +3,17 @@
 
 package dev.ionfusion.fusion._private.doc.tool;
 
+import static java.nio.file.Files.isDirectory;
+
 import dev.ionfusion.fusion.FusionException;
 import dev.ionfusion.fusion.ModuleIdentity;
 import dev.ionfusion.fusion._private.StreamWriter;
+import dev.ionfusion.fusion._private.doc.model.MarkdownArticle;
 import dev.ionfusion.fusion._private.doc.model.ModuleEntity;
 import dev.ionfusion.fusion._private.doc.model.RepoEntity;
 import dev.ionfusion.fusion._private.doc.site.Site;
 import dev.ionfusion.fusion._private.doc.site.Template;
+import dev.ionfusion.fusion._private.doc.tool.layout.MarkdownArticleLayout;
 import dev.ionfusion.fusion._private.doc.tool.layout.ModuleLayout;
 import dev.ionfusion.fusion._private.doc.tool.layout.StreamingTemplate;
 import java.nio.file.Path;
@@ -69,6 +73,50 @@ public class SiteBuilder
             Path file = Paths.get(".", id.absolutePath() + ".html");
 
             placePage(module, file, template);
+        }
+    }
+
+
+    /**
+     * Discover Markdown ({@code *.md}) files and place corresponding pages
+     * within the site at the same path.
+     *
+     * @param fromDir the directory to traverse recursively.
+     */
+    public void placeArticles(Path fromDir)
+    {
+        placeArticles(fromDir, Paths.get(""));
+    }
+
+    /**
+     * Discover Markdown ({@code *.md}) files and place corresponding pages
+     * within the site.
+     *
+     * @param fromDir the directory to traverse recursively.
+     * @param toDir the base path for corresponding HTML pages, relative to the
+     * site root.
+     */
+    public void placeArticles(Path fromDir, Path toDir)
+    {
+        String[] fileNames = fromDir.toFile().list();
+        if (fileNames == null) return;
+
+        for (String fileName : fileNames)
+        {
+            Path fromPath = fromDir.resolve(fileName);
+
+            if (fileName.endsWith(".md"))
+            {
+                String baseName = fileName.substring(0, fileName.length() - 3);
+                Path toPath = toDir.resolve(baseName + ".html");
+
+                MarkdownArticle article = new MarkdownArticle(fromPath);
+                placePage(article, toPath, MarkdownArticleLayout::new);
+            }
+            else if (isDirectory(fromPath))
+            {
+                placeArticles(fromPath, toDir.resolve(fileName));
+            }
         }
     }
 }
