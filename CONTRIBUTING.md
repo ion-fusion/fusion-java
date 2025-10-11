@@ -55,8 +55,8 @@ thoroughly.
    raise the topic. This is a quick way to ensure that there’s not already a reasonable solution,
    that the feature fits within the scope and aims of the language and library, and to gather
    general feedback on the idea.
-2. Create a GitHub fork of this repository. You'll push changes to it in order to create pull
-   requests.
+2. Create a GitHub fork of this repository. You'll push changes to your fork in order to create
+   pull requests to the official repository.
 3. Get a design review. Draft documentation for the proposed feature and post it as a PR. In most
    cases, this should basically be the documentation for the procedure you’re adding. This allows
    experts to ensure the proposed behavior is well-designed and well-defined, to suggest test cases,
