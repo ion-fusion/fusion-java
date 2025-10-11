@@ -1,11 +1,12 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion._private.doc.tool;
+package dev.ionfusion.fusion._private.doc.tool.layout;
 
 import dev.ionfusion.fusion.ModuleIdentity;
 import dev.ionfusion.fusion._private.HtmlWriter;
 import dev.ionfusion.fusion._private.StreamWriter;
+import dev.ionfusion.fusion._private.doc.tool.DocIndex;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
@@ -88,7 +89,7 @@ final class PermutedIndexWriter
     }
 
 
-    public PermutedIndexWriter(Predicate<ModuleIdentity> filter, DocIndex index, StreamWriter out)
+    PermutedIndexWriter(Predicate<ModuleIdentity> filter, DocIndex index, StreamWriter out)
     {
         super(out);
 
@@ -128,50 +129,37 @@ final class PermutedIndexWriter
     {
         permute();
 
-        openHtml();
+        renderHeader1("Permuted Binding Index");
+
+        append("<table><tbody>");
+        for (Line line : myLines)
         {
-            renderHead("Fusion Binding Index (Permuted)", null, "common.css", "index.css");
+            String escapedName = escapeString(line.bindingName());
 
-            openBody();
+            append("<tr><td class='prefix'>");
+            escape(line.prefix());
+            append("</td><td class='tail'><span class='keyword'>");
+            escape(line.keyword());
+            append("</span>");
+            escape(line.suffix());
+            append("</td><td>");
+
+            boolean printedOne = false;
+            for (ModuleIdentity id : line.modules())
             {
-                append("<div class='indexlink'>" + "<a href='index.html'>Top</a> " +
-                       "<a href='binding-index.html'>Alphabetical Index</a>" + "</div>\n");
-
-                renderHeader1("Permuted Binding Index");
-
-                append("<table><tbody>");
-                for (Line line : myLines)
+                if (myFilter.test(id))
                 {
-                    String escapedName = escapeString(line.bindingName());
-
-                    append("<tr><td class='prefix'>");
-                    escape(line.prefix());
-                    append("</td><td class='tail'><span class='keyword'>");
-                    escape(line.keyword());
-                    append("</span>");
-                    escape(line.suffix());
-                    append("</td><td>");
-
-                    boolean printedOne = false;
-                    for (ModuleIdentity id : line.modules())
+                    if (printedOne)
                     {
-                        if (myFilter.test(id))
-                        {
-                            if (printedOne)
-                            {
-                                append(", ");
-                            }
-                            linkToBindingAsModulePath(id, escapedName);
-                            printedOne = true;
-                        }
+                        append(", ");
                     }
-
-                    append("</td></tr>\n");
+                    linkToBindingAsModulePath(id, escapedName);
+                    printedOne = true;
                 }
-                append("</tbody></table>\n");
             }
-            closeBody();
+
+            append("</td></tr>\n");
         }
-        closeHtml();
+        append("</tbody></table>\n");
     }
 }

@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion._private.doc.tool;
 
+import static dev.ionfusion.fusion._private.doc.tool.DocIndex.buildDocIndex;
 import static java.nio.file.Files.isDirectory;
 
 import dev.ionfusion.fusion.FusionException;
@@ -13,8 +14,10 @@ import dev.ionfusion.fusion._private.doc.model.ModuleEntity;
 import dev.ionfusion.fusion._private.doc.model.RepoEntity;
 import dev.ionfusion.fusion._private.doc.site.Site;
 import dev.ionfusion.fusion._private.doc.site.Template;
+import dev.ionfusion.fusion._private.doc.tool.layout.AlphabeticalIndexLayout;
 import dev.ionfusion.fusion._private.doc.tool.layout.MarkdownArticleLayout;
 import dev.ionfusion.fusion._private.doc.tool.layout.ModuleLayout;
+import dev.ionfusion.fusion._private.doc.tool.layout.PermutedIndexLayout;
 import dev.ionfusion.fusion._private.doc.tool.layout.StreamingTemplate;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -118,5 +121,15 @@ public class SiteBuilder
                 placeArticles(fromPath, toDir.resolve(fileName));
             }
         }
+    }
+
+    public void prepareIndexes()
+        throws FusionException
+    {
+        // The two index artifacts are different layouts of the same entity.
+        DocIndex docIndex = buildDocIndex(myRepo.getModules());
+
+        placePage(docIndex, "binding-index.html", AlphabeticalIndexLayout.template(myModuleSelector));
+        placePage(docIndex, "permuted-index.html", PermutedIndexLayout.template(myModuleSelector));
     }
 }

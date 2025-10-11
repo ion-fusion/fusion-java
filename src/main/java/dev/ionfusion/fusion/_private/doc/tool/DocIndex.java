@@ -13,7 +13,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 
-final class DocIndex
+public final class DocIndex
 {
     private final TreeMap<String, Set<ModuleIdentity>> myNameMap;
 
@@ -22,7 +22,7 @@ final class DocIndex
         myNameMap = new TreeMap<>();
     }
 
-    TreeMap<String, Set<ModuleIdentity>> getNameMap()
+    public TreeMap<String, Set<ModuleIdentity>> getNameMap()
     {
         return myNameMap;
     }

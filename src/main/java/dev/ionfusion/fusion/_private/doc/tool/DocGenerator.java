@@ -3,13 +3,10 @@
 
 package dev.ionfusion.fusion._private.doc.tool;
 
-import static dev.ionfusion.fusion._private.doc.tool.DocIndex.buildDocIndex;
-
 import com.amazon.ion.Timestamp;
 import dev.ionfusion.fusion.FusionException;
 import dev.ionfusion.fusion.FusionRuntime;
 import dev.ionfusion.fusion.ModuleIdentity;
-import dev.ionfusion.fusion._private.StreamWriter;
 import dev.ionfusion.fusion._private.doc.model.RepoEntity;
 import java.io.File;
 import java.io.IOException;
@@ -41,42 +38,13 @@ public final class DocGenerator
         site.placeArticles(repoDir.toPath().resolve("src"));
 
         log("Building indices");
-        DocIndex index = buildDocIndex(repo.getModules());
-
-        log("Writing indices");
-        writeIndexFile(filter, outputDir, index);
-        writePermutedIndexFile(filter, outputDir, index);
+        site.prepareIndexes();
 
         log("Writing HTML pages");
         site.build().generate(outputDir.toPath());
 
         log("DONE writing HTML docs to " + outputDir);
     }
-
-
-    private static void writeIndexFile(Predicate<ModuleIdentity> filter,
-                                       File outputDir,
-                                       DocIndex index)
-        throws IOException
-    {
-        try (StreamWriter writer = new StreamWriter(outputDir, "binding-index.html"))
-        {
-            new IndexWriter(filter, writer).renderIndex(index);
-        }
-    }
-
-
-    private static void writePermutedIndexFile(Predicate<ModuleIdentity> filter,
-                                               File outputDir,
-                                               DocIndex index)
-        throws IOException
-    {
-        try (StreamWriter writer = new StreamWriter(outputDir, "permuted-index.html"))
-        {
-            new PermutedIndexWriter(filter, index, writer).renderIndex();
-        }
-    }
-
 
 
     private static void log(String message)
