@@ -52,6 +52,7 @@ class Document
     {
         private Path myModulesDir;
         private Path myArticlesDir;
+        private Path myAssetsDir;
 
         public void setModules(Path dir)
             throws UsageException
@@ -75,6 +76,16 @@ class Document
                 throw usage("--articles is not a directory: " + path);
             }
             myArticlesDir = path;
+        }
+
+        public void setAssets(Path path)
+            throws UsageException
+        {
+            if (! isDirectory(path))
+            {
+                throw usage("--assets is not a directory: " + path);
+            }
+            myAssetsDir = path;
         }
     }
 
@@ -156,6 +167,13 @@ class Document
             {
                 log.accept("Discovering Markdown pages");
                 site.placeArticles(articles);
+            }
+
+            Path assets = myOptions.myAssetsDir;
+            if (assets != null)
+            {
+                log.accept("Discovering static assets");
+                site.placeAssets(assets);
             }
 
             log.accept("Building indices");

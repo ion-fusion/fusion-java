@@ -261,18 +261,21 @@ val fusiondocDir = docsDir.get().dir("fusiondoc")
 
 tasks.register<JavaExec>("fusiondocGen") {
     var articlesDir = layout.projectDirectory.dir("src/doc/articles")
+    var assetsDir   = layout.projectDirectory.dir("src/doc/assets")
 
     classpath = sourceSets["main"].runtimeClasspath
     mainClass = "dev.ionfusion.fusion.cli.Cli"
     args = listOf("document",
                   "--modules", "fusion",
                   "--articles", articlesDir.toString(),
+                  "--assets", assetsDir.toString(),
                   fusiondocDir.asFile.path)
 
     enableAssertions = true
 
     inputs.dir(layout.projectDirectory.dir("fusion"))
     inputs.dir(articlesDir)
+    inputs.dir(assetsDir)
     outputs.dir(fusiondocDir)
 }
 
@@ -281,12 +284,6 @@ val fusiondoc by tasks.register<Copy>("fusiondoc") {
     description = "Generates Fusion language and library documentation."
 
     dependsOn("fusiondocGen")
-
-    // Copy Favicon and CSS from `doc` directory.
-    into(fusiondocDir)
-    from(layout.projectDirectory.dir("doc"))
-    exclude("**/*.md")
-    includeEmptyDirs = false
 }
 
 

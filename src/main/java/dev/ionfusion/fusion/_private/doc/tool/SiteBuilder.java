@@ -12,6 +12,7 @@ import dev.ionfusion.fusion._private.StreamWriter;
 import dev.ionfusion.fusion._private.doc.model.MarkdownArticle;
 import dev.ionfusion.fusion._private.doc.model.ModuleEntity;
 import dev.ionfusion.fusion._private.doc.model.RepoEntity;
+import dev.ionfusion.fusion._private.doc.site.FileCopyTemplate;
 import dev.ionfusion.fusion._private.doc.site.Site;
 import dev.ionfusion.fusion._private.doc.site.Template;
 import dev.ionfusion.fusion._private.doc.tool.layout.AlphabeticalIndexLayout;
@@ -122,6 +123,35 @@ public class SiteBuilder
             }
         }
     }
+
+
+    public void placeAssets(Path fromDir)
+    {
+        placeAssets(fromDir, Paths.get(""));
+    }
+
+    public void placeAssets(Path fromDir,  Path toDir)
+    {
+        String[] fileNames = fromDir.toFile().list();
+        if (fileNames == null) return;
+
+        FileCopyTemplate template = new FileCopyTemplate();
+        for (String fileName : fileNames)
+        {
+            Path fromPath = fromDir.resolve(fileName);
+            Path toPath = toDir.resolve(fileName);
+
+            if (isDirectory(fromPath))
+            {
+                placeAssets(fromPath, toPath);
+            }
+            else
+            {
+                mySite.placeArtifact(fromPath, toPath, template);
+            }
+        }
+    }
+
 
     public void prepareIndexes()
         throws FusionException
