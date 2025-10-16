@@ -3,11 +3,14 @@
 
 package dev.ionfusion.fusion.cli;
 
-import static dev.ionfusion.fusion._private.doc.tool.DocGenerator.writeHtmlTree;
-
+import com.amazon.ion.Timestamp;
+import dev.ionfusion.fusion.FusionRuntime;
 import dev.ionfusion.fusion.ModuleIdentity;
+import dev.ionfusion.fusion._private.doc.model.RepoEntity;
+import dev.ionfusion.fusion._private.doc.tool.SiteBuilder;
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 
@@ -93,7 +96,13 @@ class Document
         public int execute(PrintWriter out, PrintWriter err)
             throws Exception
         {
-            // TODO send log messages to the output PrintWriter, not System.out
+            FusionRuntime runtime = runtime();
+
+            Consumer<String> log = message -> {
+                err.print(Timestamp.now());
+                err.print(" ");
+                err.println(message);
+            };
 
             Predicate<ModuleIdentity> filter = id -> {
                 String path = id.absolutePath();
@@ -101,7 +110,24 @@ class Document
                 return !isPrivate;
             };
 
-            writeHtmlTree(runtime(), myOutputDir, myRepoDir, filter);
+            log.accept("Building module docs");
+            RepoEntity  repo = new RepoEntity(myRepoDir.toPath(), filter, runtime.makeTopLevel());
+            SiteBuilder site = new SiteBuilder(repo, filter);
+
+            log.accept("Discovering module docs");
+            site.placeModules();
+
+            log.accept("Discovering Markdown pages");
+            // TODO Move articles to a separate directory.
+            site.placeArticles(myRepoDir.toPath().resolve("src"));
+
+            log.accept("Building indices");
+            site.prepareIndexes();
+
+            log.accept("Writing HTML pages");
+            site.build().generate(myOutputDir.toPath());
+
+            log.accept("DONE writing HTML docs to " + myOutputDir);
             return 0;
         }
     }
