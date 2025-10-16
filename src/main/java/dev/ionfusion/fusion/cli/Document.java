@@ -51,6 +51,7 @@ class Document
     private class Options
     {
         private Path myModulesDir;
+        private Path myArticlesDir;
 
         public void setModules(Path dir)
             throws UsageException
@@ -64,6 +65,16 @@ class Document
                 throw usage("--modules has no src directory: " + dir);
             }
             myModulesDir = dir;
+        }
+
+        public void setArticles(Path path)
+            throws UsageException
+        {
+            if (! isDirectory(path))
+            {
+                throw usage("--articles is not a directory: " + path);
+            }
+            myArticlesDir = path;
         }
     }
 
@@ -140,9 +151,12 @@ class Document
             log.accept("Discovering module docs");
             site.placeModules();
 
-            log.accept("Discovering Markdown pages");
-            // TODO Move articles to a separate directory.
-            site.placeArticles(repoDir.resolve("src"));
+            Path articles = myOptions.myArticlesDir;
+            if (articles != null)
+            {
+                log.accept("Discovering Markdown pages");
+                site.placeArticles(articles);
+            }
 
             log.accept("Building indices");
             site.prepareIndexes();
