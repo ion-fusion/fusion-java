@@ -9,6 +9,8 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -212,6 +214,11 @@ abstract class Command
                 {
                     throw new UsageException("Missing argument: " + arg);
                 }
+                else if (propClass.equals(Path.class))
+                {
+                    // TODO handle InvalidPathException (etc?)
+                    value = Paths.get(value.toString());
+                }
                 else if (! propClass.equals(String.class))
                 {
                     throw new UsageException("Invalid option: " + arg);
@@ -321,7 +328,6 @@ abstract class Command
      *
      * @return null if there are no command options.
      */
-    final  // TODO See comment in prepare() before adding a command w/ options
     Object makeOptions(GlobalOptions globals)
     {
         return null;
@@ -350,10 +356,7 @@ abstract class Command
         // so any options we find will cause an error.
         if (options == null) options = new Object();
 
-        // TODO The `false` here causes the parser to accept options mingled
-        //  within the arguments. I don't think that's a good idea, but so far
-        //  no command has options, so it doesn't matter.
-        args = extractOptions(options, args, false);
+        args = extractOptions(options, args, true);
 
         return makeExecutor(globals, options, args);
     }

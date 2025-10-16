@@ -262,7 +262,7 @@ val fusiondocDir = docsDir.get().dir("fusiondoc")
 tasks.register<JavaExec>("fusiondocGen") {
     classpath = sourceSets["main"].runtimeClasspath
     mainClass = "dev.ionfusion.fusion.cli.Cli"
-    args = listOf("document", fusiondocDir.asFile.path, "fusion")
+    args = listOf("document", "--modules", "fusion", fusiondocDir.asFile.path)
 
     enableAssertions = true
 

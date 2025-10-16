@@ -3,6 +3,8 @@
 
 package dev.ionfusion.fusion.cli;
 
+import static java.nio.file.Files.isDirectory;
+
 import com.amazon.ion.Timestamp;
 import dev.ionfusion.fusion.FusionRuntime;
 import dev.ionfusion.fusion.ModuleIdentity;
@@ -10,6 +12,7 @@ import dev.ionfusion.fusion._private.doc.model.RepoEntity;
 import dev.ionfusion.fusion._private.doc.tool.SiteBuilder;
 import java.io.File;
 import java.io.PrintWriter;
+import java.nio.file.Path;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -39,8 +42,34 @@ class Document
     {
         super("document");
 
-        // We don't want this documented yet since its not stable.
+        // We don't want this documented yet since it's not stable.
 //        putHelpText(HELP_ONE_LINER, HELP_USAGE, HELP_BODY);
+    }
+
+
+
+    private class Options
+    {
+        private Path myModulesDir;
+
+        public void setModules(Path dir)
+            throws UsageException
+        {
+            if (! isDirectory(dir))
+            {
+                throw usage("--modules is not a directory: " + dir);
+            }
+            if (! isDirectory(dir.resolve("src")))
+            {
+                throw usage("--modules has no src directory: " + dir);
+            }
+            myModulesDir = dir;
+        }
+    }
+
+    Object makeOptions(GlobalOptions globals)
+    {
+        return new Options();
     }
 
 
@@ -48,48 +77,41 @@ class Document
 
 
     @Override
-    Executor makeExecutor(GlobalOptions globals, String[] args)
+    Executor makeExecutor(GlobalOptions globals, Object locals, String[] args)
         throws UsageException
     {
-        if (args.length != 2) return null;
+        Options options = (Options) locals;
+
+        if (args.length != 1) throw usage("Wrong number of arguments");
 
         File outputDir = new File(args[0]);
-        File repoDir   = new File(args[1]);
-
         if (outputDir.isFile())
         {
             throw usage("Output location is a file: " + outputDir);
         }
 
-        if (! repoDir.isDirectory())
-        {
-            throw usage("Repository is not a directory: " + repoDir);
-        }
-
-        if (! new File(repoDir, "src").isDirectory())
-        {
-            throw usage("Repository has no src directory: " + repoDir);
-        }
-
         globals.collectDocumentation();
-        globals.setRepositories(repoDir.getAbsolutePath());
 
-        return new Executor(globals, outputDir, repoDir);
+        // TODO This may not be sufficient, if this repo depends on others.
+        Path repoDir = options.myModulesDir;
+        globals.setRepositories(repoDir.toAbsolutePath().toString());
+
+        return new Executor(globals, options, outputDir);
     }
 
 
     private static class Executor
         extends FusionExecutor
     {
-        private final File myOutputDir;
-        private final File myRepoDir;
+        private final Options myOptions;
+        private final File    myOutputDir;
 
-        private Executor(GlobalOptions globals, File outputDir, File repoDir)
+        private Executor(GlobalOptions globals, Options options, File outputDir)
         {
             super(globals);
 
+            myOptions   = options;
             myOutputDir = outputDir;
-            myRepoDir   = repoDir;
         }
 
         @Override
@@ -110,8 +132,9 @@ class Document
                 return !isPrivate;
             };
 
+            Path repoDir = myOptions.myModulesDir;
             log.accept("Building module docs");
-            RepoEntity  repo = new RepoEntity(myRepoDir.toPath(), filter, runtime.makeTopLevel());
+            RepoEntity  repo = new RepoEntity(repoDir, filter, runtime.makeTopLevel());
             SiteBuilder site = new SiteBuilder(repo, filter);
 
             log.accept("Discovering module docs");
@@ -119,7 +142,7 @@ class Document
 
             log.accept("Discovering Markdown pages");
             // TODO Move articles to a separate directory.
-            site.placeArticles(myRepoDir.toPath().resolve("src"));
+            site.placeArticles(repoDir.resolve("src"));
 
             log.accept("Building indices");
             site.prepareIndexes();

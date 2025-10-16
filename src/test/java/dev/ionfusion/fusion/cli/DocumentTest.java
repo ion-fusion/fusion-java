@@ -6,6 +6,7 @@ package dev.ionfusion.fusion.cli;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import java.io.File;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
@@ -46,7 +47,7 @@ public class DocumentTest
     {
         String aFile = plainFile().getPath();
 
-        run(1, "document", aFile, "fusion");
+        run(1, "document", aFile);
 
         assertThat(stderrText, containsString(aFile));
     }
@@ -57,7 +58,7 @@ public class DocumentTest
     {
         String repo = noSuchFile().getPath();
 
-        run(1, "document", outputDir().getPath(), repo);
+        run(1, "document", "--modules", repo, outputDir().getPath());
 
         assertThat(stderrText, containsString("not a directory"));
         assertThat(stderrText, containsString(repo));
@@ -69,7 +70,7 @@ public class DocumentTest
     {
         String repo = plainFile().getPath();
 
-        run(1, "document", outputDir().getPath(), repo);
+        run(1, "document", "--modules", repo, outputDir().getPath());
 
         assertThat(stderrText, containsString("not a directory"));
         assertThat(stderrText, containsString(repo));
@@ -81,7 +82,7 @@ public class DocumentTest
     {
         String repo = newFolder(tmpDir, "junit").getPath();
 
-        run(1, "document", outputDir().getPath(), repo);
+        run(1, "document", "--modules", repo, outputDir().getPath());
 
         assertThat(stderrText, containsString("has no src"));
         assertThat(stderrText, containsString(repo));
