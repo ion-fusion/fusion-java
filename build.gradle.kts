@@ -260,16 +260,19 @@ tasks.javadoc {
 val fusiondocDir = docsDir.get().dir("fusiondoc")
 
 tasks.register<JavaExec>("fusiondocGen") {
+    var articlesDir = layout.projectDirectory.dir("src/doc/articles")
+
     classpath = sourceSets["main"].runtimeClasspath
     mainClass = "dev.ionfusion.fusion.cli.Cli"
     args = listOf("document",
                   "--modules", "fusion",
-                  "--articles", "fusion/src",  // TODO move these
+                  "--articles", articlesDir.toString(),
                   fusiondocDir.asFile.path)
 
     enableAssertions = true
 
     inputs.dir(layout.projectDirectory.dir("fusion"))
+    inputs.dir(articlesDir)
     outputs.dir(fusiondocDir)
 }
 
