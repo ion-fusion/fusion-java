@@ -3,29 +3,18 @@
 
 package dev.ionfusion.fusion._private.doc.tool.layout;
 
-import dev.ionfusion.fusion.ModuleIdentity;
 import dev.ionfusion.fusion._private.StreamWriter;
 import dev.ionfusion.fusion._private.doc.site.Artifact;
-import dev.ionfusion.fusion._private.doc.site.Template;
 import dev.ionfusion.fusion._private.doc.tool.DocIndex;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.function.Predicate;
 
 public final class PermutedIndexLayout
     extends CommonLayout<DocIndex>
 {
-    private final Predicate<ModuleIdentity> myFilter;
-
-    private PermutedIndexLayout(Artifact<DocIndex> artifact, Predicate<ModuleIdentity> filter)
+    public PermutedIndexLayout(Artifact<DocIndex> artifact)
     {
         super(artifact);
-        myFilter = filter;
-    }
-
-    public static Template<DocIndex, StreamWriter> template(Predicate<ModuleIdentity> filter)
-    {
-        return artifact -> new PermutedIndexLayout(artifact, filter);
     }
 
     @Override
@@ -47,6 +36,6 @@ public final class PermutedIndexLayout
     void renderContent(StreamWriter out)
         throws IOException
     {
-        new PermutedIndexWriter(myFilter, getEntity(), out).renderIndex();
+        new PermutedIndexWriter(getEntity(), out).renderIndex();
     }
 }

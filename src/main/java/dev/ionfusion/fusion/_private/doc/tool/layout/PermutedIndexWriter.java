@@ -11,13 +11,11 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.function.Predicate;
 
 final class PermutedIndexWriter
     extends HtmlWriter
 {
-    private final Predicate<ModuleIdentity> myFilter;
-    private final DocIndex                  myIndex;
+    private final DocIndex myIndex;
 
     /**
      * Maps keywords to the lines in which they exist.
@@ -89,11 +87,10 @@ final class PermutedIndexWriter
     }
 
 
-    PermutedIndexWriter(Predicate<ModuleIdentity> filter, DocIndex index, StreamWriter out)
+    PermutedIndexWriter(DocIndex index, StreamWriter out)
     {
         super(out);
 
-        myFilter = filter;
         myIndex = index;
         myLines = new TreeSet<>();
     }
@@ -147,15 +144,12 @@ final class PermutedIndexWriter
             boolean printedOne = false;
             for (ModuleIdentity id : line.modules())
             {
-                if (myFilter.test(id))
+                if (printedOne)
                 {
-                    if (printedOne)
-                    {
-                        append(", ");
-                    }
-                    linkToBindingAsModulePath(id, escapedName);
-                    printedOne = true;
+                    append(", ");
                 }
+                linkToBindingAsModulePath(id, escapedName);
+                printedOne = true;
             }
 
             append("</td></tr>\n");
