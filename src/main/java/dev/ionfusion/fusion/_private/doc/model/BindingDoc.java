@@ -91,6 +91,12 @@ public final class BindingDoc
     }
 
 
+    /**
+     * Identifies the (visited) modules that provide this binding. This can
+     * include modules not selected for doc generation.
+     *
+     * @return not null.
+     */
     public Set<ModuleIdentity> getProvidingModules()
     {
         return myProvidingModules;

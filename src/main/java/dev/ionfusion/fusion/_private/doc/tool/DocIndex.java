@@ -11,14 +11,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.function.Predicate;
 
 
 public final class DocIndex
 {
+    private final Predicate<ModuleIdentity>            myModuleSelector;
     private final TreeMap<String, Set<ModuleIdentity>> myNameMap;
 
-    private DocIndex()
+    private DocIndex(Predicate<ModuleIdentity> selector)
     {
+        myModuleSelector = selector;
         myNameMap = new TreeMap<>();
     }
 
@@ -31,9 +34,10 @@ public final class DocIndex
     //========================================================================
 
 
-    static DocIndex buildDocIndex(Set<ModuleEntity> modules)
+    static DocIndex buildDocIndex(Predicate<ModuleIdentity> selector,
+                                  Set<ModuleEntity> modules)
     {
-        DocIndex index = new DocIndex();
+        DocIndex index = new DocIndex(selector);
 
         modules.stream()
                 .map(ModuleEntity::getModuleDocs)
@@ -62,7 +66,12 @@ public final class DocIndex
             }
             else
             {
-                ids.addAll(bindingDoc.getProvidingModules());
+                // Binding cross-references are collected by the compiler and
+                // not pre-filtered.
+                bindingDoc.getProvidingModules()
+                          .stream()
+                          .filter(myModuleSelector)
+                          .forEach(ids::add);
             }
         }
     }

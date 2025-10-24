@@ -86,7 +86,7 @@ public class RepoEntity
      *
      * @throws FusionException if there's a problem during discovery.
      */
-    public Set<ModuleEntity> getModules()
+    public Set<ModuleEntity> getSelectedModules()
         throws FusionException
     {
         if (myModules == null)
