@@ -156,10 +156,10 @@ public class SiteBuilder
     public void prepareIndexes()
         throws FusionException
     {
-        // The two index artifacts are different layouts of the same entity.
         DocIndex docIndex = buildDocIndex(myModuleSelector, myRepo.getSelectedModules());
+        PermutedIndex permuted = docIndex.permute();
 
         placePage(docIndex, "binding-index.html", AlphabeticalIndexLayout::new);
-        placePage(docIndex, "permuted-index.html", PermutedIndexLayout::new);
+        placePage(permuted, "permuted-index.html", PermutedIndexLayout::new);
     }
 }

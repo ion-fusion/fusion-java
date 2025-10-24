@@ -5,14 +5,14 @@ package dev.ionfusion.fusion._private.doc.tool.layout;
 
 import dev.ionfusion.fusion._private.StreamWriter;
 import dev.ionfusion.fusion._private.doc.site.Artifact;
-import dev.ionfusion.fusion._private.doc.tool.DocIndex;
+import dev.ionfusion.fusion._private.doc.tool.PermutedIndex;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public final class PermutedIndexLayout
-    extends CommonLayout<DocIndex>
+    extends CommonLayout<PermutedIndex>
 {
-    public PermutedIndexLayout(Artifact<DocIndex> artifact)
+    public PermutedIndexLayout(Artifact<PermutedIndex> artifact)
     {
         super(artifact);
     }

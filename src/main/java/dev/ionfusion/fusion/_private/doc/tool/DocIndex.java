@@ -75,4 +75,12 @@ public final class DocIndex
             }
         }
     }
+
+
+    public PermutedIndex permute()
+    {
+        PermutedIndex permuted = new PermutedIndex();
+        myNameMap.forEach(permuted::addEntries);
+        return permuted;
+    }
 }
