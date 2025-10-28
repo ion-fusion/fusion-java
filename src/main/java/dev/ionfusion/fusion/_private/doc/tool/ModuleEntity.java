@@ -9,9 +9,6 @@ import dev.ionfusion.fusion.ModuleIdentity;
 import dev.ionfusion.fusion._private.doc.model.BindingDoc;
 import dev.ionfusion.fusion._private.doc.model.ModuleDocs;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -23,7 +20,7 @@ public class ModuleEntity
     private final DocIndex                   myIndex;
     private final ModuleIdentity             myModuleIdentity;
     private       ModuleDocs                 myModuleDocs;
-    private final Map<String, ModuleEntity>  myChildren;
+    private final SortedSet<ModuleEntity>    mySubmodules;
     private final SortedSet<ExportedBinding> myExports;
 
 
@@ -31,7 +28,7 @@ public class ModuleEntity
     {
         myIndex = index;
         myModuleIdentity = id;
-        myChildren = new HashMap<>();
+        mySubmodules = new TreeSet<>(comparing(ModuleEntity::getIdentity));
         myExports = new TreeSet<>(comparing(ExportedBinding::getName,
                                             index.getBoundNameComparator()));
     }
@@ -69,22 +66,20 @@ public class ModuleEntity
     //=========================================================================
     // Submodules
 
-    void addChild(ModuleEntity child)
+    void addSubmodule(ModuleEntity child)
     {
-        myChildren.put(child.getIdentity().baseName(), child);
-    }
-
-    public ModuleEntity getChild(String name)
-    {
-        return myChildren.get(name);
+        assert child.getIdentity().parent() == myModuleIdentity;
+        mySubmodules.add(child);
     }
 
     /**
-     * Not sorted.
+     * Sorted by name.
+     *
+     * @return not null.
      */
-    public Set<String> getChildNames()
+    public Collection<ModuleEntity> submodules()
     {
-        return myChildren.keySet();
+        return mySubmodules;
     }
 
 

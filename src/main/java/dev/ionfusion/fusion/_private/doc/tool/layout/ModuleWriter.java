@@ -3,8 +3,6 @@
 
 package dev.ionfusion.fusion._private.doc.tool.layout;
 
-import static java.util.stream.Collectors.toList;
-
 import dev.ionfusion.fusion.ModuleIdentity;
 import dev.ionfusion.fusion._private.StreamWriter;
 import dev.ionfusion.fusion._private.doc.model.BindingDoc;
@@ -15,8 +13,6 @@ import dev.ionfusion.fusion._private.doc.tool.ModuleEntity;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 final class ModuleWriter
     extends MarkdownWriter
@@ -89,19 +85,15 @@ final class ModuleWriter
     private void renderSubmoduleLinks()
         throws IOException
     {
-        Set<String> submoduleNames = myModuleEntity.getChildNames();
-        if (submoduleNames.isEmpty()) return;
+        Collection<ModuleEntity> submodules = myModuleEntity.submodules();
+        if (submodules.isEmpty()) return;
 
         renderHeader2("Submodules");
-
-        List<String> names = submoduleNames.stream().sorted().collect(toList());
-
         append("<ul class='submodules'>");
-        for (String name : names)
-        {
-            ModuleEntity module = myModuleEntity.getChild(name);
 
-            String escapedName = escapeString(name);
+        for (ModuleEntity module : submodules)
+        {
+            String escapedName = escapeString(module.getIdentity().baseName());
             append("<li>");
             linkToModule(module.getIdentity(), escapedName);
 

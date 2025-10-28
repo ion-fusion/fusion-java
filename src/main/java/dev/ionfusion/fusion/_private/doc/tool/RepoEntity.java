@@ -68,7 +68,7 @@ public class RepoEntity
         ModuleEntity parent = ensureEntityForModule(id.parent());
 
         module = new ModuleEntity(myIndex, id);
-        if (parent != null) parent.addChild(module);
+        if (parent != null) parent.addSubmodule(module);
         myModules.put(id, module);
 
         return module;
