@@ -7,6 +7,7 @@ import static dev.ionfusion.fusion.FusionEval.callCurrentEval;
 import static dev.ionfusion.fusion.FusionString.makeString;
 import static dev.ionfusion.fusion.GlobalState.MODULE;
 import static dev.ionfusion.fusion.StandardReader.readSyntax;
+
 import com.amazon.ion.IonException;
 import com.amazon.ion.IonReader;
 import java.io.File;
@@ -219,6 +220,16 @@ final class LoadHandler
     {
         SyntaxSexp moduleDeclaration = readModuleDeclaration(eval, id, loc);
 
-        evalModuleDeclaration(eval, loc, moduleDeclaration);
+        try
+        {
+            evalModuleDeclaration(eval, loc, moduleDeclaration);
+        }
+        catch (AssertionError e)
+        {
+            // Attempt to make debugging easier.
+            // TODO Similarly wrap other unchecked exceptions?
+            // TODO this doesn't need to be rewrapped by each module
+            throw new AssertionError("Assertion failure in " + loc + ": ", e);
+        }
     }
 }
