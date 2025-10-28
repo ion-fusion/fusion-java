@@ -59,7 +59,7 @@ public class TailCallTest
     {
         CountupProc()
         {
-            super(null, "i", "limit");
+            super("i", "limit");
         }
 
         @Override

@@ -162,38 +162,7 @@ final class ModuleInstance
     {
         ModuleDefinedBinding binding = resolveProvidedName(name).target();
 
-        BindingDoc doc = documentProvidedName(binding);
-        if (doc == null)
-        {
-            Object value = binding.lookup(this);
-            if (value instanceof Procedure)
-            {
-                doc = ((Procedure) value).document();
-                assert doc == null: "Doc on procs should be unused";
-                if (doc != null)
-                {
-                    {
-                        String msg =
-                            "WARNING: using doc-on-value for " +
-                                myIdentity.absolutePath() + ' ' + name;
-                        System.err.println(msg);
-                    }
-
-                    if (! name.equals(doc.getName()))
-                    {
-                        String msg =
-                            "WARNING: potential documented-name mismatch in " +
-                            myIdentity.absolutePath() + ": " +
-                            name + " vs " + doc.getName();
-                        System.err.println(msg);
-                    }
-
-                    doc.addProvidingModule(binding.myModuleId);
-                    doc.addProvidingModule(myIdentity);
-                }
-            }
-        }
-        return doc;
+        return documentProvidedName(binding);
     }
 
     private BindingDoc documentProvidedName(ModuleDefinedBinding binding)

@@ -247,6 +247,7 @@ class Compiler
         if (size == 1) return compileExpression(env, stx.get(myEval, from));
 
         CompiledForm[] subforms = compileExpressions(env, stx, from, to);
+        // TODO Perhaps eliminate forms that are constants?
         return new CompiledBegin(subforms);
     }
 

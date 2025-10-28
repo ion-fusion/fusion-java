@@ -11,16 +11,6 @@ package dev.ionfusion.fusion;
 abstract class Procedure2
     extends Procedure
 {
-    Procedure2()
-    {
-    }
-
-    @Deprecated
-    Procedure2(String doc, String arg0Name, String arg1Name)
-    {
-        super(doc, arg0Name, arg1Name);
-    }
-
     abstract Object doApply(Evaluator eval, Object arg0, Object arg1)
         throws FusionException;
 

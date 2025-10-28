@@ -142,15 +142,6 @@ public final class _Private_HelpForm
                 {
                     docs.add(doc);
                 }
-                else
-                {
-                    // Couldn't get docs from the binding, lets evaluate it.
-                    Object result = eval.eval(store, form);
-                    if (result instanceof Procedure)
-                    {
-                        docs.add(((Procedure) result).document());
-                    }
-                }
             }
 
             // TODO write directly to current_output_port or somesuch.

@@ -5,7 +5,6 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionSexp.immutableSexp;
 import static dev.ionfusion.fusion.FusionString.isString;
-import static dev.ionfusion.fusion.FusionString.stringToJavaString;
 import static dev.ionfusion.fusion.FusionUtils.EMPTY_STRING_ARRAY;
 
 /**
@@ -151,23 +150,6 @@ final class LambdaForm
     {
         Evaluator eval = comp.getEvaluator();
 
-        String doc = null;
-        int bodyStart = 2;
-
-        if (stx.size() > 3)
-        {
-            Object maybeDoc = stx.get(eval, 2).unwrap(eval);
-            if (isString(eval, maybeDoc))
-            {
-                System.err.println("WARNING: lambda docstring found at " + stx.getLocation() + ": " + stx);
-                assert false: "We don't want to use this any more";
-
-                doc = stringToJavaString(eval, maybeDoc);
-                if (doc != null) doc = doc.trim();
-                bodyStart = 3;
-            }
-        }
-
         SyntaxValue formalsDecl = stx.get(eval, 1);
         if (countFormals(formalsDecl) != 0)
         {
@@ -175,14 +157,14 @@ final class LambdaForm
             env = new LocalEnvironment(env);
         }
 
-        CompiledForm body = comp.compileBegin(env, stx, bodyStart);
+        CompiledForm body = comp.compileBegin(env, stx, 2);
 
         boolean isRest = (formalsDecl instanceof SyntaxSymbol);
         if (isRest)
         {
             SyntaxSymbol identifier = (SyntaxSymbol) formalsDecl;
             String name = identifier.stringValue();
-            return new CompiledLambdaRest(doc, name, body);
+            return new CompiledLambdaRest(name, body);
         }
         else
         {
@@ -191,13 +173,13 @@ final class LambdaForm
             switch (argNames.length)
             {
                 case 0:
-                    return new CompiledLambda0(doc, body);
+                    return new CompiledLambda0(body);
                 case 1:
-                    return new CompiledLambda1(doc, argNames, body);
+                    return new CompiledLambda1(argNames, body);
                 case 2:
-                    return new CompiledLambda2(doc, argNames, body);
+                    return new CompiledLambda2(argNames, body);
                 default:
-                    return new CompiledLambdaN(doc, argNames, body);
+                    return new CompiledLambdaN(argNames, body);
             }
         }
     }
@@ -209,14 +191,11 @@ final class LambdaForm
     abstract static class CompiledLambdaBase
         implements CompiledForm
     {
-        final String       myDoc;
         final String[]     myArgNames;
         final CompiledForm myBody;
 
-        CompiledLambdaBase(String doc, String[] argNames, CompiledForm body)
+        CompiledLambdaBase(String[] argNames, CompiledForm body)
         {
-            assert doc == null;
-            myDoc      = doc;
             myArgNames = argNames;
             myBody     = body;
         }
@@ -231,16 +210,16 @@ final class LambdaForm
         extends CompiledLambdaBase
         implements CompiledLambdaExact
     {
-        CompiledLambdaN(String doc, String[] argNames, CompiledForm body)
+        CompiledLambdaN(String[] argNames, CompiledForm body)
         {
-            super(doc, argNames, body);
+            super(argNames, body);
         }
 
         @Override
         public Object doEval(Evaluator eval, Store store)
             throws FusionException
         {
-            return new Closure(store, myDoc, myArgNames, myBody);
+            return new Closure(store, myArgNames, myBody);
         }
     }
 
@@ -259,10 +238,9 @@ final class LambdaForm
          *  closure.  Any free variables in the procedure are expected to be
          *  bound here.
          */
-        Closure(Store enclosure, String doc, String[] argNames,
-                CompiledForm body)
+        Closure(Store enclosure, String[] argNames, CompiledForm body)
         {
-            super(doc, argNames);
+            super(argNames);
 
             myEnclosure = enclosure;
             myBody      = body;
@@ -288,16 +266,16 @@ final class LambdaForm
         extends CompiledLambdaBase
         implements CompiledLambdaExact
     {
-        CompiledLambda0(String doc, CompiledForm body)
+        CompiledLambda0(CompiledForm body)
         {
-            super(doc, EMPTY_STRING_ARRAY, body);
+            super(EMPTY_STRING_ARRAY, body);
         }
 
         @Override
         public Object doEval(Evaluator eval, Store store)
             throws FusionException
         {
-            return new Closure0(store, myDoc, myBody);
+            return new Closure0(store, myBody);
         }
     }
 
@@ -305,9 +283,9 @@ final class LambdaForm
     private static final class Closure0
         extends Closure
     {
-        Closure0(Store enclosure, String doc, CompiledForm body)
+        Closure0(Store enclosure, CompiledForm body)
         {
-            super(enclosure, doc, EMPTY_STRING_ARRAY, body);
+            super(enclosure, EMPTY_STRING_ARRAY, body);
         }
 
         @Override
@@ -329,9 +307,9 @@ final class LambdaForm
         extends CompiledLambdaBase
         implements CompiledLambdaExact
     {
-        CompiledLambda1(String doc, String[] argNames, CompiledForm body)
+        CompiledLambda1(String[] argNames, CompiledForm body)
         {
-            super(doc, argNames, body);
+            super(argNames, body);
             assert argNames.length == 1;
         }
 
@@ -339,7 +317,7 @@ final class LambdaForm
         public Object doEval(Evaluator eval, Store store)
             throws FusionException
         {
-            return new Closure1(store, myDoc, myArgNames, myBody);
+            return new Closure1(store, myArgNames, myBody);
         }
     }
 
@@ -347,10 +325,9 @@ final class LambdaForm
     private static final class Closure1
         extends Closure
     {
-        Closure1(Store enclosure, String doc, String[] argNames,
-                 CompiledForm body)
+        Closure1(Store enclosure, String[] argNames, CompiledForm body)
         {
-            super(enclosure, doc, argNames, body);
+            super(enclosure, argNames, body);
         }
 
         @Override
@@ -373,9 +350,9 @@ final class LambdaForm
         extends CompiledLambdaBase
         implements CompiledLambdaExact
     {
-        CompiledLambda2(String doc, String[] argNames, CompiledForm body)
+        CompiledLambda2(String[] argNames, CompiledForm body)
         {
-            super(doc, argNames, body);
+            super(argNames, body);
             assert argNames.length == 2;
         }
 
@@ -383,7 +360,7 @@ final class LambdaForm
         public Object doEval(Evaluator eval, Store store)
             throws FusionException
         {
-            return new Closure2(store, myDoc, myArgNames, myBody);
+            return new Closure2(store, myArgNames, myBody);
         }
     }
 
@@ -391,10 +368,9 @@ final class LambdaForm
     private static final class Closure2
         extends Closure
     {
-        Closure2(Store enclosure, String doc, String[] argNames,
-                 CompiledForm body)
+        Closure2(Store enclosure, String[] argNames, CompiledForm body)
         {
-            super(enclosure, doc, argNames, body);
+            super(enclosure, argNames, body);
         }
 
         @Override
@@ -416,16 +392,16 @@ final class LambdaForm
     private static final class CompiledLambdaRest
         extends CompiledLambdaBase
     {
-        CompiledLambdaRest(String doc, String restArgName, CompiledForm body)
+        CompiledLambdaRest(String restArgName, CompiledForm body)
         {
-            super(doc, new String[]{ restArgName, Procedure.DOTDOTDOT }, body);
+            super(new String[] { restArgName, Procedure.DOTDOTDOT }, body);
         }
 
         @Override
         public Object doEval(Evaluator eval, Store store)
             throws FusionException
         {
-            return new ClosureRest(store, myDoc, myArgNames, myBody);
+            return new ClosureRest(store, myArgNames, myBody);
         }
     }
 
@@ -433,10 +409,9 @@ final class LambdaForm
     private static final class ClosureRest
         extends Closure
     {
-        ClosureRest(Store enclosure, String doc, String[] argNames,
-                    CompiledForm body)
+        ClosureRest(Store enclosure, String[] argNames, CompiledForm body)
         {
-            super(enclosure, doc, argNames, body);
+            super(enclosure, argNames, body);
         }
 
         @Override

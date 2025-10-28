@@ -26,7 +26,6 @@ public final class BindingDoc
 
     public BindingDoc(String name, Kind kind, String usage, String body)
     {
-        assert myUsage == null;
         myName = name;
         myKind = kind;
         myUsage = usage;
@@ -60,29 +59,11 @@ public final class BindingDoc
 
     public String getUsage()
     {
-        if (myUsage != null
-            && ! (myUsage.startsWith("(") && myUsage.endsWith(")")))
-        {
-            assert false: "I think this is unused.";
-            StringBuilder buf = new StringBuilder();
-            buf.append('(');
-            buf.append(myName == null ? "_" : myName);
-            if (! myUsage.isEmpty())
-            {
-                if (! myUsage.startsWith(" ")) buf.append(' ');
-                buf.append(myUsage);
-            }
-            buf.append(')');
-
-            myUsage = buf.toString();
-        }
-
         return myUsage;
     }
 
     void setUsage(String usage)
     {
-        assert false: "I don't think this can happen.";
         assert myUsage == null;
         myUsage = usage;
     }

@@ -13,8 +13,6 @@ import static dev.ionfusion.fusion.FusionSequence.checkNullableSequenceArg;
 import static dev.ionfusion.fusion.FusionStruct.checkNullableStructArg;
 
 import com.amazon.ion.util.IonTextUtils;
-import dev.ionfusion.fusion._private.doc.model.BindingDoc;
-import dev.ionfusion.fusion._private.doc.model.BindingDoc.Kind;
 import java.io.IOException;
 import java.math.BigInteger;
 
@@ -29,45 +27,24 @@ abstract class Procedure
     final static String DOTDOTDOT = "...";
     final static String DOTDOTDOTPLUS = "...+";
 
-    private final BindingDoc myDocs;
     private final int myArity;
 
 
     /**
-     * @param argNames are used for documentation, and to determine the result
+     * @param argNames are used to determine the result
      *   of {@link #checkArityExact(Object[])}.
      *
      * @deprecated since Release 17, 2014-06-18.
-     *   Documentation should be supplied to module-level bindings via
-     *   {@code define}, not placed on individual values.
      */
     @Deprecated
-    Procedure(String doc, String... argNames)
+    Procedure(String... argNames)
     {
-        assert doc == null;
         myArity = argNames.length;
-
-        StringBuilder buf = new StringBuilder();
-        for (String formal : argNames)
-        {
-            buf.append(' ');
-            buf.append(formal);
-        }
-        String usage = buf.toString();
-
-        myDocs = new BindingDoc(null, Kind.PROCEDURE, usage, doc);
     }
 
     Procedure()
     {
-        myDocs = null;
         myArity = -1;
-    }
-
-    @Override
-    final void nameInferred(String name)
-    {
-        if (myDocs != null) myDocs.setName(name);
     }
 
 
@@ -85,13 +62,6 @@ abstract class Procedure
             out.append("procedure ");
             IonTextUtils.printQuotedSymbol(out, name);
         }
-    }
-
-
-    @Deprecated
-    final BindingDoc document()
-    {
-        return myDocs;
     }
 
 
