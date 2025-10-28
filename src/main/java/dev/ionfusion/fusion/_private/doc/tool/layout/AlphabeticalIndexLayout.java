@@ -5,14 +5,14 @@ package dev.ionfusion.fusion._private.doc.tool.layout;
 
 import dev.ionfusion.fusion._private.StreamWriter;
 import dev.ionfusion.fusion._private.doc.site.Artifact;
-import dev.ionfusion.fusion._private.doc.tool.DocIndex;
+import dev.ionfusion.fusion._private.doc.tool.AlphaIndex;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public final class AlphabeticalIndexLayout
-    extends CommonLayout<DocIndex>
+    extends CommonLayout<AlphaIndex>
 {
-    public AlphabeticalIndexLayout(Artifact<DocIndex> artifact)
+    public AlphabeticalIndexLayout(Artifact<AlphaIndex> artifact)
     {
         super(artifact);
     }

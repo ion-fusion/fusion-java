@@ -163,9 +163,10 @@ public class SiteBuilder
     public void prepareIndexes()
         throws FusionException
     {
+        AlphaIndex alpha = myIndex.alphabetize();
         PermutedIndex permuted = myIndex.permute();
 
-        placePage(myIndex, "binding-index.html", AlphabeticalIndexLayout::new);
+        placePage(alpha, "binding-index.html", AlphabeticalIndexLayout::new);
         placePage(permuted, "permuted-index.html", PermutedIndexLayout::new);
     }
 }

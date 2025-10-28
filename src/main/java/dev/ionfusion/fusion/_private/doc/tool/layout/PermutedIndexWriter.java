@@ -3,9 +3,9 @@
 
 package dev.ionfusion.fusion._private.doc.tool.layout;
 
-import dev.ionfusion.fusion.ModuleIdentity;
 import dev.ionfusion.fusion._private.HtmlWriter;
 import dev.ionfusion.fusion._private.StreamWriter;
+import dev.ionfusion.fusion._private.doc.tool.ExportedBinding;
 import dev.ionfusion.fusion._private.doc.tool.PermutedIndex;
 import dev.ionfusion.fusion._private.doc.tool.PermutedIndex.PermutedEntry;
 import java.io.IOException;
@@ -41,13 +41,13 @@ final class PermutedIndexWriter
             append("</td><td>");
 
             boolean printedOne = false;
-            for (ModuleIdentity id : line.modules())
+            for (ExportedBinding export : line.exports())
             {
                 if (printedOne)
                 {
                     append(", ");
                 }
-                linkToBindingAsModulePath(id, escapedName);
+                linkToBindingAsModulePath(export.getModuleId(), escapedName);
                 printedOne = true;
             }
 

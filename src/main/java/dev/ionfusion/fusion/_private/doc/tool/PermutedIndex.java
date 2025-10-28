@@ -3,8 +3,8 @@
 
 package dev.ionfusion.fusion._private.doc.tool;
 
-import dev.ionfusion.fusion.ModuleIdentity;
 import java.util.Iterator;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class PermutedIndex
@@ -25,19 +25,19 @@ public class PermutedIndex
     public static final class PermutedEntry
         implements Comparable<PermutedEntry>
     {
-        private final String                   myName;
-        private final String                   myPrefix;
-        private final String                   myKeyword;
-        private final Iterable<ModuleIdentity> myModules;
+        private final String                     myName;
+        private final String                     myPrefix;
+        private final String                     myKeyword;
+        private final SortedSet<ExportedBinding> myExports;
 
 
-        PermutedEntry(String name, Iterable<ModuleIdentity> modules,
+        PermutedEntry(String name, SortedSet<ExportedBinding> exports,
                       int keywordStartPos, int keywordLimitPos)
         {
             myName = name;
             myPrefix = name.substring(0, keywordStartPos);
             myKeyword = name.substring(keywordStartPos, keywordLimitPos);
-            myModules = modules;
+            myExports = exports;
         }
 
         public String bindingName()
@@ -61,9 +61,9 @@ public class PermutedIndex
             return myName.substring(pos);
         }
 
-        public Iterable<ModuleIdentity> modules()
+        public SortedSet<ExportedBinding> exports()
         {
-            return myModules;
+            return myExports;
         }
 
         @Override
@@ -85,7 +85,7 @@ public class PermutedIndex
     }
 
 
-    public void addEntries(String name, Iterable<ModuleIdentity> exportingModules)
+    public void addEntries(String name, SortedSet<ExportedBinding> exports)
     {
         int pos = 0;
         while (true)
@@ -93,12 +93,12 @@ public class PermutedIndex
             int underscorePos = name.indexOf('_', pos);
             if (underscorePos == -1)
             {
-                myEntries.add(new PermutedEntry(name, exportingModules, pos, name.length()));
+                myEntries.add(new PermutedEntry(name, exports, pos, name.length()));
                 break;
             }
             else if (pos < underscorePos)
             {
-                myEntries.add(new PermutedEntry(name, exportingModules, pos, underscorePos));
+                myEntries.add(new PermutedEntry(name, exports, pos, underscorePos));
             }
             pos = underscorePos + 1;
         }

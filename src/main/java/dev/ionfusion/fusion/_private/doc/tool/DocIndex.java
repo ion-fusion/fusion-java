@@ -3,29 +3,38 @@
 
 package dev.ionfusion.fusion._private.doc.tool;
 
+import static dev.ionfusion.fusion._private.doc.tool.ExportedBinding.COMPARE_BY_MODULE;
+import static java.util.stream.Collectors.toList;
+
 import dev.ionfusion.fusion.ModuleIdentity;
-import dev.ionfusion.fusion._private.doc.model.ModuleDocs;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 
 public final class DocIndex
 {
-    private final Predicate<ModuleIdentity>            myModuleSelector;
-    private final TreeMap<String, Set<ModuleIdentity>> myNameMap;
+    private final Predicate<ModuleIdentity>               myModuleSelector;
+    private final Comparator<String>                      myBoundNameComparator;
+    private final Map<ModuleIdentity, ModuleEntity>       myModules;
+    private final Map<String, SortedSet<ExportedBinding>> myExports;
 
     DocIndex(Predicate<ModuleIdentity> selector)
     {
         myModuleSelector = selector;
-        myNameMap = new TreeMap<>();
+        myBoundNameComparator = new BindingComparator();
+        myModules = new HashMap<>();
+        myExports = new HashMap<>();
     }
 
-    public TreeMap<String, Set<ModuleIdentity>> getNameMap()
+    public Comparator<String> getBoundNameComparator()
     {
-        return myNameMap;
+        return myBoundNameComparator;
     }
 
 
@@ -34,38 +43,46 @@ public final class DocIndex
 
     void addModule(ModuleEntity module)
     {
-        addEntriesForModule(module.getModuleDocs());
+        assert !myModules.containsKey(module.getIdentity());
+        assert myModuleSelector.test(module.getIdentity());
+
+        myModules.put(module.getIdentity(), module);
+
+        module.exports().forEach(this::addExport);
     }
 
-    private void addEntriesForModule(ModuleDocs model)
+
+    private void addExport(ExportedBinding export)
     {
-        if (model == null) return;
-
-        ModuleIdentity id = model.getIdentity();
-        assert myModuleSelector.test(id);
-
-        model.getProvidedNames().forEach(name -> addExport(name, id));
+        Set<ExportedBinding> ids =
+            myExports.computeIfAbsent(export.getName(),
+                                      k -> new TreeSet<>(COMPARE_BY_MODULE));
+        ids.add(export);
     }
 
 
-    private void addExport(String name, ModuleIdentity exportingModule)
+    public AlphaIndex alphabetize()
     {
-        Set<ModuleIdentity> ids = myNameMap.computeIfAbsent(name, k -> new TreeSet<>());
-        ids.add(exportingModule);
+        AlphaIndex alpha = new AlphaIndex();
+        myExports.forEach(alpha::addEntry);
+        return alpha;
     }
-
-
-    public Stream<ModuleIdentity> exportsOf(String exportName)
-    {
-        assert myNameMap.containsKey(exportName);
-        return myNameMap.get(exportName).stream();
-    }
-
 
     public PermutedIndex permute()
     {
         PermutedIndex permuted = new PermutedIndex();
-        myNameMap.forEach(permuted::addEntries);
+        myExports.forEach(permuted::addEntries);
         return permuted;
+    }
+
+    public List<ExportedBinding> otherExportsOf(ExportedBinding binding)
+    {
+        assert binding.getName() != null;
+        assert myExports.containsKey(binding.getName());
+
+        return myExports.get(binding.getName())
+                        .stream()
+                        .filter(x -> x != binding)
+                        .collect(toList());
     }
 }

@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion._private.doc.tool.layout;
+package dev.ionfusion.fusion._private.doc.tool;
 
 import java.util.Comparator;
 

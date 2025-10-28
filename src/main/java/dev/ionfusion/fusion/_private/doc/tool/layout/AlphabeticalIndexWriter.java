@@ -3,21 +3,19 @@
 
 package dev.ionfusion.fusion._private.doc.tool.layout;
 
-import dev.ionfusion.fusion.ModuleIdentity;
 import dev.ionfusion.fusion._private.HtmlWriter;
 import dev.ionfusion.fusion._private.StreamWriter;
-import dev.ionfusion.fusion._private.doc.tool.DocIndex;
+import dev.ionfusion.fusion._private.doc.tool.AlphaIndex;
+import dev.ionfusion.fusion._private.doc.tool.ExportedBinding;
 import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
 
 final class AlphabeticalIndexWriter
     extends HtmlWriter
 {
-    private final DocIndex myIndex;
+    private final AlphaIndex myIndex;
 
 
-    AlphabeticalIndexWriter(DocIndex index, StreamWriter out)
+    AlphabeticalIndexWriter(AlphaIndex index, StreamWriter out)
     {
         super(out);
         myIndex = index;
@@ -29,21 +27,21 @@ final class AlphabeticalIndexWriter
         renderHeader1("Binding Index");
 
         append("<table><tbody>");
-        for (Map.Entry<String, Set<ModuleIdentity>> entry : myIndex.getNameMap().entrySet())
+        for (AlphaIndex.AlphaEntry entry : myIndex)
         {
-            String escapedName = escapeString(entry.getKey());
+            String escapedName = escapeString(entry.bindingName());
             append("<tr><td class='bound'>");
             append(escapedName);
             append("</td><td>");
 
             boolean printedOne = false;
-            for (ModuleIdentity id : entry.getValue())
+            for (ExportedBinding export : entry.exports())
             {
                 if (printedOne)
                 {
                     append(", ");
                 }
-                linkToBindingAsModulePath(id, escapedName);
+                linkToBindingAsModulePath(export.getModuleId(), escapedName);
                 printedOne = true;
             }
 

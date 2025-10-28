@@ -9,13 +9,13 @@ import dev.ionfusion.fusion.ModuleIdentity;
 import dev.ionfusion.fusion._private.StreamWriter;
 import dev.ionfusion.fusion._private.doc.model.BindingDoc;
 import dev.ionfusion.fusion._private.doc.model.ModuleDocs;
+import dev.ionfusion.fusion._private.doc.tool.ExportedBinding;
 import dev.ionfusion.fusion._private.doc.tool.MarkdownWriter;
 import dev.ionfusion.fusion._private.doc.tool.ModuleEntity;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 final class ModuleWriter
@@ -118,15 +118,15 @@ final class ModuleWriter
     }
 
 
-    private void renderBindingIndex(String[] names)
+    private void renderBindingIndex(Collection<ExportedBinding> exports)
         throws IOException
     {
-        if (names.length == 0) { return; }
+        if (exports.isEmpty()) { return; }
 
         append("<div class='exports'>\n");
-        for (String name : names)
+        for (ExportedBinding export : exports)
         {
-            String escapedName = escapeString(name);
+            String escapedName = escapeString(export.getName());
             linkToBindingAsName(myModuleId, escapedName);
             append("&nbsp;&nbsp;\n");
         }
@@ -137,21 +137,16 @@ final class ModuleWriter
     private void renderBindings()
         throws IOException
     {
-        Map<String, BindingDoc> bindings = myModuleDocs.getBindingDocs();
-        if (bindings == null || bindings.isEmpty()) { return; }
+        Collection<ExportedBinding> exports = myModuleEntity.exports();
+        if (exports.isEmpty()) { return; }
 
         renderHeader2("Exported Bindings");
 
-        String[] names = bindings.keySet().toArray(new String[0]);
-        Arrays.sort(names, new BindingComparator());
+        renderBindingIndex(exports);
 
-        renderBindingIndex(names);
-
-        for (String name : names)
+        for (ExportedBinding export: exports)
         {
-            // May be null:
-            BindingDoc binding = bindings.get(name);
-            renderBinding(name, binding);
+            renderBinding(export);
         }
     }
 
@@ -166,9 +161,12 @@ final class ModuleWriter
      *      body
      *      also
      */
-    private void renderBinding(String name, BindingDoc doc)
+    private void renderBinding(ExportedBinding export)
         throws IOException
     {
+        String name = export.getName();
+        BindingDoc doc = export.getDocs();
+
         String escapedName = escapeString(name);
 
         append("\n<div class='binding' id='");
@@ -219,18 +217,14 @@ final class ModuleWriter
 
             append('\n');
 
-
-            Iterator<ModuleIdentity> others =
-                myModuleEntity.getIndex()
-                              .exportsOf(name)
-                              .filter(i -> i != myModuleId)
-                              .iterator();
+            Iterator<ExportedBinding> others = export.alsoProvidedBy().iterator();
             if (others.hasNext())
             {
                 append("<p class='also'>Also provided by ");
                 while (others.hasNext())
                 {
-                    linkToBindingAsModulePath(others.next(), escapedName);
+                    ExportedBinding other = others.next();
+                    linkToBindingAsModulePath(other.getModuleId(), escapedName);
                     if (others.hasNext())
                     {
                         append(", ");
