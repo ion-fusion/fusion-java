@@ -40,9 +40,8 @@ TODO
 
 
   (define_syntax record
-    (lambda (stx)
-      '''
-      (record name (field_name ...))
+    '''
+    (record name (field_name ...))
 
 Creates a new record type and defines various related bindings based on the _name_.
 Each `name` and `field_name` must be a non-empty symbol; the `field_name`s must be
@@ -55,7 +54,8 @@ The bindings defined are:
   * `NAME_FIELD_NAME` for each `FIELD_NAME` is an accessor procedure.
     It accepts an instance of this record type and returns the value of
     the relevant field.
-      '''
+    '''
+    (lambda (stx)
       (unless (== (syntax_size stx) 3)
         (wrong_syntax stx "record: expected name and sexp of field names"))
       (lets [(name_stx   (syntax_get stx 1)),

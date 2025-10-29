@@ -44,7 +44,7 @@ abstract class Procedure
     @Deprecated
     Procedure(String doc, String... argNames)
     {
-        assert doc == null || ! doc.endsWith("\n");
+        assert doc == null;
         myArity = argNames.length;
 
         StringBuilder buf = new StringBuilder();

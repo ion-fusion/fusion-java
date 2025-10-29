@@ -47,8 +47,7 @@
 // datum_to_syntax and syntax_to_datum
 
 (define_syntax check_xforms1
-  (lambda (stx)
-    '''
+  '''
     (check_xforms1 datum annotations)
     =>
     (begin (check_annotations (quote ANNOTATIONS) (quote DATUM))
@@ -56,7 +55,8 @@
              (syntax_to_datum (quote_syntax DATUM))
              (quote DATUM))
            /* And several variants */ )
-    '''
+  '''
+  (lambda (stx)
     (lets [(datum_stx (syntax_get stx 1)),
            (quote_datum_stx (quasisyntax (quote (unsyntax datum_stx))))]
       (quasisyntax
@@ -82,15 +82,15 @@
                                 (unsyntax datum_stx))))))))))
 
 (define_syntax check_xforms
-  (lambda (stx)
-    '''
+  '''
     (check_xforms datum)
     =>
     (begin (check_xforms1 datum)
            (check_xforms1 a::datum)    // TODO How to annotate syntax objects?
            (check_xforms1 a::a::datum)
            (check_xforms1 a::b::datum))
-    '''
+  '''
+  (lambda (stx)
     (lets [(datum_stx (syntax_get stx 1)),
            (datum     (syntax_unwrap datum_stx)),
            (  a_datum_stx (datum_to_syntax (annotate datum "a"    ))),

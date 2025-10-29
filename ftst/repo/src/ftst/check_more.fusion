@@ -40,13 +40,13 @@ Basically even-more-experimental stuff.
 
 
   (define_syntax run_top_and_module
-    (lambda (stx)
-      '''
+    '''
     (run_top_and_module expr ...)
 
 Evaluates the body expressions at top-level, and then within a single new
 module.  The module is `require`d to ensure it runs.
-      '''
+    '''
+    (lambda (stx)
       (let [(body (pair (quote begin) (tail (syntax_unwrap stx)))),
              (modname (make_module_name))]
         (d2s_at stx
@@ -58,13 +58,13 @@ module.  The module is `require`d to ensure it runs.
 
 
   (define_syntax expect_syntax_errors_top_and_module
-    (lambda (stx)
-      '''
+    '''
     (expect_syntax_errors_top_and_module expr ...)
 
 Evaluates each individual expression at top-level and within a new module,
 expecting each one to raise a syntax error.
-      '''
+    '''
+    (lambda (stx)
       (let [(exprs (tail (syntax_unwrap stx)))]
         (d2s_at stx
           (pair (quote begin)
@@ -81,12 +81,12 @@ expecting each one to raise a syntax error.
 
 
   (define_syntax expect_result_error_top
-    (lambda (stx)
-      '''
+    '''
     (expect_result_error_top expr ...)
 
 Evaluates the body expressions at top-level, expecting a (single) result error.
-      '''
+    '''
+    (lambda (stx)
       (lets [(exprs (tail (syntax_unwrap stx))),
              (body (pair (quote begin) exprs))]
         (d2s_at stx
@@ -95,13 +95,13 @@ Evaluates the body expressions at top-level, expecting a (single) result error.
 
 
   (define_syntax expect_result_errors_top_and_module
-    (lambda (stx)
-      '''
+    '''
     (expect_result_errors_top_and_module expr ...)
 
 Evaluates each individual expression at top-level and within a new module,
 expecting all to raise result errors.
-      '''
+    '''
+    (lambda (stx)
       (let [(exprs (tail (syntax_unwrap stx)))]
         (d2s_at stx
           (pair (quote begin)

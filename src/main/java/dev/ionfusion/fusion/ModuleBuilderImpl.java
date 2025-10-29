@@ -60,6 +60,7 @@ final class ModuleBuilderImpl
             BindingDoc doc = ((Procedure) value).document();
             if (doc != null)
             {
+                assert false;
                 myNamespace.setDoc(name, doc);
             }
         }

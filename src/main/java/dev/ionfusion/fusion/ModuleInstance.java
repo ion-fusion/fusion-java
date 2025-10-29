@@ -169,6 +169,7 @@ final class ModuleInstance
             if (value instanceof Procedure)
             {
                 doc = ((Procedure) value).document();
+                assert doc == null: "Doc on procs should be unused";
                 if (doc != null)
                 {
                     {

@@ -5,6 +5,7 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionNumber.checkIntArgToJavaInt;
 import static dev.ionfusion.fusion.FusionNumber.makeInt;
+
 import org.junit.jupiter.api.Test;
 
 public class TailCallTest
@@ -58,7 +59,7 @@ public class TailCallTest
     {
         CountupProc()
         {
-            super("countup", "i", "limit");
+            super(null, "i", "limit");
         }
 
         @Override

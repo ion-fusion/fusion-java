@@ -153,7 +153,7 @@ otherwise the result is void.
                    false))),
              (has_duplicate_identifier
                (lambda (id ids)
-                 "Is `id` `bound_identifier_equal` to any element of `ids`?"
+                 // Is `id` `bound_identifier_equal` to any element of `ids`?
                  (if (is_pair ids)
                    (if (bound_identifier_equal id (head ids))
                      true

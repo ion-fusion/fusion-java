@@ -159,6 +159,9 @@ final class LambdaForm
             Object maybeDoc = stx.get(eval, 2).unwrap(eval);
             if (isString(eval, maybeDoc))
             {
+                System.err.println("WARNING: lambda docstring found at " + stx.getLocation() + ": " + stx);
+                assert false: "We don't want to use this any more";
+
                 doc = stringToJavaString(eval, maybeDoc);
                 if (doc != null) doc = doc.trim();
                 bodyStart = 3;
@@ -212,6 +215,7 @@ final class LambdaForm
 
         CompiledLambdaBase(String doc, String[] argNames, CompiledForm body)
         {
+            assert doc == null;
             myDoc      = doc;
             myArgNames = argNames;
             myBody     = body;
