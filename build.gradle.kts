@@ -259,7 +259,10 @@ tasks.javadoc {
 
 val fusiondocDir = docsDir.get().dir("fusiondoc")
 
-tasks.register<JavaExec>("fusiondocGen") {
+tasks.register<JavaExec>("fusiondoc") {
+    group = "Documentation"
+    description = "Generates Fusion language and library documentation."
+
     var articlesDir = layout.projectDirectory.dir("src/doc/articles")
     var assetsDir   = layout.projectDirectory.dir("src/doc/assets")
 
@@ -273,17 +276,13 @@ tasks.register<JavaExec>("fusiondocGen") {
 
     enableAssertions = true
 
+    // Docgen has Java code! Not sure if this is the best solution...
+    dependsOn(tasks.compileJava)
+
     inputs.dir(layout.projectDirectory.dir("fusion"))
     inputs.dir(articlesDir)
     inputs.dir(assetsDir)
     outputs.dir(fusiondocDir)
-}
-
-val fusiondoc by tasks.register<Copy>("fusiondoc") {
-    group = "Documentation"
-    description = "Generates Fusion language and library documentation."
-
-    dependsOn("fusiondocGen")
 }
 
 
