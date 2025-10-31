@@ -68,6 +68,8 @@ public final class ModuleDocs
     }
 
     /**
+     * Not sorted. Entries have non-null keys but may have null values.
+     *
      * @return not null.
      */
     public Map<String, BindingDoc> getBindingDocs()

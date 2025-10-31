@@ -13,25 +13,21 @@ import dev.ionfusion.fusion._private.doc.tool.MarkdownWriter;
 import dev.ionfusion.fusion._private.doc.tool.ModuleEntity;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Predicate;
 
 final class ModuleWriter
     extends MarkdownWriter
 {
-    private final Predicate<ModuleIdentity> myFilter;
     private final ModuleEntity              myModuleEntity;
     private final ModuleDocs                myModuleDocs;
     private final ModuleIdentity            myModuleId;
 
-    public ModuleWriter(Predicate<ModuleIdentity> filter,
-                        StreamWriter out,
-                        ModuleEntity module)
+    public ModuleWriter(StreamWriter out, ModuleEntity module)
     {
         super(out);
-        myFilter = filter;
         myModuleEntity = module;
         myModuleDocs = myModuleEntity.getModuleDocs();
         myModuleId = myModuleEntity.getIdentity();
@@ -224,29 +220,22 @@ final class ModuleWriter
             append('\n');
 
 
-            ModuleIdentity[] ids = doc.getProvidingModules().toArray(new ModuleIdentity[0]);
-            Arrays.sort(ids);
-
-            boolean printedOne = false;
-            for (ModuleIdentity id : ids)
+            Iterator<ModuleIdentity> others =
+                myModuleEntity.getIndex()
+                              .exportsOf(name)
+                              .filter(i -> i != myModuleId)
+                              .iterator();
+            if (others.hasNext())
             {
-                if (id != myModuleId && myFilter.test(id))
+                append("<p class='also'>Also provided by ");
+                while (others.hasNext())
                 {
-                    if (printedOne)
+                    linkToBindingAsModulePath(others.next(), escapedName);
+                    if (others.hasNext())
                     {
                         append(", ");
                     }
-                    else
-                    {
-                        append("<p class='also'>Also provided by ");
-                    }
-
-                    linkToBindingAsModulePath(id, escapedName);
-                    printedOne = true;
                 }
-            }
-            if (printedOne)
-            {
                 append("</p>\n");
             }
 

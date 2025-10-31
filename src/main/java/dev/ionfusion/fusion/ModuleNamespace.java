@@ -7,7 +7,6 @@ import static dev.ionfusion.fusion.BindingSite.makeExportBindingSite;
 import static dev.ionfusion.fusion.GlobalState.REQUIRE;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
-import dev.ionfusion.fusion._private.doc.model.BindingDoc;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -549,16 +548,6 @@ final class ModuleNamespace
         assert definitionCount() == myDefinedNames.size();
         return myDefinedNames.toArray(BaseSymbol.EMPTY_ARRAY);
     }
-
-
-    @Override
-    public void setDoc(int address, BindingDoc doc)
-    {
-        doc.addProvidingModule(getModuleId());
-
-        super.setDoc(address, doc);
-    }
-
 
 
     @Override

@@ -14,16 +14,23 @@ import java.util.Set;
  */
 public class ModuleEntity
 {
+    private final DocIndex                  myIndex;
     private final ModuleIdentity            myModuleIdentity;
     private       ModuleDocs                myModuleDocs;
     private final Map<String, ModuleEntity> myChildren;
 
-    ModuleEntity(ModuleIdentity id)
+    ModuleEntity(DocIndex index, ModuleIdentity id)
     {
+        myIndex = index;
         myModuleIdentity = id;
         myChildren = new HashMap<>();
     }
 
+
+    public DocIndex getIndex()
+    {
+        return myIndex;
+    }
 
     public ModuleIdentity getIdentity()
     {

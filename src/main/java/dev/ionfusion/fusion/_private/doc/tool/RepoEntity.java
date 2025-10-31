@@ -23,17 +23,19 @@ import java.util.function.Predicate;
  */
 public class RepoEntity
 {
+    private final DocIndex                          myIndex;
     private final Path                              myRepoDir;
     private final Predicate<ModuleIdentity>         mySelector;
     private final TopLevel                          myTopLevel;
     private       Map<ModuleIdentity, ModuleEntity> myModules;
 
 
-    public RepoEntity(Path repoDir, Predicate<ModuleIdentity> selector, TopLevel top)
+    public RepoEntity(DocIndex index, Path repoDir, Predicate<ModuleIdentity> selector, TopLevel top)
     {
-        this.myRepoDir = repoDir;
-        this.mySelector = selector;
-        this.myTopLevel = top;
+        myIndex = index;
+        myRepoDir = repoDir;
+        mySelector = selector;
+        myTopLevel = top;
     }
 
     private void discoverModules()
@@ -65,7 +67,7 @@ public class RepoEntity
 
         ModuleEntity parent = ensureEntityForModule(id.parent());
 
-        module = new ModuleEntity(id);
+        module = new ModuleEntity(myIndex, id);
         if (parent != null) parent.addChild(module);
         myModules.put(id, module);
 

@@ -3,11 +3,6 @@
 
 package dev.ionfusion.fusion._private.doc.model;
 
-import dev.ionfusion.fusion.ModuleIdentity;
-import java.util.HashSet;
-import java.util.Set;
-
-
 public final class BindingDoc
 {
     public static final BindingDoc[] EMPTY_ARRAY = new BindingDoc[0];
@@ -20,7 +15,6 @@ public final class BindingDoc
     // TODO pairs of usage/body
     private String myUsage;
     private final String myBody;
-    private final HashSet<ModuleIdentity> myProvidingModules = new HashSet<>();
 
 
     public BindingDoc(Kind kind, String usage, String body)
@@ -58,22 +52,5 @@ public final class BindingDoc
     public String getBody()
     {
         return myBody;
-    }
-
-
-    /**
-     * Identifies the (visited) modules that provide this binding. This can
-     * include modules not selected for doc generation.
-     *
-     * @return not null.
-     */
-    public Set<ModuleIdentity> getProvidingModules()
-    {
-        return myProvidingModules;
-    }
-
-    public void addProvidingModule(ModuleIdentity id)
-    {
-        myProvidingModules.add(id);
     }
 }

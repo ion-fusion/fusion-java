@@ -139,6 +139,7 @@ final class ModuleInstance
 
     ModuleDocs getDocs()
     {
+        // TODO This map should be constructed downstream.
         Set<BaseSymbol> names = providedNames();
         Map<String, BindingDoc> bindings =
             (names.isEmpty()
@@ -180,11 +181,6 @@ final class ModuleInstance
             assert module != null
                 : "Module not found: " + binding.myModuleId;
             doc = module.myStore.document(binding.myAddress);
-        }
-
-        if (doc != null)
-        {
-            doc.addProvidingModule(myIdentity);
         }
 
         return doc;

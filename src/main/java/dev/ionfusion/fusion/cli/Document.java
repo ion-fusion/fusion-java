@@ -8,7 +8,6 @@ import static java.nio.file.Files.isDirectory;
 import com.amazon.ion.Timestamp;
 import dev.ionfusion.fusion.FusionRuntime;
 import dev.ionfusion.fusion.ModuleIdentity;
-import dev.ionfusion.fusion._private.doc.tool.RepoEntity;
 import dev.ionfusion.fusion._private.doc.tool.SiteBuilder;
 import java.io.File;
 import java.io.PrintWriter;
@@ -154,10 +153,11 @@ class Document
                 return !isPrivate;
             };
 
+            SiteBuilder site = new SiteBuilder(runtime.makeTopLevel(), filter);
+
             Path repoDir = myOptions.myModulesDir;
             log.accept("Building module docs");
-            RepoEntity  repo = new RepoEntity(repoDir, filter, runtime.makeTopLevel());
-            SiteBuilder site = new SiteBuilder(repo, filter);
+            site.addRepository(repoDir);
 
             log.accept("Discovering module docs");
             site.placeModules();

@@ -51,6 +51,6 @@ public final class ModuleLayout
     void renderContent(StreamWriter out)
         throws IOException
     {
-        new ModuleWriter(mySelector, out, getEntity()).renderModule();
+        new ModuleWriter(out, getEntity()).renderModule();
     }
 }

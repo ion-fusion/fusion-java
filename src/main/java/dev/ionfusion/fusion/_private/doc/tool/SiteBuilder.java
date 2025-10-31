@@ -3,11 +3,11 @@
 
 package dev.ionfusion.fusion._private.doc.tool;
 
-import static dev.ionfusion.fusion._private.doc.tool.DocIndex.buildDocIndex;
 import static java.nio.file.Files.isDirectory;
 
 import dev.ionfusion.fusion.FusionException;
 import dev.ionfusion.fusion.ModuleIdentity;
+import dev.ionfusion.fusion.TopLevel;
 import dev.ionfusion.fusion._private.StreamWriter;
 import dev.ionfusion.fusion._private.doc.model.MarkdownArticle;
 import dev.ionfusion.fusion._private.doc.site.FileCopyTemplate;
@@ -24,20 +24,21 @@ import java.util.function.Predicate;
 
 public class SiteBuilder
 {
+    private final TopLevel                  myTopLevel;
+    private final DocIndex                  myIndex;
     private final Site                      mySite = new Site();
-    private final RepoEntity                myRepo;
+    private       RepoEntity                myRepo;
     private final Predicate<ModuleIdentity> myModuleSelector;
 
     /**
      *
-     * @param repo
      * @param selector predicate determining which modules will be documented.
      */
-    public SiteBuilder(RepoEntity repo,
-                       Predicate<ModuleIdentity> selector)
+    public SiteBuilder(TopLevel topLevel, Predicate<ModuleIdentity> selector)
     {
+        myTopLevel = topLevel;
+        myIndex = new DocIndex(selector);
         myModuleSelector = selector;
-        myRepo = repo;
     }
 
     public Site build()
@@ -46,6 +47,12 @@ public class SiteBuilder
         return mySite;
     }
 
+    public void addRepository(Path repoDir)
+    {
+        // At the moment we only support one repository.
+        assert myRepo == null;
+        myRepo = new RepoEntity(myIndex, repoDir, myModuleSelector, myTopLevel);
+    }
 
     private <E> void placePage(E entity, Path path, Template<E, StreamWriter> template)
     {
@@ -71,6 +78,8 @@ public class SiteBuilder
 
         for (ModuleEntity module : myRepo.getSelectedModules())
         {
+            myIndex.addModule(module);
+
             ModuleIdentity id = module.getIdentity();
             Path file = Paths.get(".", id.absolutePath() + ".html");
 
@@ -154,10 +163,9 @@ public class SiteBuilder
     public void prepareIndexes()
         throws FusionException
     {
-        DocIndex docIndex = buildDocIndex(myModuleSelector, myRepo.getSelectedModules());
-        PermutedIndex permuted = docIndex.permute();
+        PermutedIndex permuted = myIndex.permute();
 
-        placePage(docIndex, "binding-index.html", AlphabeticalIndexLayout::new);
+        placePage(myIndex, "binding-index.html", AlphabeticalIndexLayout::new);
         placePage(permuted, "permuted-index.html", PermutedIndexLayout::new);
     }
 }

@@ -104,6 +104,8 @@ final class ModuleStore
 
     BindingDoc document(int address)
     {
+//      assert (address < myBindingDocs.length);  FIXME Fails!!
+
         if (address < myBindingDocs.length)
         {
             BindingDoc doc = myBindingDocs[address];
