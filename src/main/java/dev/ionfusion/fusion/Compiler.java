@@ -368,8 +368,7 @@ class Compiler
             for (int i = 0; i < idCount; i++)
             {
                 Object docString = docSeq.get(myEval, i).unwrap(myEval);
-                BindingDoc doc = new BindingDoc(names[i],
-                                                null, // kind
+                BindingDoc doc = new BindingDoc(null, // kind
                                                 null, // usage
                                                 stringToJavaString(myEval, docString));
                 namespace.setDoc(addresses[i], doc);
@@ -421,8 +420,7 @@ class Compiler
         {
             // We have documentation. Sort of.
             Object docString = stx.get(myEval, 2).unwrap(myEval);
-            BindingDoc doc = new BindingDoc(identifier.stringValue(),
-                                            Kind.SYNTAX,
+            BindingDoc doc = new BindingDoc(Kind.SYNTAX,
                                             null, // usage
                                             stringToJavaString(myEval, docString));
             int address = ((NsDefinedBinding) binding).myAddress;
