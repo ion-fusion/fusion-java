@@ -14,7 +14,6 @@ public final class BindingDoc
 
     public enum Kind { PROCEDURE, SYNTAX, CONSTANT }
 
-    private String myName;
     private Kind   myKind;
     // TODO one-liner
     // TODO intro
@@ -24,24 +23,11 @@ public final class BindingDoc
     private final HashSet<ModuleIdentity> myProvidingModules = new HashSet<>();
 
 
-    public BindingDoc(String name, Kind kind, String usage, String body)
+    public BindingDoc(Kind kind, String usage, String body)
     {
-        myName = name;
         myKind = kind;
         myUsage = usage;
         myBody = body;
-    }
-
-
-    public String getName()
-    {
-        return myName;
-    }
-
-    public void setName(String name)
-    {
-        assert myName == null;
-        myName = name;
     }
 
 

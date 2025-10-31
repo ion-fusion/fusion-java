@@ -913,7 +913,7 @@ abstract class Namespace
 
     final void setDoc(String name, BindingDoc.Kind kind, String doc)
     {
-        BindingDoc bDoc = new BindingDoc(name, kind,
+        BindingDoc bDoc = new BindingDoc(kind,
                                          null, // usage
                                          doc);
         setDoc(name, bDoc);
