@@ -5,9 +5,9 @@ package dev.ionfusion.fusion._private.doc.tool.layout;
 
 import dev.ionfusion.fusion.ModuleIdentity;
 import dev.ionfusion.fusion._private.StreamWriter;
-import dev.ionfusion.fusion._private.doc.model.ModuleEntity;
 import dev.ionfusion.fusion._private.doc.site.Artifact;
 import dev.ionfusion.fusion._private.doc.site.Template;
+import dev.ionfusion.fusion._private.doc.tool.ModuleEntity;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.function.Predicate;

@@ -6,7 +6,6 @@ package dev.ionfusion.fusion._private.doc.tool;
 import dev.ionfusion.fusion.ModuleIdentity;
 import dev.ionfusion.fusion._private.doc.model.BindingDoc;
 import dev.ionfusion.fusion._private.doc.model.ModuleDocs;
-import dev.ionfusion.fusion._private.doc.model.ModuleEntity;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;

@@ -10,8 +10,6 @@ import dev.ionfusion.fusion.FusionException;
 import dev.ionfusion.fusion.ModuleIdentity;
 import dev.ionfusion.fusion._private.StreamWriter;
 import dev.ionfusion.fusion._private.doc.model.MarkdownArticle;
-import dev.ionfusion.fusion._private.doc.model.ModuleEntity;
-import dev.ionfusion.fusion._private.doc.model.RepoEntity;
 import dev.ionfusion.fusion._private.doc.site.FileCopyTemplate;
 import dev.ionfusion.fusion._private.doc.site.Site;
 import dev.ionfusion.fusion._private.doc.site.Template;

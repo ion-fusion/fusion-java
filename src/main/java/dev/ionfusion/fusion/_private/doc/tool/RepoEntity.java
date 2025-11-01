@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion._private.doc.model;
+package dev.ionfusion.fusion._private.doc.tool;
 
 import static dev.ionfusion.fusion._Private_Trampoline.discoverModulesInRepository;
 import static dev.ionfusion.fusion._Private_Trampoline.instantiateModuleDocs;
@@ -10,6 +10,7 @@ import static dev.ionfusion.fusion._Private_Trampoline.loadModule;
 import dev.ionfusion.fusion.FusionException;
 import dev.ionfusion.fusion.ModuleIdentity;
 import dev.ionfusion.fusion.TopLevel;
+import dev.ionfusion.fusion._private.doc.model.ModuleDocs;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;

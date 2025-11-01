@@ -1,9 +1,10 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion._private.doc.model;
+package dev.ionfusion.fusion._private.doc.tool;
 
 import dev.ionfusion.fusion.ModuleIdentity;
+import dev.ionfusion.fusion._private.doc.model.ModuleDocs;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
