@@ -13,6 +13,7 @@ import static dev.ionfusion.fusion.FusionString.isString;
 import static dev.ionfusion.fusion.FusionString.unsafeStringToJavaString;
 import static dev.ionfusion.fusion.FusionValue.isAnyNull;
 import static dev.ionfusion.fusion.FusionVoid.isVoid;
+import static dev.ionfusion.fusion.TestSetup.testRepositoryDirectory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -70,45 +71,12 @@ public class CoreTestCase
 
     //========================================================================
 
-    /**
-     * The absolute path of the root directory of this source code.
-     * <p>
-     * Historically, tests code assumed it was run from the project root, but
-     * we'd prefer that not be a requirement.  Points of coupling to source code
-     * layout should instead use this path so they are easily adjusted if this
-     * assumption becomes false.
-     * <p>
-     * This is {@code static final} because Java doesn't guarantee that the
-     * "working directory" can't be changed dynamically.
-     * <p>
-     * This is {@code public} because we'd prefer test code use this directly
-     * than be blocked by not having a better resolver here.
-     * </p>
-     */
-    public static final Path PROJECT_DIRECTORY =
-        Paths.get("").toAbsolutePath();
-
 
     private final IonSystem            mySystem = IonSystemBuilder.standard().build();
     private       FusionRuntimeBuilder myRuntimeBuilder;
     private       FusionRuntime        myRuntime;
     private       TopLevel             myTopLevel;
 
-
-    public static Path fusionBootstrapDirectory()
-    {
-        return PROJECT_DIRECTORY.resolve("fusion");
-    }
-
-    public static Path ftstScriptDirectory()
-    {
-        return PROJECT_DIRECTORY.resolve("ftst");
-    }
-
-    public static Path ftstRepositoryDirectory()
-    {
-        return ftstScriptDirectory().resolve("repo");
-    }
 
     protected IonSystem system()
     {
@@ -120,25 +88,8 @@ public class CoreTestCase
     {
         if (myRuntimeBuilder == null)
         {
-            FusionRuntimeBuilder b = FusionRuntimeBuilder.standard();
-
-            // This allows tests to run in an IDE, so that we don't have to copy the
-            // bootstrap repo into the classpath.  In scripted builds, this has no
-            // effect since the classpath includes the code, which will shadow the
-            // content of this directory.
-            b = b.withBootstrapRepository(fusionBootstrapDirectory().toFile());
-
-            // Enable this to have coverage collected during an IDE run.
-//          b = b.withCoverageDataDirectory(new File("build/private/fcoverage"));
-
-            // This has no effect in an IDE, since this file is not on its copy of
-            // the test classpath.  In scripted builds, this provides the coverage
-            // configuration. Historically, it also provided the bootstrap repo.
-            b = b.withConfigProperties(getClass(), "/fusion.properties");
-
-            b = b.withInitialCurrentOutputPort(stdout());
-
-            myRuntimeBuilder = b;
+            myRuntimeBuilder = TestSetup.makeRuntimeBuilder()
+                                        .withInitialCurrentOutputPort(stdout());
         }
         return myRuntimeBuilder;
     }
@@ -146,7 +97,7 @@ public class CoreTestCase
     protected void useTstRepo()
         throws FusionException
     {
-        runtimeBuilder().addRepositoryDirectory(ftstRepositoryDirectory().toFile());
+        runtimeBuilder().addRepositoryDirectory(testRepositoryDirectory().toFile());
     }
 
     protected synchronized FusionRuntime runtime()

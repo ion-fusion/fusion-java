@@ -5,6 +5,7 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionRuntimeBuilder.standard;
 import static dev.ionfusion.fusion.FusionString.unsafeStringToJavaString;
+import static dev.ionfusion.fusion.TestSetup.fusionBootstrapDirectory;
 import static dev.ionfusion.fusion.junit.Reflect.assertEqualProperties;
 import static dev.ionfusion.fusion.junit.Reflect.getterFor;
 import static dev.ionfusion.fusion.junit.Reflect.invoke;
@@ -20,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.amazon.ion.IonCatalog;
 import com.amazon.ion.system.SimpleCatalog;
 import java.io.ByteArrayOutputStream;

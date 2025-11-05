@@ -5,9 +5,12 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionIo.read;
 import static dev.ionfusion.fusion.FusionSexp.isPair;
+import static dev.ionfusion.fusion.TestSetup.PROJECT_DIRECTORY;
+import static dev.ionfusion.fusion.TestSetup.testRepositoryDirectory;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.amazon.ion.IonReader;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -68,7 +71,7 @@ public class ClassLoaderModuleRepositoryTest
     public void loadModuleFromDirectory()
         throws Exception
     {
-        Path dir = CoreTestCase.ftstRepositoryDirectory();
+        Path dir = testRepositoryDirectory();
 
         URL url = dir.toUri().toURL();
         assert url.getProtocol().equals("file");

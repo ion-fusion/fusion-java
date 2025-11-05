@@ -5,6 +5,7 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.ModuleIdentity.isValidAbsoluteModulePath;
 import static dev.ionfusion.fusion._Private_CoverageCollectorImpl.fromDirectory;
+
 import com.amazon.ion.IonCatalog;
 import com.amazon.ion.system.SimpleCatalog;
 import java.io.File;
@@ -999,6 +1000,8 @@ public class FusionRuntimeBuilder
 
         // When our own unit tests are running in an IDE, this is nonfunctional;
         // we rely on the test setup configuring the bootstrap explicitly.
+        // TODO Need a better way to handle this for our own test cases so we
+        //   can delete the bootstrap repo configuration point.
         repos.add(new ClassLoaderModuleRepository(getClass().getClassLoader(),
                                                   "FUSION-REPO"));
 

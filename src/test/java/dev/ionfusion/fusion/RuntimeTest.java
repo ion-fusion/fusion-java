@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionVoid.isVoid;
+import static dev.ionfusion.fusion.TestSetup.testScriptDirectory;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
@@ -14,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import com.amazon.ion.IonInt;
+
 import com.amazon.ion.IonReader;
 import com.amazon.ion.IonValue;
 import com.amazon.ion.IonWriter;
@@ -51,7 +52,7 @@ public class RuntimeTest
         assertEval(3328, "x");
 
         // Test loading a script with top-level modules
-        loadFile(ftstScriptDirectory().resolve("topmodules.test.fusion"));
+        loadFile(testScriptDirectory().resolve("topmodules.test.fusion"));
     }
 
 
