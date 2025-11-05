@@ -208,7 +208,7 @@ affect existing code.
 
 ### Testing
 
-Fusion language/library features are tested via Fusion code in the `ftst` directory, using an
+Fusion language/library features are tested via Fusion code in `src/test/fusion/scripts`, using an
 assertion framework provided by the `/fusion/experimental/check` module.
 
 #### Test the Unhappy Cases

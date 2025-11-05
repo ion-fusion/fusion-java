@@ -60,10 +60,6 @@ class Document
             {
                 throw usage("--modules is not a directory: " + dir);
             }
-            if (! isDirectory(dir.resolve("src")))
-            {
-                throw usage("--modules has no src directory: " + dir);
-            }
             myModulesDir = dir;
         }
 

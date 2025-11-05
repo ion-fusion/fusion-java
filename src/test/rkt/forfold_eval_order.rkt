@@ -5,7 +5,7 @@
 
 (require rackunit)
 
-;; This corresponds to the evaluation-order test case in ftst/for.test.fusion
+;; This corresponds to the evaluation-order test case in for.test.fusion
 
 (let* [(evaluation_order '())
        (record (lambda (v) (set! evaluation_order (cons v evaluation_order)) v))]

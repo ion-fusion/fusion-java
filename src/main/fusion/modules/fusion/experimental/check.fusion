@@ -11,7 +11,7 @@ scripts, where each script uses this module to express a number of _checks_
 that each validate some aspect of the code under test.
 
 For examples of these features in action, peruse
-[Fusion's own test suite](code:trees/mainline/--/ftst).
+[Fusion's own test suite](https://github.com/ion-fusion/fusion-java/tree/main/src/test/fusion/scripts).
 
 These APIs are inspired by those of
 [RackUnit](http://docs.racket-lang.org/rackunit)

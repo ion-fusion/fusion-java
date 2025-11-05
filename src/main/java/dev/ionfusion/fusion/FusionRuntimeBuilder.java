@@ -700,13 +700,6 @@ public class FusionRuntimeBuilder
            throw new IllegalArgumentException(message);
         }
 
-        File src = new File(directory, "src");
-        if (! src.isDirectory())
-        {
-           String message = "Repository has no src directory: " + original;
-           throw new IllegalArgumentException(message);
-        }
-
         if (myRepositoryDirectories == null)
         {
             myRepositoryDirectories = new File[] { directory };

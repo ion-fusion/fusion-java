@@ -52,8 +52,8 @@ java {
     withJavadocJar()
 }
 
-val mainFusionRepo = layout.projectDirectory.dir("fusion")
-val testFusionRepo = layout.projectDirectory.dir("ftst/repo")
+val mainFusionRepo = layout.projectDirectory.dir("src/main/fusion")
+val testFusionRepo = layout.projectDirectory.dir("src/test/fusion")
 
 // Default output paths, hard-coded because the DSL doesn't seem to expose them.
 val docsDir    = layout.buildDirectory.dir("docs")

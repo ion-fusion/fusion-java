@@ -14,12 +14,11 @@ import org.junit.jupiter.api.TestFactory;
 
 
 /**
- * Run all the `*.test.fusion` scripts under the `ftst` directory as individual
+ * Run all the `*.test.fusion` scripts under the scripts directory as individual
  * unit tests.
  * Each test passes if script evaluation completes without failure.
  * <p>
  * All tests run using a single {@link FusionRuntime}.
- * If `ftst/repo` is a directory, it's added as a repository.
  */
 public class ScriptedTests
 {
@@ -27,8 +26,8 @@ public class ScriptedTests
      * presumably due to contention over symbol interning and/or module loading.
      */
     @TestFactory
-    @DisplayName("ftst/")
-    Stream<DynamicNode> ftst()
+    @DisplayName("scripts/")
+    Stream<DynamicNode> scripts()
         throws Exception
     {
         FusionRuntime runtime =

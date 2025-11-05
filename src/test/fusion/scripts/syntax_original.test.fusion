@@ -14,4 +14,5 @@
     (quote_syntax (if 1 head 3))))
 
 
-(load "ftst/syntax_original.rkt.fusion")
+// TODO Should implement and use load_relative
+(load "src/test/fusion/scripts/syntax_original.rkt.fusion")

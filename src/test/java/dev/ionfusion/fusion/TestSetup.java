@@ -31,17 +31,17 @@ public class TestSetup
      */
     public static Path fusionBootstrapDirectory()
     {
-        return PROJECT_DIRECTORY.resolve("fusion");
+        return PROJECT_DIRECTORY.resolve("src/main/fusion");
     }
 
     public static Path testScriptDirectory()
     {
-        return PROJECT_DIRECTORY.resolve("ftst");
+        return testRepositoryDirectory().resolve("scripts");
     }
 
     public static Path testRepositoryDirectory()
     {
-        return testScriptDirectory().resolve("repo");
+        return PROJECT_DIRECTORY.resolve("src/test/fusion");
     }
 
     public static Path testDataDirectory()

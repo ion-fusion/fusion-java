@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.File;
 import java.io.IOException;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -77,6 +78,7 @@ public class DocumentTest
     }
 
     @Test
+    @Disabled("This should instead evoke failure when no modules are selected")
     public void testRepoHasNoSrc()
         throws Exception
     {

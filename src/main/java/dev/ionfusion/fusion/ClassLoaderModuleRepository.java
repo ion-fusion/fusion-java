@@ -18,7 +18,7 @@ final class ClassLoaderModuleRepository
     ClassLoaderModuleRepository(ClassLoader cl, String pathPrefix)
     {
         myClassLoader = cl;
-        myPathPrefix  = pathPrefix + "/src";
+        myPathPrefix  = pathPrefix + "/modules";
 
         // We want to resolve relative to the classpath root(s).
         assert ! myPathPrefix.startsWith("/");

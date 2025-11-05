@@ -24,7 +24,7 @@ final class FileSystemModuleRepository
     {
         myRepoDir = repoDir.getAbsoluteFile();
 
-        File src = new File(repoDir, "src");
+        File src = new File(repoDir, "modules");
         mySrcDir = (src.isDirectory() ? src : null);
     }
 

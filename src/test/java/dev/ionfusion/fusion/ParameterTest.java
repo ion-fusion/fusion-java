@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * See ftst/parameter.test.ion
+ * See parameter.test.fusion
  */
 public class ParameterTest
     extends CoreTestCase
