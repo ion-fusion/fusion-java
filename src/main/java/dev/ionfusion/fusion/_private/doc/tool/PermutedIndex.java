@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion._private.doc.tool;
 
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -10,7 +11,15 @@ import java.util.TreeSet;
 public class PermutedIndex
     implements Iterable<PermutedIndex.PermutedEntry>
 {
-    private final TreeSet<PermutedEntry> myEntries = new TreeSet<>();
+    private final Comparator<String>     myBoundNameComparator;
+    private final TreeSet<PermutedEntry> myEntries;
+
+    public PermutedIndex(Comparator<String> boundNameComparator)
+    {
+        myBoundNameComparator = boundNameComparator;
+        myEntries = new TreeSet<>();
+    }
+
 
     @Override
     public Iterator<PermutedEntry> iterator()
@@ -22,7 +31,7 @@ public class PermutedIndex
     /**
      * An entry in the permuted index.
      */
-    public static final class PermutedEntry
+    public final class PermutedEntry
         implements Comparable<PermutedEntry>
     {
         private final String                     myName;
@@ -69,15 +78,16 @@ public class PermutedIndex
         @Override
         public int compareTo(PermutedEntry that)
         {
-            int result = myKeyword.compareTo(that.myKeyword);
+            Comparator<String> c = myBoundNameComparator;
+            int result = c.compare(this.myKeyword, that.myKeyword);
             if (result == 0)
             {
-                result = myPrefix.compareTo(that.myPrefix);
+                result = c.compare(this.myPrefix, that.myPrefix);
                 if (result == 0)
                 {
                     // We shouldn't get this far often, so we spend time to
                     // get the suffix rather than memory to cache it.
-                    result = suffix().compareTo(that.suffix());
+                    result = c.compare(this.suffix(), that.suffix());
                 }
             }
             return result;

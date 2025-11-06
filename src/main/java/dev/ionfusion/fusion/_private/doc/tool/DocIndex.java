@@ -63,14 +63,14 @@ public final class DocIndex
 
     public AlphaIndex alphabetize()
     {
-        AlphaIndex alpha = new AlphaIndex();
+        AlphaIndex alpha = new AlphaIndex(myBoundNameComparator);
         myExports.forEach(alpha::addEntry);
         return alpha;
     }
 
     public PermutedIndex permute()
     {
-        PermutedIndex permuted = new PermutedIndex();
+        PermutedIndex permuted = new PermutedIndex(myBoundNameComparator);
         myExports.forEach(permuted::addEntries);
         return permuted;
     }

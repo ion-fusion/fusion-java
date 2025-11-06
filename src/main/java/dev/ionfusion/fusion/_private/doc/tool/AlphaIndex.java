@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion._private.doc.tool;
 
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -10,12 +11,15 @@ import java.util.TreeSet;
 public class AlphaIndex
     implements Iterable<AlphaIndex.AlphaEntry>
 {
+    private final Comparator<String>  myBoundNameComparator;
     private final TreeSet<AlphaEntry> myEntries;
 
-    public AlphaIndex()
+    public AlphaIndex(Comparator<String> boundNameComparator)
     {
+        myBoundNameComparator = boundNameComparator;
         myEntries = new TreeSet<>();
     }
+
 
     @Override
     public Iterator<AlphaEntry> iterator()
@@ -27,7 +31,7 @@ public class AlphaIndex
     /**
      * An entry in the alphabetical index.
      */
-    public static final class AlphaEntry
+    public final class AlphaEntry
         implements Comparable<AlphaEntry>
     {
         private final String                     myName;
@@ -52,7 +56,7 @@ public class AlphaIndex
         @Override
         public int compareTo(AlphaEntry that)
         {
-            return myName.compareTo(that.myName);
+            return myBoundNameComparator.compare(this.myName, that.myName);
         }
     }
 
