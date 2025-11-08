@@ -6,12 +6,39 @@
     {{$moreCss}}{{/moreCss}}
   {{/head}}
   {{$title}}Proto Template{{/title}}
+  {{! TODO Add skip links for accessibility:
+      https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a#skip_links }}
   {{$body}}
-    <div class='indexlink'>
-      <a href='index.html'>Top</a>
-      <a href='binding-index.html'>Binding Index</a>
-      (<a href='permuted-index.html'>Permuted</a>)
+    <nav class="leftnav">
+      <a id="toplink" href="index.html">Ion Fusion</a>
+
+      <h1>Tutorials</h1>
+      <nav>
+        <a href='tutorial_cli.html'>Exploring the <code>fusion</code> CLI</a>
+      </nav>
+
+      <h1>How-To Guides</h1>
+      <nav>
+        <a href='howto_build.html'>How to Build Ion Fusion</a>
+      </nav>
+
+      <h1>Explanation</h1>
+      <nav>
+        <a href='about_cli.html'>About the <code>fusion</code> CLI</a>
+      </nav>
+
+      <h1>Reference</h1>
+      <nav>
+        <a href='fusion.html'>Language Reference</a>
+        <nav>
+          <a href='binding-index.html'>Alphabetical Index</a>
+          <a href='permuted-index.html'>Permuted Index</a>
+        </nav>
+        <a href='javadoc/index.html'>Java API Reference</a>
+      </nav>
+    </nav>
+    <div class="main">
+      {{$content}}No content{{/content}}
     </div>
-    {{$content}}No content{{/content}}
   {{/body}}
 {{/base}}
