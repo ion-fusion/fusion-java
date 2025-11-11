@@ -218,6 +218,10 @@ val fcovTestReport = tasks.register<JavaExec>("fcovTestReport") {
     group = "verification"
     description = "Generates Fusion code coverage report"
 
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = java.toolchain.languageVersion
+    }
+
     classpath = sourceSets["main"].runtimeClasspath
     mainClass = "dev.ionfusion.fusion.cli.Cli"
     args = listOf("report_coverage",
@@ -266,6 +270,10 @@ tasks.register<JavaExec>("fusiondoc") {
 
     var articlesDir = layout.projectDirectory.dir("src/doc/articles")
     var assetsDir   = layout.projectDirectory.dir("src/doc/assets")
+
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = java.toolchain.languageVersion
+    }
 
     classpath = sourceSets["main"].runtimeClasspath
     mainClass = "dev.ionfusion.fusion.cli.Cli"
