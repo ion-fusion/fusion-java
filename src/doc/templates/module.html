@@ -20,7 +20,7 @@
   {{/moreCss}}
   {{$title}}{{entity.identity.absolutePath}}{{/title}}
   {{$content}}
-    <h1>Module {{#entity.identity}}{{>breadcrumbs}}{{/entity.identity}}</h1>
+    <h1 class="headline">Module {{#entity.identity}}{{>breadcrumbs}}{{/entity.identity}}</h1>
     {{#entity.moduleDocs.overview}}{{#md}}{{&.}}{{/md}}{{/entity.moduleDocs.overview}}
 
     {{^entity.submodules.empty}}

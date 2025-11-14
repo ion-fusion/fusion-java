@@ -1,6 +1,55 @@
 /* Copyright Ion Fusion contributors. All rights reserved. */
 /* SPDX-License-Identifier: Apache-2.0 */
 
-.indexlink {
-  float: right;
+.leftnav {
+    position: fixed;
+    z-index: 2;
+    overflow-y: scroll;
+/*  float: none; /* Not sure why Racket has this */
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 14rem; /* Sync with main margin-left */
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    background-color: lightsteelblue;
+/*  border-top: 6rem solid hsl(216, 15%, 70%); */
+}
+
+#toplink {
+    /* TODO font */
+    font-size: 2rem;
+    font-weight: bold;
+    margin-left: 0;
+    margin-bottom: .5rem;
+}
+
+.leftnav h1 {
+    font-size: 1.25rem;
+    margin-top: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.leftnav nav {
+    margin-left: 1rem;
+    margin-bottom: .5rem;
+}
+
+.leftnav a {
+    display: block;
+    color: black;
+    text-decoration: none;
+}
+
+.leftnav a:hover {
+    text-decoration: underline;
+}
+
+
+.main {
+    width: auto;
+    margin-top: 1rem;
+    margin-left: 15.5rem;  /* Sync with leftnav width */
+    margin-right: 2rem;
+    max-width: 700px;
+    min-width: 370px; /* below this size, code samples don't fit */
 }
