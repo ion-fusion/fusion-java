@@ -26,16 +26,19 @@ public class SiteBuilder
     private final Site                      mySite = new Site();
     private       RepoEntity                myRepo;
     private final Predicate<ModuleIdentity> myModuleSelector;
+    private final SiteModel                 mySiteModel;
 
     /**
      *
      * @param selector predicate determining which modules will be documented.
      */
     public SiteBuilder(TopLevel topLevel, Predicate<ModuleIdentity> selector)
+        throws FusionException
     {
         myTopLevel = topLevel;
         myIndex = new DocIndex(selector);
         myModuleSelector = selector;
+        mySiteModel = new SiteModel();
     }
 
     public Site build()
@@ -73,6 +76,11 @@ public class SiteBuilder
     }
 
 
+    private <E> Template<E, Path> mustacheTemplate(String templatePath)
+    {
+        return new MustacheTemplate<>(mySiteModel, templatePath);
+    }
+
     /**
      * Discover selected modules in our {@link RepoEntity}, placing a page
      * for each at the same path within the site.
@@ -82,8 +90,8 @@ public class SiteBuilder
     public void placeModules()
         throws FusionException
     {
-        MustacheTemplate<ModuleEntity> template =
-            new MustacheTemplate<>("src/doc/templates/module.html");
+        Template<ModuleEntity, Path> template =
+            mustacheTemplate("src/doc/templates/module.html");
 
         for (ModuleEntity module : myRepo.getSelectedModules())
         {
@@ -121,8 +129,8 @@ public class SiteBuilder
         String[] fileNames = fromDir.toFile().list();
         if (fileNames == null) return;
 
-        MustacheTemplate<MarkdownArticle> template =
-            new MustacheTemplate<>("src/doc/templates/article.html");
+        Template<MarkdownArticle, Path> template =
+            mustacheTemplate("src/doc/templates/article.html");
 
         for (String fileName : fileNames)
         {
@@ -178,10 +186,10 @@ public class SiteBuilder
         AlphaIndex alpha = myIndex.alphabetize();
         PermutedIndex permuted = myIndex.permute();
 
-        MustacheTemplate<AlphaIndex> alphaTemplate =
-            new MustacheTemplate<>("src/doc/templates/binding-index.html");
-        MustacheTemplate<PermutedIndex> permuTemplate =
-            new MustacheTemplate<>("src/doc/templates/permuted-index.html");
+        Template<AlphaIndex, Path> alphaTemplate =
+            mustacheTemplate("src/doc/templates/binding-index.html");
+        Template<PermutedIndex, Path> permuTemplate =
+            mustacheTemplate("src/doc/templates/permuted-index.html");
 
         placeArtifact(alpha, "binding-index.html", alphaTemplate);
         placeArtifact(permuted, "permuted-index.html", permuTemplate);

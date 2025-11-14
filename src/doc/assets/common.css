@@ -23,6 +23,12 @@
     margin-bottom: .5rem;
 }
 
+.leftnav .version {
+    font-size: 0.9rem;
+    margin-top: -.5rem;
+    margin-left: 1rem;
+}
+
 .leftnav h1 {
     font-size: 1.25rem;
     margin-top: 1rem;
