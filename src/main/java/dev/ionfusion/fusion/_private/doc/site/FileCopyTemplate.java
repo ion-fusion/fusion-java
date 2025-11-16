@@ -15,6 +15,7 @@ public class FileCopyTemplate
     public Generator<Path> populate(Artifact<Path> artifact)
     {
         return dest -> {
+            Files.createDirectories(dest.getParent());
             Files.copy(artifact.getEntity(), dest, REPLACE_EXISTING);
         };
     }
