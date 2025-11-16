@@ -1,0 +1,17 @@
+/* Copyright Ion Fusion contributors. All rights reserved. */
+/* SPDX-License-Identifier: Apache-2.0 */
+
+/* Get Bitter Pro from Google Fonts, which does a good job serving small files.
+ */
+@import url('https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&display=swap');
+
+/* Monaspace is not on Google Fonts, and looks like they don't want to add it.
+ *   https://github.com/githubnext/monaspace/issues/120
+ *   https://github.com/githubnext/monaspace/issues/172
+ */
+@font-face {
+    font-family: 'Monaspace Neon';
+    font-style: normal;
+    font-display: swap;
+    src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.301/fonts/Web Fonts/Variable Web Fonts/Monaspace Neon/Monaspace Neon Var.woff2') format('woff2');
+}
