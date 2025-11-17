@@ -257,8 +257,9 @@ tasks.javadoc {
         docEncoding = "UTF-8"
         overview = "$projectDir/src/main/java/overview.html"
 
-        header = "FusionJava API Reference"
+        header = "FusionJava API Reference<br />${project.version}"
         bottom = "<center>Copyright Ion Fusion contributors. All Rights Reserved.</center>"
+        noTimestamp(true)
     }
 }
 
