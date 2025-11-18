@@ -127,7 +127,7 @@ public class HtmlWriter
     {
         openHead(title, null);
 
-        myOut.append("<style type='text/css'><!--\n");
+        myOut.append("<style><!--\n");
         myOut.append(css);
         myOut.append("\n--></style>");
 
@@ -149,7 +149,7 @@ public class HtmlWriter
         {
             myOut.append("<link href='");
             escape(cssUrl);
-            myOut.append("' rel='stylesheet' type='text/css'></link>\n");
+            myOut.append("' rel='stylesheet'></link>\n");
         }
 
         myOut.append("</head>\n");
