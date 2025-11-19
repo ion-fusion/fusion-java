@@ -66,7 +66,7 @@ public class DocumentationTest
         assertEquals(modulePath, page.getTitleText());
 
         HtmlBody     body    = page.getBody();
-        HtmlHeading1 firstH1 = body.getFirstByXPath("//h1[@class=\"headline\"]");
+        HtmlHeading1 firstH1 = body.getFirstByXPath("//main/h1[@class=\"headline\"]");
         assertNotNull(firstH1, "Missing first <h1> in " + url);
         assertEquals("Module " + modulePath, firstH1.getTextContent());
 
@@ -84,7 +84,7 @@ public class DocumentationTest
         HtmlPage page = loadModule("/fusion");
         HtmlBody body = page.getBody();
 
-        HtmlParagraph p = body.getFirstByXPath("//main/p");
+        HtmlParagraph p = body.getFirstByXPath("//main/section[@class='overview']/p");
         assertNotNull(p, "missing first <p>");
         assertThat(p.getTextContent(), startsWith("The main Fusion language."));
     }

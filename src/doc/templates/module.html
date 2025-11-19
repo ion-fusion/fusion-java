@@ -2,11 +2,11 @@
 {{! SPDX-License-Identifier: Apache-2.0 }}
 {{!
   CSS hierarchy:
-    -- should be something for the overview
-    submodules
+    section.overview
+    nav.submodules
       oneliner
-    exports
-    binding
+    nav.exports
+    section.export
       name
       kind
       doc
@@ -21,28 +21,36 @@
   {{$title}}{{entity.identity.absolutePath}}{{/title}}
   {{$main}}
     <h1 class="headline">Module {{#entity.identity}}{{>breadcrumbs}}{{/entity.identity}}</h1>
-    {{#entity.moduleDocs.overview}}{{#md}}{{&.}}{{/md}}{{/entity.moduleDocs.overview}}
+
+    <section class='overview'>
+      {{#entity.moduleDocs.overview}}{{#md}}{{&.}}{{/md}}{{/entity.moduleDocs.overview}}
+    </section>
 
     {{^entity.submodules.empty}}
-      <h2>Submodules</h2>
-      <ul class='submodules'>
-      {{#entity.submodules}}
-        <li>{{<module-link}}{{$id}}{{identity}}{{/id}}{{$link}}{{identity.baseName}}{{/link}}{{/module-link}}
-          {{#moduleDocs.oneLiner}} &ndash; <span class='oneliner'>{{#md}}{{&.}}{{/md}}</span>{{/moduleDocs.oneLiner}}
-        </li>
-      {{/entity.submodules}}
-      </ul>
+      <nav class='submodules'>
+        <h2>Submodules</h2>
+        <ul>
+        {{#entity.submodules}}
+          <li>{{<module-link}}{{$id}}{{identity}}{{/id}}{{$link}}{{identity.baseName}}{{/link}}{{/module-link}}
+            {{#moduleDocs.oneLiner}} &ndash; <span class='oneliner'>{{#md}}{{&.}}{{/md}}</span>{{/moduleDocs.oneLiner}}
+          </li>
+        {{/entity.submodules}}
+        </ul>
+      </nav>
     {{/entity.submodules.empty}}
 
     {{^entity.exports.empty}}
-      <h2>Exported Bindings</h2>
-      <div class='exports'>
-        {{#entity.exports}}{{<binding-link}}{{$id}}{{moduleId}}{{/id}}{{$name}}{{name}}{{/name}}{{/binding-link}}&nbsp;&nbsp;
-        {{/entity.exports}}
-      </div>
+      <nav class='exports'>
+        <h2>Exported Bindings</h2>
+        <ol>
+          {{#entity.exports}}
+            <li>{{<binding-link}}{{$id}}{{moduleId}}{{/id}}{{$name}}{{name}}{{/name}}{{/binding-link}}</li>
+          {{/entity.exports}}
+        </ol>
+      </nav>
 
       {{#entity.exports}}
-        <div class='binding' id='{{name}}'><span class='name'>{{name}}</span>
+        <section class='export' id='{{name}}'><span class='name'>{{name}}</span>
           {{#docs.kind}}<span class='kind'>{{toString.toLowerCase}}</span>{{/docs.kind}}
           <div class='doc'>
             <div class='body'>
@@ -50,12 +58,12 @@
               {{#docs.body}}{{#md}}{{&nl}}{{&.}}{{&nl}}{{/md}}{{/docs.body}}
             </div>
             {{^alsoProvidedBy.empty}}
-               <p class='also'>Also provided by
+               <aside class='also'>Also provided by
                {{#alsoProvidedBy}}{{>export-link}}, {{/alsoProvidedBy}}
-               </p>
+               </aside>
             {{/alsoProvidedBy.empty}}
           </div>
-        </div>
+        </section>
       {{/entity.exports}}
     {{/entity.exports.empty}}
   {{/main}}

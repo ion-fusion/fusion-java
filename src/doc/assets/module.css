@@ -1,44 +1,46 @@
 /* Copyright Ion Fusion contributors. All rights reserved. */
 /* SPDX-License-Identifier: Apache-2.0 */
 
-.submodules .oneliner p {
+nav.submodules .oneliner p {
   display: inline;
 }
-.exports {
-  display: block;
-  margin-left: 1em; margin-bottom: 1em
+
+nav.exports ol {
+  list-style-type: none;
+  padding-left: 1em;
 }
-.binding {
+nav.exports li {
+  display: inline;
+  margin-right: .5em;
+}
+
+.export {
   display: block;
   border-top: 1px solid #999;
-  padding-top: .5em;
+  padding: .8em 0;
 }
-.binding .name {
+.export .name {
   font-family: monospace;
   font-size: 1.17em;
   font-weight: bold;
 }
-.binding .kind {
+.export .kind {
   float: right; font-style: italic;
 }
-.binding .nodoc {
+.export .nodoc {
   font-style: italic;
 }
-.binding .doc {
+.export .doc {
    margin-left: 1em;
 }
-.binding .doc .oneliner {
-}
-.binding .doc .body {
-}
-.binding .doc .also {
+.export .also {
   font-size: 0.8em;
   font-style: italic;
 }
 
-/* Highlight the binding when arriving via a link.
+/* Highlight the targeted section when arriving via a link.
 /* From http://css-tricks.com/on-target/  */
-:target.binding {
+:target.export {
   -moz-animation:    highlight 2s ease;
   -webkit-animation: highlight 2s ease;
 }
