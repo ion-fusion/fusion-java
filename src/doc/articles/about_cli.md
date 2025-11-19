@@ -1,7 +1,8 @@
 <!-- Copyright Ion Fusion contributors. All rights reserved. -->
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 
-<!-- MarkdownJ can't handle backticks in headers -->
+<!-- MarkdownJ can't handle backticks in headers
+     https://github.com/ion-fusion/fusion-java/issues/334 -->
 # About the <code>fusion</code> CLI
 
 The `fusion` command-line interface is intended to support evaluation of Fusion code across a 

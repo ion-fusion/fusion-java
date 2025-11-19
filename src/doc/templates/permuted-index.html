@@ -5,12 +5,12 @@
     <link href='index.css' rel='stylesheet'></link>
   {{/moreHead}}
   {{$title}}Fusion Binding Index (Permuted){{/title}}
-  {{$content}}
+  {{$main}}
     <h1>Permuted Binding Index</h1>
     <table><tbody>
       {{#entity}}
 <tr><td class='prefix'>{{prefix}}</td><td class='tail'><span class='keyword'>{{keyword}}</span>{{suffix}}</td><td>{{#exports}}{{>export-link}}, {{/exports}}</td></tr>
       {{/entity}}
     </tbody></table>
-  {{/content}}
+  {{/main}}
 {{/common}}

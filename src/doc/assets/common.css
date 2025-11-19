@@ -62,7 +62,7 @@ code, pre {
 }
 
 
-.main {
+main {
     width: auto;
     margin-top: 1rem;
     margin-left: 15.5rem;  /* Sync with leftnav width */

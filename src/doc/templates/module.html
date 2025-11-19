@@ -19,7 +19,7 @@
     <link href='module.css' rel='stylesheet'></link>
   {{/moreHead}}
   {{$title}}{{entity.identity.absolutePath}}{{/title}}
-  {{$content}}
+  {{$main}}
     <h1 class="headline">Module {{#entity.identity}}{{>breadcrumbs}}{{/entity.identity}}</h1>
     {{#entity.moduleDocs.overview}}{{#md}}{{&.}}{{/md}}{{/entity.moduleDocs.overview}}
 
@@ -58,5 +58,5 @@
         </div>
       {{/entity.exports}}
     {{/entity.exports.empty}}
-  {{/content}}
+  {{/main}}
 {{/common}}

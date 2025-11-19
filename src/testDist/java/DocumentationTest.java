@@ -84,7 +84,7 @@ public class DocumentationTest
         HtmlPage page = loadModule("/fusion");
         HtmlBody body = page.getBody();
 
-        HtmlParagraph p = body.getFirstByXPath("//div[@class='main']/p");
+        HtmlParagraph p = body.getFirstByXPath("//main/p");
         assertNotNull(p, "missing first <p>");
         assertThat(p.getTextContent(), startsWith("The main Fusion language."));
     }
