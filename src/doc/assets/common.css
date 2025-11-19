@@ -14,16 +14,13 @@ code, pre {
 
 .leftnav {
     position: fixed;
-    z-index: 2;
-    overflow-y: scroll;
-/*  float: none; /* Not sure why Racket has this */
-    left: 0;
     top: 0;
+    left: 0;
     bottom: 0;
-    width: 14rem; /* Sync with main margin-left */
-    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    width: 15rem; /* Sync with main left */
+    padding: 0.5rem;
+    overflow-y: scroll;
     background-color: lightsteelblue;
-/*  border-top: 6rem solid hsl(216, 15%, 70%); */
 }
 
 #toplink {
@@ -63,10 +60,11 @@ code, pre {
 
 
 main {
+    position: fixed;
+    top: 0;
+    left: 15rem;     /* Sync with .leftnav width */
+    bottom: 0;
     width: auto;
-    margin-top: 1rem;
-    margin-left: 15.5rem;  /* Sync with leftnav width */
-    margin-right: 2rem;
-    max-width: 700px;
-    min-width: 370px; /* below this size, code samples don't fit */
+    padding: 0 1rem;
+    overflow: scroll;
 }

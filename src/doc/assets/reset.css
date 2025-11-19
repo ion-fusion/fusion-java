@@ -1,0 +1,61 @@
+/* Copyright Ion Fusion contributors. All rights reserved. */
+/* SPDX-License-Identifier: Apache-2.0 */
+
+/* CSS Reset.
+ *
+ * https://www.joshwcomeau.com/css/custom-css-reset/
+ * https://pawelgrzybek.com/the-css-reset-again/
+ * https://mayank.co/blog/css-reset-layer/
+ */
+
+@layer reset {
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    html {
+        /* TODO Let user select light/dark mode */
+        /* color-scheme: light dark; */
+
+        /* Stop some macOS browsers from using subpixel anti-aliasing */
+        -webkit-font-smoothing: antialiased;
+
+        /* Stop mobile browsers from scaling text */
+        -moz-text-size-adjust: none;
+        -webkit-text-size-adjust: none;
+        text-size-adjust: none;
+    }
+
+    img, picture, video, canvas, svg {
+        display: block;
+        max-width: 100%;
+    }
+
+    input, button, textarea, select {
+        font: inherit;
+    }
+
+
+    /* Some opinionated typography. */
+
+    /* Avoid text overflows */
+    p, h1, h2, h3, h4, h5, h6 {
+        overflow-wrap: break-word;
+    }
+
+    /* Use improved line wrapping heuristics */
+    h1, h2, h3, h4, h5, h6 {
+        text-wrap: balance;
+    }
+    p {
+        text-wrap: pretty;
+    }
+
+    /* Use hanging punctuation, except where inappropriate. */
+    html {
+        hanging-punctuation: first allow-end last;
+    }
+    code, pre, input, button, textarea, select {
+        hanging-punctuation: none;
+    }
+}
