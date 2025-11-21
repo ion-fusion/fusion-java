@@ -12,12 +12,29 @@ code, pre {
     font-weight: 350;
 }
 
+/* Outermost page layout uses flexbox so the site nav shifts above the main
+ * content on narrow viewports.
+ */
+body {
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+
+    nav {
+        /* TODO perhaps use intrinsic width? */
+        flex-basis: 15rem; /* Width when on the side */
+        flex-grow: 1;
+    }
+
+    main {
+        flex-basis: 0;
+        flex-grow: 999;
+        min-inline-size: 70%; /* Threshold for flowing inline (right) */
+    }
+}
+
 .leftnav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 15rem; /* Sync with main left */
     padding: 0.5rem;
     overflow-y: scroll;
     background-color: lightsteelblue;
@@ -60,11 +77,6 @@ code, pre {
 
 
 main {
-    position: fixed;
-    top: 0;
-    left: 15rem;     /* Sync with .leftnav width */
-    bottom: 0;
-    width: auto;
     padding: 0 1rem;
     overflow: scroll;
 }
