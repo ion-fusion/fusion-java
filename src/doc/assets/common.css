@@ -99,3 +99,13 @@ main {
     padding: 0 1rem;
     overflow: scroll;
 }
+
+pre {
+    padding-inline-start: 1em;
+    overflow-x: auto;
+}
+
+/* When a link is targeted, ensure some visible room around it. */
+:target {
+    scroll-margin: 2rlh;
+}
