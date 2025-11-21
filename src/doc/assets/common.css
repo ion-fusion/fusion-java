@@ -34,47 +34,51 @@ body {
     }
 }
 
-.leftnav {
+
+/* Formatting of the site navigation. */
+
+body > nav {
     padding: 0.5rem;
     overflow-y: scroll;
     background-color: lightsteelblue;
+
+    .logotype {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-left: 0;
+        margin-bottom: .5rem;
+    }
+
+    .version {
+        font-size: 0.9rem;
+        margin-top: -.5rem;
+        margin-left: 1rem;
+    }
+
+    h1 {
+        font-size: 1.25rem;
+        margin-top: 1rem;
+        margin-bottom: 0.25rem;
+    }
+
+    nav {
+        margin-left: 1rem;
+        margin-bottom: .5rem;
+    }
+
+    a {
+        display: block;
+        color: black;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
 }
 
-#toplink {
-    /* TODO font */
-    font-size: 2rem;
-    font-weight: bold;
-    margin-left: 0;
-    margin-bottom: .5rem;
-}
 
-.leftnav .version {
-    font-size: 0.9rem;
-    margin-top: -.5rem;
-    margin-left: 1rem;
-}
-
-.leftnav h1 {
-    font-size: 1.25rem;
-    margin-top: 1rem;
-    margin-bottom: 0.25rem;
-}
-
-.leftnav nav {
-    margin-left: 1rem;
-    margin-bottom: .5rem;
-}
-
-.leftnav a {
-    display: block;
-    color: black;
-    text-decoration: none;
-}
-
-.leftnav a:hover {
-    text-decoration: underline;
-}
-
+/* Formatting of the main content area. */
 
 main {
     padding: 0 1rem;
