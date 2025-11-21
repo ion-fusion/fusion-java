@@ -15,3 +15,15 @@
     font-display: swap;
     src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.301/fonts/Web Fonts/Variable Web Fonts/Monaspace Neon/Monaspace Neon Var.woff2') format('woff2');
 }
+
+
+body {
+    font-family: "Bitter", serif;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+code, pre {
+    font-family: "Monaspace Neon", monospace;
+    font-weight: 300; /* Neon is a bit heavier than Bitter */
+}

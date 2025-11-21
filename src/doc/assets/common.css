@@ -1,16 +1,6 @@
 /* Copyright Ion Fusion contributors. All rights reserved. */
 /* SPDX-License-Identifier: Apache-2.0 */
 
-body {
-    font-family: "Bitter", serif;
-    font-weight: 400;
-    line-height: 1.5;
-}
-
-code, pre {
-    font-family: "Monaspace Neon", monospace;
-    font-weight: 350;
-}
 
 /* Outermost page layout uses flexbox so the site nav shifts above the main
  * content on narrow viewports.
