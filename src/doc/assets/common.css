@@ -11,6 +11,10 @@ body {
     display: flex;
     flex-wrap: wrap;
 
+    header {
+        flex-basis: 100%;
+    }
+
     nav {
         /* TODO perhaps use intrinsic width? */
         flex-basis: 15rem; /* Width when on the side */
@@ -22,38 +26,57 @@ body {
         flex-grow: 999;
         min-inline-size: 70%; /* Threshold for flowing inline (right) */
     }
+
+    footer {
+        flex-basis: 100%;
+    }
+}
+
+
+header {
+    padding: 1rem;
+    background-color: lightsteelblue;
+
+    .logotype {
+        margin: 0;
+        line-height: 1;
+        font-weight: bold;
+        font-size: 2rem;
+        color: black;
+        text-decoration: none;
+    }
+}
+
+footer {
+    padding: 1rem;
+    background-color: lightsteelblue;
+    line-height: 1;
+    text-align: center;
+
+    p {
+        margin: 0;
+    }
 }
 
 
 /* Formatting of the site navigation. */
 
 body > nav {
-    padding: 0.5rem;
+    padding: 0 1rem 1rem; /* No padding on top; the header provides it. */
     overflow-y: scroll;
     background-color: lightsteelblue;
 
-    .logotype {
-        font-size: 2rem;
-        font-weight: bold;
-        margin-left: 0;
-        margin-bottom: .5rem;
-    }
-
-    .version {
-        font-size: 0.9rem;
-        margin-top: -.5rem;
-        margin-left: 1rem;
+    > section + section { /* Space _between_ sections */
+        margin-block-start: 1rem;
     }
 
     h1 {
+        margin: 0;
         font-size: 1.25rem;
-        margin-top: 1rem;
-        margin-bottom: 0.25rem;
     }
 
     nav {
         margin-left: 1rem;
-        margin-bottom: .5rem;
     }
 
     a {

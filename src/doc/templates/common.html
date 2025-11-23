@@ -10,41 +10,57 @@
   {{! TODO Add skip links for accessibility:
       https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a#skip_links }}
   {{$body}}
-    <nav>
-      <a class="logotype" href="index.html">Ion Fusion</a>
 
-      <p class="version">
+    <header>
+      <a class="logotype" href="index.html">Ion Fusion Documentation</a>
+
+      <div class="version">
         Release {{site.version}}
-        {{#site.devBuild}}{{site.time}}{{/site.devBuild}}
-      </p>
+        {{#site.devBuild}}({{site.time}}){{/site.devBuild}}
+      </div>
+    </header>
 
-      <h1>Tutorials</h1>
-      <nav>
-        <a href='tutorial_cli.html'>Exploring the <code>fusion</code> CLI</a>
-      </nav>
-
-      <h1>How-To Guides</h1>
-      <nav>
-        <a href='howto_build.html'>How to Build Ion Fusion</a>
-      </nav>
-
-      <h1>Explanation</h1>
-      <nav>
-        <a href='about_cli.html'>About the <code>fusion</code> CLI</a>
-      </nav>
-
-      <h1>Reference</h1>
-      <nav>
-        <a href='fusion.html'>Language Reference</a>
+    <nav>
+      <section>
+        <h1>Tutorials</h1>
         <nav>
-          <a href='binding-index.html'>Alphabetical Index</a>
-          <a href='permuted-index.html'>Permuted Index</a>
+          <a href='tutorial_cli.html'>Exploring the <code>fusion</code> CLI</a>
         </nav>
-        <a href='javadoc/index.html'>Java API Reference</a>
-      </nav>
+      </section>
+
+      <section>
+        <h1>How-To Guides</h1>
+        <nav>
+          <a href='howto_build.html'>How to Build Ion Fusion</a>
+        </nav>
+      </section>
+
+      <section>
+        <h1>Explanation</h1>
+        <nav>
+          <a href='about_cli.html'>About the <code>fusion</code> CLI</a>
+        </nav>
+      </section>
+
+      <section>
+        <h1>Reference</h1>
+        <nav>
+          <a href='fusion.html'>Language Reference</a>
+          <nav>
+            <a href='binding-index.html'>Alphabetical Index</a>
+            <a href='permuted-index.html'>Permuted Index</a>
+          </nav>
+          <a href='javadoc/index.html'>Java API Reference</a>
+        </nav>
+      </section>
     </nav>
+
     <main>
       {{$main}}This page is unintentionally blank.{{/main}}
     </main>
+
+    <footer>
+      <p>&copy; Ion Fusion contributors. All rights reserved.</p>
+    </footer>
   {{/body}}
 {{/base}}
