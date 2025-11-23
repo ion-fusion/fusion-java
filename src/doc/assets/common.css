@@ -96,10 +96,23 @@ body > nav {
 /* Formatting of the main content area. */
 
 main {
-    padding: 0 1rem;
+    padding: 1rem;
     overflow: scroll;
+
+    * + * {
+        margin-block-start: 1em;
+    }
+    h1 + p, h2 + p, h3 + p {
+        margin-block-start: .25em;
+    }
+    li {
+        margin-block-start: 0;
+    }
 }
 
+blockquote {
+    padding-inline-start: 1em;
+}
 pre {
     padding-inline-start: 1em;
     overflow-x: auto;

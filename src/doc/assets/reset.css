@@ -11,6 +11,7 @@
 @layer reset {
     *, *::before, *::after {
         box-sizing: border-box;
+        margin: 0;
     }
 
     html {
@@ -46,6 +47,9 @@
     /* Use improved line wrapping heuristics */
     h1, h2, h3, h4, h5, h6 {
         text-wrap: balance;
+    }
+    h1, h2, h3 {
+        line-height: 1.1;
     }
 
     p, li, dd {

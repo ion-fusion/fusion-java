@@ -16,9 +16,13 @@ nav.exports li {
 
 .export {
   display: block;
+
+  /* Use the same space on both sides of the separator line. */
+  margin-block: 1.5rem;
   border-top: 1px solid #999;
-  padding: .8em 0;
+  padding-top: 1.5rem;
 }
+
 .export .name {
   font-family: monospace;
   font-size: 1.17em;
