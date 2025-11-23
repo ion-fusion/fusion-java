@@ -33,7 +33,7 @@ body {
 }
 
 
-header {
+body > header {
     padding: 1rem;
     background-color: lightsteelblue;
 
@@ -47,7 +47,7 @@ header {
     }
 }
 
-footer {
+body > footer {
     padding: 1rem;
     background-color: lightsteelblue;
     line-height: 1;
