@@ -181,15 +181,6 @@ thrown if the position is out of bounds.
       (raise_argument_error "list_element" "valid position" 1 list pos))
     (unsafe_list_element list pos))
 
-  (defpub list_ref
-    '''
-DEPRECATED. Renamed to `list_element`.
-
-**This binding was deprecated in R8 (October 2013) and will be removed in**
-**Q2 2014.**  https://github.com/ion-fusion/fusion-java/issues/86
-    '''
-    list_element)
-
 
   (defpub (list_set list pos value)
     '''
