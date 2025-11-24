@@ -23,37 +23,37 @@
 
 // Check key out-of-bounds
 
-(expect_argument_exn (element null.list 0))
-(expect_argument_exn (element [0,1] null.int))
-(expect_argument_exn (element [0,1] -1))
-(expect_argument_exn (element [0,1] 2))
+(expect_argument_error (element null.list 0))
+(expect_argument_error (element [0,1] null.int))
+(expect_argument_error (element [0,1] -1))
+(expect_argument_error (element [0,1] 2))
 
-(expect_argument_exn (element (quote null.sexp) 0))
-(expect_argument_exn (element (sexp 0 1) null.int))
-(expect_argument_exn (element (sexp 0 1) -1))
-(expect_argument_exn (element (sexp 0 1) 2))
+(expect_argument_error (element (quote null.sexp) 0))
+(expect_argument_error (element (sexp 0 1) null.int))
+(expect_argument_error (element (sexp 0 1) -1))
+(expect_argument_error (element (sexp 0 1) 2))
 
-(expect_argument_exn (element null.struct ""))
-(expect_argument_exn (element {f:0,g:1} null.string))
-(expect_argument_exn (element {f:0,g:1} "h"))
+(expect_argument_error (element null.struct ""))
+(expect_argument_error (element {f:0,g:1} null.string))
+(expect_argument_error (element {f:0,g:1} "h"))
 
 
 // Check key has bad type
 
-(expect_argument_exn (element [0,1] "f"))
-(expect_argument_exn (element [0,1] first))
+(expect_argument_error (element [0,1] "f"))
+(expect_argument_error (element [0,1] first))
 
-(expect_argument_exn (element (sexp 0 1) "f"))
-(expect_argument_exn (element (sexp 0 1) first))
+(expect_argument_error (element (sexp 0 1) "f"))
+(expect_argument_error (element (sexp 0 1) first))
 
-(expect_argument_exn (element {f:0,g:1} 0))
-(expect_argument_exn (element {f:0,g:1} (lambda (struct) (void))))
+(expect_argument_error (element {f:0,g:1} 0))
+(expect_argument_error (element {f:0,g:1} (lambda (struct) (void))))
 
 
 // Check collection has bad type
 
-(expect_argument_exn (element false 0))
-(expect_argument_exn (element (void) (void)))
+(expect_argument_error (element false 0))
+(expect_argument_error (element (void) (void)))
 
 
 //==========================================================================
@@ -104,7 +104,7 @@
 
 // Check collection has bad type
 
-(expect_argument_exn (elt false 0))
+(expect_argument_error (elt false 0))
 
 
 //==========================================================================

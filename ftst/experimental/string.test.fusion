@@ -11,9 +11,9 @@
 //============================================================================
 // string_size_codepoints
 
-(expect_argument_exn (string_size_codepoints (void)))
-(expect_argument_exn (string_size_codepoints null))
-(expect_argument_exn (string_size_codepoints null.string))
+(expect_argument_error (string_size_codepoints (void)))
+(expect_argument_error (string_size_codepoints null))
+(expect_argument_error (string_size_codepoints null.string))
 (check === 0 (string_size_codepoints ""))
 (check === 1 (string_size_codepoints "1"))
 (check === 10 (string_size_codepoints "1234567890"))
@@ -37,13 +37,13 @@
 //============================================================================
 // string_index_codepoints
 
-(expect_argument_exn (string_index_codepoints (void) "a"))
-(expect_argument_exn (string_index_codepoints "a" (void)))
-(expect_argument_exn (string_index_codepoints null "a"))
-(expect_argument_exn (string_index_codepoints "a" null))
-(expect_argument_exn (string_index_codepoints null.string "a"))
-(expect_argument_exn (string_index_codepoints "a" null.string))
-(expect_argument_exn (string_index_codepoints null.string null.string))
+(expect_argument_error (string_index_codepoints (void) "a"))
+(expect_argument_error (string_index_codepoints "a" (void)))
+(expect_argument_error (string_index_codepoints null "a"))
+(expect_argument_error (string_index_codepoints "a" null))
+(expect_argument_error (string_index_codepoints null.string "a"))
+(expect_argument_error (string_index_codepoints "a" null.string))
+(expect_argument_error (string_index_codepoints null.string null.string))
 
 (check === 0 (string_index_codepoints "" ""))
 (check_void (string_index_codepoints "" "a"))
@@ -73,8 +73,8 @@
 // Start with ASCII then switch to supplementary plane.
 (check_explode "abc\U00100000"        [97, 98, 99, 0x100000])
 
-(expect_argument_exn (string_explode null.string))
-(expect_argument_exn (string_implode null.list))
+(expect_argument_error (string_explode null.string))
+(expect_argument_error (string_implode null.list))
 
 
 //============================================================================
@@ -83,11 +83,11 @@
 (expect_arity_exn (string_split_noregexp (void)))
 (expect_arity_exn (string_split_noregexp null.string))
 (expect_arity_exn (string_split_noregexp ""))
-(expect_argument_exn (string_split_noregexp (void) " "))
-(expect_argument_exn (string_split_noregexp null " "))
-(expect_argument_exn (string_split_noregexp null.string " "))
-(expect_argument_exn (string_split_noregexp "abc def" null))
-(expect_argument_exn (string_split_noregexp "abc def" null.string))
+(expect_argument_error (string_split_noregexp (void) " "))
+(expect_argument_error (string_split_noregexp null " "))
+(expect_argument_error (string_split_noregexp null.string " "))
+(expect_argument_error (string_split_noregexp "abc def" null))
+(expect_argument_error (string_split_noregexp "abc def" null.string))
 
 (check === [] (string_split_noregexp "" " "))
 (check === ["a", "b", "c", " ", "d", "e", "f"] (string_split_noregexp "abc def" ""))

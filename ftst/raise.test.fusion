@@ -16,8 +16,8 @@
 (expect_arity_exn
   (raise_arity_error "proc" /* missing arity */))
 
-(expect_argument_exn
+(expect_argument_error
   (raise_arity_error /* wrong: */ 0 0))
 
-(expect_argument_exn
+(expect_argument_error
   (raise_arity_error "proc" /* wrong: */ "0"))

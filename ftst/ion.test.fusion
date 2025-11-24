@@ -68,8 +68,8 @@
 (check_representative_ion_data check_annotate)
 
 
-(expect_argument_exn (annotate  void  "a"))  // procedure isn't annotatable
-(expect_argument_exn (annotate (void) "a"))  // void      isn't annotatable
+(expect_argument_error (annotate  void  "a"))  // procedure isn't annotatable
+(expect_argument_error (annotate (void) "a"))  // void      isn't annotatable
 
 
 //==========================================================================

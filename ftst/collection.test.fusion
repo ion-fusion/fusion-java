@@ -56,10 +56,10 @@
 //==========================================================================
 // Check non-collection arguments
 
-(expect_argument_exn (any   T  "non-collection"))
-(expect_argument_exn (do    T  "non-collection"))
-(expect_argument_exn (every T  "non-collection"))
-(expect_argument_exn (find  T  "non-collection"))
-(expect_argument_exn (has_key  "non-collection" "key"))
-(expect_argument_exn (is_empty "non-collection"))
-(expect_argument_exn (none  T  "non-collection"))
+(expect_argument_error (any   T  "non-collection"))
+(expect_argument_error (do    T  "non-collection"))
+(expect_argument_error (every T  "non-collection"))
+(expect_argument_error (find  T  "non-collection"))
+(expect_argument_error (has_key  "non-collection" "key"))
+(expect_argument_error (is_empty "non-collection"))
+(expect_argument_error (none  T  "non-collection"))

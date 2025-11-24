@@ -34,10 +34,10 @@
   (expect_arity_exn (proc 2012T))
   (expect_arity_exn (proc 2012T 1 2))
 
-  (expect_argument_exn (proc 1 1))
-  (expect_argument_exn (proc 1234T 1.)
+  (expect_argument_error (proc 1 1))
+  (expect_argument_error (proc 1234T 1.)
 
-  (expect_argument_exn (proc 2014T 2147483648))))  // Bigger than Java MAX_INT
+  (expect_argument_error (proc 2014T 2147483648))))  // Bigger than Java MAX_INT
 
 (check_adjust_args adjust_year)
 (check_adjust_args adjust_month)
@@ -131,19 +131,19 @@
 (check_conversion "2013-11-13T17:33:12.0-08:00" 2013-11-13T17:33:12.0-08:00)
 
 
-(expect_argument_exn (string_to_timestamp 12))
-(expect_argument_exn (string_to_timestamp ""))
-(expect_argument_exn (string_to_timestamp "not a timestamp"))
-(expect_argument_exn (string_to_timestamp "null.timestamp"))
+(expect_argument_error (string_to_timestamp 12))
+(expect_argument_error (string_to_timestamp ""))
+(expect_argument_error (string_to_timestamp "not a timestamp"))
+(expect_argument_error (string_to_timestamp "null.timestamp"))
 
-(expect_argument_exn (string_to_timestamp " 2013T"))
-(expect_argument_exn (string_to_timestamp "2013T "))
-(expect_argument_exn (string_to_timestamp "2013T,"))
-(expect_argument_exn (string_to_timestamp "2013-11-13T "))
-(expect_argument_exn (string_to_timestamp "2013-11-13T17:35Z "))
-(expect_argument_exn (string_to_timestamp "2013-11-13T17:35-00:00 "))
+(expect_argument_error (string_to_timestamp " 2013T"))
+(expect_argument_error (string_to_timestamp "2013T "))
+(expect_argument_error (string_to_timestamp "2013T,"))
+(expect_argument_error (string_to_timestamp "2013-11-13T "))
+(expect_argument_error (string_to_timestamp "2013-11-13T17:35Z "))
+(expect_argument_error (string_to_timestamp "2013-11-13T17:35-00:00 "))
 
-(expect_argument_exn (timestamp_to_string 12))
+(expect_argument_error (timestamp_to_string 12))
 
 //============================================================================
 // timestamp
@@ -151,37 +151,37 @@
 (expect_arity_exn (timestamp 2016 7 1 10 7 45 -420 10))
 (expect_arity_exn (timestamp))
 
-(expect_argument_exn (timestamp 2016 6 6 14))
-(expect_argument_exn (timestamp 0 6 6 14 46 4 -420))
-(expect_argument_exn (timestamp 10000 6 6 14 46 4 -420))
-(expect_argument_exn (timestamp 2016 0 6 14 46 4 -420))
-(expect_argument_exn (timestamp 2016 13 6 14 46 4 -420))
-(expect_argument_exn (timestamp 2016 6 0 14 46 4 -420))
-(expect_argument_exn (timestamp 2016 6 31 14 46 4 -420))
-(expect_argument_exn (timestamp 2016 6 6 -1 46 4 -420))
-(expect_argument_exn (timestamp 2016 6 6 25 46 4 -420))
-(expect_argument_exn (timestamp 2016 6 6 14 -1 4 -420))
-(expect_argument_exn (timestamp 2016 6 6 14 60 4 -420))
-(expect_argument_exn (timestamp 2016 6 6 14 46 -1 -420))
-(expect_argument_exn (timestamp 2016 6 6 14 46 60 -420))
-(expect_argument_exn (timestamp 2016 6 6 14 46 60 -1440))
-(expect_argument_exn (timestamp 2016 6 6 14 46 60 1440))
-(expect_argument_exn (timestamp null))
-(expect_argument_exn (timestamp null.int))
-(expect_argument_exn (timestamp 2016 6 6 null.int))
-(expect_argument_exn (timestamp 2016 6 6 null))
-(expect_argument_exn (timestamp "not an int"))
-(expect_argument_exn (timestamp [2016, 6, 6, 14, 46, 4]))
-(expect_argument_exn (timestamp (sexp 2016 6 6 14 46 4)))
-(expect_argument_exn (timestamp 2016 (void) 6))
-(expect_argument_exn (timestamp (void) (void) (void) (void) (void) (void) (void)))
-(expect_argument_exn (timestamp (void)))
-(expect_argument_exn (timestamp 2016 6 6 14 (void)))
-(expect_argument_exn (timestamp 2016 6 6 14 (void) (void) -420))
-(expect_argument_exn (timestamp 2016 6 6 14 46 -4.539 -420))
-(expect_argument_exn (timestamp 2016 6 6 14 46 -0.539 -420))
-(expect_argument_exn (timestamp 2016 6 6 14 46 60.0 -420))
-(expect_argument_exn (timestamp 2015 2 29 0 0 0.000 0))
+(expect_argument_error (timestamp 2016 6 6 14))
+(expect_argument_error (timestamp 0 6 6 14 46 4 -420))
+(expect_argument_error (timestamp 10000 6 6 14 46 4 -420))
+(expect_argument_error (timestamp 2016 0 6 14 46 4 -420))
+(expect_argument_error (timestamp 2016 13 6 14 46 4 -420))
+(expect_argument_error (timestamp 2016 6 0 14 46 4 -420))
+(expect_argument_error (timestamp 2016 6 31 14 46 4 -420))
+(expect_argument_error (timestamp 2016 6 6 -1 46 4 -420))
+(expect_argument_error (timestamp 2016 6 6 25 46 4 -420))
+(expect_argument_error (timestamp 2016 6 6 14 -1 4 -420))
+(expect_argument_error (timestamp 2016 6 6 14 60 4 -420))
+(expect_argument_error (timestamp 2016 6 6 14 46 -1 -420))
+(expect_argument_error (timestamp 2016 6 6 14 46 60 -420))
+(expect_argument_error (timestamp 2016 6 6 14 46 60 -1440))
+(expect_argument_error (timestamp 2016 6 6 14 46 60 1440))
+(expect_argument_error (timestamp null))
+(expect_argument_error (timestamp null.int))
+(expect_argument_error (timestamp 2016 6 6 null.int))
+(expect_argument_error (timestamp 2016 6 6 null))
+(expect_argument_error (timestamp "not an int"))
+(expect_argument_error (timestamp [2016, 6, 6, 14, 46, 4]))
+(expect_argument_error (timestamp (sexp 2016 6 6 14 46 4)))
+(expect_argument_error (timestamp 2016 (void) 6))
+(expect_argument_error (timestamp (void) (void) (void) (void) (void) (void) (void)))
+(expect_argument_error (timestamp (void)))
+(expect_argument_error (timestamp 2016 6 6 14 (void)))
+(expect_argument_error (timestamp 2016 6 6 14 (void) (void) -420))
+(expect_argument_error (timestamp 2016 6 6 14 46 -4.539 -420))
+(expect_argument_error (timestamp 2016 6 6 14 46 -0.539 -420))
+(expect_argument_error (timestamp 2016 6 6 14 46 60.0 -420))
+(expect_argument_error (timestamp 2015 2 29 0 0 0.000 0))
 
 // expected use cases
 (check === 2016-07-01T10:07:45.462-07:00 (timestamp 2016 7 1 10 7 45.462 -420))
@@ -209,9 +209,9 @@
 //============================================================================
 // timestamp_at_year
 
-(expect_argument_exn (timestamp_at_year (void)))
-(expect_argument_exn (timestamp_at_year null.timestamp))
-(expect_argument_exn (timestamp_at_year "not a timestamp"))
+(expect_argument_error (timestamp_at_year (void)))
+(expect_argument_error (timestamp_at_year null.timestamp))
+(expect_argument_error (timestamp_at_year "not a timestamp"))
 
 (check === 2016T (timestamp_at_year 2016T))
 (check === 2016T (timestamp_at_year 2016-06-06T16:25:16Z))
@@ -221,9 +221,9 @@
 //============================================================================
 // timestamp_at_month
 
-(expect_argument_exn (timestamp_at_month (void)))
-(expect_argument_exn (timestamp_at_month null.timestamp))
-(expect_argument_exn (timestamp_at_month "not a timestamp"))
+(expect_argument_error (timestamp_at_month (void)))
+(expect_argument_error (timestamp_at_month null.timestamp))
+(expect_argument_error (timestamp_at_month "not a timestamp"))
 
 (check === 2016-01T (timestamp_at_month 2016T))
 
@@ -235,9 +235,9 @@
 //============================================================================
 // timestamp_at_day
 
-(expect_argument_exn (timestamp_at_day (void)))
-(expect_argument_exn (timestamp_at_day null.timestamp))
-(expect_argument_exn (timestamp_at_day "not a timestamp"))
+(expect_argument_error (timestamp_at_day (void)))
+(expect_argument_error (timestamp_at_day null.timestamp))
+(expect_argument_error (timestamp_at_day "not a timestamp"))
 
 (check === 2016-01-01T (timestamp_at_day 2016T))
 (check === 2016-06-01T (timestamp_at_day 2016-06T))
@@ -250,10 +250,10 @@
 //============================================================================
 // timestamp_at_minute
 
-(expect_argument_exn (timestamp_at_minute (void)))
-(expect_argument_exn (timestamp_at_minute null.timestamp))
-(expect_argument_exn (timestamp_at_minute null))
-(expect_argument_exn (timestamp_at_minute "not a timestamp"))
+(expect_argument_error (timestamp_at_minute (void)))
+(expect_argument_error (timestamp_at_minute null.timestamp))
+(expect_argument_error (timestamp_at_minute null))
+(expect_argument_error (timestamp_at_minute "not a timestamp"))
 
 (check === 2016-01-01T00:00-00:00 (timestamp_at_minute 2016T))
 (check === 2016-06-01T00:00-00:00 (timestamp_at_minute 2016-06T))
@@ -266,9 +266,9 @@
 //============================================================================
 // timestamp_at_second
 
-(expect_argument_exn (timestamp_at_second (void)))
-(expect_argument_exn (timestamp_at_second null.timestamp))
-(expect_argument_exn (timestamp_at_second null))
+(expect_argument_error (timestamp_at_second (void)))
+(expect_argument_error (timestamp_at_second null.timestamp))
+(expect_argument_error (timestamp_at_second null))
 
 (check === 2016-01-01T00:00:00-00:00 (timestamp_at_second 2016T))
 (check === 2016-06-01T00:00:00-00:00 (timestamp_at_second 2016-06T))
@@ -281,10 +281,10 @@
 //============================================================================
 // timestamp_year
 
-(expect_argument_exn (timestamp_year (void)))
-(expect_argument_exn (timestamp_year null))
-(expect_argument_exn (timestamp_year null.timestamp))
-(expect_argument_exn (timestamp_year {}))
+(expect_argument_error (timestamp_year (void)))
+(expect_argument_error (timestamp_year null))
+(expect_argument_error (timestamp_year null.timestamp))
+(expect_argument_error (timestamp_year {}))
 
 (check_true (is_truthy (timestamp_year 2016T)))
 
@@ -300,10 +300,10 @@
 //============================================================================
 // timestamp_month
 
-(expect_argument_exn (timestamp_month (void)))
-(expect_argument_exn (timestamp_month null))
-(expect_argument_exn (timestamp_month null.timestamp))
-(expect_argument_exn (timestamp_month {}))
+(expect_argument_error (timestamp_month (void)))
+(expect_argument_error (timestamp_month null))
+(expect_argument_error (timestamp_month null.timestamp))
+(expect_argument_error (timestamp_month {}))
 
 (check_true (is_untruthy (timestamp_month 2016T)))
 (check_true (is_truthy (timestamp_month 2016-05T)))
@@ -319,10 +319,10 @@
 
 //============================================================================
 // timestamp_day
-(expect_argument_exn (timestamp_day (void)))
-(expect_argument_exn (timestamp_day null))
-(expect_argument_exn (timestamp_day null.timestamp))
-(expect_argument_exn (timestamp_day {}))
+(expect_argument_error (timestamp_day (void)))
+(expect_argument_error (timestamp_day null))
+(expect_argument_error (timestamp_day null.timestamp))
+(expect_argument_error (timestamp_day {}))
 
 (check_true (is_untruthy (timestamp_day 2016-05T)))
 (check_true (is_truthy (timestamp_day 2016-05-31T)))
@@ -339,10 +339,10 @@
 //============================================================================
 // timestamp_hour
 
-(expect_argument_exn (timestamp_hour (void)))
-(expect_argument_exn (timestamp_hour null))
-(expect_argument_exn (timestamp_hour null.timestamp))
-(expect_argument_exn (timestamp_hour {}))
+(expect_argument_error (timestamp_hour (void)))
+(expect_argument_error (timestamp_hour null))
+(expect_argument_error (timestamp_hour null.timestamp))
+(expect_argument_error (timestamp_hour {}))
 
 (check_true (is_untruthy (timestamp_hour 2016-05-31T)))
 (check_true (is_truthy (timestamp_hour 2016-05-31T19:18Z)))
@@ -359,10 +359,10 @@
 //============================================================================
 // timestamp_minute
 
-(expect_argument_exn (timestamp_minute (void)))
-(expect_argument_exn (timestamp_minute null))
-(expect_argument_exn (timestamp_minute null.timestamp))
-(expect_argument_exn (timestamp_minute {}))
+(expect_argument_error (timestamp_minute (void)))
+(expect_argument_error (timestamp_minute null))
+(expect_argument_error (timestamp_minute null.timestamp))
+(expect_argument_error (timestamp_minute {}))
 
 (check_true (is_untruthy (timestamp_minute 2016-05-31T)))
 (check_true (is_truthy (timestamp_minute 2016-05-31T19:18Z)))
@@ -379,10 +379,10 @@
 //============================================================================
 // timestamp_second
 
-(expect_argument_exn (timestamp_second (void)))
-(expect_argument_exn (timestamp_second null))
-(expect_argument_exn (timestamp_second null.timestamp))
-(expect_argument_exn (timestamp_second {}))
+(expect_argument_error (timestamp_second (void)))
+(expect_argument_error (timestamp_second null))
+(expect_argument_error (timestamp_second null.timestamp))
+(expect_argument_error (timestamp_second {}))
 
 (check_true (is_untruthy (timestamp_second 2016-05-31T19:18Z)))
 (check_true (is_truthy (timestamp_second 2016-05-31T19:18:06Z)))
@@ -399,18 +399,18 @@
 //============================================================================
 // timestamp_with_offset
 
-(expect_argument_exn (timestamp_with_offset (void) 60))
-(expect_argument_exn (timestamp_with_offset null 60))
-(expect_argument_exn (timestamp_with_offset null.timestamp 60))
-(expect_argument_exn (timestamp_with_offset "not a timestamp" 60))
-(expect_argument_exn (timestamp_with_offset 2016-04-01T16:20:01+07:00 null))
-(expect_argument_exn (timestamp_with_offset 2016-04-01T16:20:01+07:00 {}))
-(expect_argument_exn (timestamp_with_offset 2016-04-01T16:20:01+07:00 null.int))
-(expect_argument_exn (timestamp_with_offset 2016-04-01T16:20:01+07:00 1440))
-(expect_argument_exn (timestamp_with_offset 2016-04-01T16:20:01+07:00 -1440))
+(expect_argument_error (timestamp_with_offset (void) 60))
+(expect_argument_error (timestamp_with_offset null 60))
+(expect_argument_error (timestamp_with_offset null.timestamp 60))
+(expect_argument_error (timestamp_with_offset "not a timestamp" 60))
+(expect_argument_error (timestamp_with_offset 2016-04-01T16:20:01+07:00 null))
+(expect_argument_error (timestamp_with_offset 2016-04-01T16:20:01+07:00 {}))
+(expect_argument_error (timestamp_with_offset 2016-04-01T16:20:01+07:00 null.int))
+(expect_argument_error (timestamp_with_offset 2016-04-01T16:20:01+07:00 1440))
+(expect_argument_error (timestamp_with_offset 2016-04-01T16:20:01+07:00 -1440))
 
-(expect_argument_exn (timestamp_with_offset 2016-03-30T 60))
-(expect_argument_exn (timestamp_with_offset 2016-03-30T (void)))
+(expect_argument_error (timestamp_with_offset 2016-03-30T 60))
+(expect_argument_error (timestamp_with_offset 2016-03-30T (void)))
 
 (check === 2016-03-29T19:41Z (timestamp_with_offset 2016-03-29T12:41-07:00 0))
 (check === 2016-03-30T02:41:22Z (timestamp_with_offset 2016-03-29T19:41:22-07:00 0))
@@ -422,17 +422,17 @@
 //============================================================================
 // timestamp_put_offset
 
-(expect_argument_exn (timestamp_put_offset (void) 0))
-(expect_argument_exn (timestamp_put_offset null 0))
-(expect_argument_exn (timestamp_put_offset null.timestamp 0))
-(expect_argument_exn (timestamp_put_offset 2016-06-09T14:08:44Z null))
-(expect_argument_exn (timestamp_put_offset 2016-06-09T14:08:44Z null.int))
-(expect_argument_exn (timestamp_put_offset 2016-06-09T14:08:44Z 1440))
-(expect_argument_exn (timestamp_put_offset 2016-06-09T14:08:44Z -1440))
-(expect_argument_exn (timestamp_put_offset 2016-06-09T 0))
-(expect_argument_exn (timestamp_put_offset 2016-06-09T (void)))
-(expect_argument_exn (timestamp_put_offset 2016-06-09T14:08:44Z -420.))
-(expect_argument_exn (timestamp_put_offset 2016-06-09T14:08:44Z "-420"))
+(expect_argument_error (timestamp_put_offset (void) 0))
+(expect_argument_error (timestamp_put_offset null 0))
+(expect_argument_error (timestamp_put_offset null.timestamp 0))
+(expect_argument_error (timestamp_put_offset 2016-06-09T14:08:44Z null))
+(expect_argument_error (timestamp_put_offset 2016-06-09T14:08:44Z null.int))
+(expect_argument_error (timestamp_put_offset 2016-06-09T14:08:44Z 1440))
+(expect_argument_error (timestamp_put_offset 2016-06-09T14:08:44Z -1440))
+(expect_argument_error (timestamp_put_offset 2016-06-09T 0))
+(expect_argument_error (timestamp_put_offset 2016-06-09T (void)))
+(expect_argument_error (timestamp_put_offset 2016-06-09T14:08:44Z -420.))
+(expect_argument_error (timestamp_put_offset 2016-06-09T14:08:44Z "-420"))
 
 (check === 2016-06-09T14:08:44-07:00 (timestamp_put_offset 2016-06-09T14:08:44Z -420))
 (check === 2016-06-09T14:08:44Z (timestamp_put_offset 2016-06-09T14:08:44-07:00 0))
@@ -446,11 +446,11 @@
 //============================================================================
 // timestamp_offset
 
-(expect_argument_exn (timestamp_offset (void)))
-(expect_argument_exn (timestamp_offset null))
-(expect_argument_exn (timestamp_offset null.timestamp))
-(expect_argument_exn (timestamp_offset {}))
-(expect_argument_exn (timestamp_offset "2016-03-29T19:41:22-07:00"))
+(expect_argument_error (timestamp_offset (void)))
+(expect_argument_error (timestamp_offset null))
+(expect_argument_error (timestamp_offset null.timestamp))
+(expect_argument_error (timestamp_offset {}))
+(expect_argument_error (timestamp_offset "2016-03-29T19:41:22-07:00"))
 
 
 (check === (void) (timestamp_offset 2016T))

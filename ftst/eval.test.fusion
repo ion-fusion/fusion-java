@@ -36,7 +36,7 @@
 (check === 2
   (eval (quote (. {f:2} "f")) ns))
 
-(expect_argument_exn
+(expect_argument_error
   (eval (void)))
 
 (eval (quote (define top 17220)) ns)

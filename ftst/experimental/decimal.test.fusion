@@ -66,8 +66,8 @@
 (check ===          "-1.23456789012345678901234567890"
   (decimal_to_string -1.23456789012345678901234567890))
 
-(expect_argument_exn (decimal_to_string 1))
-(expect_argument_exn (decimal_to_string "1"))
+(expect_argument_error (decimal_to_string 1))
+(expect_argument_error (decimal_to_string "1"))
 
 //============================================================================
 // string_to_decimal
@@ -99,11 +99,11 @@
 (check ===            -1.23456789012345678901234567890
   (string_to_decimal "-1.23456789012345678901234567890"))
 
-(expect_argument_exn (string_to_decimal ""))
-(expect_argument_exn (string_to_decimal " 0.0"))
-(expect_argument_exn (string_to_decimal "0.0 "))
-(expect_argument_exn (string_to_decimal " 0.0 "))
-(expect_argument_exn (string_to_decimal "0.0-"))
-(expect_argument_exn (string_to_decimal "0.0,"))
-(expect_argument_exn (string_to_decimal "+1.0"))
-(expect_argument_exn (string_to_decimal "--1.0"))
+(expect_argument_error (string_to_decimal ""))
+(expect_argument_error (string_to_decimal " 0.0"))
+(expect_argument_error (string_to_decimal "0.0 "))
+(expect_argument_error (string_to_decimal " 0.0 "))
+(expect_argument_error (string_to_decimal "0.0-"))
+(expect_argument_error (string_to_decimal "0.0,"))
+(expect_argument_error (string_to_decimal "+1.0"))
+(expect_argument_error (string_to_decimal "--1.0"))

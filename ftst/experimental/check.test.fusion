@@ -195,10 +195,10 @@
 //==========================================================================
 // expect_argument_error
 
-(expect_argument_exn
+(expect_argument_error
   (raise_argument_error "here" "truth and beauty" -1 "ugliness"))
 
-(expect_argument_exn (bad_argument))
+(expect_argument_error (bad_argument))
 
 
 // Inheritance
@@ -210,8 +210,8 @@
 
 
 // Malformed uses
-(expect_syntax_error (expect_argument_exn))
-(expect_syntax_error (expect_argument_exn true "message" "extra"))
+(expect_syntax_error (expect_argument_error))
+(expect_syntax_error (expect_argument_error true "message" "extra"))
 
 
 //==========================================================================

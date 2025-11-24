@@ -148,10 +148,10 @@
 (check_mod annotate (quote x::{f:1}) ["a", "b"] (quote a::b::{f:1}))
 
 
-(expect_argument_exn (annotate null.struct null))
-(expect_argument_exn (annotate null.struct null.string))
-(expect_argument_exn (annotate null.struct (quote null.symbol)))
-(expect_argument_exn (annotate null.struct 12))
+(expect_argument_error (annotate null.struct null))
+(expect_argument_error (annotate null.struct null.string))
+(expect_argument_error (annotate null.struct (quote null.symbol)))
+(expect_argument_error (annotate null.struct 12))
 
 
 //==========================================================================
@@ -252,13 +252,13 @@
 (expect_arity_exn (put_m {}))
 (expect_arity_exn (put_m {} "f"))
 
-(expect_argument_exn (put   [] "f" 1))
-(expect_argument_exn (put   {} null.string 1))
-(expect_argument_exn (put   {} (quote null.symbol) 1))
+(expect_argument_error (put   [] "f" 1))
+(expect_argument_error (put   {} null.string 1))
+(expect_argument_error (put   {} (quote null.symbol) 1))
 
-(expect_argument_exn (put_m [] "f" 1))
-(expect_argument_exn (put_m {} null.string 1))
-(expect_argument_exn (put_m {} (quote null.symbol) 1))
+(expect_argument_error (put_m [] "f" 1))
+(expect_argument_error (put_m {} null.string 1))
+(expect_argument_error (put_m {} (quote null.symbol) 1))
 
 
 //==========================================================================
@@ -447,7 +447,7 @@
 (check_unzip {a:1,'':2} (quote ['',a]) [2,1])
 
 
-(expect_argument_exn (struct_unzip []))
+(expect_argument_error (struct_unzip []))
 
 
 //==========================================================================
@@ -483,13 +483,13 @@
 (expect_arity_exn (        struct_zip ["f"]))
 (expect_arity_exn (mutable_struct_zip ["f"]))
 
-(expect_argument_exn (        struct_zip  "f"  [3]))
-(expect_argument_exn (mutable_struct_zip  "f"  [3]))
-(expect_argument_exn (        struct_zip ["f"]  3 ))
-(expect_argument_exn (mutable_struct_zip ["f"]  3 ))
+(expect_argument_error (        struct_zip  "f"  [3]))
+(expect_argument_error (mutable_struct_zip  "f"  [3]))
+(expect_argument_error (        struct_zip ["f"]  3 ))
+(expect_argument_error (mutable_struct_zip ["f"]  3 ))
 
-(expect_argument_exn (struct_zip [null.string] [0]))
-(expect_argument_exn (struct_zip (quote [null.symbol]) [0]))
+(expect_argument_error (struct_zip [null.string] [0]))
+(expect_argument_error (struct_zip (quote [null.symbol]) [0]))
 
 
 //==========================================================================
@@ -701,4 +701,4 @@
 (check_iter {a:1,a:2}     (quote [[a,1],[a,2]]))
 (check_iter {a:1,b:3,a:2} (quote [[b,3],[a,1],[a,2]]))
 
-(expect_argument_exn (struct_iterator []))
+(expect_argument_error (struct_iterator []))

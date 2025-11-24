@@ -43,9 +43,9 @@
 (check === "body"
   (call_with_handler (|e bad| e) (|| "body")))
 
-(expect_argument_exn
+(expect_argument_error
   (call_with_handler "not a proc" (|| "body")))
-(expect_argument_exn
+(expect_argument_error
   (call_with_handler (|e| e) "not a proc"))
 
 

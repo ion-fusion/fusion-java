@@ -48,10 +48,10 @@
 (expect_arity_exn (ceiling))
 (expect_arity_exn (ceiling 0 1))
 
-(expect_argument_exn (ceiling null.int))
-(expect_argument_exn (ceiling null.decimal))
-(expect_argument_exn (ceiling 1e0))
-(expect_argument_exn (ceiling "1"))
+(expect_argument_error (ceiling null.int))
+(expect_argument_error (ceiling null.decimal))
+(expect_argument_error (ceiling 1e0))
+(expect_argument_error (ceiling "1"))
 
 
 //============================================================================
@@ -70,10 +70,10 @@
 (expect_arity_exn (floor))
 (expect_arity_exn (floor 0 1))
 
-(expect_argument_exn (floor null.int))
-(expect_argument_exn (floor null.decimal))
-(expect_argument_exn (floor 1e0))
-(expect_argument_exn (floor "1"))
+(expect_argument_error (floor null.int))
+(expect_argument_error (floor null.decimal))
+(expect_argument_error (floor 1e0))
+(expect_argument_error (floor "1"))
 
 
 //============================================================================
@@ -88,8 +88,8 @@
 (check ===     "-123456789012345678901234567890"
  (int_to_string -123456789012345678901234567890))
 
-(expect_argument_exn (int_to_string 1.))
-(expect_argument_exn (int_to_string "1"))
+(expect_argument_error (int_to_string 1.))
+(expect_argument_error (int_to_string "1"))
 
 
 //============================================================================
@@ -104,17 +104,17 @@
 (check ===        -123456789012345678901234567890
   (string_to_int "-123456789012345678901234567890"))
 
-(expect_argument_exn (string_to_int ""))
-(expect_argument_exn (string_to_int " 0"))
-(expect_argument_exn (string_to_int "0 "))
-(expect_argument_exn (string_to_int " 0 "))
-(expect_argument_exn (string_to_int "0-"))
-(expect_argument_exn (string_to_int "0,"))
-(expect_argument_exn (string_to_int "+1"))
-(expect_argument_exn (string_to_int "--1"))
+(expect_argument_error (string_to_int ""))
+(expect_argument_error (string_to_int " 0"))
+(expect_argument_error (string_to_int "0 "))
+(expect_argument_error (string_to_int " 0 "))
+(expect_argument_error (string_to_int "0-"))
+(expect_argument_error (string_to_int "0,"))
+(expect_argument_error (string_to_int "+1"))
+(expect_argument_error (string_to_int "--1"))
 
-(expect_argument_exn (string_to_int "1."))
-(expect_argument_exn (string_to_int "1.0"))
+(expect_argument_error (string_to_int "1."))
+(expect_argument_error (string_to_int "1.0"))
 
 
 //============================================================================
@@ -137,11 +137,11 @@
 (check === 0.  (decimal 0.0e0 1))
 (check === 0.  (decimal -0.0e0 1))
 
-(expect_argument_exn (decimal 2.05e0 null.int))
-(expect_argument_exn (decimal null.blob))
-(expect_argument_exn (decimal nan))
-(expect_argument_exn (decimal +inf))
-(expect_argument_exn (decimal -inf))
+(expect_argument_error (decimal 2.05e0 null.int))
+(expect_argument_error (decimal null.blob))
+(expect_argument_error (decimal nan))
+(expect_argument_error (decimal +inf))
+(expect_argument_error (decimal -inf))
 
 //============================================================================
 /* This function implements a quick access to java.util.Random java object. A PRNG testing is not required for

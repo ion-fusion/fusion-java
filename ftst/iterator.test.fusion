@@ -52,9 +52,9 @@
 (expect_arity_exn (sexp_iterator))
 (expect_arity_exn (sexp_iterator (sexp) 1))
 
-(expect_argument_exn (sexp_iterator null))
-(expect_argument_exn (sexp_iterator null.list))
-(expect_argument_exn (sexp_iterator []))
+(expect_argument_error (sexp_iterator null))
+(expect_argument_error (sexp_iterator null.list))
+(expect_argument_error (sexp_iterator []))
 
 (check_iter []              (sexp_iterator (quote null.sexp)))
 (check_iter []              (sexp_iterator (sexp)))
@@ -96,9 +96,9 @@
   (check === 2 (iterator_next i))
   (expect_contract_exn (iterator_next i)))
 
-(expect_argument_exn
+(expect_argument_error
   (iterator_choose true empty_iterator))     // 1st arg not a proc
-(expect_argument_exn
+(expect_argument_error
   (iterator_choose identity []))             // 2nd arg not an iterator
 
 
@@ -116,9 +116,9 @@
 (check_iter []     (iterator_map plus1 empty_iterator))
 (check_iter [2, 8] (iterator_map plus1 (list_iterator [1, 7])))
 
-(expect_argument_exn
+(expect_argument_error
   (iterator_map true empty_iterator))     // 1st arg not a proc
-(expect_argument_exn
+(expect_argument_error
   (iterator_map identity []))             // 2nd arg not an iterator
 
 
@@ -139,9 +139,9 @@
   (check === 3 (iterator_next i))
   (expect_contract_exn (iterator_next i)))
 
-(expect_argument_exn
+(expect_argument_error
   (iterator_map_splicing true empty_iterator))     // 1st arg not a proc
-(expect_argument_exn
+(expect_argument_error
   (iterator_map_splicing identity []))             // 2nd arg not an iterator
 
 // Proc doesn't return an iterator

@@ -121,8 +121,8 @@
 (expect_arity_exn (tail))
 (expect_arity_exn (tail (pair 1 2) 3))
 
-(expect_argument_exn (head VOID))
-(expect_argument_exn (tail VOID))
+(expect_argument_error (head VOID))
+(expect_argument_error (tail VOID))
 
 
 //==========================================================================
@@ -160,10 +160,10 @@
 (check_mod_f annotate (quote x::(1)) ["a", "b"] (quote a::b::(1)))
 
 
-(expect_argument_exn (annotate NULL_SEXP null))
-(expect_argument_exn (annotate NULL_SEXP null.string))
-(expect_argument_exn (annotate NULL_SEXP (quote null.symbol)))
-(expect_argument_exn (annotate NULL_SEXP 12))
+(expect_argument_error (annotate NULL_SEXP null))
+(expect_argument_error (annotate NULL_SEXP null.string))
+(expect_argument_error (annotate NULL_SEXP (quote null.symbol)))
+(expect_argument_error (annotate NULL_SEXP 12))
 
 
 //==========================================================================
@@ -202,8 +202,8 @@
 (check === 1 (first (quote (1))))
 (check === 1 (first (sexp 1 2)))
 
-(expect_argument_exn (first (quote null.sexp)))
-(expect_argument_exn (first (sexp)))
+(expect_argument_error (first (quote null.sexp)))
+(expect_argument_error (first (sexp)))
 
 
 //==========================================================================
@@ -212,8 +212,8 @@
 (check === 1 (last (quote (1))))
 (check === 2 (last (sexp 1 2)))
 
-(expect_argument_exn (last (quote null.sexp)))
-(expect_argument_exn (last (sexp)))
+(expect_argument_error (last (quote null.sexp)))
+(expect_argument_error (last (sexp)))
 
 
 //==========================================================================
@@ -338,7 +338,7 @@
 (check === 2 (size (sexp 1 51)))
 (check === 2 (size (pair 1 (pair 2 (quote ())))))
 
-(expect_argument_exn (size (pair 1 215)))
+(expect_argument_error (size (pair 1 215)))
 
 
 //==========================================================================
@@ -375,8 +375,8 @@
 (check === (sexp 1 2)
   (sexp_append (sexp 1) (sexp 2)))
 
-(expect_argument_exn (sexp_append (sexp) (list)))
-(expect_argument_exn (sexp_append (list) (sexp)))
+(expect_argument_error (sexp_append (sexp) (list)))
+(expect_argument_error (sexp_append (list) (sexp)))
 
 // TODO test annotations
 

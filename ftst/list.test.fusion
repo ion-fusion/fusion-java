@@ -168,10 +168,10 @@
 (check_mod_f annotate (quote x::[1]) ["a", "b"] (quote a::b::[1]))
 
 
-(expect_argument_exn (annotate null.list null))
-(expect_argument_exn (annotate null.list null.string))
-(expect_argument_exn (annotate null.list (quote null.symbol)))
-(expect_argument_exn (annotate null.list 12))
+(expect_argument_error (annotate null.list null))
+(expect_argument_error (annotate null.list null.string))
+(expect_argument_error (annotate null.list (quote null.symbol)))
+(expect_argument_error (annotate null.list 12))
 
 
 //==========================================================================
@@ -256,9 +256,9 @@
 (check_true ((list_element (stretchy_list F T) 1)))
 
 // Bad arguments
-(expect_argument_exn (list_element (sexp 1) 0))
-(expect_argument_exn (list_element [1,2] null.int))
-(expect_argument_exn (list_element [1,2] 3))
+(expect_argument_error (list_element (sexp 1) 0))
+(expect_argument_error (list_element [1,2] null.int))
+(expect_argument_error (list_element [1,2] 3))
 
 
 //==========================================================================
@@ -275,10 +275,10 @@
    v))
 
 
-(expect_argument_exn (list_set (sexp 1) 0 null))
-(expect_argument_exn (list_set [0] 0 null))       // list not mutable
-(expect_argument_exn (list_set (mutable_list 1) "0" null))  // non-int pos
-(expect_argument_exn (list_set (mutable_list 1) 2 null))    // out of range
+(expect_argument_error (list_set (sexp 1) 0 null))
+(expect_argument_error (list_set [0] 0 null))       // list not mutable
+(expect_argument_error (list_set (mutable_list 1) "0" null))  // non-int pos
+(expect_argument_error (list_set (mutable_list 1) 2 null))    // out of range
 
 
 //==========================================================================
@@ -348,7 +348,7 @@
 (check_add_m unsafe_list_add_m unsafe_list_add (stretchy_list))
 
 
-(expect_argument_exn (add_m NULL_SEXP 2))
+(expect_argument_error (add_m NULL_SEXP 2))
 
 
 (define str (stretchy_list 1 2))
@@ -451,9 +451,9 @@
 (check === 1 (first [1]))
 (check === 1 (first [1, 2]))
 
-(expect_argument_exn (first null.list))
-(expect_argument_exn (first []))
-(expect_argument_exn (first "boeing"))
+(expect_argument_error (first null.list))
+(expect_argument_error (first []))
+(expect_argument_error (first "boeing"))
 
 
 //==========================================================================
@@ -466,8 +466,8 @@
 (check === 1 (last [1]))
 (check === 2 (last [1, 2]))
 
-(expect_argument_exn (last []))
-(expect_argument_exn (last "boeing"))
+(expect_argument_error (last []))
+(expect_argument_error (last "boeing"))
 
 
 //==========================================================================
