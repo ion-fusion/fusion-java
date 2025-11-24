@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 (require
-  "/fusion/experimental/altlambda"
   "/fusion/experimental/check"
   "/fusion/experimental/ref"
   "/testutils")

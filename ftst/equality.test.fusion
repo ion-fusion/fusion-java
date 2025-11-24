@@ -3,7 +3,6 @@
 
 (require
   "/ftst/symbol"
-  "/fusion/experimental/altlambda"
   "/fusion/experimental/check"
   "/fusion/list"
   "/fusion/struct"
