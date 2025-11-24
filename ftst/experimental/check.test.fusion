@@ -69,9 +69,9 @@
 
 
 // Malformed uses
-(expect_syntax_exn (check_same))
-(expect_syntax_exn (check_same 1))
-(expect_syntax_exn (check_same 1 2 "msg" "extra"))
+(expect_syntax_error (check_same))
+(expect_syntax_error (check_same 1))
+(expect_syntax_error (check_same 1 2 "msg" "extra"))
 
 
 //==========================================================================
@@ -90,7 +90,7 @@
 
 
 // Malformed uses
-(expect_syntax_exn (check_annotations 2))
+(expect_syntax_error (check_annotations 2))
 
 
 //==========================================================================
@@ -99,13 +99,13 @@
 (define_check (check_foo0) 1)
 (check_foo0)
 (check_foo0 "message")
-(expect_syntax_exn (check_foo0 "message" "extra"))
+(expect_syntax_error (check_foo0 "message" "extra"))
 
 (define_check (check_foo1 arg) 1)
 (check_foo1 1)
 (check_foo1 1 "message")
-(expect_syntax_exn (check_foo1))
-(expect_syntax_exn (check_foo1 1 "message" "extra"))
+(expect_syntax_error (check_foo1))
+(expect_syntax_error (check_foo1 1 "message" "extra"))
 
 
 (define_check (check_doc) "documentation" true)
@@ -118,14 +118,14 @@
 
 
 // Malformed uses
-(expect_syntax_exn (define_check))
-(expect_syntax_exn (define_check () 1))
-(expect_syntax_exn (define_check [check_foo] 1))
-(expect_syntax_exn (define_check ("check_foo") 1))
-(expect_syntax_exn (define_check ((check_foo)) 1))
-(expect_syntax_exn (define_check (check_foo "arg") 1))
-(expect_syntax_exn (define_check (check_foo "arg" arg) 1))
-(expect_syntax_exn (define_check (check_foo arg "arg" arg) 1))
+(expect_syntax_error (define_check))
+(expect_syntax_error (define_check () 1))
+(expect_syntax_error (define_check [check_foo] 1))
+(expect_syntax_error (define_check ("check_foo") 1))
+(expect_syntax_error (define_check ((check_foo)) 1))
+(expect_syntax_error (define_check (check_foo "arg") 1))
+(expect_syntax_error (define_check (check_foo "arg" arg) 1))
+(expect_syntax_error (define_check (check_foo arg "arg" arg) 1))
 
 
 //==========================================================================
@@ -136,14 +136,14 @@
 
 
 // Malformed uses
-(expect_syntax_exn (define_simple_check))
-(expect_syntax_exn (define_simple_check () 1))
-(expect_syntax_exn (define_simple_check [check_foo] 1))
-(expect_syntax_exn (define_simple_check ("check_foo") 1))
-(expect_syntax_exn (define_simple_check ((check_foo)) 1))
-(expect_syntax_exn (define_simple_check (check_foo "arg") 1))
-(expect_syntax_exn (define_simple_check (check_foo "arg" arg) 1))
-(expect_syntax_exn (define_simple_check (check_foo arg "arg" arg) 1))
+(expect_syntax_error (define_simple_check))
+(expect_syntax_error (define_simple_check () 1))
+(expect_syntax_error (define_simple_check [check_foo] 1))
+(expect_syntax_error (define_simple_check ("check_foo") 1))
+(expect_syntax_error (define_simple_check ((check_foo)) 1))
+(expect_syntax_error (define_simple_check (check_foo "arg") 1))
+(expect_syntax_error (define_simple_check (check_foo "arg" arg) 1))
+(expect_syntax_error (define_simple_check (check_foo arg "arg" arg) 1))
 
 
 //==========================================================================
@@ -155,17 +155,17 @@
 
 
 // Malformed uses
-(expect_syntax_exn (define_binary_check))
-(expect_syntax_exn (define_binary_check () 1))
-(expect_syntax_exn (define_binary_check [check_foo] 1))
-(expect_syntax_exn (define_binary_check ("check_foo") 1))
-(expect_syntax_exn (define_binary_check ((check_foo)) 1))
-(expect_syntax_exn (define_binary_check (check_foo "arg") 1))
-(expect_syntax_exn (define_binary_check (check_foo "arg" arg) 1))
-(expect_syntax_exn (define_binary_check (check_foo arg "arg" arg) 1))
+(expect_syntax_error (define_binary_check))
+(expect_syntax_error (define_binary_check () 1))
+(expect_syntax_error (define_binary_check [check_foo] 1))
+(expect_syntax_error (define_binary_check ("check_foo") 1))
+(expect_syntax_error (define_binary_check ((check_foo)) 1))
+(expect_syntax_error (define_binary_check (check_foo "arg") 1))
+(expect_syntax_error (define_binary_check (check_foo "arg" arg) 1))
+(expect_syntax_error (define_binary_check (check_foo arg "arg" arg) 1))
 
-(expect_syntax_exn (define_binary_check expected) 1)
-(expect_syntax_exn (define_binary_check expected actual extra) 1)
+(expect_syntax_error (define_binary_check expected) 1)
+(expect_syntax_error (define_binary_check expected actual extra) 1)
 
 
 //==========================================================================
@@ -188,8 +188,8 @@
 
 
 // Malformed uses
-(expect_syntax_exn (expect_check_exn))
-(expect_syntax_exn (expect_check_exn true "message" "extra"))
+(expect_syntax_error (expect_check_exn))
+(expect_syntax_error (expect_check_exn true "message" "extra"))
 
 
 //==========================================================================
@@ -210,8 +210,8 @@
 
 
 // Malformed uses
-(expect_syntax_exn (expect_argument_exn))
-(expect_syntax_exn (expect_argument_exn true "message" "extra"))
+(expect_syntax_error (expect_argument_exn))
+(expect_syntax_error (expect_argument_exn true "message" "extra"))
 
 
 //==========================================================================
@@ -231,8 +231,8 @@
 
 
 // Malformed uses
-(expect_syntax_exn (expect_arity_exn))
-(expect_syntax_exn (expect_arity_exn true "message" "extra"))
+(expect_syntax_error (expect_arity_exn))
+(expect_syntax_error (expect_arity_exn true "message" "extra"))
 
 
 //==========================================================================
@@ -252,8 +252,8 @@
 
 
 // Malformed uses
-(expect_syntax_exn (expect_result_exn))
-(expect_syntax_exn (expect_result_exn true "message" "extra"))
+(expect_syntax_error (expect_result_exn))
+(expect_syntax_error (expect_result_exn true "message" "extra"))
 
 
 //==========================================================================
@@ -277,16 +277,16 @@
 
 
 // Malformed uses
-(expect_syntax_exn (expect_contract_exn))
-(expect_syntax_exn (expect_contract_exn true "message" "extra"))
+(expect_syntax_error (expect_contract_exn))
+(expect_syntax_error (expect_contract_exn true "message" "extra"))
 
 
 //==========================================================================
 // expect_syntax_error
 
-(expect_syntax_exn (wrong_syntax (quote_syntax foo) "you are wrong"))
+(expect_syntax_error (wrong_syntax (quote_syntax foo) "you are wrong"))
 
-(expect_syntax_exn (lambda))
+(expect_syntax_error (lambda))
 
 
 // Inheritance
@@ -297,8 +297,8 @@
 
 
 // Malformed uses
-(expect_syntax_exn (expect_syntax_exn))
-(expect_syntax_exn (expect_syntax_exn true "message" "extra"))
+(expect_syntax_error (expect_syntax_error))
+(expect_syntax_error (expect_syntax_error true "message" "extra"))
 
 
 //==========================================================================
@@ -316,8 +316,8 @@
 
 
 // Malformed uses
-(expect_syntax_exn (expect_any_exn))
-(expect_syntax_exn (expect_any_exn true "message" "extra"))
+(expect_syntax_error (expect_any_exn))
+(expect_syntax_error (expect_any_exn true "message" "extra"))
 
 
 "SUCCESS (check.test)"

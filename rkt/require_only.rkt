@@ -42,11 +42,11 @@
 "============================================================================"
 "Importing an identifier that's not provided by the given module"
 
-(expect_syntax_exn
+(expect_syntax_error
   (require (only_in 'M1 three)))
 (expect_variable_exn three)
 
-(expect_syntax_exn
+(expect_syntax_error
   (module Fails racket
     (require "fusion.rkt")
     (require (only_in 'M1 three))))
@@ -60,13 +60,13 @@
          (only_in 'M2 one))
 (check === "M2 1" one)
 
-(expect_syntax_exn
+(expect_syntax_error
   (module Fails racket
     (require "fusion.rkt")
     (require (only_in 'M1 one))
     (require (only_in 'M2 one))))
 
-(expect_syntax_exn
+(expect_syntax_error
   (module Fails racket
     (require "fusion.rkt")
     (require (only_in 'M1 one)

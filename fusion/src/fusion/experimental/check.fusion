@@ -584,7 +584,7 @@ another kind of exception is thrown, then the check fails.''')))]
   (define_exn_check expect_result_error   is_result_error   "result_error")
 
   // NOT PUBLIC! Only used by the public version below.
-  (define_exn_check _expect_syntax_exn  is_syntax_error   false /*skip frame*/)
+  (define_exn_check _expect_syntax_error  is_syntax_error   false /*skip frame*/)
 
   (defpub_syntax expect_syntax_error
     '''
@@ -622,13 +622,13 @@ but do this instead:
           (datum_to_syntax
             // (parameterize
             //   [(check_stack_param (quote META))]
-            //   (_expect_syntax_exn (eval (quote_syntax TOP)) [MESSAGE]))
+            //   (_expect_syntax_error (eval (quote_syntax TOP)) [MESSAGE]))
             (sexp
               (quote_syntax parameterize)
               [(sexp (quote_syntax check_stack_param)
                      (sexp (quote_syntax quote) meta))]
               (apply sexp
-                (quote_syntax _expect_syntax_exn)
+                (quote_syntax _expect_syntax_error)
                 (sexp (quote_syntax eval)
                   (sexp (quote_syntax quote_syntax) top_form))
                 (tail actuals)))

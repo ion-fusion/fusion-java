@@ -121,17 +121,17 @@
     (raise "fail")))
 
 // Verify that a handler must be specified in the pred-handler tuple.
-(expect_syntax_exn
+(expect_syntax_error
   (with_handlers
     [(catch_all),]
     (raise "foo")))
 
 // Verify that the form requires at least 2 arguments
-(expect_syntax_exn
+(expect_syntax_error
   (with_handlers "foo"))
 
 // Verify that the form requires a sequence as the second argument.
-(expect_syntax_exn
+(expect_syntax_error
   (with_handlers "foo" (raise "foo")))
 
 // Verify that predicates only accept one argument.

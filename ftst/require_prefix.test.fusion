@@ -17,7 +17,7 @@
 (require (prefix_in M1_symbol_prefix_in__ M1))
 (check === "from M1" M1_symbol_prefix_in__m1_binding)
 
-(expect_syntax_exn m1_binding)
+(expect_syntax_error m1_binding)
 
 
 // ============================================================================
@@ -35,7 +35,7 @@
 // Module using prefix_in cannot refer to un-prefixed bindings
 
 
-(expect_syntax_exn
+(expect_syntax_error
   (module M3 "/fusion"
     (require "/fusion/experimental/check")
     (require (prefix_in M3_prefix_in__ M1))
@@ -88,12 +88,12 @@
   (define foo_bar 7)
   (provide foo_bar))
 
-(expect_syntax_exn
+(expect_syntax_error
   (module M8 "/fusion"
     (require (prefix_in foo_ M6))
     (require M7)))
 
-(expect_syntax_exn
+(expect_syntax_error
   (module M9 "/fusion"
     (require M7)
     (require (prefix_in foo_ M6))))
@@ -103,7 +103,7 @@
 // Module fails to export an imported module's exported binding if it has been prefixed
 
 
-(expect_syntax_exn
+(expect_syntax_error
   (module M10 "/fusion"
     (require (prefix_in M10_prefix_in__ M1))
 

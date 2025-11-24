@@ -15,7 +15,7 @@
 (require (rename_in M1 (m1_binding renamed_m1_binding)))
 (check === "from M1" renamed_m1_binding)
 
-(expect_syntax_exn m1_binding)
+(expect_syntax_error m1_binding)
 
 
 // ============================================================================
@@ -32,11 +32,11 @@
 // Module using rename_in cannot refer to un-renamed bindings
 
 
-(expect_syntax_exn
+(expect_syntax_error
   (module M3 "/fusion"
     (require "/fusion/experimental/check")
     (require (rename_in M1 (m1_binding M3_renamed_m1_binding)))
-    
+
     m1_binding))
 
 
@@ -113,12 +113,12 @@
   (define foo_bar 9)
   (provide foo_bar))
 
-(expect_syntax_exn
+(expect_syntax_error
   (module M10 "/fusion"
     (require (rename_in M8 (bar foo_bar)))
     (require M9)))
 
-(expect_syntax_exn
+(expect_syntax_error
   (module M11 "/fusion"
     (require M9)
     (require (rename_in M8 (bar foo_bar)))))
@@ -128,7 +128,7 @@
 // Module fails to export an imported module's exported binding if it was renamed
 
 
-(expect_syntax_exn
+(expect_syntax_error
   (module M12 "/fusion"
     (require (rename_in M1 (m1_binding M12_renamed_m1_binding)))
 
@@ -168,10 +168,10 @@
   (define binding_2 2)
   (provide binding_1 binding_2))
 
-(expect_syntax_exn
+(expect_syntax_error
   (require (rename_in M16 (binding_1 same_binding) (binding_2 same_binding))))
 
-(expect_syntax_exn
+(expect_syntax_error
   (module M17 "/fusion"
     (require (rename_in M16 (binding_1 same_binding) (binding_2 same_binding)))))
 
@@ -202,4 +202,4 @@
 // assert that we didn't import any bindings provided by M1
 
 
-(expect_syntax_exn m1_binding)
+(expect_syntax_error m1_binding)

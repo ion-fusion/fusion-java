@@ -11,7 +11,7 @@
 
 (require "/fusion/experimental/check")
 
-(expect_syntax_exn
+(expect_syntax_error
   (module fails "/fusion"
     (require local1)
     (require local2) // Fails because `ambiguous` is ambiguous

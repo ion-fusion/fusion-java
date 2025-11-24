@@ -22,15 +22,15 @@
 
 
 // Duplicate bound names
-(expect_syntax_exn
+(expect_syntax_error
   (lambda (x x) true))
-(expect_syntax_exn
+(expect_syntax_error
   (lambda (x a b c x) true))
 
 // Null/Empty bound name
-(expect_syntax_exn
+(expect_syntax_error
   (lambda (null.symbol) true))
-(expect_syntax_exn
+(expect_syntax_error
   (lambda ('') true))
 
 // Regression tests for an ancient defect:

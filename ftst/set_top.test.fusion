@@ -7,7 +7,7 @@
 // TODO Mutating an undefined top-level binding should throw contract exn at
 //      runtime, not a syntax error at compile-time.
 //      But it doesn't matter until we implement top-level mutation.
-(expect_syntax_exn
+(expect_syntax_error
   (set unbound "outside"))
 
 
@@ -19,10 +19,10 @@
 (define our_size size)
 
 
-(expect_syntax_exn
+(expect_syntax_error
   (set size "fail"))
 
-(expect_syntax_exn
+(expect_syntax_error
   (module Fail "/fusion"
     (set size "fail")))
 
@@ -39,11 +39,11 @@
   (provide m1_bound))
 (require M1)
 
-(expect_syntax_exn
+(expect_syntax_error
   (set m1_bound "outside"))
 (check === "in M1" m1_bound)
 
-(expect_syntax_exn
+(expect_syntax_error
   (module Fail "/fusion"
     (require M1)
     (set m1_bound "fail")))

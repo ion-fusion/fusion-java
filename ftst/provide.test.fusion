@@ -11,11 +11,11 @@
 //============================================================================
 // Check use at module context
 
-(expect_syntax_exn
+(expect_syntax_error
   (provide eval))   // ERROR: not at module level
 
 
-(expect_syntax_exn
+(expect_syntax_error
   (module M "/fusion"
     (if true
       (provide if)  // ERROR: not at module level
@@ -51,7 +51,7 @@
 (check === 2 m2)
 
 
-(expect_syntax_exn
+(expect_syntax_error
   (module Bad "/fusion"
     (provide (all_defined_out id))))  // ERROR: superfluous id
 
@@ -97,7 +97,7 @@
 
 
 // Check failure exporting two bindings w/same name
-(expect_syntax_exn
+(expect_syntax_error
   (module M5 "/fusion"
     (require M2)
     (define top "M5")
@@ -131,35 +131,35 @@
 (check free_identifier_equal (quote_syntax m7_counter) (quote_syntax m8_counter2))
 
 
-(expect_syntax_exn
+(expect_syntax_error
   (module Bad "/fusion"
     (provide (rename_out id id2))))  // ERROR: not a rename pair
 
-(expect_syntax_exn
+(expect_syntax_error
   (module Bad "/fusion"
     (provide (rename_out ()))))  // ERROR: Malformed rename pair
 
-(expect_syntax_exn
+(expect_syntax_error
   (module Bad "/fusion"
     (provide (rename_out (+ out out2)))))  // ERROR: Malformed rename pair
 
-(expect_syntax_exn
+(expect_syntax_error
   (module Bad "/fusion"
     (provide (rename_out (12 id)))))  // ERROR: local is not an identifier
 
-(expect_syntax_exn
+(expect_syntax_error
   (module Bad "/fusion"
     (provide (rename_out (+ 12)))))  // ERROR: exported is not an identifier
 
-(expect_syntax_exn
+(expect_syntax_error
   (module Bad "/fusion"
     (provide (rename_out (unbound out)))))  // ERROR: unbound identifier
 
-(expect_syntax_exn
+(expect_syntax_error
   (module Bad "/fusion"
     (provide (rename_out (+ out) (- out)))))  // ERROR: duplicate name
 
-(expect_syntax_exn
+(expect_syntax_error
   (module Bad "/fusion"
     (define one 1)
     (define two 2)

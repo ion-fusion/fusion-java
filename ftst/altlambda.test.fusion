@@ -6,12 +6,12 @@
   "/fusion/experimental/check"
   "/fusion/experimental/syntax")
 
-(expect_syntax_exn (|))
-(expect_syntax_exn (|2))
-(expect_syntax_exn (| a 2))
-(expect_syntax_exn (| a |))
-(expect_syntax_exn (| |))
-(expect_syntax_exn (||))
+(expect_syntax_error (|))
+(expect_syntax_error (|2))
+(expect_syntax_error (| a 2))
+(expect_syntax_error (| a |))
+(expect_syntax_error (| |))
+(expect_syntax_error (||))
 
 (define sub1
   (|x| (- x 1)))

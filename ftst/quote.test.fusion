@@ -40,4 +40,4 @@
   (quote [im_out, mid, (quasiquote ((unquote im_out) (unquote mid) inner))]))
 
 
-(expect_syntax_exn (unquote true))
+(expect_syntax_error (unquote true))

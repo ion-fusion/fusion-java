@@ -5,10 +5,10 @@
 
 
 // Not a symbol
-(expect_syntax_exn (module null  "/fusion" "body"))
-(expect_syntax_exn (module 12    "/fusion" "body"))
+(expect_syntax_error (module null  "/fusion" "body"))
+(expect_syntax_error (module 12    "/fusion" "body"))
 
 // Symbol with invalid content
-(expect_syntax_exn (module null.symbol "/fusion" "body"))
-(expect_syntax_exn (module ''          "/fusion" "body"))
-(expect_syntax_exn (module $name       "/fusion" "body"))
+(expect_syntax_error (module null.symbol "/fusion" "body"))
+(expect_syntax_error (module ''          "/fusion" "body"))
+(expect_syntax_error (module $name       "/fusion" "body"))

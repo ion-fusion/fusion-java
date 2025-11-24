@@ -31,7 +31,7 @@
     (check === 1 (t))
     (check === 1 x)))
 
-(expect_syntax_exn (thunk))
+(expect_syntax_error (thunk))
 
 
 //==========================================================================

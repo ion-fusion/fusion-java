@@ -51,13 +51,13 @@
 // In a module, you cannot redefine a binding that's required, even if the same
 // binding is also in the language.
 
-(expect_syntax_exn
+(expect_syntax_error
   (module redefine_unique_require "/fusion"
     // This imports a different `apply` than the language provides.
     (require (only_in export_fusion_apply apply))
     (define apply 404)))
 
-(expect_syntax_exn
+(expect_syntax_error
   (module redefine_required_language_binding "/fusion"
     // This imports the same `apply` that the language provides.
     (require (only_in export_fusion_apply apply))

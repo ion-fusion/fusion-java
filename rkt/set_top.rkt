@@ -12,10 +12,10 @@
 (define our_size size)
 
 
-(expect_syntax_exn
+(expect_syntax_error
   (set size "fail"))
 
-(expect_syntax_exn
+(expect_syntax_error
   (module Fail racket
     (require "fusion.rkt")
     (set size "fail")))
@@ -38,7 +38,7 @@
     (eval '(set m1_bound "outside"))))
 (check === "in M1" m1_bound)
 
-(expect_syntax_exn
+(expect_syntax_error
   (module Fail racket
     (require "fusion.rkt")
     (require 'M1)

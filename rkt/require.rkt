@@ -4,11 +4,11 @@
 (require rackunit "fusion.rkt")
 
 
-;(expect_syntax_exn (require))    ; TODO this works in Racket
-(expect_syntax_exn (require 23))
+;(expect_syntax_error (require))    ; TODO this works in Racket
+(expect_syntax_error (require 23))
 
-(expect_syntax_exn (require ""))
-(expect_syntax_exn (require " module"))
+(expect_syntax_error (require ""))
+(expect_syntax_error (require " module"))
 
 (module M1 racket
   (define one 1)
@@ -21,11 +21,11 @@
 (require 'M1 'M2)
 (check === 2 one)
 
-(expect_syntax_exn
+(expect_syntax_error
   (module Fail racket
     (require 'M1 'M2)))
 
-(expect_syntax_exn
+(expect_syntax_error
   (expand
     (quote_syntax (module Fail racket
                     (require 'M1 'M2)))))

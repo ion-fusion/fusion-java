@@ -13,10 +13,10 @@
 (require "/require_macro")
 
 (require_grain_naive)
-(expect_syntax_exn barley)
+(expect_syntax_error barley)
 
 (require_grain_wrong)
-(expect_syntax_exn barley)
+(expect_syntax_error barley)
 
 
 // The "risky" macro has context on the both `require` and the module path.
@@ -55,10 +55,10 @@
 // Now, similar tests for require only-in
 
 (require_only_barley_naive)
-(expect_syntax_exn barley)
+(expect_syntax_error barley)
 
 (require_only_barley_wrong)
-(expect_syntax_exn barley)
+(expect_syntax_error barley)
 
 (module test_require_only "/fusion"
   (require "/fusion/experimental/check"
@@ -71,8 +71,8 @@
 // And for prefix-in
 
 (require_prefix_barley_wrong)
-(expect_syntax_exn my_barley)
-(expect_syntax_exn barley)
+(expect_syntax_error my_barley)
+(expect_syntax_error barley)
 
 (module test_require_prefix "/fusion"
   (require "/fusion/experimental/check"
@@ -85,8 +85,8 @@
 // And for rename-in, which works differently.
 
 (require_rename_barley_wrong)
-(expect_syntax_exn barlee)
-(expect_syntax_exn barley)
+(expect_syntax_error barlee)
+(expect_syntax_error barley)
 
 (module test_require_rename "/fusion"
   (require "/fusion/experimental/check"

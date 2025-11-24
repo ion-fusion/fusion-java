@@ -118,7 +118,7 @@
 (loop 3)
 
 
-(expect_syntax_exn (when))
+(expect_syntax_error (when))
 
 
 //============================================================================
@@ -140,7 +140,7 @@
 (loop 3)
 
 
-(expect_syntax_exn (unless))
+(expect_syntax_error (unless))
 
 
 //============================================================================
@@ -164,4 +164,4 @@
         (true    "bad")))
 
 
-(expect_syntax_exn (cond true (true true)))
+(expect_syntax_error (cond true (true true)))

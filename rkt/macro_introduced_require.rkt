@@ -17,10 +17,10 @@
 ;; Neither of these work, because there lexical context on the module-path is incorrect.
 
 (require_grain_naive)
-(expect_syntax_exn barley)
+(expect_syntax_error barley)
 
 (require_grain_wrong)
-(expect_syntax_exn barley)
+(expect_syntax_error barley)
 
 
 ;; The "risky" macro has context on the both `require` and the module path.
@@ -58,10 +58,10 @@
 ;; Now, similar tests for require only-in
 
 (require_only_barley_naive)
-(expect_syntax_exn barley)
+(expect_syntax_error barley)
 
 (require_only_barley_wrong)
-(expect_syntax_exn barley)
+(expect_syntax_error barley)
 
 (module test_require_only racket
   (require rackunit
@@ -75,8 +75,8 @@
 ;; And for prefix-in
 
 (require_prefix_barley_wrong)
-(expect_syntax_exn my-barley)
-(expect_syntax_exn barley)
+(expect_syntax_error my-barley)
+(expect_syntax_error barley)
 
 (module test_require_prefix racket
   (require rackunit
@@ -90,8 +90,8 @@
 ;; And for rename-in, which works differently.
 
 (require_rename_barley_wrong)
-(expect_syntax_exn barlee)
-(expect_syntax_exn barley)
+(expect_syntax_error barlee)
+(expect_syntax_error barley)
 
 (module test_require_rename racket
   (require rackunit

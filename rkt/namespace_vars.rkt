@@ -17,12 +17,12 @@
 
 "A top-level variable brought into a generated module cannot be used within it."
 (define (times7 n) (* n 7))
-(expect_syntax_exn
+(expect_syntax_error
   (make_module (times7 3)))
 
 "An imported variable brought into a generated module cannot be used within it."
 "  This succeeds in Racket < 6.3"
-(expect_syntax_exn
+(expect_syntax_error
   (make_module (* 7 3)))
 
 
@@ -67,7 +67,7 @@
   (provide splort))
 (require 'M)
 (check === "M splort" splort)
-(expect_syntax_exn
+(expect_syntax_error
   (eval (quote_syntax splort) other_namespace))
 
 

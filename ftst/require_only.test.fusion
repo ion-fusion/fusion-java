@@ -4,8 +4,8 @@
 (require "/fusion/experimental/check")
 
 "Check our assumptions"
-(expect_syntax_exn one)
-(expect_syntax_exn two)
+(expect_syntax_error one)
+(expect_syntax_error two)
 
 
 (module M1 "/fusion"
@@ -19,7 +19,7 @@
   (provide one two))
 
 (require (only_in M1 two))
-(expect_syntax_exn one)
+(expect_syntax_error one)
 (check === two "M1 2")
 
 (require (only_in M2 one))
@@ -45,11 +45,11 @@
 // TODO Error reporting is bad here, it's lost the location of the unbound id
 //  so it reports the entire require form.
 
-(expect_syntax_exn
+(expect_syntax_error
   (require (only_in M1 three)))
-(expect_syntax_exn three)
+(expect_syntax_error three)
 
-(expect_syntax_exn
+(expect_syntax_error
   (module Fails "/fusion"
     (require (only_in M1 three))))
 
@@ -62,12 +62,12 @@
          (only_in M2 one))
 (check === "M2 1" one)
 
-(expect_syntax_exn
+(expect_syntax_error
   (module Fails "/fusion"
     (require (only_in M1 one))
     (require (only_in M2 one))))
 
-(expect_syntax_exn
+(expect_syntax_error
   (module Fails "/fusion"
     (require (only_in M1 one)
              (only_in M2 one))))

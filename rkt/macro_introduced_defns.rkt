@@ -94,7 +94,7 @@
   mib)
 
 "This doesn't work:"
-(expect_syntax_exn
+(expect_syntax_error
   (module Test2 'Language
     (require 'HasMacro)
     (reference_mib)))

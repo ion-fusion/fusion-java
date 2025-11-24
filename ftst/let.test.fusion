@@ -34,44 +34,44 @@
                          (* n (fac (- n 1))))))
 
 
-(expect_syntax_exn
+(expect_syntax_error
   (let))
-(expect_syntax_exn
+(expect_syntax_error
   (let ((x 1))))
-(expect_syntax_exn
+(expect_syntax_error
   (let 12 13))
-(expect_syntax_exn
+(expect_syntax_error
   (let null.sexp 13))
 
 // Bound name not an identifier
-(expect_syntax_exn (let ((1 1)         ) true))
-(expect_syntax_exn (let ((name 1) (1 1)) true))
+(expect_syntax_error (let ((1 1)         ) true))
+(expect_syntax_error (let ((name 1) (1 1)) true))
 
 // Bad loop name
-(expect_syntax_exn (let null.symbol []      true))
-(expect_syntax_exn (let null.symbol ((n 1)) true))
+(expect_syntax_error (let null.symbol []      true))
+(expect_syntax_error (let null.symbol ((n 1)) true))
 
-(expect_syntax_exn
+(expect_syntax_error
   (let (12) 13))
-(expect_syntax_exn
+(expect_syntax_error
   (let (1 2) 13))
-(expect_syntax_exn
+(expect_syntax_error
   (let (()) 13))
-(expect_syntax_exn
+(expect_syntax_error
   (let ((n 1 2)) 13))
-(expect_syntax_exn
+(expect_syntax_error
   (let ((12)) 13))
-(expect_syntax_exn
+(expect_syntax_error
   (let ((1 2)) 13))
-(expect_syntax_exn
+(expect_syntax_error
   (let ((name)) 13))
-(expect_syntax_exn
+(expect_syntax_error
   (let ((name 1) ()) 13))
-(expect_syntax_exn
+(expect_syntax_error
   (let ((name 1) (name2)) 13))
 
 // Duplicate bound names
-(expect_syntax_exn
+(expect_syntax_error
   (let [(x 1), (b 2), (x 3)] true))
 
 
@@ -115,9 +115,9 @@
 
 
 // Duplicate bound names
-(expect_syntax_exn
+(expect_syntax_error
   (let_values [((x) 1), ((x) 2)] 3))
-(expect_syntax_exn
+(expect_syntax_error
   (let_values [((x x) (values 1 2))] 3))
 
 // Result arity mismatch
@@ -155,26 +155,26 @@
     (is_odd 11)))
 
 // Bound name not an identifier
-(expect_syntax_exn (letrec ((1 1)         ) true))
-(expect_syntax_exn (letrec ((name 1) (1 1)) true))
+(expect_syntax_error (letrec ((1 1)         ) true))
+(expect_syntax_error (letrec ((name 1) (1 1)) true))
 
 // Duplicate bound names
-(expect_syntax_exn
+(expect_syntax_error
   (letrec [(x 1), (b 2), (x 3)] true))
 
 
-(expect_syntax_exn (letrec))
-(expect_syntax_exn (letrec ((x 1))))
-(expect_syntax_exn (letrec 12 13))
-(expect_syntax_exn (letrec null.sexp 13))
-(expect_syntax_exn (letrec (12) 13))
-(expect_syntax_exn (letrec (1 2) 13))
-(expect_syntax_exn (letrec (()) 13))
-(expect_syntax_exn (letrec ((12)) 13))
-(expect_syntax_exn (letrec ((name)) 13))
-(expect_syntax_exn (letrec ((name 1 2)) 13))
-(expect_syntax_exn (letrec ((name 1) ()) 13))
-(expect_syntax_exn (letrec ((name 1) (name2)) 13))
+(expect_syntax_error (letrec))
+(expect_syntax_error (letrec ((x 1))))
+(expect_syntax_error (letrec 12 13))
+(expect_syntax_error (letrec null.sexp 13))
+(expect_syntax_error (letrec (12) 13))
+(expect_syntax_error (letrec (1 2) 13))
+(expect_syntax_error (letrec (()) 13))
+(expect_syntax_error (letrec ((12)) 13))
+(expect_syntax_error (letrec ((name)) 13))
+(expect_syntax_error (letrec ((name 1 2)) 13))
+(expect_syntax_error (letrec ((name 1) ()) 13))
+(expect_syntax_error (letrec ((name 1) (name2)) 13))
 
 
 //==========================================================================
@@ -191,37 +191,37 @@
   (lets [(x 19), (y (+ x 222))] y))
 
 
-(expect_syntax_exn
+(expect_syntax_error
   (lets))
-(expect_syntax_exn
+(expect_syntax_error
   (lets ((x 1))))
-(expect_syntax_exn
+(expect_syntax_error
   (lets ((1 1)) true))            // Bound name not an identifier
-(expect_syntax_exn
+(expect_syntax_error
   (lets ((name 1) (1 1)) true))   // Bound name not an identifier
-(expect_syntax_exn
+(expect_syntax_error
   (lets 12 13))
-(expect_syntax_exn
+(expect_syntax_error
   (lets null.sexp 13))
-(expect_syntax_exn
+(expect_syntax_error
   (lets null.symbol [] true))  // Bad loop name
-(expect_syntax_exn
+(expect_syntax_error
   (lets (12) 13))
-(expect_syntax_exn
+(expect_syntax_error
   (lets (1 2) 13))
-(expect_syntax_exn
+(expect_syntax_error
   (lets (()) 13))
-(expect_syntax_exn
+(expect_syntax_error
   (lets ((n 1 2)) 13))
-(expect_syntax_exn
+(expect_syntax_error
   (lets ((12)) 13))
-(expect_syntax_exn
+(expect_syntax_error
   (lets ((1 2)) 13))
-(expect_syntax_exn
+(expect_syntax_error
   (lets ((name)) 13))
-(expect_syntax_exn
+(expect_syntax_error
   (lets ((name 1) ()) 13))
-(expect_syntax_exn
+(expect_syntax_error
   (lets ((name 1) (name2)) 13))
 
 

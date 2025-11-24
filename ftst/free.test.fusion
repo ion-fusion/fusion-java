@@ -4,20 +4,20 @@
 (require "/fusion/experimental/check")
 
 
-(expect_syntax_exn
+(expect_syntax_error
   free)
 
 (define (free_ref)
   free)
 
-(expect_syntax_exn
+(expect_syntax_error
   (free_ref))
 
-(expect_syntax_exn
+(expect_syntax_error
   (define free free))
 
 // Still not defined
-(expect_syntax_exn
+(expect_syntax_error
   free)
 
 

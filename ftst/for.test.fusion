@@ -212,70 +212,70 @@
 // All the for-forms are syntactically the same; test for syntax errors once.
 
 // Missing all subforms
-(expect_syntax_exn (for))
-(expect_syntax_exn (fors))
+(expect_syntax_error (for))
+(expect_syntax_error (fors))
 
 // Missing body
-(expect_syntax_exn (for  ((name 1)) /* no body */))
-(expect_syntax_exn (fors ((name 1)) /* no body */))
+(expect_syntax_error (for  ((name 1)) /* no body */))
+(expect_syntax_error (fors ((name 1)) /* no body */))
 
 // For-clauses subform isn't a sequence of sexps
-(expect_syntax_exn (for  null      13))
-(expect_syntax_exn (fors null      13))
-(expect_syntax_exn (for  null.sexp 13))
-(expect_syntax_exn (fors null.sexp 13))
-(expect_syntax_exn (for  null.list 13))
-(expect_syntax_exn (fors null.list 13))
-(expect_syntax_exn (for  1         13))
-(expect_syntax_exn (fors 1         13))
-(expect_syntax_exn (for  (1)       13))
-(expect_syntax_exn (fors (1)       13))
-(expect_syntax_exn (for  (1 2)     13))
-(expect_syntax_exn (fors (1 2)     13))
+(expect_syntax_error (for  null      13))
+(expect_syntax_error (fors null      13))
+(expect_syntax_error (for  null.sexp 13))
+(expect_syntax_error (fors null.sexp 13))
+(expect_syntax_error (for  null.list 13))
+(expect_syntax_error (fors null.list 13))
+(expect_syntax_error (for  1         13))
+(expect_syntax_error (fors 1         13))
+(expect_syntax_error (for  (1)       13))
+(expect_syntax_error (fors (1)       13))
+(expect_syntax_error (for  (1 2)     13))
+(expect_syntax_error (fors (1 2)     13))
 
 // For-clause is a list not a sexp
 // TODO split_binding allows this, but it's not tested nor used in this library.
 (when false
-(expect_syntax_exn (for  ([a, []]       ) 13))
-(expect_syntax_exn (fors ([a, []]       ) 13))
-(expect_syntax_exn (for  ([a, []] (b  2)) 13))
-(expect_syntax_exn (fors ([a, []] (b  2)) 13))
-(expect_syntax_exn (for  ((a  []) [b, 2]) 13))
-(expect_syntax_exn (fors ((a  []) [b, 2]) 13))
+(expect_syntax_error (for  ([a, []]       ) 13))
+(expect_syntax_error (fors ([a, []]       ) 13))
+(expect_syntax_error (for  ([a, []] (b  2)) 13))
+(expect_syntax_error (fors ([a, []] (b  2)) 13))
+(expect_syntax_error (for  ((a  []) [b, 2]) 13))
+(expect_syntax_error (fors ((a  []) [b, 2]) 13))
 )
 
 // For-clause doesn't start with an identifier (or sexp; see below)
-(expect_syntax_exn (for  (null.sexp) 13))
-(expect_syntax_exn (fors (null.sexp) 13))
-(expect_syntax_exn (for  (()) 13))
-(expect_syntax_exn (fors (()) 13))
-(expect_syntax_exn (for  ((12)) 13))
-(expect_syntax_exn (fors ((12)) 13))
-(expect_syntax_exn (for  ((name 1) ()) 13))
-(expect_syntax_exn (fors ((name 1) ()) 13))
-(expect_syntax_exn (for  ((name 1) (12)) 13))
-(expect_syntax_exn (fors ((name 1) (12)) 13))
+(expect_syntax_error (for  (null.sexp) 13))
+(expect_syntax_error (fors (null.sexp) 13))
+(expect_syntax_error (for  (()) 13))
+(expect_syntax_error (fors (()) 13))
+(expect_syntax_error (for  ((12)) 13))
+(expect_syntax_error (fors ((12)) 13))
+(expect_syntax_error (for  ((name 1) ()) 13))
+(expect_syntax_error (fors ((name 1) ()) 13))
+(expect_syntax_error (for  ((name 1) (12)) 13))
+(expect_syntax_error (fors ((name 1) (12)) 13))
 
 // For-clause has more than one series expression
-(expect_syntax_exn (for  ((name)) 13))
-(expect_syntax_exn (fors ((name)) 13))
-(expect_syntax_exn (for  ((name 1 2)) 13))
-(expect_syntax_exn (fors ((name 1 2)) 13))
-(expect_syntax_exn (for  ((name 1) (name2)) 13))
-(expect_syntax_exn (fors ((name 1) (name2)) 13))
+(expect_syntax_error (for  ((name)) 13))
+(expect_syntax_error (fors ((name)) 13))
+(expect_syntax_error (for  ((name 1 2)) 13))
+(expect_syntax_error (fors ((name 1 2)) 13))
+(expect_syntax_error (for  ((name 1) (name2)) 13))
+(expect_syntax_error (fors ((name 1) (name2)) 13))
 
 // Duplicate identifiers across clauses of plain `for` (not `fors`)
-(expect_syntax_exn (for [(name []), (name [])] 13))
+(expect_syntax_error (for [(name []), (name [])] 13))
 
 // For-clause has malformed sexp-of-identifiers
-(expect_syntax_exn (for  [(null.sexp [])] 1))  // No ids
-(expect_syntax_exn (fors [(null.sexp [])] 1))
-(expect_syntax_exn (for  [(()        [])] 1))
-(expect_syntax_exn (fors [(()        [])] 1))
-(expect_syntax_exn (for  [((a 9)     [])] 1))  // Not an id
-(expect_syntax_exn (fors [((a 9)     [])] 1))
-(expect_syntax_exn (for  [([a, b]    [])] 1))  // Not a sexp
-(expect_syntax_exn (fors [([a, b]    [])] 1))
+(expect_syntax_error (for  [(null.sexp [])] 1))  // No ids
+(expect_syntax_error (fors [(null.sexp [])] 1))
+(expect_syntax_error (for  [(()        [])] 1))
+(expect_syntax_error (fors [(()        [])] 1))
+(expect_syntax_error (for  [((a 9)     [])] 1))  // Not an id
+(expect_syntax_error (fors [((a 9)     [])] 1))
+(expect_syntax_error (for  [([a, b]    [])] 1))  // Not a sexp
+(expect_syntax_error (fors [([a, b]    [])] 1))
 
 (expect_result_error
   (for [((a b) [1])] a))   // expects 2 values, returns 1

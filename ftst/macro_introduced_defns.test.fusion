@@ -97,7 +97,7 @@
   mib)
 
 "This doesn't work:"
-(expect_syntax_exn
+(expect_syntax_error
   (module Test2 "/mib_language" // TODO Language
     (require HasMacro)
     (reference_mib)))

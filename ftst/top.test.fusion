@@ -14,7 +14,7 @@
 
 
 // Top-level bindings shouldn't leak into modules
-(expect_syntax_exn
+(expect_syntax_error
   (module Bad "/fusion"
     my_top))              // ERROR: unbound
 
@@ -31,7 +31,7 @@
 (define my_top "at-top")
 
 
-(expect_syntax_exn
+(expect_syntax_error
   (module M "/fusion"
     (define my_top "in-M")
     (let [(my_top "shadow")]

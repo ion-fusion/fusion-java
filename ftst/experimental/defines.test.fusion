@@ -12,11 +12,11 @@
 (check === 39 jonny)
 
 
-(expect_syntax_exn (defpub))
-(expect_syntax_exn (defpub foo))
-(expect_syntax_exn (defpub (foo)))
+(expect_syntax_error (defpub))
+(expect_syntax_error (defpub foo))
+(expect_syntax_error (defpub (foo)))
 
 // TODO these fail poorly
-//(expect_syntax_exn (defpub_j))
-//(expect_syntax_exn (defpub_j foo))
-(expect_syntax_exn (defpub_j foo 'bad docstring' "java.lang.String"))
+//(expect_syntax_error (defpub_j))
+//(expect_syntax_error (defpub_j foo))
+(expect_syntax_error (defpub_j foo 'bad docstring' "java.lang.String"))
