@@ -100,7 +100,7 @@
 (check === [5,6,7,1,2,3] (prepend567 [1] [2,3]))
 
 
-(expect_arity_exn    (curry_left append_m))
+(expect_arity_error    (curry_left append_m))
 (expect_argument_error (curry_left (void) 1))
 
 
@@ -117,5 +117,5 @@
 (check === [1,5,6,7] (append567 [1]))
 (check === [1,2,3,5,6,7] (append567 [1] [2,3]))
 
-(expect_arity_exn    (curry_right append_m))
+(expect_arity_error    (curry_right append_m))
 (expect_argument_error (curry_right (void) 1))

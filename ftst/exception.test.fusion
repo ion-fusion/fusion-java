@@ -36,9 +36,9 @@
 
 // TODO Check arity of both procs before installing the handler.
 //   That requires that all procedures can report their arity.
-(expect_arity_exn
+(expect_arity_error
   (call_with_handler (|e| (raise e)) (|bad args| "body")))
-(expect_arity_exn
+(expect_arity_error
   (call_with_handler (|e bad| e) (|| (raise "body"))))
 (check === "body"
   (call_with_handler (|e bad| e) (|| "body")))
@@ -135,13 +135,13 @@
   (with_handlers "foo" (raise "foo")))
 
 // Verify that predicates only accept one argument.
-(expect_arity_exn
+(expect_arity_error
   (with_handlers
     [((|x y| true) (|x| "bar")),]
     (raise "foo")))
 
 // Verify that handlers only accept one argument.
-(expect_arity_exn
+(expect_arity_error
   (with_handlers
     [((|x| true) (|x y| "bar")),]
     (raise "foo")))

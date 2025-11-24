@@ -20,8 +20,8 @@
 (check === "" (lob_to_hex {{ "" }}))
 (check === null.string (lob_to_hex null.clob))
 
-(expect_arity_exn (lob_to_hex))
-(expect_arity_exn (lob_to_hex {{ CBB/ }} {{ }}))
+(expect_arity_error (lob_to_hex))
+(expect_arity_error (lob_to_hex {{ CBB/ }} {{ }}))
 
 (expect_argument_error (lob_to_hex "not_a_lob"))
 

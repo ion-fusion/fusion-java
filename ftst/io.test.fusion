@@ -7,25 +7,25 @@
 )
 
 
-(expect_arity_exn (read 1))
+(expect_arity_error (read 1))
 
-(expect_arity_exn (write))
-(expect_arity_exn (write 1 2))
+(expect_arity_error (write))
+(expect_arity_error (write 1 2))
 
-(expect_arity_exn (ionize))
-(expect_arity_exn (ionize 1 2))
+(expect_arity_error (ionize))
+(expect_arity_error (ionize 1 2))
 
-(expect_arity_exn (with_ion_from_string))
-(expect_arity_exn (with_ion_from_string ""))
-(expect_arity_exn (with_ion_from_string "" read 1))
+(expect_arity_error (with_ion_from_string))
+(expect_arity_error (with_ion_from_string ""))
+(expect_arity_error (with_ion_from_string "" read 1))
 
-(expect_arity_exn (with_ion_from_lob))
-(expect_arity_exn (with_ion_from_lob {{""}}))
-(expect_arity_exn (with_ion_from_lob {{""}} read 1))
+(expect_arity_error (with_ion_from_lob))
+(expect_arity_error (with_ion_from_lob {{""}}))
+(expect_arity_error (with_ion_from_lob {{""}} read 1))
 
-(expect_arity_exn (with_ion_from_file))
-(expect_arity_exn (with_ion_from_file "tst-data-ints.ion"))
-(expect_arity_exn (with_ion_from_file "tst-data-ints.ion" read 1))
+(expect_arity_error (with_ion_from_file))
+(expect_arity_error (with_ion_from_file "tst-data-ints.ion"))
+(expect_arity_error (with_ion_from_file "tst-data-ints.ion" read 1))
 
 
 (with_ion_from_string "0 1 2 3"
@@ -82,8 +82,8 @@
 (check === (quote [only_me])
   (with_ion_from_lob {{"[only_me]"}} read))
 
-(expect_arity_exn (ionize_to_blob))
-(expect_arity_exn (ionize_to_blob 1 2))
+(expect_arity_error (ionize_to_blob))
+(expect_arity_error (ionize_to_blob 1 2))
 
 
 // ionize_to_string
@@ -93,8 +93,8 @@
 (check === "{f:\"hi\"}"    (ionize_to_string {f:"hi"}))
 (check === "\"\\\"!\\\"\"" (ionize_to_string "\"!\""))
 
-(expect_arity_exn (ionize_to_string))
-(expect_arity_exn (ionize_to_string 1 2))
+(expect_arity_error (ionize_to_string))
+(expect_arity_error (ionize_to_string 1 2))
 
 
 // jsonize_to_string
@@ -106,8 +106,8 @@
 (check === "\"\\\"!\\\"\""                 (jsonize_to_string (quote '\"!\"')))
 (check === "\"2021-06-08T10:19:00-07:00\"" (jsonize_to_string 2021-06-08T10:19:00-07:00))
 
-(expect_arity_exn (jsonize_to_string))
-(expect_arity_exn (jsonize_to_string 1 2))
+(expect_arity_error (jsonize_to_string))
+(expect_arity_error (jsonize_to_string 1 2))
 
 
 //=============================================================================

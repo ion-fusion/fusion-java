@@ -217,9 +217,9 @@
 //==========================================================================
 // expect_arity_error
 
-(expect_arity_exn (raise_arity_error "foo" 1))
+(expect_arity_error (raise_arity_error "foo" 1))
 
-(expect_arity_exn (bad_arity))
+(expect_arity_error (bad_arity))
 
 
 // Inheritance
@@ -231,8 +231,8 @@
 
 
 // Malformed uses
-(expect_syntax_error (expect_arity_exn))
-(expect_syntax_error (expect_arity_exn true "message" "extra"))
+(expect_syntax_error (expect_arity_error))
+(expect_syntax_error (expect_arity_error true "message" "extra"))
 
 
 //==========================================================================

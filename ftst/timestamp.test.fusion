@@ -30,9 +30,9 @@
 
 
 (define_check (check_adjust_args proc)
-  (expect_arity_exn (proc))
-  (expect_arity_exn (proc 2012T))
-  (expect_arity_exn (proc 2012T 1 2))
+  (expect_arity_error (proc))
+  (expect_arity_error (proc 2012T))
+  (expect_arity_error (proc 2012T 1 2))
 
   (expect_argument_error (proc 1 1))
   (expect_argument_error (proc 1234T 1.)
@@ -148,8 +148,8 @@
 //============================================================================
 // timestamp
 
-(expect_arity_exn (timestamp 2016 7 1 10 7 45 -420 10))
-(expect_arity_exn (timestamp))
+(expect_arity_error (timestamp 2016 7 1 10 7 45 -420 10))
+(expect_arity_error (timestamp))
 
 (expect_argument_error (timestamp 2016 6 6 14))
 (expect_argument_error (timestamp 0 6 6 14 46 4 -420))

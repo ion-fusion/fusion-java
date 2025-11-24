@@ -45,8 +45,8 @@
 (check ===  2 (ceiling  1.9))
 
 
-(expect_arity_exn (ceiling))
-(expect_arity_exn (ceiling 0 1))
+(expect_arity_error (ceiling))
+(expect_arity_error (ceiling 0 1))
 
 (expect_argument_error (ceiling null.int))
 (expect_argument_error (ceiling null.decimal))
@@ -67,8 +67,8 @@
 (check ===  1 (floor  1.0))
 (check ===  1 (floor  1.9))
 
-(expect_arity_exn (floor))
-(expect_arity_exn (floor 0 1))
+(expect_arity_error (floor))
+(expect_arity_error (floor 0 1))
 
 (expect_argument_error (floor null.int))
 (expect_argument_error (floor null.decimal))

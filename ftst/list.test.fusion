@@ -230,8 +230,8 @@
 (check_true (has_key [false]  0))
 (check_true (has_key [(void)] 0))
 
-(expect_arity_exn (has_key))
-(expect_arity_exn (has_key []))
+(expect_arity_error (has_key))
+(expect_arity_error (has_key []))
 
 
 //==========================================================================
@@ -285,8 +285,8 @@
 // add, add_m
 
 (define_check (check_add add_proc v0)
-  (expect_arity_exn (add_proc))
-  (expect_arity_exn (add_proc []))
+  (expect_arity_error (add_proc))
+  (expect_arity_error (add_proc []))
   (let [(mutable (is_mutable_list v0)),
         (stretchy (is_stretchy_list v0)),
         (v1 (add_proc v0 1))]
@@ -311,7 +311,7 @@
 
 
 (define_check (check_add_m add_m_proc add_proc v0)
-  (expect_arity_exn (add_m_proc))
+  (expect_arity_error (add_m_proc))
   (let [(mutable (is_mutable_list v0)),
         (stretchy (is_stretchy_list v0)),
         (v1 (add_m_proc v0 1))]
@@ -445,8 +445,8 @@
 //==========================================================================
 // first
 
-(expect_arity_exn (first))
-(expect_arity_exn (first [1] 2))
+(expect_arity_error (first))
+(expect_arity_error (first [1] 2))
 
 (check === 1 (first [1]))
 (check === 1 (first [1, 2]))
@@ -459,8 +459,8 @@
 //==========================================================================
 // last
 
-(expect_arity_exn (last))
-(expect_arity_exn (last [1] 2))
+(expect_arity_error (last))
+(expect_arity_error (last [1] 2))
 
 
 (check === 1 (last [1]))

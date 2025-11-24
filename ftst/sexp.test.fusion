@@ -112,14 +112,14 @@
 (check_void (tail EMPTY_SEXP))
 
 
-(expect_arity_exn (pair))
-(expect_arity_exn (pair 1))
-(expect_arity_exn (pair 1 2 3))
+(expect_arity_error (pair))
+(expect_arity_error (pair 1))
+(expect_arity_error (pair 1 2 3))
 
-(expect_arity_exn (head))
-(expect_arity_exn (head (pair 1 2) 3))
-(expect_arity_exn (tail))
-(expect_arity_exn (tail (pair 1 2) 3))
+(expect_arity_error (head))
+(expect_arity_error (head (pair 1 2) 3))
+(expect_arity_error (tail))
+(expect_arity_error (tail (pair 1 2) 3))
 
 (expect_argument_error (head VOID))
 (expect_argument_error (tail VOID))
@@ -192,8 +192,8 @@
 (check_true (has_key (sexp false)  0))
 (check_true (has_key (sexp (void)) 0))
 
-(expect_arity_exn (has_key))
-(expect_arity_exn (has_key []))
+(expect_arity_error (has_key))
+(expect_arity_error (has_key []))
 
 
 //==========================================================================

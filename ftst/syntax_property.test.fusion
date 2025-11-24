@@ -51,7 +51,7 @@
     key1))
 
 
-(expect_arity_exn (syntax_property))
-(expect_arity_exn (syntax_property (quote_syntax sym)))
+(expect_arity_error (syntax_property))
+(expect_arity_error (syntax_property (quote_syntax sym)))
 
 (expect_argument_error (syntax_property "sym" "key"))

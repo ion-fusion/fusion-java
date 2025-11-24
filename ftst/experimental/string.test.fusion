@@ -80,9 +80,9 @@
 //============================================================================
 // string_split_noregexp
 
-(expect_arity_exn (string_split_noregexp (void)))
-(expect_arity_exn (string_split_noregexp null.string))
-(expect_arity_exn (string_split_noregexp ""))
+(expect_arity_error (string_split_noregexp (void)))
+(expect_arity_error (string_split_noregexp null.string))
+(expect_arity_error (string_split_noregexp ""))
 (expect_argument_error (string_split_noregexp (void) " "))
 (expect_argument_error (string_split_noregexp null " "))
 (expect_argument_error (string_split_noregexp null.string " "))

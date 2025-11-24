@@ -203,8 +203,8 @@
 (check_has_key (quote (a (void))) "a"         true)
 
 
-(expect_arity_exn (has_key))
-(expect_arity_exn (has_key {}))
+(expect_arity_error (has_key))
+(expect_arity_error (has_key {}))
 
 
 //==========================================================================
@@ -244,13 +244,13 @@
   (check === 2 (size s)))
 
 
-(expect_arity_exn (put))
-(expect_arity_exn (put   {}))
-(expect_arity_exn (put   {} "f"))
+(expect_arity_error (put))
+(expect_arity_error (put   {}))
+(expect_arity_error (put   {} "f"))
 
-(expect_arity_exn (put_m))
-(expect_arity_exn (put_m {}))
-(expect_arity_exn (put_m {} "f"))
+(expect_arity_error (put_m))
+(expect_arity_error (put_m {}))
+(expect_arity_error (put_m {} "f"))
 
 (expect_argument_error (put   [] "f" 1))
 (expect_argument_error (put   {} null.string 1))
@@ -478,10 +478,10 @@
 (check_zip ["A","B"] [3] {A:3})
 
 
-(expect_arity_exn (        struct_zip))
-(expect_arity_exn (mutable_struct_zip))
-(expect_arity_exn (        struct_zip ["f"]))
-(expect_arity_exn (mutable_struct_zip ["f"]))
+(expect_arity_error (        struct_zip))
+(expect_arity_error (mutable_struct_zip))
+(expect_arity_error (        struct_zip ["f"]))
+(expect_arity_error (mutable_struct_zip ["f"]))
 
 (expect_argument_error (        struct_zip  "f"  [3]))
 (expect_argument_error (mutable_struct_zip  "f"  [3]))

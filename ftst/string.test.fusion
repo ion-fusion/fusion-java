@@ -214,7 +214,7 @@
 //============================================================================
 // string_join
 
-(expect_arity_exn (string_join))
+(expect_arity_error (string_join))
 (expect_argument_error (string_join (void)))
 (expect_argument_error (string_join null.string))
 (expect_argument_error (string_join " " (void)))
@@ -239,10 +239,10 @@
 //============================================================================
 // string_replace
 
-(expect_arity_exn (string_replace))
-(expect_arity_exn (string_replace "a"))
-(expect_arity_exn (string_replace "a" "b"))
-(expect_arity_exn (string_replace "a" "b" "c" "d"))
+(expect_arity_error (string_replace))
+(expect_arity_error (string_replace "a"))
+(expect_arity_error (string_replace "a" "b"))
+(expect_arity_error (string_replace "a" "b" "c" "d"))
 (expect_argument_error (string_replace (void) "b" "c"))
 (expect_argument_error (string_replace null "b" "c"))
 (expect_argument_error (string_replace (quote a) "b" "c"))
@@ -294,9 +294,9 @@
 //============================================================================
 // string_split
 
-(expect_arity_exn (string_split (void)))
-(expect_arity_exn (string_split null.string))
-(expect_arity_exn (string_split ""))
+(expect_arity_error (string_split (void)))
+(expect_arity_error (string_split null.string))
+(expect_arity_error (string_split ""))
 (expect_argument_error (string_split (void) " "))
 (expect_argument_error (string_split null " "))
 (expect_argument_error (string_split null.string " "))

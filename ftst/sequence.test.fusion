@@ -206,7 +206,7 @@ arguments).
     (loopA (tail ctors))))
 
 
-(expect_arity_exn (append))
+(expect_arity_error (append))
 
 (expect_argument_error (append 1))
 (expect_argument_error (append [] 1))
@@ -244,11 +244,11 @@ arguments).
 (check_subseq [1,2,3] 0 3 [1,2,3])
 (check_subseq [1,2,3] 3 3 [])
 
-(expect_arity_exn (subseq))
-(expect_arity_exn (subseq []))
-(expect_arity_exn (subseq [] 0 0 0))
-(expect_arity_exn (subseq EMPTY_SEXP))
-(expect_arity_exn (subseq EMPTY_SEXP 0 0 0))
+(expect_arity_error (subseq))
+(expect_arity_error (subseq []))
+(expect_arity_error (subseq [] 0 0 0))
+(expect_arity_error (subseq EMPTY_SEXP))
+(expect_arity_error (subseq EMPTY_SEXP 0 0 0))
 
 (expect_argument_error (subseq 99 0 0))       // 1st arg not a sequence
 
@@ -340,7 +340,7 @@ arguments).
     {}
     [{a:1}, {b:2}, {c:3}]))
 
-(expect_arity_exn (fold_left +))
+(expect_arity_error (fold_left +))
 (expect_argument_error (fold_left + 0 {}))
 (expect_argument_error (fold_left + 0 (sexp 2 3 4) {}))
 (expect_argument_error (fold_left + 0 {} (sexp 2 3 4)))

@@ -49,8 +49,8 @@
 //==========================================================================
 // sexp_iterator
 
-(expect_arity_exn (sexp_iterator))
-(expect_arity_exn (sexp_iterator (sexp) 1))
+(expect_arity_error (sexp_iterator))
+(expect_arity_error (sexp_iterator (sexp) 1))
 
 (expect_argument_error (sexp_iterator null))
 (expect_argument_error (sexp_iterator null.list))
