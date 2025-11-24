@@ -12,7 +12,7 @@
 
 
 // Test raise
-(expect_any_exn (raise "foo"))   // Obsolete name for this form.
+(expect_any_raise (raise "foo"))   // Obsolete name for this form.
 (expect_any_raise (raise "foo"))
 
 //=============================================================================

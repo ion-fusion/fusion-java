@@ -114,7 +114,7 @@
 
 // Unsupported recursive use of a check form.
 (define_check (recur n) (if (== n 0) true (recur (- n 1))))
-(expect_any_exn (recur 2))
+(expect_any_raise (recur 2))
 
 
 // Malformed uses
@@ -302,22 +302,22 @@
 
 
 //==========================================================================
-// expect_any_exn
+// expect_any_raise
 
-(expect_any_exn (/ 1. 0.))
+(expect_any_raise (/ 1. 0.))
 
 // Check subtypes
-(expect_any_exn (bad_argument))
-(expect_any_exn (bad_arity))
-(expect_any_exn (bad_result))
-(expect_any_exn (fail))
-(expect_any_exn (raise_contract_error "proc" "oops"))
-(expect_any_exn (wrong_syntax (quote_syntax here) "oops"))
+(expect_any_raise (bad_argument))
+(expect_any_raise (bad_arity))
+(expect_any_raise (bad_result))
+(expect_any_raise (fail))
+(expect_any_raise (raise_contract_error "proc" "oops"))
+(expect_any_raise (wrong_syntax (quote_syntax here) "oops"))
 
 
 // Malformed uses
-(expect_syntax_error (expect_any_exn))
-(expect_syntax_error (expect_any_exn true "message" "extra"))
+(expect_syntax_error (expect_any_raise))
+(expect_syntax_error (expect_any_raise true "message" "extra"))
 
 
 "SUCCESS (check.test)"
