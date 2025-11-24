@@ -13,6 +13,7 @@ import static dev.ionfusion.fusion.FusionStruct.unsafeStructSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -108,42 +109,42 @@ public class StructTest
 
 
     @Test
-    public void testStructForEach()
+    public void testStructDo()
         throws Exception
     {
         eval("(define add_name (lambda (name value) (add_m value name)))");
         assertEval("{f:[f],g:[g],f:[true,false,f]}",
-                   "(struct_for_each add_name " +
+                   "(struct_do add_name " +
                    "  (mutable_struct \"f\" (stretchy_list) " +
                    "                  \"g\" (stretchy_list) " +
                    "                  \"f\" (stretchy_list true false)))");
     }
 
     @Test
-    public void testStructForEachArity()
+    public void testStructDoArity()
         throws Exception
     {
         eval("(define add_name (lambda (name value) (add value name)))");
-        expectArityExn("(struct_for_each)");
-        expectArityExn("(struct_for_each add_name)");
-        expectArityExn("(struct_for_each add_name {} 3)");
+        expectArityExn("(struct_do)");
+        expectArityExn("(struct_do add_name)");
+        expectArityExn("(struct_do add_name {} 3)");
     }
 
     @Test
-    public void testStructForEachArgTypes()
+    public void testStructDoArgTypes()
         throws Exception
     {
         eval("(define add_name (lambda (name value) (add value name)))");
 
         for (String form : allIonExpressions())
         {
-            String expr = "(struct_for_each " + form + " {})";
+            String expr = "(struct_do " + form + " {})";
             expectArgumentExn(expr, 0);
         }
 
         for (String form : nonStructExpressions())
         {
-            String expr = "(struct_for_each add_name " + form + ")";
+            String expr = "(struct_do add_name " + form + ")";
             expectArgumentExn(expr, 1);
         }
     }

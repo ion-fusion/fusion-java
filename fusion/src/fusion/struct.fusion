@@ -77,7 +77,7 @@ the fields from two structs.
 
 `struct_iterator` creates a multi-valued [iterator](fusion/iterator.html) over
 a struct's key-value pairs.
-The procedure `struct_for_each` iterates the name/value pairs within a struct,
+The procedure `struct_do` iterates the name/value pairs within a struct,
 but since the input isn't modified one must use side effects.
 
 More general [collection](fusion/collection.html) operations like `any` and
@@ -340,17 +340,6 @@ See also: [`do`](fusion/collection.html#do)
             (proc k v)
             (loop))
           struct))))
-
-  (defpub struct_for_each
-    '''
-DEPRECATED: renamed to [`struct_do`](fusion/struct.html#struct_do) for
-consistency with [`do`](fusion/collection.html#do).
-
-**This binding was deprecated in R11 (November 2013) and will be removed in**
-**Q2 2014.**  https://github.com/ion-fusion/fusion-java/issues/66
-    '''
-    struct_do)
-
 
 
   (defpub (struct_unzip struct)

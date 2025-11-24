@@ -17,7 +17,7 @@
       (if (is_null s)
         s
         (let [(args (stretchy_list))]
-          (struct_for_each
+          (struct_do
             (lambda (name value)
               (add_m args name)
               (add_m args value))
@@ -493,13 +493,13 @@
 
 
 //==========================================================================
-// struct_do (aka struct_for_each)
+// struct_do
 
 (define rip_and_zip
   (lambda (struct)
     (let [(names  (stretchy_list)),
           (values (stretchy_list))]
-      (let [(result (struct_for_each
+      (let [(result (struct_do
                       (lambda (name value)
                         (add_m names name)
                         (add_m values value))
@@ -514,9 +514,10 @@
 (rip_and_zip {a:1,b:[2,3],a:{d:(quote e)}})  // Repeated field
 
 
-// struct_for_each returns its input struct.
-(check === 1
-  (. (struct_for_each (lambda (k v) 3) {f:1}) "f"))
+// struct_do returns its input struct.
+(lets [(original {f:1}),
+       (result   (struct_do (lambda (k v) 3) original))]
+  (check ident result original))
 
 
 //==========================================================================

@@ -155,7 +155,7 @@ contact us for clarification.
 
   (require "/fusion/struct")
   (provide is_struct put remove_keys retain_keys struct struct_do
-    struct_for_each struct_iterator struct_merge struct_unzip struct_zip)
+    struct_iterator struct_merge struct_unzip struct_zip)
 
 
   //=========================================================================
