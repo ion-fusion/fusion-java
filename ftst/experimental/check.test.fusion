@@ -262,11 +262,11 @@
 (define (bad_contract)
   (raise_contract_error "bad_contract" "something went wrong"))
 
-(expect_contract_exn (bad_contract))
+(expect_contract_error (bad_contract))
 
-(expect_contract_exn (bad_argument))  // Argument exn IS-A contract exn
-(expect_contract_exn (bad_arity))     // Arity    exn IS-A contract exn
-(expect_contract_exn (bad_result))    // Result   exn IS-A contract exn
+(expect_contract_error (bad_argument))  // Argument exn IS-A contract exn
+(expect_contract_error (bad_arity))     // Arity    exn IS-A contract exn
+(expect_contract_error (bad_result))    // Result   exn IS-A contract exn
 
 
 // Inheritance
@@ -277,8 +277,8 @@
 
 
 // Malformed uses
-(expect_syntax_error (expect_contract_exn))
-(expect_syntax_error (expect_contract_exn true "message" "extra"))
+(expect_syntax_error (expect_contract_error))
+(expect_syntax_error (expect_contract_error true "message" "extra"))
 
 
 //==========================================================================

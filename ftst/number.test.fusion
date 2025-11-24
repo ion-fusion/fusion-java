@@ -26,10 +26,10 @@
 (check == 2.0 (/ 4.0 2.0))
 
 // divide by zero
-(expect_contract_exn (/ 12. 0.))
+(expect_contract_error (/ 12. 0.))
 
 // inexact result
-(expect_contract_exn (/ 12. 7.))
+(expect_contract_error (/ 12. 7.))
 
 //============================================================================
 // ceiling

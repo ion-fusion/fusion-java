@@ -15,7 +15,7 @@
       (if (= i len)
         (begin
           (check_false (iterator_has_next iter) "iterator should be empty")
-          (expect_contract_exn (iterator_next iter)))
+          (expect_contract_error (iterator_next iter)))
         (begin
           (check_pred iterator_has_next iter "iterator should have next")
           (let [(actual   (iterator_next iter)),
@@ -78,7 +78,7 @@
 (let [(i (iterator_append (value_iterator 1) (value_iterator 2)))]
   (check === 1 (iterator_next i))
   (check === 2 (iterator_next i))
-  (expect_contract_exn (iterator_next i)))
+  (expect_contract_error (iterator_next i)))
 
 
 //==========================================================================
@@ -94,7 +94,7 @@
 (let [(i (iterator_choose is_int (list_iterator [true, 1, 2, false])))]
   (check === 1 (iterator_next i))
   (check === 2 (iterator_next i))
-  (expect_contract_exn (iterator_next i)))
+  (expect_contract_error (iterator_next i)))
 
 (expect_argument_error
   (iterator_choose true empty_iterator))     // 1st arg not a proc
@@ -137,7 +137,7 @@
   (check === 1 (iterator_next i))
   (check === 2 (iterator_next i))
   (check === 3 (iterator_next i))
-  (expect_contract_exn (iterator_next i)))
+  (expect_contract_error (iterator_next i)))
 
 (expect_argument_error
   (iterator_map_splicing true empty_iterator))     // 1st arg not a proc

@@ -171,7 +171,7 @@
       (raise "foo"))))
 
 // Test pass through of exceptions when re-raised within a handler
-(expect_contract_exn
+(expect_contract_error
   (with_handlers
     [(catch_all (|x| (raise x))),]
     (raise_contract_error "test" "foo")))
