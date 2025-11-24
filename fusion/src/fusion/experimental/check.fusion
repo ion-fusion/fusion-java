@@ -634,34 +634,4 @@ but do this instead:
                 (tail actuals)))
             (quote_syntax here)
             stx)))))
-
-
-  //===========================================================================
-  // Provide deprecated bindings for backwards compatibility.
-
-  (define_syntax defpub_old_expect
-    (lambda (stx)
-      (lets
-        [(args (tail (syntax_unwrap stx))),
-         (old_name (head args)),
-         (new_name (head (tail args))),
-         (docs (string_append
-                 "DEPRECATED.  Renamed to `"
-                 (syntax_unwrap new_name)
-                 "`."))]
-        (datum_to_syntax
-          (sexp (quote_syntax defpub_syntax) old_name
-            docs
-            new_name)
-          (quote_syntax here)
-          stx))))
-
-  (defpub_old_expect expect_any_exn      expect_any_raise)
-  (defpub_old_expect expect_argument_exn expect_argument_error)
-  (defpub_old_expect expect_arity_exn    expect_arity_error)
-  (defpub_old_expect expect_check_exn    expect_check_error)
-  (defpub_old_expect expect_contract_exn expect_contract_error)
-  (defpub_old_expect expect_result_exn   expect_result_error)
-  (defpub_old_expect expect_syntax_exn   expect_syntax_error)
-
 )
