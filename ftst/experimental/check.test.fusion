@@ -27,14 +27,14 @@
 (check_true true)
 (check_true (quote a::true))
 
-(expect_check_exn (check_true false))
-(expect_check_exn (check_true 1))      // truthy but not true
+(expect_check_error (check_true false))
+(expect_check_error (check_true 1))      // truthy but not true
 
 (check_false false)
 (check_false (quote a::false))
 
-(expect_check_exn (check_false true))
-(expect_check_exn (check_false null))      // untruthy but not false
+(expect_check_error (check_false true))
+(expect_check_error (check_false null))      // untruthy but not false
 
 
 //==========================================================================
@@ -44,8 +44,8 @@
 (check_null null.int)
 (check_null null.int "msg")
 
-(expect_check_exn (check_null (void)))
-(expect_check_exn (check_null (void) "msg"))
+(expect_check_error (check_null (void)))
+(expect_check_error (check_null (void) "msg"))
 
 
 //==========================================================================
@@ -54,8 +54,8 @@
 (check_void (void))
 (check_void (void) "msg")
 
-(expect_check_exn (check_void null))
-(expect_check_exn (check_void null "msg"))
+(expect_check_error (check_void null))
+(expect_check_error (check_void null "msg"))
 
 
 //==========================================================================
@@ -64,8 +64,8 @@
 (check_same 1 1)
 (check_same 1 1 "message")
 
-(expect_check_exn (check_same 1 2))
-(expect_check_exn (check_same 1 2 "msg"))
+(expect_check_error (check_same 1 2))
+(expect_check_error (check_same 1 2 "msg"))
 
 
 // Malformed uses
@@ -85,7 +85,7 @@
 (check_annotations ["a", "b"]    (quote a::b::c))
 (check_annotations (quote (a b)) (quote a::b::null))
 
-(expect_check_exn
+(expect_check_error
   (check_annotations ["b", "a"] (quote a::b::null)))
 
 
@@ -151,7 +151,7 @@
 
 (define_binary_check (?== e a) (== e a))
 (?== 1 1)
-(expect_check_exn (?== 1 2))
+(expect_check_error (?== 1 2))
 
 
 // Malformed uses
@@ -171,11 +171,11 @@
 //==========================================================================
 // expect_check_error
 
-(expect_check_exn (fail))
-(expect_check_exn (fail "message"))
-(expect_check_exn (fail_check))
-(expect_check_exn (check = 1 2))
-(expect_check_exn (expect_check_exn (check = 1 1)))
+(expect_check_error (fail))
+(expect_check_error (fail "message"))
+(expect_check_error (fail_check))
+(expect_check_error (check = 1 2))
+(expect_check_error (expect_check_error (check = 1 1)))
 
 // Inheritance
 (expect_any_raise      (fail))
@@ -188,8 +188,8 @@
 
 
 // Malformed uses
-(expect_syntax_error (expect_check_exn))
-(expect_syntax_error (expect_check_exn true "message" "extra"))
+(expect_syntax_error (expect_check_error))
+(expect_syntax_error (expect_check_error true "message" "extra"))
 
 
 //==========================================================================
