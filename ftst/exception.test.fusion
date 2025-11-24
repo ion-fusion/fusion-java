@@ -147,7 +147,7 @@
     (raise "foo")))
 
 // Verify that handler exceptions are thrown.
-(expect_result_exn
+(expect_result_error
   (with_handlers
     [(catch_all (|x| (raise_result_error "bar" "baz" "biz"))),]
     (raise "foo")))

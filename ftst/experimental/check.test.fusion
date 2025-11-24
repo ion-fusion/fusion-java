@@ -238,9 +238,9 @@
 //==========================================================================
 // expect_result_error
 
-(expect_result_exn (raise_result_error "here" "int" "string"))
+(expect_result_error (raise_result_error "here" "int" "string"))
 
-(expect_result_exn (bad_result))
+(expect_result_error (bad_result))
 
 
 // Inheritance
@@ -252,8 +252,8 @@
 
 
 // Malformed uses
-(expect_syntax_error (expect_result_exn))
-(expect_syntax_error (expect_result_exn true "message" "extra"))
+(expect_syntax_error (expect_result_error))
+(expect_syntax_error (expect_result_error true "message" "extra"))
 
 
 //==========================================================================

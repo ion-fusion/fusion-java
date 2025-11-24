@@ -121,17 +121,17 @@
   (let_values [((x x) (values 1 2))] 3))
 
 // Result arity mismatch
-(expect_result_exn
+(expect_result_error
   (let_values [(() 1)] 3))
-(expect_result_exn
+(expect_result_error
   (let_values [((x) (values))] 3))
-(expect_result_exn
+(expect_result_error
   (let_values [((x) (values 1 2 3))] 3))
-(expect_result_exn
+(expect_result_error
   (let_values [((x y) (values 1))] 3))
-(expect_result_exn
+(expect_result_error
   (let_values [((x y) (values 1 2 3))] 3))
-(expect_result_exn
+(expect_result_error
   (let_values [((x) 1), ((y z) (values 1 2 3))] 3))
 
 

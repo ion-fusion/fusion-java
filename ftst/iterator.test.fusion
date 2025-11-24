@@ -145,6 +145,6 @@
   (iterator_map_splicing identity []))             // 2nd arg not an iterator
 
 // Proc doesn't return an iterator
-(expect_result_exn
+(expect_result_error
   (let [(i (iterator_map_splicing identity (list_iterator [1])))]
     (iterator_has_next i)))
