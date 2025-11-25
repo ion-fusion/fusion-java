@@ -26,15 +26,18 @@ repositories {
 }
 
 dependencies {
-    implementation("com.amazon.ion:ion-java:1.11.9")
-    // TODO This shouldn't be needed when consumers embed Fusion.
+    // NOTICE: More dependencies are declared below for testDist
+
+    implementation("com.amazon.ion:ion-java:1.11.11")
+
+    // TODO These shouldn't be needed when consumers embed Fusion.
     //  It's a build-time dependency, but here b/c consumers use the CLI to
     //  generate their docs.  That should be handled by a plugin instead.
     implementation("org.markdownj:markdownj:0.3.0-1.0.2b4")
     implementation("com.github.spullara.mustache.java:compiler:0.9.14")
 
     // https://junit.org/junit5/docs/current/user-guide/#running-tests-build-gradle-bom
-    testImplementation(platform("org.junit:junit-bom:5.11.3"))
+    testImplementation(platform("org.junit:junit-bom:5.14.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
@@ -130,10 +133,10 @@ testing {
             dependencies {
                 // Docs claim that Jupiter is configured by default, but these
                 // are all necessary.
-                implementation(platform("org.junit:junit-bom:5.11.3"))
+                implementation(platform("org.junit:junit-bom:5.14.1"))
                 implementation("org.junit.jupiter:junit-jupiter")
                 implementation("org.hamcrest:hamcrest:3.0")
-                implementation("org.htmlunit:htmlunit:4.12.0")
+                implementation("org.htmlunit:htmlunit:4.19.0")
 
                 // Provide access to utility classes from src/test
                 implementation(sourceSets.test.get().runtimeClasspath)
