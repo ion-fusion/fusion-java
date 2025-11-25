@@ -5,7 +5,8 @@
 
 > **Prerequisites:**
 >
-> * Install a Java runtime, version 8 or later. We recommend [Amazon Corretto][].
+> * Install a Java runtime, version 17 or later. We recommend [Amazon Corretto][].
+>   * This project builds for Java 8, but its Gradle tooling requires 17.
 > * Install [Git][].
 > * Ensure that `java` and `git` are on your shell's `PATH`.
 
