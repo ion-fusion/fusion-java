@@ -74,24 +74,4 @@ Since Fusion doesn't define a specific implementation of strings, this procedure
 is not guaranteed to have better than O(_n_) time.
     '''
     "dev.ionfusion.fusion.FusionString$IndexCodePointsProc")
-
-
-  (defpub_j string_split_noregexp
-    '''
-    (string_split_noregexp string separator)
-
-Splits `string` into an immutable list of strings using `separator`.
-Both arguments must be actual strings.
-
-Returns an empty list when `string` is an empty string.
-
-The `separator` is _not_ a regular expression; callers needing that feature
-should use `regexp_split` from the [FusionJavaRegexp][] package, being careful
-to adapt code to that method's different argument order, result type (sexp
-instead of immutable list), and edge cases around leading matches. Test your
-code thoroughly.
-
-[FusionJavaRegexp]: wiki:FusionJavaRegexp
-    '''
-    "dev.ionfusion.fusion.FusionString$SplitNoRegexpProc")
 )

@@ -178,29 +178,15 @@ Both arguments must be actual strings.
 
 Returns an empty list when `string` is an empty string.
 
-**DEPRECATED** where `separator` is a regular expression. That behavior was
-unintentional, and in conflict with this library's design goal to have no
-dependency on the Java language or library.
-
-  * Callers needing to split based on regular expressions should use
-    `regexp_split` from the [FusionJavaRegexp][] package, being careful to adapt code to that method's
-    different argument order, result type (sexp instead of immutable list), and
-    edge cases around leading matches. Test your code thoroughly.
-  * Callers needing separators that are escaped to avoid being regular
-    expressions should use [`string_split_noregexp`][ssn] until the regexp
-    behavior is removed from this procedure. For example, replace:
-
-        (string_split txt "\\\\.")
-
-    with:
-
-        (require "/fusion/experimental/string")
-        (string_split_noregexp txt ".")
+The `separator` is _not_ a regular expression; callers needing that feature
+should use `regexp_split` from the [FusionJavaRegexp][] package, being careful
+to adapt code to that method's different argument order, result type (sexp
+instead of immutable list), and edge cases around leading matches. Test your
+code thoroughly.
 
 [FusionJavaRegexp]: wiki:FusionJavaRegexp
-[ssn]: fusion/experimental/string.html#string_split_noregexp
     '''
-    (java_new "dev.ionfusion.fusion.FusionString$SplitProc"))
+    (java_new "dev.ionfusion.fusion.FusionString$SplitNoRegexpProc"))
 
   (define_values (string_starts_with)
     '''
