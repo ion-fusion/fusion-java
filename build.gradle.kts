@@ -52,6 +52,8 @@ java {
     withJavadocJar()
 }
 
+val mainFusionRepo = layout.projectDirectory.dir("fusion")
+val testFusionRepo = layout.projectDirectory.dir("ftst/repo")
 
 // Default output paths, hard-coded because the DSL doesn't seem to expose them.
 val docsDir    = layout.buildDirectory.dir("docs")
@@ -76,8 +78,7 @@ tasks.jar {
     // sourceSet, so they are automatically added to the classpath when testing.
     // It's unclear how to change the parent directory that way.
     into("FUSION-REPO") {
-        from(layout.projectDirectory.dir("fusion"))
-        exclude("**/*.md")
+        from(mainFusionRepo)
         includeEmptyDirs = true
     }
 }
@@ -95,7 +96,7 @@ tasks.test {
     // Collect Fusion coverage data IFF a report is being generated.
     mustRunAfter(fcovConfigure)
 
-    inputs.dir(layout.projectDirectory.dir("ftst"))
+    inputs.dir(testFusionRepo)
 
     jvmArgumentProviders.add {
         if (fcovRunning) {
@@ -113,7 +114,7 @@ val ftstRepo = tasks.register<Jar>("ftstRepo") {
     archiveFileName = "ftst-repo.jar"
 
     into("FUSION-REPO") {
-        from(layout.projectDirectory.dir("ftst/repo"))
+        from(testFusionRepo)
         includeEmptyDirs = true
     }
 }
@@ -282,7 +283,7 @@ tasks.register<JavaExec>("fusiondoc") {
     classpath = sourceSets["main"].runtimeClasspath
     mainClass = "dev.ionfusion.fusion.cli.Cli"
     args = listOf("document",
-                  "--modules", "fusion",
+                  "--modules", mainFusionRepo.toString(),
                   "--articles", articlesDir.toString(),
                   "--assets", assetsDir.toString(),
                   fusiondocDir.asFile.path)
@@ -292,7 +293,7 @@ tasks.register<JavaExec>("fusiondoc") {
     // Docgen has Java code! Not sure if this is the best solution...
     dependsOn(tasks.compileJava)
 
-    inputs.dir(layout.projectDirectory.dir("fusion"))
+    inputs.dir(mainFusionRepo)
     inputs.dir(articlesDir)
     inputs.dir(assetsDir)
     inputs.dir(layout.projectDirectory.dir("src/doc/templates"))
