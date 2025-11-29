@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion.cli;
 
+import static dev.ionfusion.fusion.TestSetup.fusionBootstrapDirectory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import dev.ionfusion.fusion.junit.StdioTestCase;
@@ -46,9 +47,8 @@ public class CliTestCase
     {
         ArrayList<String> join = new ArrayList<>();
 
-        // This is needed to run tests in the IDE.
         join.add("--repositories");
-        join.add("fusion");
+        join.add(fusionBootstrapDirectory().toString());
 
         join.addAll(Arrays.asList(commandLine));
         return join.toArray(new String[0]);
