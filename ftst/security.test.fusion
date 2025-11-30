@@ -6,13 +6,14 @@
   "/fusion/experimental/check"
   "/fusion/parameter"
   (only_in "/fusion/private/kernel" current_directory)
-  "/fusion/private/security")
+  "/fusion/private/security"
+  "/testutils")
 
 
 (define (load_hello)
-  (load "tst-data/hello.ion"))
+  (load (test_data_file "hello.ion")))
 (define (read_hello)
-  (with_ion_from_file "tst-data/hello.ion" read))
+  (with_ion_from_file (test_data_file "hello.ion") read))
 
 (check === "hello" (load_hello))
 (check === "hello" (read_hello))

@@ -4,12 +4,14 @@
 package dev.ionfusion.fusion;
 
 import static com.amazon.ion.util.IonTextUtils.printString;
+import static dev.ionfusion.fusion.TestSetup.testDataFile;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -17,7 +19,7 @@ import org.junit.jupiter.api.function.Executable;
 public class SandboxTest
     extends CoreTestCase
 {
-    public static final File HELLO_RELATIVE = new File("tst-data/hello.ion");
+    public static final File HELLO_RELATIVE = testDataFile("hello.ion").toFile();
     public static final File HELLO_ABSOLUTE = HELLO_RELATIVE.getAbsoluteFile();
 
 

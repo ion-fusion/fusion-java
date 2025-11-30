@@ -3,13 +3,15 @@
 
 package dev.ionfusion.fusion;
 
+import static com.amazon.ion.util.IonTextUtils.printString;
 import static dev.ionfusion.fusion.FusionIo.isEof;
 import static dev.ionfusion.fusion.FusionIo.read;
 import static dev.ionfusion.fusion.FusionStruct.isImmutableStruct;
 import static dev.ionfusion.fusion.FusionStruct.unsafeStructSize;
-import static com.amazon.ion.util.IonTextUtils.printString;
+import static dev.ionfusion.fusion.TestSetup.testDataDirectory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.amazon.ion.IonList;
 import com.amazon.ion.IonReader;
 import com.amazon.ion.IonValue;
@@ -27,9 +29,10 @@ public class FusionIoTest
     public void requires()
         throws Exception
     {
+        useTstRepo();
         topLevel().requireModule("/fusion/eval");
         topLevel().requireModule("/fusion/io");
-        topLevel().requireModule("/fusion/parameter");
+        topLevel().requireModule("/testutils");
     }
 
 
@@ -47,7 +50,7 @@ public class FusionIoTest
         String userDir = System.getProperty("user.dir");
         assertEval(printString(userDir), "(current_directory)");
 
-        String newDir = userDir + "/tst-data";
+        String newDir = testDataDirectory().toString();
         assertEval("\"hello\"",
                    "(parameterize" +
                    "  ((current_directory " + printString(newDir) + "))" +
@@ -85,7 +88,7 @@ public class FusionIoTest
     public void testLoadCurrentNamespace()
         throws Exception
     {
-        eval("(load \"tst-data/trivialDefine.fusion\")");
+        eval("(load (test_data_file \"trivialDefine.fusion\"))");
         assertEval(3328, "x");
     }
 

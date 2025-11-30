@@ -44,6 +44,16 @@ public class TestSetup
         return testScriptDirectory().resolve("repo");
     }
 
+    public static Path testDataDirectory()
+    {
+        return PROJECT_DIRECTORY.resolve("tst-data");
+    }
+
+    public static Path testDataFile(String path)
+    {
+        return testDataDirectory().resolve(path);
+    }
+
 
     /**
      * Create a standard Fusion runtime builder, configured for testing.

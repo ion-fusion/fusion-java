@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionVoid.isVoid;
+import static dev.ionfusion.fusion.TestSetup.testDataFile;
 import static dev.ionfusion.fusion.TestSetup.testScriptDirectory;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
@@ -45,10 +46,10 @@ public class RuntimeTest
     public void testLoadFile()
         throws Exception
     {
-        checkString("hello", loadFile("tst-data/hello.ion"));
+        checkString("hello", loadFile(testDataFile("hello.ion")));
 
         // Test that eval'd define affects the visible namespace
-        loadFile("tst-data/trivialDefine.fusion");
+        loadFile(testDataFile("trivialDefine.fusion"));
         assertEval(3328, "x");
 
         // Test loading a script with top-level modules

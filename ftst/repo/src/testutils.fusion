@@ -12,9 +12,12 @@
   (provide
     bag_equal
     remove_first
+    test_data_file
     test_equivalence
   )
 
+  (define (test_data_file filename)
+    (string_append "tst-data/" filename))
 
   (defpub F (lambda rest false))
   (defpub T (lambda rest true))

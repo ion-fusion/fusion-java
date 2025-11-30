@@ -3,10 +3,12 @@
 
 package dev.ionfusion.fusion.cli;
 
+import static dev.ionfusion.fusion.TestSetup.testDataFile;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.isEmptyString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 
 public class LoadTest
@@ -16,19 +18,20 @@ public class LoadTest
     public void testNoSuchScript()
         throws Exception
     {
-        String scriptPath = "tst-data/no-such-script";
-        run(1, "load", scriptPath);
+        String path = testDataFile("no-such-script").toString();
+        run(1, "load", path);
 
         assertThat(stdoutText, isEmptyString());
         assertThat(stderrText, containsString("not a readable file"));
-        assertThat(stderrText, containsString(scriptPath));
+        assertThat(stderrText, containsString(path));
     }
 
     @Test
     public void testVoidResult()
         throws Exception
     {
-        run(0, "load", "tst-data/trivialDefine.fusion");
+        String path = testDataFile("trivialDefine.fusion").toString();
+        run(0, "load", path);
 
         assertThat(stdoutText, isEmptyString());
         assertThat(stderrText, isEmptyString());
@@ -38,7 +41,8 @@ public class LoadTest
     public void testSingleResult()
         throws Exception
     {
-        run(0, "load", "tst-data/hello.ion");
+        String path = testDataFile("hello.ion").toString();
+        run(0, "load", path);
 
         assertEquals("\"hello\"\n", stdoutText);
         assertThat(stderrText, isEmptyString());
@@ -48,7 +52,8 @@ public class LoadTest
     public void testMultipleResults()
         throws Exception
     {
-        run(0, "load", "tst-data/two-results.fusion");
+        String path = testDataFile("two-results.fusion").toString();
+        run(0, "load", path);
 
         assertEquals("1\n\"2\"\n", stdoutText);
         assertThat(stderrText, isEmptyString());

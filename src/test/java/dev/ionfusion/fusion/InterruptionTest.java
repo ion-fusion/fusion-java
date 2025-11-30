@@ -4,10 +4,11 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
+import static dev.ionfusion.fusion.TestSetup.testDataFile;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.fail;
+
 import com.amazon.ion.IonReader;
-import java.io.File;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
@@ -199,7 +200,7 @@ public class InterruptionTest
             void eval() throws Exception
             {
                 TopLevel top = topLevel();
-                top.load(new File("tst-data/interrupt.fusion"));
+                top.load(testDataFile("interrupt.fusion").toFile());
             }
         };
 

@@ -24,8 +24,8 @@
 (expect_arity_error (with_ion_from_lob {{""}} read 1))
 
 (expect_arity_error (with_ion_from_file))
-(expect_arity_error (with_ion_from_file "tst-data-ints.ion"))
-(expect_arity_error (with_ion_from_file "tst-data-ints.ion" read 1))
+(expect_arity_error (with_ion_from_file (test_data_file "ints.ion")))
+(expect_arity_error (with_ion_from_file (test_data_file "ints.ion") read 1))
 
 
 (with_ion_from_string "0 1 2 3"
@@ -42,11 +42,11 @@
 
 
 // This assumes that current_directory is at the project root.
-(with_ion_from_file "tst-data/ints.ion"
+(with_ion_from_file (test_data_file "ints.ion")
   (lambda ()
     (check === 0 (read))
     (check === 1 (read))
-    (with_ion_from_file "tst-data/hello.ion"
+    (with_ion_from_file (test_data_file "hello.ion")
       (lambda ()
         (check = "hello" (read))
         (check_true (is_eof (read)))))
@@ -56,7 +56,7 @@
 
 // A nice shortcut for reading a single value.
 (check = "hello"
-  (with_ion_from_file "tst-data/hello.ion" read))
+  (with_ion_from_file (test_data_file "hello.ion") read))
 
 (check_true (is_eof eof))
 
