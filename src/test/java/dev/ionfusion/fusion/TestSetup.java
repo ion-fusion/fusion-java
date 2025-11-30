@@ -46,7 +46,7 @@ public class TestSetup
 
     public static Path testDataDirectory()
     {
-        return PROJECT_DIRECTORY.resolve("tst-data");
+        return PROJECT_DIRECTORY.resolve("src/test/data");
     }
 
     public static Path testDataFile(String path)
