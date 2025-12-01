@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion.junit;
+package dev.ionfusion.testing;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.enumeration;

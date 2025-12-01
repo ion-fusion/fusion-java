@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import dev.ionfusion.fusion.junit.TreeWalker;
+import dev.ionfusion.testing.TreeWalker;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;

@@ -3,8 +3,9 @@
 
 package dev.ionfusion.fusion.util.hamt;
 
-import static dev.ionfusion.fusion.util.Permute.generateSubsetPermutations;
+import static dev.ionfusion.testing.Permute.generateSubsetPermutations;
 import static java.util.Collections.unmodifiableList;
+
 import dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.CollisionNode;
 import dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.FlatNode;
 import java.util.List;

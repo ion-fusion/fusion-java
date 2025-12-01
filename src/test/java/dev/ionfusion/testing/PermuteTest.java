@@ -1,16 +1,17 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion.util;
+package dev.ionfusion.testing;
 
-import static dev.ionfusion.fusion.util.Permute.generatePermutations;
-import static dev.ionfusion.fusion.util.Permute.generateSubsetPermutations;
-import static dev.ionfusion.fusion.util.Permute.generateSubsets;
+import static dev.ionfusion.testing.Permute.generatePermutations;
+import static dev.ionfusion.testing.Permute.generateSubsetPermutations;
+import static dev.ionfusion.testing.Permute.generateSubsets;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.hamcrest.Matchers.hasItems;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;

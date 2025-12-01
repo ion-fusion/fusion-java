@@ -1,9 +1,10 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion.junit;
+package dev.ionfusion.testing;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;

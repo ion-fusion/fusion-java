@@ -6,7 +6,7 @@ package dev.ionfusion.fusion.cli;
 import static dev.ionfusion.fusion.TestSetup.fusionBootstrapDirectory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import dev.ionfusion.fusion.junit.StdioTestCase;
+import dev.ionfusion.testing.StdioTestCase;
 import java.util.ArrayList;
 import java.util.Arrays;
 

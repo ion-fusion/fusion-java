@@ -3,7 +3,7 @@
 
 package dev.ionfusion.fusion.util.hamt;
 
-import static dev.ionfusion.fusion.util.Permute.generateSubsets;
+import static dev.ionfusion.testing.Permute.generateSubsets;
 import static java.util.Collections.unmodifiableList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;

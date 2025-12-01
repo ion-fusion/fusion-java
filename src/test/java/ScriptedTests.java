@@ -6,7 +6,7 @@ import static dev.ionfusion.fusion.TestSetup.testRepositoryDirectory;
 import static dev.ionfusion.fusion.TestSetup.testScriptDirectory;
 
 import dev.ionfusion.fusion.FusionRuntime;
-import dev.ionfusion.fusion.junit.TreeWalker;
+import dev.ionfusion.testing.TreeWalker;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicNode;

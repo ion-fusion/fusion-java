@@ -1,11 +1,12 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion.junit;
+package dev.ionfusion.testing;
 
-import static dev.ionfusion.fusion.junit.Reflect.assertEqualProperties;
+import static dev.ionfusion.testing.Reflect.assertEqualProperties;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 
 

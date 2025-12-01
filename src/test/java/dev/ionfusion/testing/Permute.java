@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion.util;
+package dev.ionfusion.testing;
 
 import java.util.ArrayList;
 import java.util.Arrays;
