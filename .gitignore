@@ -1,9 +1,5 @@
-/build
-/compiled
-/demo/compiled
+build
 /eclipse-bin
-/jdiff-baseline
-cobertura.ser
 junit*.properties
 tmp*
 FusionJava.iml
@@ -11,3 +7,4 @@ FusionJava.iml
 # Ignore Gradle project-specific cache directory
 .gradle
 .idea
+.kotlin

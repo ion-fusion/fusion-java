@@ -22,11 +22,11 @@ by core syntax forms during compilation (after macro expansion) and by some high
 macros) during expansion.
 
 * Code for core-syntax
-  `module` [here](/src/com/amazon/fusion/ModuleForm.java#L386)
+  `module` [here](/runtime/src/com/amazon/fusion/ModuleForm.java#L386)
 * Code for core-syntax
-  `define_values` [here](/src/com/amazon/fusion/Compiler.java#L351)
+  `define_values` [here](/runtime/src/com/amazon/fusion/Compiler.java#L351)
 * Code for core-syntax
-  `define_syntax` [here](/src/com/amazon/fusion/Compiler.java#L407)
+  `define_syntax` [here](/runtime/src/com/amazon/fusion/Compiler.java#L407)
 * Code for macro
   `define` [here](/fusion/src/fusion/private/define.fusion#L25)
   and [here](/fusion/src/fusion/private/define.fusion#L81)

@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
  */
 public class CliSmokeTest
 {
-    private static final String CLI_PATH = "build/install/fusion/bin/fusion";
+    private static final String CLI_PATH = "build/install/ion-fusion-sdk/bin/fusion";
 
     @BeforeAll
     public static void ensureCliIsExecutable()

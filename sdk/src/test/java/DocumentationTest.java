@@ -61,7 +61,7 @@ public class DocumentationTest
     private HtmlPage loadModule(String modulePath)
         throws IOException
     {
-        String   url  = "file:build/install/fusion/docs" + modulePath + ".html";
+        String   url  = "file:build/install/ion-fusion-sdk/docs" + modulePath + ".html";
         HtmlPage page = myWebClient.getPage(url);
         assertEquals(modulePath, page.getTitleText());
 
@@ -93,7 +93,7 @@ public class DocumentationTest
     @DisplayName("docs/")
     Stream<DynamicNode> testAllHtmlPages()
     {
-        return TreeWalker.walk(Paths.get("build/install/fusion/docs"),
+        return TreeWalker.walk(Paths.get("build/install/ion-fusion-sdk/docs"),
                                dir  -> !dir.startsWith("javadoc"),
                                file -> file.getFileName().toString().endsWith(".html"),
                                file -> myWebClient.getPage(file.toUri().toURL()));

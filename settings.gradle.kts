@@ -11,3 +11,5 @@
 
 // Among other things, this becomes the module name in IDEA.
 rootProject.name = "fusion-java"
+
+include("testing", "runtime", "sdk")
