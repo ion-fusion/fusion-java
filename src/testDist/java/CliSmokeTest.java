@@ -3,6 +3,7 @@
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +29,8 @@ public class CliSmokeTest
     @BeforeAll
     public static void ensureCliIsExecutable()
     {
+        assertTrue(new File(CLI_PATH).exists(),
+                   "CLI does not exist: " + CLI_PATH);
         assertTrue(new File(CLI_PATH).canExecute(),
                    "CLI can't be executed: " + CLI_PATH);
     }

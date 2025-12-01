@@ -3,7 +3,8 @@
 
 package dev.ionfusion.fusion.util;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.startsWith;
 
 import dev.ionfusion.fusion.FusionException;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,6 @@ public class FusionJarInfoTest
         throws FusionException
     {
         FusionJarInfo info = new FusionJarInfo();
-        assertTrue(info.getReleaseLabel().startsWith("0.3"));
+        assertThat(info.getReleaseLabel(), startsWith("0.3"));
     }
 }
