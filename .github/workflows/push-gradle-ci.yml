@@ -10,7 +10,7 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: 
+    branches:
       - "main"
 
 env:
@@ -36,7 +36,7 @@ jobs:
         java-version: 17
         distribution: corretto
 
-    # Configure Gradle for optimal use in GitHub Actions, 
+    # Configure Gradle for optimal use in GitHub Actions,
     # including caching of downloaded dependencies.
     # https://github.com/gradle/actions/blob/main/setup-gradle
     - name: Setup Gradle
@@ -51,7 +51,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: distribution-artifacts
-        path: build/distributions/
+        path: sdk/build/distributions/
         if-no-files-found: error
 
     # Maintain snapshot tag
@@ -69,7 +69,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write # to create a release
-      
+
     steps:
     - name: Download distribution
       uses: actions/download-artifact@v4
