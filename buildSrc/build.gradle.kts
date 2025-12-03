@@ -12,3 +12,12 @@ repositories {
     // Use the plugin portal to build our convention plugins.
     gradlePluginPortal()
 }
+
+
+// Gradle picks a JRE (not JDK) in the ReadTheDocs build environment.
+java {
+    toolchain {
+        // Keep in sync with `.readthedocs.yaml`
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}

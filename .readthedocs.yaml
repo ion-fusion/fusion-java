@@ -11,7 +11,8 @@ build:
         python: "3.10"
 
     apt_packages:
-        - openjdk-8-jdk-headless
+        - openjdk-8-jdk-headless   # For our code
+        - openjdk-17-jdk-headless  # For Gradle 9.x
 
     jobs:
         # This is just here to log the shell environment.
@@ -23,4 +24,4 @@ build:
             html:
                 - ./gradlew installDist
                 - mkdir -p "${READTHEDOCS_OUTPUT}"
-                - mv build/install/fusion/docs "${READTHEDOCS_OUTPUT}/html"
+                - mv sdk/build/install/ion-fusion-sdk/docs "${READTHEDOCS_OUTPUT}/html"

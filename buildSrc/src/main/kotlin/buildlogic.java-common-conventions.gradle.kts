@@ -25,6 +25,7 @@ dependencies {
 // Apply a specific Java toolchain to ease working on different environments.
 java {
     toolchain {
+        // Keep in sync with `.readthedocs.yaml`
         languageVersion = JavaLanguageVersion.of(8)
     }
 }
