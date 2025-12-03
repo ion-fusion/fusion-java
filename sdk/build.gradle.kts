@@ -62,7 +62,7 @@ val fusiondoc = tasks.register<JavaExec>("fusiondoc") {
     group = "Documentation"
     description = "Generates Fusion language and library documentation."
 
-    val fusiondocDir = layout.buildDirectory.dir("docs/fusiondoc")
+    val fusiondocDir = java.docsDir.dir("fusiondoc")
 
     var docSrcDir   = layout.projectDirectory.dir("src/doc")
     var articlesDir = docSrcDir.dir("articles")

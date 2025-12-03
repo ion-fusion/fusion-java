@@ -7,7 +7,7 @@ plugins {
 }
 
 dependencies {
-    implementation("com.amazon.ion:ion-java:1.11.11")
+    api("com.amazon.ion:ion-java:1.11.11")
 
     // TODO These shouldn't be needed when consumers embed Fusion.
     //  It's a build-time dependency, but here b/c consumers use the CLI to
@@ -24,20 +24,16 @@ base {
 
 java {
     withJavadocJar()
+    withSourcesJar()
 }
 
 
 val mainFusionRepo = layout.projectDirectory.dir("src/main/fusion")
 val testFusionRepo = layout.projectDirectory.dir("src/test/fusion")
 
-// Default output paths, hard-coded because the DSL doesn't seem to expose them.
-val docsDir    = layout.buildDirectory.dir("docs")
-val libsDir    = layout.buildDirectory.dir("libs")
-val reportsDir = layout.buildDirectory.dir("reports")
-
 // New output paths for Fusion code coverage.
 val fcovDataDir = layout.buildDirectory.dir("fcov")
-val fcovReportDir = reportsDir.get().dir("fcov")
+val fcovReportDir = reporting.baseDirectory.dir("fcov")
 
 
 // Various resources refer to the current version label.
@@ -83,7 +79,7 @@ tasks.test {
 }
 
 val ftstRepo = tasks.register<Jar>("ftstRepo") {
-    destinationDirectory = libsDir
+    destinationDirectory = base.libsDirectory
     archiveFileName = "ftst-repo.jar"
 
     into("FUSION-REPO") {
@@ -157,8 +153,8 @@ val fcovTestReport = tasks.register<JavaExec>("fcovTestReport") {
     classpath = sourceSets["main"].runtimeClasspath
     mainClass = "dev.ionfusion.fusion.cli.Cli"
     args = listOf("report_coverage",
-        fcovDataDir.get().asFile.path,
-        fcovReportDir.asFile.path)
+                  fcovDataDir.get().asFile.path,
+                  fcovReportDir.get().asFile.path)
 
     enableAssertions = true
 }
@@ -176,9 +172,9 @@ gradle.taskGraph.whenReady {
 
 tasks.javadoc {
     exclude("**/_Private_*",
-        "**/_private/**",
-        "dev/ionfusion/fusion/cli",
-        "dev/ionfusion/fusion/util/hamt/**")
+            "**/_private/**",
+            "dev/ionfusion/fusion/cli",
+            "dev/ionfusion/fusion/util/hamt/**")
 
     title = "FusionJava API Reference"
 
