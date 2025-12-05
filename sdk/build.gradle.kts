@@ -114,8 +114,8 @@ distributions {
 
             from(rootDir.resolve("LICENSE"))
 
-            expand("project_version" to project.version) {
-                include("README.md")
+            filesMatching("**/README.md") {
+                expand("project_version" to project.version)
             }
         }
     }
