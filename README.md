@@ -11,7 +11,7 @@ domain-specific custom syntax. Among its interesting characteristics:
 * While Fusion facilitates general-purpose use, you can use syntactic abstractions to create custom
   syntax forms and Domain-Specific Languages, even those that are not as general as the core.
 
-Linguistically, Fusion is a dialect of [Racket][], adapted to the Ion notation. Here's a quick 
+Linguistically, Fusion is a dialect of [Racket][], adapted to the Ion notation. Here's a quick
 sample:
 
 ```
@@ -19,11 +19,11 @@ sample:
   (writeln (. value "marketplace_id")))  //   and write its marketplace_id field to stdout
 ```
 
-Fusion has an interactive command console for experimentation, and a "batch" mode for running
+Fusion has an interactive command console for experimentation and a "batch" mode for running
 scripts and pipelining data. It can also be embedded into Java applications and services, with
 some support for sandboxing untrusted code.
 
-Ion Fusion started inside Amazon in 2012, and has been used in production for over a
+Ion Fusion started inside Amazon in 2012 and has been used in production for over a
 decade, driving numerous data processing, workflow management, and analytics systems.
 It is now an independent Apache-licensed project led by current and former Amazonians.
 
@@ -37,8 +37,8 @@ It is now an independent Apache-licensed project led by current and former Amazo
 
 To learn more about this project, browse our documentation at <https://docs.ion-fusion.dev>.
 
-To try out the Fusion CLI, you'll need to build from source (sorry!).  
-See [Building Ion Fusion](https://docs.ion-fusion.dev/howto_build.html) for instructions and 
+To try out the Fusion CLI, download the [SDK](https://github.com/ion-fusion/fusion-java/releases).
+See [the documentation](https://docs.ion-fusion.dev/latest/) for instructions and
 some introductory tutorials.
 
 
@@ -53,7 +53,7 @@ If you have questions, feel free to reach out on our [Slack workspace][slack].
 
 # Contributing
 
-Contributions of all kinds are welcome! Our [Contributor's Guide](CONTRIBUTING.md) can help you get 
+Contributions of all kinds are welcome! Our [Contributor's Guide](CONTRIBUTING.md) can help you get
 going.  We are deeply grateful to our many [contributors](CONTRIBUTORS.md).
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
