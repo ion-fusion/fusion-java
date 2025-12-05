@@ -111,6 +111,12 @@ distributions {
             into("docs/javadoc") {
                 from(javadoc)
             }
+
+            from(rootDir.resolve("LICENSE"))
+
+            filesMatching("**/README.md") {
+                expand("project_version" to project.version)
+            }
         }
     }
 }
