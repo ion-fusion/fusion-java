@@ -205,8 +205,7 @@ final class RequireForm
     {
         SyntaxSymbol specId = spec.firstIdentifier(eval);
         return syntaxTrackOrigin(eval,
-                                 SyntaxSymbol.make(eval,
-                                                   specId.getLocation(),
+                                 SyntaxSymbol.make(specId.getLocation(),
                                                    makeSymbol(eval, primitiveImportName)),
                                  spec,
                                  specId);
@@ -319,7 +318,7 @@ final class RequireForm
                         FusionSymbol.BaseSymbol name = id.getName();
 
                         // Mint a fresh identifier with only the context from the module path.
-                        SyntaxSymbol localId = SyntaxSymbol.make(eval, id.getLocation(), name);
+                        SyntaxSymbol localId = SyntaxSymbol.make(id.getLocation(), name);
                         localId = (SyntaxSymbol) Syntax.applyContext(eval, context, localId);
 
                         mappings[i] = new RequireRenameMapping(localId, name);
