@@ -12,7 +12,7 @@ import static dev.ionfusion.fusion.FusionString.stringToJavaString;
 import static dev.ionfusion.fusion.FusionStruct.emptyStruct;
 import static dev.ionfusion.fusion.FusionStruct.immutableStruct;
 import static dev.ionfusion.fusion.FusionStruct.nullStruct;
-import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.internSymbol;
+import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionValue.isAnnotated;
 import static dev.ionfusion.fusion.FusionValue.isAnyNull;
 import static dev.ionfusion.fusion.FusionVoid.isVoid;
@@ -50,11 +50,9 @@ import dev.ionfusion.fusion._private.doc.model.BindingDoc.Kind;
  */
 class Compiler
 {
-    private static final Object STX_PROPERTY_RETAIN_ARG_LOCS =
-        internSymbol("#%plain_app retain arg locations");
-
     private final Evaluator myEval;
     private final boolean   myDocCollectingEnabled;
+    private final Object    myStxPropRetainArgLocs;
 
     Compiler(Evaluator eval)
     {
@@ -62,6 +60,10 @@ class Compiler
 
         DynamicParameter param = eval.getGlobalState().myCollectDocsParam;
         myDocCollectingEnabled = param.currentValue(eval);
+
+        // This magic value exists in Fusion code!
+        // TODO It should not be a symbol, but a private value of some kind.
+        myStxPropRetainArgLocs = makeSymbol(eval, "#%plain_app retain arg locations");
     }
 
 
@@ -285,7 +287,7 @@ class Compiler
         }
 
         // Look for syntax property forcing argument location tracking.
-        if (isVoid(myEval, stx.findProperty(myEval, STX_PROPERTY_RETAIN_ARG_LOCS)))
+        if (isVoid(myEval, stx.findProperty(myEval, myStxPropRetainArgLocs)))
         {
             return new CompiledPlainApp(stx.getLocation(), procForm, argForms);
         }
