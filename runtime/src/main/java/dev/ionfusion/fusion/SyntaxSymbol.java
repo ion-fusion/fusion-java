@@ -79,27 +79,6 @@ final class SyntaxSymbol
 
 
     /**
-     * @param wraps may be null.
-     * @param value may be null.
-     */
-    static SyntaxSymbol make(Evaluator eval, SyntaxWraps wraps, String value)
-    {
-        BaseSymbol datum = makeSymbol(eval, value);
-        return new SyntaxSymbol(wraps, /*location*/ null,
-                                EMPTY_OBJECT_ARRAY, datum);
-    }
-
-
-    /**
-     * @param value may be null.
-     */
-    static SyntaxSymbol make(Evaluator eval, SyntaxWrap wrap, String value)
-    {
-        return make(eval, SyntaxWraps.make(wrap), value);
-    }
-
-
-    /**
      * @param value may be null.
      */
     static SyntaxSymbol make(Evaluator eval, String value)
