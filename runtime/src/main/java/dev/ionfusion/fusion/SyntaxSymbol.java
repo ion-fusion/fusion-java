@@ -3,11 +3,12 @@
 
 package dev.ionfusion.fusion;
 
+import static com.amazon.ion.util.IonTextUtils.printQuotedSymbol;
 import static dev.ionfusion.fusion.FusionBool.makeBool;
 import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionSyntax.checkIdentifierArg;
 import static dev.ionfusion.fusion.FusionUtils.EMPTY_OBJECT_ARRAY;
-import static com.amazon.ion.util.IonTextUtils.printQuotedSymbol;
+
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import java.util.Collections;
 import java.util.Set;
@@ -41,10 +42,12 @@ final class SyntaxSymbol
     private BoundIdentifier myBoundId;
 
     /**
+     * @param wraps may be null.
+     * @param loc may be null.
+     * @param properties must not be null.
      * @param datum must not be null.
      */
-    private SyntaxSymbol(Evaluator      eval,
-                         SyntaxWraps    wraps,
+    private SyntaxSymbol(SyntaxWraps    wraps,
                          SourceLocation loc,
                          Object[]       properties,
                          BaseSymbol     datum)
@@ -54,38 +57,24 @@ final class SyntaxSymbol
 
 
 
-    static SyntaxSymbol makeOriginal(Evaluator      eval,
-                                     SourceLocation loc,
+    /**
+     * @param loc may be null.
+     * @param symbol must not be null.
+     */
+    static SyntaxSymbol makeOriginal(SourceLocation loc,
                                      BaseSymbol     symbol)
     {
-        return new SyntaxSymbol(eval, null, loc, ORIGINAL_STX_PROPS, symbol);
+        return new SyntaxSymbol(null, loc, ORIGINAL_STX_PROPS, symbol);
     }
 
-    static SyntaxSymbol make(Evaluator      eval,
-                             SourceLocation loc,
+    /**
+     * @param loc may be null.
+     * @param symbol must not be null.
+     */
+    static SyntaxSymbol make(SourceLocation loc,
                              BaseSymbol     symbol)
     {
-        return new SyntaxSymbol(eval, null, loc, EMPTY_OBJECT_ARRAY, symbol);
-    }
-
-
-    /**
-     * @param value may be null.
-     */
-    static SyntaxSymbol make(Evaluator eval, SyntaxWraps wraps, String value)
-    {
-        BaseSymbol datum = makeSymbol(eval, value);
-        return new SyntaxSymbol(eval, wraps, /*location*/ null,
-                                EMPTY_OBJECT_ARRAY, datum);
-    }
-
-
-    /**
-     * @param value may be null.
-     */
-    static SyntaxSymbol make(Evaluator eval, SyntaxWrap wrap, String value)
-    {
-        return make(eval, SyntaxWraps.make(wrap), value);
+        return new SyntaxSymbol(null, loc, EMPTY_OBJECT_ARRAY, symbol);
     }
 
 
@@ -95,7 +84,7 @@ final class SyntaxSymbol
     static SyntaxSymbol make(Evaluator eval, String value)
     {
         BaseSymbol datum = makeSymbol(eval, value);
-        return new SyntaxSymbol(eval, null, null, EMPTY_OBJECT_ARRAY, datum);
+        return new SyntaxSymbol(null, null, EMPTY_OBJECT_ARRAY, datum);
     }
 
 
@@ -112,8 +101,7 @@ final class SyntaxSymbol
     @Override
     SyntaxSymbol copyReplacingProperties(Object[] properties)
     {
-        SyntaxSymbol id = new SyntaxSymbol(null,
-                                           myWraps,
+        SyntaxSymbol id = new SyntaxSymbol(myWraps,
                                            getLocation(),
                                            properties,
                                            getName());
@@ -132,7 +120,7 @@ final class SyntaxSymbol
         // probably different, so the binding may be different.
 
         SyntaxSymbol copy =
-            new SyntaxSymbol(null, wraps, getLocation(), getProperties(),
+            new SyntaxSymbol(wraps, getLocation(), getProperties(),
                              getName());
         return copy;
     }
@@ -141,7 +129,7 @@ final class SyntaxSymbol
     SyntaxSymbol copyReplacingBinding(Binding binding)
     {
         SyntaxSymbol copy =
-            new SyntaxSymbol(null, myWraps, getLocation(), getProperties(),
+            new SyntaxSymbol(myWraps, getLocation(), getProperties(),
                              getName());
         copy.myBoundId = uncachedResolveBoundIdentifier().copyReplacingBinding(binding);
         return copy;
@@ -324,8 +312,7 @@ final class SyntaxSymbol
                 Evaluator eval = expander.getEvaluator();
                 BaseSymbol topSym = makeSymbol(eval, "#%top");
                 SyntaxSymbol top =
-                    new SyntaxSymbol(eval,
-                                     myWraps,
+                    new SyntaxSymbol(myWraps,
                                      /*location*/ null,
                                      /*properties*/ EMPTY_OBJECT_ARRAY,
                                      topSym);

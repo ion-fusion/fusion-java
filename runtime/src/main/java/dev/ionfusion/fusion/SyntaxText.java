@@ -11,6 +11,9 @@ abstract class SyntaxText<Sub extends SyntaxText>
     final SyntaxWraps myWraps;   // TODO make non-null to streamline logic.
 
     /**
+     * @param wraps may be null.
+     * @param loc may be null.
+     * @param properties must not be null.
      * @param datum must not be null.
      */
     SyntaxText(SyntaxWraps    wraps,

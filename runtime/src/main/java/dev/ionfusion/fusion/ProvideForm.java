@@ -3,12 +3,13 @@
 
 package dev.ionfusion.fusion;
 
+import static com.amazon.ion.util.IonTextUtils.printQuotedSymbol;
 import static dev.ionfusion.fusion.FusionSexp.isSexp;
 import static dev.ionfusion.fusion.FusionSymbol.isSymbol;
 import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionSyntax.syntaxTrackOrigin;
 import static dev.ionfusion.fusion.Syntax.datumToSyntax;
-import static com.amazon.ion.util.IonTextUtils.printQuotedSymbol;
+
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.Namespace.NsDefinedBinding;
 import java.util.ArrayList;
@@ -140,7 +141,7 @@ final class ProvideForm
             // but is needed for syntax analysis and origin tracking.
             SyntaxSymbol allDefinedSym =
                 syntaxTrackOrigin(eval,
-                                  SyntaxSymbol.make(eval, specId.getLocation(),
+                                  SyntaxSymbol.make(specId.getLocation(),
                                                     makeSymbol(eval, "all_defined")),
                                   specForm, specId);
             expanded.add(specForm.copyReplacingChildren(eval, allDefinedSym));
@@ -177,7 +178,7 @@ final class ProvideForm
 
             SyntaxSymbol renameSym =
                 syntaxTrackOrigin(eval,
-                                  SyntaxSymbol.make(eval, specId.getLocation(),
+                                  SyntaxSymbol.make(specId.getLocation(),
                                                     makeSymbol(eval, "rename")),
                                   specForm, specId);
 

@@ -715,7 +715,7 @@ abstract class Namespace
 
         for (ProvidedBinding provided : module.providedBindings())
         {
-            SyntaxSymbol id = SyntaxSymbol.make(eval, null, provided.getName());
+            SyntaxSymbol id = SyntaxSymbol.make(null, provided.getName());
             id = (SyntaxSymbol) Syntax.applyContext(eval, context, id);
             installRequiredBinding(eval, id, provided);
         }
@@ -741,7 +741,7 @@ abstract class Namespace
                 // TODO Error reporting is bad here, it's lost the location of
                 //   the unbound id so it reports the entire require form (when
                 //   this gets wrapped.
-                SyntaxSymbol sym = SyntaxSymbol.make(eval, null, exportedId);
+                SyntaxSymbol sym = SyntaxSymbol.make(null, exportedId);
                 throw new UnboundIdentifierException(sym);
             }
 

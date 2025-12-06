@@ -8,13 +8,14 @@ import static dev.ionfusion.fusion.FusionBool.makeBool;
 import static dev.ionfusion.fusion.FusionBool.trueBool;
 import static dev.ionfusion.fusion.FusionString.makeString;
 import static dev.ionfusion.fusion.FusionUtils.EMPTY_STRING_ARRAY;
-import dev.ionfusion.fusion.FusionBool.BaseBool;
+
 import com.amazon.ion.IonException;
 import com.amazon.ion.IonType;
 import com.amazon.ion.IonValue;
 import com.amazon.ion.IonWriter;
 import com.amazon.ion.ValueFactory;
 import com.amazon.ion.util.IonTextUtils;
+import dev.ionfusion.fusion.FusionBool.BaseBool;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
@@ -160,7 +161,7 @@ final class FusionSymbol
             {
                 return SyntaxKeyword.makeOriginal(eval, loc, this);
             }
-            return SyntaxSymbol.makeOriginal(eval, loc, this);
+            return SyntaxSymbol.makeOriginal(loc, this);
         }
 
         @Override
@@ -171,7 +172,7 @@ final class FusionSymbol
             {
                 return SyntaxKeyword.make(eval, loc, this);
             }
-            return SyntaxSymbol.make(eval, loc, this);
+            return SyntaxSymbol.make(loc, this);
         }
     }
 
@@ -213,7 +214,7 @@ final class FusionSymbol
         SyntaxValue makeOriginalSyntax(Evaluator eval, SourceLocation loc)
         {
             // No need to check for keywords.
-            return SyntaxSymbol.makeOriginal(eval, loc, this);
+            return SyntaxSymbol.makeOriginal(loc, this);
         }
 
         @Override
@@ -221,7 +222,7 @@ final class FusionSymbol
             throws FusionException
         {
             // No need to check for keywords.
-            return SyntaxSymbol.make(eval, loc, this);
+            return SyntaxSymbol.make(loc, this);
         }
 
         @Override
