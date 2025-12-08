@@ -16,10 +16,9 @@ import com.amazon.ion.IonWriter;
 import com.amazon.ion.ValueFactory;
 import com.amazon.ion.util.IonTextUtils;
 import dev.ionfusion.fusion.FusionBool.BaseBool;
+import dev.ionfusion.fusion._private.InternMap;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.util.Arrays;
-import java.util.WeakHashMap;
 
 
 final class FusionSymbol
@@ -44,26 +43,7 @@ final class FusionSymbol
         {
             if (value == null) return NULL_SYMBOL;
 
-            ActualSymbol sym = new ActualSymbol(value);
-
-            // Prevent other threads from touching the intern table.
-            // This doesn't prevent the GC from removing entries!
-            synchronized (ourActualSymbols)
-            {
-                WeakReference<ActualSymbol> ref = ourActualSymbols.get(sym);
-                if (ref != null)
-                {
-                    // There's a chance that the entry for a string will exist but
-                    // the weak reference has been cleared.
-                    ActualSymbol interned = ref.get();
-                    if (interned != null) return interned;
-                }
-
-                ref = new WeakReference<>(sym);
-                ourActualSymbols.put(sym, ref);
-
-                return sym;
-            }
+            return ourActualSymbols.intern(value);
         }
 
         /**
@@ -442,21 +422,15 @@ final class FusionSymbol
 
     /**
      * Interning table for unannotated, non-null symbols.
-     * <p>
-     * Each entry's key is the same instance as the referrent of the
-     * {@link WeakReference}, so the entry will be retained at least as long as
-     * the symbol is reachable.
      */
-    private static final
-    WeakHashMap<ActualSymbol, WeakReference<ActualSymbol>>
-        ourActualSymbols = new WeakHashMap<>(256);
+    private static final InternMap<String, ActualSymbol>
+        ourActualSymbols = new InternMap<>(ActualSymbol::new, 256);
 
     /**
      * Interning table for annotated symbols.
      */
-    private static final
-    WeakHashMap<AnnotatedSymbol, WeakReference<AnnotatedSymbol>>
-        ourAnnotatedSymbols = new WeakHashMap<>(256);
+    private static final InternMap<AnnotatedSymbol, AnnotatedSymbol>
+        ourAnnotatedSymbols = new InternMap<>((s) -> s, 256);
 
     // TODO Perhaps add expungeStaleEntries() to force GC of intern tables.
     // Because WeakHashMap only purges entries on access, we could end up with
@@ -485,25 +459,10 @@ final class FusionSymbol
 
         if (annotations.length == 0) return unannotated;
 
+        // No way to avoid allocating a key aggregating the value+annotations.
         AnnotatedSymbol sym = new AnnotatedSymbol(annotations, unannotated);
 
-        synchronized (ourAnnotatedSymbols)
-        {
-            WeakReference<AnnotatedSymbol> ref = ourAnnotatedSymbols.get(sym);
-            if (ref != null)
-            {
-                // There's a chance that the entry for a string will exist but
-                // the weak reference has been cleared.
-                AnnotatedSymbol interned = ref.get();
-                if (interned != null) return interned;
-            }
-
-            // We don't have an interned symbol, so intern the one we've made.
-            ref = new WeakReference<>(sym);
-            ourAnnotatedSymbols.put(sym, ref);
-        }
-
-        return sym;
+        return ourAnnotatedSymbols.intern(sym);
     }
 
 
