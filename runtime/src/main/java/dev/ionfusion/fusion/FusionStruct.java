@@ -180,32 +180,11 @@ final class FusionStruct
         return new FunctionalStruct(map, anns);
     }
 
-    /**
-     * @deprecated It is generally better to use a {@link #builder} or to
-     * populate a Fusion struct directly
-     * than to populate a {@link Map} and then copy it into a struct.
-     */
-    @Deprecated
-    static NonNullImmutableStruct immutableStruct(Map<String, Object> map)
-    {
-        if (map.isEmpty()) return EMPTY_STRUCT;
-        return new FunctionalStruct(MultiHashTrie.fromMap(map),
-                                    BaseSymbol.EMPTY_ARRAY);
-    }
-
-
     static NonNullImmutableStruct immutableStruct(String[] names,
                                                   Object[] values,
                                                   BaseSymbol[] anns)
     {
         return immutableStruct(MultiHashTrie.fromArrays(names, values), anns);
-    }
-
-    static NonNullImmutableStruct immutableStruct(String[] names,
-                                                  Object[] values,
-                                                  String[] anns)
-    {
-        return immutableStruct(names, values, internSymbols(anns));
     }
 
 
@@ -242,26 +221,6 @@ final class FusionStruct
     {
         return new MutableStruct(MultiHashTrie.singleEntry(name, value),
                                  BaseSymbol.EMPTY_ARRAY);
-    }
-
-    /**
-     * @deprecated It is generally better to use a {@link #builder} or to
-     * populate a Fusion struct directly
-     * than to populate a {@link Map} and then copy it into a struct.
-     */
-    @Deprecated
-    static MutableStruct mutableStruct(Map<String, Object> map)
-    {
-        return new MutableStruct(MultiHashTrie.fromMap(map),
-                                 BaseSymbol.EMPTY_ARRAY);
-    }
-
-    static MutableStruct mutableStruct(String[] names,
-                                       Object[] values,
-                                       String[] anns)
-    {
-        MultiHashTrie<String, Object> trie = MultiHashTrie.fromArrays(names, values);
-        return new MutableStruct(trie, internSymbols(anns));
     }
 
 
@@ -335,19 +294,6 @@ final class FusionStruct
         ((BaseStruct) struct).visitFields(eval, visitor);
     }
 
-    /**
-     * @param struct must be a {@link BaseStruct}.
-     * @return void if the position is out of bounds.
-     *
-     * @deprecated
-     * Renamed to {@link #unsafeStructElt(Evaluator, Object, String)}.
-     */
-    @Deprecated
-    static Object unsafeStructDot(Evaluator eval, Object struct, String field)
-        throws FusionException
-    {
-        return ((BaseStruct) struct).elt(eval, field);
-    }
 
     /**
      * Equivalent to {@code (elt struct field)}.
