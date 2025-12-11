@@ -7,12 +7,13 @@ import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.internSymbols;
 import static dev.ionfusion.fusion.SimpleSyntaxValue.makeSyntax;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+
 import com.amazon.ion.IonException;
 import com.amazon.ion.IonType;
 import com.amazon.ion.IonValue;
 import com.amazon.ion.IonWriter;
 import com.amazon.ion.ValueFactory;
+import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import java.io.IOException;
 
 
@@ -76,10 +77,7 @@ public final class FusionBool
         boolean isFalse()   { return false; }
 
         @Override
-        BaseBool isTruthy(Evaluator eval)  { return FALSE_BOOL; }
-
-        @Override
-        BaseBool not(Evaluator eval) { return TRUE_BOOL; }
+        boolean isTruthy(Evaluator eval)  { return false; }
 
         @Override
         BaseBool tightEquals(Evaluator eval, Object right)
@@ -136,10 +134,7 @@ public final class FusionBool
         boolean isFalse()   { return false; }
 
         @Override
-        BaseBool isTruthy(Evaluator eval)  { return TRUE_BOOL; }
-
-        @Override
-        BaseBool not(Evaluator eval) { return FALSE_BOOL; }
+        boolean isTruthy(Evaluator eval)  { return true; }
 
         @Override
         Boolean asJavaBoolean() { return TRUE; }
@@ -196,10 +191,7 @@ public final class FusionBool
         boolean isFalse()   { return true; }
 
         @Override
-        BaseBool isTruthy(Evaluator eval)  { return FALSE_BOOL; }
-
-        @Override
-        BaseBool not(Evaluator eval) { return TRUE_BOOL; }
+        boolean isTruthy(Evaluator eval)  { return false; }
 
         @Override
         Boolean asJavaBoolean() { return FALSE; }
@@ -287,10 +279,7 @@ public final class FusionBool
         boolean isFalse()   { return myValue.isFalse(); }
 
         @Override
-        BaseBool isTruthy(Evaluator eval)  { return myValue.isTruthy(eval); }
-
-        @Override
-        BaseBool not(Evaluator eval) { return myValue.not(eval); }
+        boolean isTruthy(Evaluator eval)  { return myValue.isTruthy(eval); }
 
         @Override
         BaseBool tightEquals(Evaluator eval, Object right)
@@ -471,7 +460,7 @@ public final class FusionBool
      * <p>
      * This is <em>not</em> a
      * <a href="{@docRoot}/../fusion/bool.html#truthiness">truthiness</a>
-     * test; use {@link #isTruthy(TopLevel, Object)} for that purpose.
+     * test; use {@link FusionValue#isTruthy(TopLevel, Object)} for that purpose.
      *
      * @param top the {@link TopLevel} in which to test the value
      * @param value the value to test
@@ -506,7 +495,7 @@ public final class FusionBool
      * <p>
      * This is <em>not</em> a
      * <a href="{@docRoot}/../fusion/bool.html#truthiness">truthiness</a>
-     * test; use {@link #isTruthy(TopLevel, Object)} for that purpose.
+     * test; use {@link FusionValue#isTruthy(TopLevel, Object)} for that purpose.
      *
      * @param top the {@link TopLevel} in which to test the value
      * @param value the value to test
@@ -533,50 +522,6 @@ public final class FusionBool
         }
 
         return false;
-    }
-
-
-    /**
-     * Determines whether a given Fusion value is "truthy".
-     * Fusion defines
-     * <a href="{@docRoot}/../fusion/bool.html#truthiness">truthiness</a>
-     * as follows:
-     * <ul>
-     *   <li>
-     *     Every value is truthy except for {@code false}, void, and any
-     *     variant of {@code null}.
-     *   </li>
-     * </ul>
-     * This definition is more lax (and hopefully more convenient) than Java,
-     * but less lenient (and hopefully less error-prone) than C or C++.
-     *
-     * @param top the {@link TopLevel} in which to test the value
-     * @param value the value to test
-     *
-     * @return {@code true} if the value is truthy,
-     * otherwise {@code false}
-     *
-     * @throws FusionException if an error occurs during evaluation
-     *
-     * @see <a href="{@docRoot}/../fusion/bool.html#truthiness">Truthiness</a>
-     * @see FusionBool#isTrue(TopLevel, Object)
-     */
-    public static boolean isTruthy(TopLevel top, Object value)
-        throws FusionException
-    {
-        Evaluator eval = StandardTopLevel.toEvaluator(top);
-        return isTruthy(eval, value).isTrue();
-    }
-
-    static BaseBool isTruthy(Evaluator eval, Object value)
-        throws FusionException
-    {
-        if (value instanceof BaseValue)
-        {
-            return ((BaseValue) value).isTruthy(eval);
-        }
-
-        return trueBool(eval);
     }
 
 

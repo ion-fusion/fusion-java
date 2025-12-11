@@ -9,14 +9,15 @@ import static dev.ionfusion.fusion.FusionBool.trueBool;
 import static dev.ionfusion.fusion.FusionIo.safeWriteToString;
 import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.unsafeSymbolsToJavaStrings;
 import static dev.ionfusion.fusion.FusionValue.sameAnnotations;
-import dev.ionfusion.fusion.FusionBool.BaseBool;
-import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+
 import com.amazon.ion.IonException;
 import com.amazon.ion.IonValue;
 import com.amazon.ion.IonWriter;
 import com.amazon.ion.ValueFactory;
 import com.amazon.ion.system.IonTextWriterBuilder;
 import com.amazon.ion.util.IonTextUtils;
+import dev.ionfusion.fusion.FusionBool.BaseBool;
+import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import java.io.IOException;
 
 /**
@@ -24,6 +25,16 @@ import java.io.IOException;
  * <p>
  * This class, and all subclasses, are <b>not for application use.</b>
  * Any aspect of this class hierarchy can and will change without notice!
+ * <p>
+ * The following capabilities are aggregated here:
+ * <ul>
+ *     <li>Annotations</li>
+ *     <li>Checks for nullness, truthiness</li>
+ *     <li>Equality</li>
+ *     <li>Syntax Object construction</li>
+ *     <li>Serialization (ionize/write/display)</li>
+ * </ul>
+ * Some of these should probably be pushed down into separate interfaces.
  */
 abstract class BaseValue
 {
@@ -78,15 +89,9 @@ abstract class BaseValue
     }
 
 
-    BaseBool isTruthy(Evaluator eval)
+    boolean isTruthy(Evaluator eval)
     {
-        return makeBool(eval, ! isAnyNull());
-    }
-
-
-    BaseBool not(Evaluator eval)
-    {
-        return makeBool(eval, isAnyNull());
+        return ! isAnyNull();
     }
 
 
@@ -254,7 +259,9 @@ abstract class BaseValue
 
 
     //========================================================================
-    // Helper methods to avoid name conflicts with FusionValue imports
+    // Helper methods to work around name conflicts between methods on this
+    // class and static imports from FusionValue (for example).
+    // The problem is that virtual methods hide same-named static imports.
 
 
     static BaseBool isAnyNull(Evaluator eval, Object value)
@@ -262,20 +269,6 @@ abstract class BaseValue
     {
         boolean r = FusionValue.isAnyNull(eval, value);
         return makeBool(eval, r);
-    }
-
-
-    static BaseBool isTruthy(Evaluator eval, Object value)
-        throws FusionException
-    {
-        return FusionValue.isTruthy(eval, value);
-    }
-
-
-    static BaseBool not(Evaluator eval, Object value)
-        throws FusionException
-    {
-        return FusionValue.not(eval, value);
     }
 
 

@@ -64,7 +64,7 @@ final class AssertForm
             throws FusionException
         {
             Object result = eval.eval(store, myTestForm);
-            if (isTruthy(eval, result).isTrue())
+            if (FusionValue.isTruthy(eval, result))
             {
                 return voidValue(eval);
             }

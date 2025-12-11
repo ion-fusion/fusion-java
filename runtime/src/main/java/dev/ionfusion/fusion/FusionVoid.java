@@ -5,7 +5,7 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionBool.falseBool;
 import static dev.ionfusion.fusion.FusionBool.makeBool;
-import static dev.ionfusion.fusion.FusionBool.trueBool;
+
 import dev.ionfusion.fusion.FusionBool.BaseBool;
 import java.io.IOException;
 
@@ -25,15 +25,9 @@ public final class FusionVoid
         new BaseValue()
         {
             @Override
-            BaseBool isTruthy(Evaluator eval)
+            boolean isTruthy(Evaluator eval)
             {
-                return falseBool(eval);
-            }
-
-            @Override
-            BaseBool not(Evaluator eval)
-            {
-                return trueBool(eval);
+                return false;
             }
 
             @Override

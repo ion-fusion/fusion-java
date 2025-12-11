@@ -4,6 +4,8 @@
 package dev.ionfusion.fusion;
 
 
+import static dev.ionfusion.fusion.FusionBool.makeBool;
+
 final class NotProc
     extends Procedure1
 {
@@ -11,6 +13,7 @@ final class NotProc
     Object doApply(Evaluator eval, Object arg)
         throws FusionException
     {
-        return not(eval, arg);
+        boolean truthy = FusionValue.isTruthy(eval, arg);
+        return makeBool(eval, !truthy);
     }
 }

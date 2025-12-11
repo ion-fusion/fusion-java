@@ -56,7 +56,7 @@ final class IfForm
         {
             Object result = eval.eval(store, myTestForm);
 
-            boolean truthy = isTruthy(eval, result).isTrue();
+            boolean truthy = FusionValue.isTruthy(eval, result);
 
             CompiledForm branch = truthy ? myThenForm : myElseForm;
 

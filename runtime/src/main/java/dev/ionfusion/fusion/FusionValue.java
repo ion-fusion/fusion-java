@@ -3,14 +3,13 @@
 
 package dev.ionfusion.fusion;
 
-import static dev.ionfusion.fusion.FusionBool.falseBool;
 import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.internSymbols;
 import static dev.ionfusion.fusion.FusionUtils.EMPTY_OBJECT_ARRAY;
 import static dev.ionfusion.fusion.FusionUtils.EMPTY_STRING_ARRAY;
-import dev.ionfusion.fusion.FusionBool.BaseBool;
-import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+
 import com.amazon.ion.IonValue;
 import com.amazon.ion.ValueFactory;
+import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import java.io.IOException;
 
 /**
@@ -97,38 +96,23 @@ public final class FusionValue
      *
      * @see <a href="{@docRoot}/../fusion/bool.html#truthiness">Truthiness</a>
      * @see FusionBool#isTrue(TopLevel, Object)
-     *
-     * @deprecated As of R15 in March 2014.
-     * Moved to {@link FusionBool#isTruthy(TopLevel, Object)}.
      */
-    @Deprecated
     public static boolean isTruthy(TopLevel top, Object value)
         throws FusionException
     {
-        return FusionBool.isTruthy(top, value);
+        Evaluator eval = StandardTopLevel.toEvaluator(top);
+        return isTruthy(eval, value);
     }
 
-    /**
-     * @deprecated As of R15 in March 2014.
-     * Moved to {@link FusionBool#isTruthy(Evaluator, Object)}.
-     */
-    @Deprecated
-    static BaseBool isTruthy(Evaluator eval, Object value)
-        throws FusionException
-    {
-        return FusionBool.isTruthy(eval, value);
-    }
-
-
-    static BaseBool not(Evaluator eval, Object value)
+    static boolean isTruthy(Evaluator eval, Object value)
         throws FusionException
     {
         if (value instanceof BaseValue)
         {
-            return ((BaseValue) value).not(eval);
+            return ((BaseValue) value).isTruthy(eval);
         }
 
-        return falseBool(eval);
+        return true;
     }
 
 
