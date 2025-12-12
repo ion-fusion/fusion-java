@@ -3,78 +3,43 @@
 
 package dev.ionfusion.fusion;
 
-import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
-import java.io.IOException;
-
-
-abstract class NamedValue
-    extends BaseValue
-    implements NamedObject
+/**
+ * Fusion objects that support {@code object_name}.
+ * <p>
+ * Object names are intended for {@linkplain FusionIo#display display} in
+ * error messages and debugging.
+ *
+ * @see ObjectNameProc
+ */
+interface NamedValue <T>
 {
-    private BaseSymbol myName;
-
-
-    @Override
-    public final BaseSymbol objectName()
-    {
-        return myName;
-    }
-
-    final String getInferredName()
-    {
-        return myName == null ? null : myName.stringValue();
-    }
-
-    final void inferName(BaseSymbol name)
-    {
-        if (myName == null)
-        {
-            myName = name;
-        }
-    }
-
-    static void inferObjectName(Object value, BaseSymbol name)
+    /**
+     * Suggests a name for the given value, if it can accept it.
+     */
+    @SuppressWarnings("unchecked")
+    static void inferObjectName(Object value, Object name)
     {
         if (value instanceof NamedValue)
         {
-            ((NamedValue)value).inferName(name);
+            ((NamedValue<Object>)value).inferObjectName(name);
         }
     }
 
-
     /**
-     * Identifies this value, usually by name and type.
-     * For example, a procedure with inferred name "foo" would give the result
-     * {@code "procedure foo"}.
-     *
-     * @throws IOException
+     * Suggests a name for this object, inferred from its syntactic context.
+     * <p>
+     * If this object already has a name, it must not be changed.
      */
-    abstract void identify(Appendable out)
-        throws IOException;
-
-    /**
-     * Returns the output of {@link #identify(Appendable)} as a {@link String}.
-     *
-     * @return not null.
-     */
-    String identify()
+    default void inferObjectName(T name)
     {
-        StringBuilder out = new StringBuilder();
-        try
-        {
-            identify(out);
-        }
-        catch (IOException e) {}
-        return out.toString();
     }
 
-
-    @Override
-    public final void write(Evaluator eval, Appendable out)
-        throws IOException
-    {
-        out.append("{{{");
-        identify(out);
-        out.append("}}}");
-    }
+    /**
+     * Produces a Fusion value that's the object's name for the purpose of the
+     * {@code object_name} function.
+     * The result must not change between invocations.
+     *
+     * @return the object name. If null, {@code object_name} returns void.
+     */
+    T objectName();
 }

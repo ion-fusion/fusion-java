@@ -13,6 +13,7 @@ import static dev.ionfusion.fusion.FusionSequence.checkNullableSequenceArg;
 import static dev.ionfusion.fusion.FusionStruct.checkNullableStructArg;
 
 import com.amazon.ion.util.IonTextUtils;
+import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import java.io.IOException;
 import java.math.BigInteger;
 
@@ -22,11 +23,14 @@ import java.math.BigInteger;
  * access to the caller's environment.
  */
 abstract class Procedure
-    extends NamedValue
+    extends BaseValue
+    implements NamedValue<BaseSymbol>
 {
     final static String DOTDOTDOT = "...";
     final static String DOTDOTDOTPLUS = "...+";
 
+
+    private BaseSymbol myName;
     private final int myArity;
 
 
@@ -49,19 +53,42 @@ abstract class Procedure
 
 
     @Override
-    final void identify(Appendable out)
+    public final void inferObjectName(BaseSymbol name)
+    {
+        if (myName == null)
+        {
+            myName = name;
+        }
+    }
+
+    @Override
+    public final BaseSymbol objectName()
+    {
+        return myName;
+    }
+
+    final String getInferredName()
+    {
+        return myName == null ? null : myName.stringValue();
+    }
+
+    final String identify()
+    {
+        if (myName == null)
+        {
+            return "anonymous procedure";
+        }
+
+        return "procedure " + IonTextUtils.printQuotedSymbol(myName.stringValue());
+    }
+
+    @Override
+    public final void write(Evaluator eval, Appendable out)
         throws IOException
     {
-        String name = getInferredName();
-        if (name == null)
-        {
-            out.append("anonymous procedure");
-        }
-        else
-        {
-            out.append("procedure ");
-            IonTextUtils.printQuotedSymbol(out, name);
-        }
+        out.append("{{{");
+        out.append(identify());
+        out.append("}}}");
     }
 
 

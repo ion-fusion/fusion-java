@@ -6,7 +6,7 @@ package dev.ionfusion.fusion;
 /**
  * Implements {@code object_name}.
  *
- * @see NamedObject
+ * @see NamedValue
  * @see <a href="http://tinyurl.com/object-name">Racket Reference for
  *        object-name</a>
  */
@@ -17,9 +17,9 @@ class ObjectNameProc
     Object doApply(Evaluator eval, Object arg)
         throws FusionException
     {
-        if (arg instanceof NamedObject)
+        if (arg instanceof NamedValue)
         {
-            Object o = ((NamedObject) arg).objectName();
+            Object o = ((NamedValue) arg).objectName();
             if (o != null)
             {
                 return o;

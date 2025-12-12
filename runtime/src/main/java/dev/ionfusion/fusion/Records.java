@@ -22,7 +22,7 @@ final class Records
 {
     private final static class RecordType
         extends BaseValue
-        implements NamedObject
+        implements NamedValue<BaseSymbol>
     {
         private final BaseSymbol myName;
         private final RecordType mySupertype; // TODO push to subclass?
@@ -181,7 +181,7 @@ final class Records
             // implementing procedure’s name."
             // https://tinyurl.com/object-name
 
-            this.inferName(myProc.objectName());
+            this.inferObjectName(myProc.objectName());
 
             // I have to wonder if there's contexts in which myProc hasn't had
             // its inferred name assigned yet; perhaps this should be dynamic?
@@ -409,9 +409,9 @@ final class Records
             Procedure accessor
                 = new RecordAccessorProc(type);
 
-            inferObjectName(ctor,     makeSymbol(eval, "make_" + name));
-            inferObjectName(pred,     makeSymbol(eval, "is_" + name));
-            inferObjectName(accessor, makeSymbol(eval, name + "_element"));
+            ctor.inferObjectName(makeSymbol(eval, "make_" + name));
+            pred.inferObjectName(makeSymbol(eval, "is_" + name));
+            accessor.inferObjectName(makeSymbol(eval, name + "_element"));
 
             return new Object[] { type, ctor, pred, accessor };
         }

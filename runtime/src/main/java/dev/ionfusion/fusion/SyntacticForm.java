@@ -3,15 +3,30 @@
 
 package dev.ionfusion.fusion;
 
-import com.amazon.ion.util.IonTextUtils;
-import java.io.IOException;
+import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 
 /**
  * Base class for syntactic forms.
  */
 abstract class SyntacticForm
-    extends NamedValue    // Primarily for SyntaxChecker to label error messages
+    implements NamedValue<BaseSymbol>
 {
+    private BaseSymbol myName;
+
+    public final void inferObjectName(BaseSymbol name)
+    {
+        if (myName == null)
+        {
+            myName = name;
+        }
+    }
+
+    public final BaseSymbol objectName()
+    {
+        return myName;
+    }
+
+
     abstract SyntaxValue expand(Expander expander, Environment env,
                                 SyntaxSexp stx)
         throws FusionException;
@@ -62,29 +77,13 @@ abstract class SyntacticForm
     }
 
 
-    @Override
-    final void identify(Appendable out)
-        throws IOException
-    {
-        String name = getInferredName();
-        if (name == null)
-        {
-            out.append("anonymous syntax");
-        }
-        else
-        {
-            out.append("syntax ");
-            IonTextUtils.printQuotedSymbol(out, name);
-        }
-    }
-
-
     //========================================================================
     // Type-checking helpers
 
     final SyntaxChecker check(Evaluator eval, SyntaxSexp form)
     {
-        return new SyntaxChecker(eval, getInferredName(), form);
+        String name = objectName().stringValue();
+        return new SyntaxChecker(eval, name, form);
     }
 
     final SyntaxChecker check(Expander expander, SyntaxSexp form)
