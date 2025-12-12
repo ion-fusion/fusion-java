@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+
 import com.amazon.ion.IonReader;
 import com.amazon.ion.system.IonReaderBuilder;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,7 +55,7 @@ public class NamespaceTest
 
                 ModuleRegistry reg = ns.getRegistry();
                 ModuleInstance kernel = reg.lookup(KERNEL_MODULE_IDENTITY);
-                assertEquals(KERNEL_MODULE_NAME, kernel.getInferredName());
+                assertEquals(KERNEL_MODULE_NAME, kernel.getIdentity().absolutePath());
 
                 return null;
             }

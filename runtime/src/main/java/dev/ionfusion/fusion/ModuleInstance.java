@@ -10,7 +10,6 @@ import dev.ionfusion.fusion.ModuleNamespace.ProvidedBinding;
 import dev.ionfusion.fusion.Namespace.NsDefinedBinding;
 import dev.ionfusion.fusion._private.doc.model.BindingDoc;
 import dev.ionfusion.fusion._private.doc.model.ModuleDocs;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,7 +23,6 @@ import java.util.Set;
  * holding its top-level bindings.
  */
 final class ModuleInstance
-    extends NamedValue
 {
     // TODO This should retain the Namespace, perhaps, so we can evaluate
     //  "inside" the module namespace
@@ -52,8 +50,6 @@ final class ModuleInstance
 
         // Use object identity since symbols are interned.
         myProvidedBindings = new IdentityHashMap<>(bindingCount);
-
-        inferName(identity.toString());
     }
 
     /**
@@ -184,16 +180,5 @@ final class ModuleInstance
         }
 
         return doc;
-    }
-
-    //========================================================================
-
-
-    @Override
-    final void identify(Appendable out)
-        throws IOException
-    {
-        out.append("module ");
-        out.append(myIdentity.absolutePath());
     }
 }
