@@ -37,16 +37,7 @@ abstract class NamedValue
         if (myName == null)
         {
             myName = name;
-            nameInferred(name);
         }
-    }
-
-    /**
-     * Hook for subclass to be notified when a name has been inferred for this
-     * value.
-     */
-    void nameInferred(String name)
-    {
     }
 
 
