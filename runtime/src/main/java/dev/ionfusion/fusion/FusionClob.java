@@ -6,15 +6,16 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionBool.falseBool;
 import static dev.ionfusion.fusion.FusionBool.makeBool;
 import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.internSymbols;
-import dev.ionfusion.fusion.FusionBool.BaseBool;
-import dev.ionfusion.fusion.FusionLob.BaseLob;
-import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+
 import com.amazon.ion.IonException;
 import com.amazon.ion.IonType;
 import com.amazon.ion.IonValue;
 import com.amazon.ion.IonWriter;
 import com.amazon.ion.ValueFactory;
 import com.amazon.ion.util.IonTextUtils;
+import dev.ionfusion.fusion.FusionBool.BaseBool;
+import dev.ionfusion.fusion.FusionLob.BaseLob;
+import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -36,7 +37,7 @@ public final class FusionClob
         private BaseClob() {}
 
         @Override
-        BaseClob annotate(Evaluator eval, BaseSymbol[] annotations)
+        public BaseClob annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             if (annotations.length == 0) return this;
             return new AnnotatedClob(annotations, this);
@@ -169,7 +170,7 @@ public final class FusionClob
         }
 
         @Override
-        boolean isAnnotated()
+        public boolean isAnnotated()
         {
             return true;
         }
@@ -181,7 +182,7 @@ public final class FusionClob
         }
 
         @Override
-        BaseClob annotate(Evaluator eval, BaseSymbol[] annotations)
+        public BaseClob annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             return myValue.annotate(eval, annotations);
         }

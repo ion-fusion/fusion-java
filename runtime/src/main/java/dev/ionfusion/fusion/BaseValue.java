@@ -7,7 +7,6 @@ import static dev.ionfusion.fusion.FusionBool.falseBool;
 import static dev.ionfusion.fusion.FusionBool.makeBool;
 import static dev.ionfusion.fusion.FusionBool.trueBool;
 import static dev.ionfusion.fusion.FusionIo.safeWriteToString;
-import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.unsafeSymbolsToJavaStrings;
 import static dev.ionfusion.fusion.FusionValue.sameAnnotations;
 
 import com.amazon.ion.IonException;
@@ -39,48 +38,6 @@ import java.io.IOException;
 abstract class BaseValue
 {
     BaseValue() {}
-
-
-    boolean isAnnotated()
-        throws FusionException
-    {
-        return false;
-    }
-
-    boolean isAnnotatable()
-        throws FusionException
-    {
-        return false;
-    }
-
-    /**
-     * @return the annotation symbols; not null.
-     * <b>Must not be modified by the caller!</b>
-     */
-    BaseSymbol[] getAnnotations()
-        throws FusionException
-    {
-        // TODO should return ImmutableList of BaseSymbol
-        return BaseSymbol.EMPTY_ARRAY;
-    }
-
-    final String[] getAnnotationsAsJavaStrings()
-        throws FusionException
-    {
-        return unsafeSymbolsToJavaStrings(getAnnotations());
-    }
-
-    /**
-     * @param annotations must not be null and must not contain elements
-     * that are null, empty, or annotated.
-     *
-     * @throws UnsupportedOperationException if this value isn't annotatable.
-     */
-    Object annotate(Evaluator eval, BaseSymbol[] annotations)
-        throws FusionException
-    {
-        throw new UnsupportedOperationException("Not annotatable");
-    }
 
 
     boolean isAnyNull()

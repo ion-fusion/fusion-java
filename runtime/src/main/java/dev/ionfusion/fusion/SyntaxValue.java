@@ -9,7 +9,7 @@ import static dev.ionfusion.fusion.FusionSexp.pair;
 import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.internSymbol;
 import static dev.ionfusion.fusion.FusionUtils.EMPTY_OBJECT_ARRAY;
 import static java.lang.Boolean.TRUE;
-import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+
 import com.amazon.ion.IonValue;
 import java.util.Arrays;
 
@@ -58,14 +58,6 @@ abstract class SyntaxValue
         myProperties = properties;
     }
 
-
-    // This final override isn't semantically necessary, but it exists to
-    // ensure that we don't return annotations from any syntax object.
-    @Override
-    final BaseSymbol[] getAnnotations()
-    {
-        return BaseSymbol.EMPTY_ARRAY;
-    }
 
     // This final override isn't semantically necessary, but it exists to
     // ensure that a syntax object is never considered null.

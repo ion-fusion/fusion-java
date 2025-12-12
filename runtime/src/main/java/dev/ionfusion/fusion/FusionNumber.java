@@ -14,8 +14,7 @@ import static dev.ionfusion.fusion.SimpleSyntaxValue.makeSyntax;
 import static java.math.RoundingMode.CEILING;
 import static java.math.RoundingMode.FLOOR;
 import static java.math.RoundingMode.HALF_EVEN;
-import dev.ionfusion.fusion.FusionBool.BaseBool;
-import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+
 import com.amazon.ion.Decimal;
 import com.amazon.ion.IonException;
 import com.amazon.ion.IonType;
@@ -23,6 +22,8 @@ import com.amazon.ion.IonValue;
 import com.amazon.ion.IonWriter;
 import com.amazon.ion.ValueFactory;
 import com.amazon.ion.util.IonTextUtils;
+import dev.ionfusion.fusion.FusionBool.BaseBool;
+import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -42,14 +43,9 @@ public final class FusionNumber
 
     abstract static class BaseNumber
         extends BaseValue
+        implements AnnotatableValue
     {
         private BaseNumber() {}
-
-        @Override
-        final boolean isAnnotatable()
-        {
-            return true;
-        }
 
         int truncateToJavaInt()
         {
@@ -145,7 +141,7 @@ public final class FusionNumber
         private BaseInt() {}
 
         @Override
-        BaseInt annotate(Evaluator eval, BaseSymbol[] annotations)
+        public BaseInt annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             if (annotations.length == 0) return this;
             return new AnnotatedInt(annotations, this);
@@ -479,7 +475,7 @@ public final class FusionNumber
         }
 
         @Override
-        boolean isAnnotated()
+        public boolean isAnnotated()
         {
             return true;
         }
@@ -491,7 +487,7 @@ public final class FusionNumber
         }
 
         @Override
-        BaseInt annotate(Evaluator eval, BaseSymbol[] annotations)
+        public BaseInt annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             return myValue.annotate(eval, annotations);
         }
@@ -583,7 +579,7 @@ public final class FusionNumber
         private BaseDecimal() {}
 
         @Override
-        BaseDecimal annotate(Evaluator eval, BaseSymbol[] annotations)
+        public BaseDecimal annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             if (annotations.length == 0) return this;
             return new AnnotatedDecimal(annotations, this);
@@ -853,7 +849,7 @@ public final class FusionNumber
         }
 
         @Override
-        boolean isAnnotated()
+        public boolean isAnnotated()
         {
             return true;
         }
@@ -865,7 +861,7 @@ public final class FusionNumber
         }
 
         @Override
-        BaseDecimal annotate(Evaluator eval, BaseSymbol[] annotations)
+        public BaseDecimal annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             return myValue.annotate(eval, annotations);
         }
@@ -962,7 +958,7 @@ public final class FusionNumber
             throws FusionException;
 
         @Override
-        BaseFloat annotate(Evaluator eval, BaseSymbol[] annotations)
+        public BaseFloat annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             if (annotations.length == 0) return this;
             return new AnnotatedFloat(annotations, this);
@@ -1262,7 +1258,7 @@ public final class FusionNumber
         }
 
         @Override
-        boolean isAnnotated()
+        public boolean isAnnotated()
         {
             return true;
         }
@@ -1274,7 +1270,7 @@ public final class FusionNumber
         }
 
         @Override
-        BaseFloat annotate(Evaluator eval, BaseSymbol[] annotations)
+        public BaseFloat annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             return myValue.annotate(eval, annotations);
         }

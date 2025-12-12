@@ -115,7 +115,7 @@ final class FusionSymbol
 
 
         @Override
-        BaseSymbol annotate(Evaluator eval, BaseSymbol[] annotations)
+        public BaseSymbol annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             return FusionSymbol.annotate(this, annotations);
         }
@@ -365,19 +365,19 @@ final class FusionSymbol
         }
 
         @Override
-        boolean isAnnotated()
+        public boolean isAnnotated()
         {
             return true;
         }
 
         @Override
-        BaseSymbol[] getAnnotations()
+        public BaseSymbol[] getAnnotations()
         {
             return myAnnotations;
         }
 
         @Override
-        BaseSymbol annotate(Evaluator eval, BaseSymbol[] annotations)
+        public BaseSymbol annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             return myValue.annotate(eval, annotations);
         }

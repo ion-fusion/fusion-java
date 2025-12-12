@@ -3,6 +3,13 @@
 
 package dev.ionfusion.fusion;
 
+import static com.amazon.ion.Timestamp.UTC_OFFSET;
+import static com.amazon.ion.Timestamp.forDay;
+import static com.amazon.ion.Timestamp.forMinute;
+import static com.amazon.ion.Timestamp.forMonth;
+import static com.amazon.ion.Timestamp.forSecond;
+import static com.amazon.ion.Timestamp.forYear;
+import static com.amazon.ion.util.IonTextUtils.isDigit;
 import static dev.ionfusion.fusion.FusionBool.falseBool;
 import static dev.ionfusion.fusion.FusionBool.makeBool;
 import static dev.ionfusion.fusion.FusionBool.trueBool;
@@ -17,16 +24,7 @@ import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.internSymbols;
 import static dev.ionfusion.fusion.FusionVoid.isVoid;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.SimpleSyntaxValue.makeSyntax;
-import static com.amazon.ion.Timestamp.UTC_OFFSET;
-import static com.amazon.ion.Timestamp.forDay;
-import static com.amazon.ion.Timestamp.forMinute;
-import static com.amazon.ion.Timestamp.forMonth;
-import static com.amazon.ion.Timestamp.forSecond;
-import static com.amazon.ion.Timestamp.forYear;
-import static com.amazon.ion.util.IonTextUtils.isDigit;
-import dev.ionfusion.fusion.FusionBool.BaseBool;
-import dev.ionfusion.fusion.FusionNumber.BaseDecimal;
-import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+
 import com.amazon.ion.IonException;
 import com.amazon.ion.IonType;
 import com.amazon.ion.IonValue;
@@ -34,6 +32,9 @@ import com.amazon.ion.IonWriter;
 import com.amazon.ion.Timestamp;
 import com.amazon.ion.Timestamp.Precision;
 import com.amazon.ion.ValueFactory;
+import dev.ionfusion.fusion.FusionBool.BaseBool;
+import dev.ionfusion.fusion.FusionNumber.BaseDecimal;
+import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import java.io.IOException;
 import java.math.BigDecimal;
 
@@ -50,19 +51,14 @@ final class FusionTimestamp
 
     abstract static class BaseTimestamp
         extends BaseValue
+        implements AnnotatableValue
     {
         private BaseTimestamp() {}
 
         abstract Timestamp timestampValue();
 
         @Override
-        final boolean isAnnotatable()
-        {
-            return true;
-        }
-
-        @Override
-        BaseTimestamp annotate(Evaluator eval, BaseSymbol[] annotations)
+        public BaseTimestamp annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             if (annotations.length == 0) return this;
             return new AnnotatedTimestamp(annotations, this);
@@ -222,19 +218,19 @@ final class FusionTimestamp
         }
 
         @Override
-        final boolean isAnnotated()
+        public final boolean isAnnotated()
         {
             return true;
         }
 
         @Override
-        BaseSymbol[] getAnnotations()
+        public BaseSymbol[] getAnnotations()
         {
             return myAnnotations;
         }
 
         @Override
-        BaseTimestamp annotate(Evaluator eval, BaseSymbol[] annotations)
+        public BaseTimestamp annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             return myValue.annotate(eval, annotations);
         }

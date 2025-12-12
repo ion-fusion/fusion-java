@@ -5,6 +5,7 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionBool.falseBool;
 import static dev.ionfusion.fusion.FusionBool.trueBool;
+
 import dev.ionfusion.fusion.FusionBool.BaseBool;
 
 
@@ -18,14 +19,9 @@ final class FusionText
 
     abstract static class BaseText
         extends BaseValue
+        implements AnnotatableValue
     {
         BaseText() {}
-
-        @Override
-        final boolean isAnnotatable()
-        {
-            return true;
-        }
 
         abstract String stringValue();
 

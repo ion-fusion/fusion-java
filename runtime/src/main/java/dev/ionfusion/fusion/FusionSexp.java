@@ -13,18 +13,19 @@ import static dev.ionfusion.fusion.FusionIo.dispatchIonize;
 import static dev.ionfusion.fusion.FusionIo.dispatchWrite;
 import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.internSymbols;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
-import dev.ionfusion.fusion.FusionBool.BaseBool;
-import dev.ionfusion.fusion.FusionCompare.EqualityTier;
-import dev.ionfusion.fusion.FusionIterator.AbstractIterator;
-import dev.ionfusion.fusion.FusionList.BaseList;
-import dev.ionfusion.fusion.FusionSequence.BaseSequence;
-import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+
 import com.amazon.ion.IonSequence;
 import com.amazon.ion.IonSexp;
 import com.amazon.ion.IonType;
 import com.amazon.ion.IonValue;
 import com.amazon.ion.IonWriter;
 import com.amazon.ion.ValueFactory;
+import dev.ionfusion.fusion.FusionBool.BaseBool;
+import dev.ionfusion.fusion.FusionCompare.EqualityTier;
+import dev.ionfusion.fusion.FusionIterator.AbstractIterator;
+import dev.ionfusion.fusion.FusionList.BaseList;
+import dev.ionfusion.fusion.FusionSequence.BaseSequence;
+import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -556,7 +557,7 @@ final class FusionSexp
         }
 
         @Override
-        Object annotate(Evaluator eval, BaseSymbol[] annotations)
+        public Object annotate(Evaluator eval, BaseSymbol[] annotations)
             throws FusionException
         {
             return new NullSexp(annotations);
@@ -636,7 +637,7 @@ final class FusionSexp
         }
 
         @Override
-        Object annotate(Evaluator eval, BaseSymbol[] annotations)
+        public Object annotate(Evaluator eval, BaseSymbol[] annotations)
             throws FusionException
         {
             return new EmptySexp(annotations);
@@ -713,7 +714,7 @@ final class FusionSexp
 
 
         @Override
-        Object annotate(Evaluator eval, BaseSymbol[] annotations)
+        public Object annotate(Evaluator eval, BaseSymbol[] annotations)
             throws FusionException
         {
             return new ImmutablePair(annotations, myHead, myTail);

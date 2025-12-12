@@ -474,14 +474,6 @@ final class FusionStruct
 
     interface BaseStruct
     {
-        boolean isAnnotated()
-            throws FusionException;
-
-        boolean isAnnotatable()
-            throws FusionException;
-
-        BaseSymbol[] getAnnotations();
-
         void ionize(Evaluator eval, IonWriter out)
             throws IOException, IonException, FusionException, IonizeFailure;
 
@@ -630,7 +622,7 @@ final class FusionStruct
         }
 
         @Override
-        Object annotate(Evaluator eval, BaseSymbol[] annotations)
+        public Object annotate(Evaluator eval, BaseSymbol[] annotations)
             throws FusionException
         {
             return new NullStruct(annotations);
@@ -1177,7 +1169,7 @@ final class FusionStruct
         }
 
         @Override
-        Object annotate(Evaluator eval, BaseSymbol[] annotations)
+        public Object annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             return makeSimilar(getMap(eval), annotations);
         }
@@ -1421,7 +1413,7 @@ final class FusionStruct
         }
 
         @Override
-        Object annotate(Evaluator eval, BaseSymbol[] annotations)
+        public Object annotate(Evaluator eval, BaseSymbol[] annotations)
             throws FusionException
         {
             return makeSimilar(getMap(eval), annotations);

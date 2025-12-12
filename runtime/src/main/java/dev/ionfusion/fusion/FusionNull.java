@@ -6,12 +6,13 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionBool.makeBool;
 import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.internSymbols;
 import static dev.ionfusion.fusion.SimpleSyntaxValue.makeSyntax;
-import dev.ionfusion.fusion.FusionBool.BaseBool;
-import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+
 import com.amazon.ion.IonException;
 import com.amazon.ion.IonValue;
 import com.amazon.ion.IonWriter;
 import com.amazon.ion.ValueFactory;
+import dev.ionfusion.fusion.FusionBool.BaseBool;
+import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import java.io.IOException;
 
 /**
@@ -27,6 +28,7 @@ public final class FusionNull
 
     static class NullNull
         extends BaseValue
+        implements AnnotatableValue
     {
         private NullNull() {}
 
@@ -37,14 +39,7 @@ public final class FusionNull
         }
 
         @Override
-        final boolean isAnnotatable()
-            throws FusionException
-        {
-            return true;
-        }
-
-        @Override
-        NullNull annotate(Evaluator eval, BaseSymbol[] annotations)
+        public NullNull annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             if (annotations.length == 0) return NULL_NULL;
             return new AnnotatedNullNull(annotations);
@@ -107,13 +102,13 @@ public final class FusionNull
         }
 
         @Override
-        boolean isAnnotated()
+        public boolean isAnnotated()
         {
             return true;
         }
 
         @Override
-        BaseSymbol[] getAnnotations()
+        public BaseSymbol[] getAnnotations()
         {
             return myAnnotations;
         }

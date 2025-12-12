@@ -24,15 +24,16 @@ import static java.lang.Character.highSurrogate;
 import static java.lang.Character.isSupplementaryCodePoint;
 import static java.lang.Character.lowSurrogate;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import dev.ionfusion.fusion.FusionBool.BaseBool;
-import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
-import dev.ionfusion.fusion.FusionText.BaseText;
+
 import com.amazon.ion.IonException;
 import com.amazon.ion.IonType;
 import com.amazon.ion.IonValue;
 import com.amazon.ion.IonWriter;
 import com.amazon.ion.ValueFactory;
 import com.amazon.ion.util.IonTextUtils;
+import dev.ionfusion.fusion.FusionBool.BaseBool;
+import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+import dev.ionfusion.fusion.FusionText.BaseText;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -65,7 +66,7 @@ public final class FusionString
         private BaseString() {}
 
         @Override
-        BaseString annotate(Evaluator eval, BaseSymbol[] annotations)
+        public BaseString annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             if (annotations.length == 0) return this;
             return new AnnotatedString(annotations, this);
@@ -250,7 +251,7 @@ public final class FusionString
         }
 
         @Override
-        boolean isAnnotated()
+        public boolean isAnnotated()
         {
             return true;
         }
@@ -262,7 +263,7 @@ public final class FusionString
         }
 
         @Override
-        BaseString annotate(Evaluator eval, BaseSymbol[] annotations)
+        public BaseString annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             return myValue.annotate(eval, annotations);
         }

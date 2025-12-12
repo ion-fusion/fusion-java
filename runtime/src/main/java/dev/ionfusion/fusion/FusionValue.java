@@ -123,11 +123,7 @@ public final class FusionValue
     static boolean isAnnotatable(Evaluator eval, Object value)
         throws FusionException
     {
-        if (value instanceof BaseValue)
-        {
-            return ((BaseValue) value).isAnnotatable();
-        }
-        return false;
+        return value instanceof AnnotatableValue;
     }
 
 
@@ -146,7 +142,7 @@ public final class FusionValue
     static Object annotate(Evaluator eval, Object value, String[] annotations)
         throws FusionException
     {
-        return ((BaseValue) value).annotate(eval, internSymbols(annotations));
+        return ((AnnotatableValue) value).annotate(eval, internSymbols(annotations));
     }
 
     /**
@@ -177,9 +173,9 @@ public final class FusionValue
     static boolean isAnnotated(Evaluator eval, Object value)
         throws FusionException
     {
-        if (value instanceof BaseValue)
+        if (value instanceof AnnotatableValue)
         {
-            return ((BaseValue) value).isAnnotated();
+            return ((AnnotatableValue) value).isAnnotated();
         }
         return false;
     }
@@ -194,9 +190,9 @@ public final class FusionValue
     static Object[] annotations(Evaluator eval, Object value)
         throws FusionException
     {
-        if (value instanceof BaseValue)
+        if (value instanceof AnnotatableValue)
         {
-            return ((BaseValue) value).getAnnotations();
+            return ((AnnotatableValue) value).getAnnotations();
         }
         return EMPTY_OBJECT_ARRAY;
     }
@@ -232,9 +228,9 @@ public final class FusionValue
     static String[] annotationsAsJavaStrings(Evaluator eval, Object value)
         throws FusionException
     {
-        if (value instanceof BaseValue)
+        if (value instanceof AnnotatableValue)
         {
-            return ((BaseValue) value).getAnnotationsAsJavaStrings();
+            return ((AnnotatableValue) value).getAnnotationsAsJavaStrings();
         }
         return EMPTY_STRING_ARRAY;
     }
@@ -251,9 +247,9 @@ public final class FusionValue
     static boolean hasAnnotation(Evaluator eval, Object value, String annotation)
         throws FusionException
     {
-        if (value instanceof BaseValue)
+        if (value instanceof AnnotatableValue)
         {
-            for (BaseSymbol a : ((BaseValue) value).getAnnotations())
+            for (BaseSymbol a : ((AnnotatableValue) value).getAnnotations())
             {
                 if (a.stringValue().equals(annotation)) return true;
             }

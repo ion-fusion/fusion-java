@@ -8,6 +8,7 @@ import static dev.ionfusion.fusion.FusionBool.makeBool;
 import static dev.ionfusion.fusion.FusionString.checkRequiredStringArg;
 import static dev.ionfusion.fusion.FusionString.makeString;
 import static dev.ionfusion.fusion.SimpleSyntaxValue.makeSyntax;
+
 import dev.ionfusion.fusion.FusionBool.BaseBool;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -30,14 +31,9 @@ public final class FusionLob
 
     abstract static class BaseLob
         extends BaseValue
+        implements AnnotatableValue
     {
         BaseLob() {}
-
-        @Override
-        final boolean isAnnotatable()
-        {
-            return true;
-        }
 
         byte[] bytesNoCopy()
         {

@@ -34,6 +34,7 @@ public final class FusionBool
 
     abstract static class BaseBool
         extends BaseValue
+        implements AnnotatableValue
     {
         private BaseBool() {}
 
@@ -41,14 +42,9 @@ public final class FusionBool
         abstract boolean isFalse();
         abstract Boolean asJavaBoolean();
 
-        @Override
-        final boolean isAnnotatable()
-        {
-            return true;
-        }
 
         @Override
-        BaseBool annotate(Evaluator eval, BaseSymbol[] annotations)
+        public BaseBool annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             if (annotations.length == 0) return this;
             return new AnnotatedBool(annotations, this);
@@ -252,19 +248,19 @@ public final class FusionBool
         }
 
         @Override
-        boolean isAnnotated()
+        public boolean isAnnotated()
         {
             return true;
         }
 
         @Override
-        BaseSymbol[] getAnnotations()
+        public BaseSymbol[] getAnnotations()
         {
             return myAnnotations;
         }
 
         @Override
-        BaseBool annotate(Evaluator eval, BaseSymbol[] annotations)
+        public BaseBool annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             return myValue.annotate(eval, annotations);
         }

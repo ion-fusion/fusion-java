@@ -803,7 +803,7 @@ final class FusionList
          * Assumes ownership of arguments.
          */
         @Override
-        Object annotate(Evaluator eval, BaseSymbol[] annotations)
+        public Object annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             // Since this instance is mutable, we cannot share the array.
             Object[] values = Arrays.copyOf(myValues, size());
@@ -852,7 +852,7 @@ final class FusionList
         }
 
         @Override
-        Object annotate(Evaluator eval, BaseSymbol[] annotations)
+        public Object annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             // Since this instance is immutable, we can share the array.
             return makeSimilar(annotations, myValues);
@@ -886,7 +886,7 @@ final class FusionList
         }
 
         @Override
-        Object annotate(Evaluator eval, BaseSymbol[] annotations)
+        public Object annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             return new NullList(annotations);
         }
@@ -1129,7 +1129,7 @@ final class FusionList
         }
 
         @Override
-        Object annotate(Evaluator eval, BaseSymbol[] annotations)
+        public Object annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             // Since this instance is immutable, we can share the array AFTER
             // we inject the children.

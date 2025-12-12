@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionNumber.makeInt;
+
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 
 
@@ -16,8 +17,10 @@ final class FusionCollection
     // Representation Classes
 
 
+    // TODO Annotation capability should move down; its a poor assumption here.
     abstract static class BaseCollection
         extends BaseValue
+        implements AnnotatableValue
     {
         /** Not null */
         final BaseSymbol[] myAnnotations;
@@ -31,12 +34,6 @@ final class FusionCollection
         {
             assert annotations != null;
             myAnnotations = annotations;
-        }
-
-        @Override
-        public final boolean isAnnotatable()
-        {
-            return true;
         }
 
         @Override
