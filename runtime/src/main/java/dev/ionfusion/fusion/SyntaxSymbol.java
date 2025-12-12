@@ -138,6 +138,9 @@ final class SyntaxSymbol
 
     //========================================================================
 
+    /**
+     * @return not null, but potentially {@code null.symbol}.
+     */
     BaseSymbol getName()
     {
         return (BaseSymbol) myDatum;

@@ -6,6 +6,7 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.BindingSite.makeDefineBindingSite;
 import static dev.ionfusion.fusion.BindingSite.makeImportBindingSite;
 import static dev.ionfusion.fusion.FusionIo.safeWriteToString;
+import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
@@ -100,6 +101,9 @@ abstract class Namespace
             myAddress   = address;
         }
 
+        /**
+         * @return not null.
+         */
         @Override
         final BaseSymbol getName()
         {
@@ -475,7 +479,7 @@ abstract class Namespace
      */
     final Binding resolveMaybe(String name)
     {
-        BaseSymbol symbol = FusionSymbol.makeSymbol(null, name);
+        BaseSymbol symbol = makeSymbol(null, name);
         return resolveMaybe(symbol);
     }
 

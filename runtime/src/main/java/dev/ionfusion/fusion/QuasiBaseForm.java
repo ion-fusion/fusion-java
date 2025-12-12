@@ -34,12 +34,7 @@ abstract class QuasiBaseForm
     {
         final Evaluator eval = expander.getEvaluator();
 
-        if (stx.size() != 2)
-        {
-            throw new SyntaxException(getInferredName(),
-                                      "a single template required",
-                                      stx);
-        }
+        check(eval, stx).arityExact(2);
 
         SyntaxValue subform = stx.get(eval, 1);
         subform = expand(expander, env, subform, 0);
