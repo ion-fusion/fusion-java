@@ -11,29 +11,21 @@ abstract class NamedValue
     extends BaseValue
     implements NamedObject
 {
-    private String myName;
+    private BaseSymbol myName;
 
 
     @Override
-    public final Object objectName(Evaluator eval)
-    {
-        if (myName == null)
-        {
-            return FusionVoid.voidValue(eval);
-        }
-        else
-        {
-            // TODO don't do this every time.
-            return FusionSymbol.makeSymbol(eval, myName);
-        }
-    }
-
-    final String getInferredName()
+    public final BaseSymbol objectName()
     {
         return myName;
     }
 
-    final void inferName(String name)
+    final String getInferredName()
+    {
+        return myName == null ? null : myName.stringValue();
+    }
+
+    final void inferName(BaseSymbol name)
     {
         if (myName == null)
         {
@@ -45,7 +37,7 @@ abstract class NamedValue
     {
         if (value instanceof NamedValue)
         {
-            ((NamedValue)value).inferName(name.stringValue());
+            ((NamedValue)value).inferName(name);
         }
     }
 

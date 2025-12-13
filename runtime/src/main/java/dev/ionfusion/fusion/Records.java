@@ -9,6 +9,8 @@ import static dev.ionfusion.fusion.FusionNull.isNullNull;
 import static dev.ionfusion.fusion.FusionNumber.checkIntArgToJavaInt;
 import static dev.ionfusion.fusion.FusionNumber.checkNullableIntArg;
 import static dev.ionfusion.fusion.FusionSymbol.checkRequiredSymbolArg;
+import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
+
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -93,7 +95,7 @@ final class Records
         }
 
         @Override
-        public Object objectName(Evaluator eval)
+        public BaseSymbol objectName()
         {
             return myName;
         }
@@ -179,7 +181,7 @@ final class Records
             // implementing procedure’s name."
             // https://tinyurl.com/object-name
 
-            this.inferName(myProc.getInferredName());
+            this.inferName(myProc.objectName());
 
             // I have to wonder if there's contexts in which myProc hasn't had
             // its inferred name assigned yet; perhaps this should be dynamic?
@@ -407,9 +409,9 @@ final class Records
             Procedure accessor
                 = new RecordAccessorProc(type);
 
-            ctor.inferName("make_" + name);
-            pred.inferName("is_" + name);
-            accessor.inferName(name + "_element");
+            inferObjectName(ctor,     makeSymbol(eval, "make_" + name));
+            inferObjectName(pred,     makeSymbol(eval, "is_" + name));
+            inferObjectName(accessor, makeSymbol(eval, name + "_element"));
 
             return new Object[] { type, ctor, pred, accessor };
         }

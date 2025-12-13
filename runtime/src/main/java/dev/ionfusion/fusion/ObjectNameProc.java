@@ -19,7 +19,11 @@ class ObjectNameProc
     {
         if (arg instanceof NamedObject)
         {
-            return ((NamedObject) arg).objectName(eval);
+            Object o = ((NamedObject) arg).objectName();
+            if (o != null)
+            {
+                return o;
+            }
         }
 
         return FusionVoid.voidValue(eval);
