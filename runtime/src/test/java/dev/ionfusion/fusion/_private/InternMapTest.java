@@ -200,12 +200,7 @@ class InternMapTest
         // Release strong references to make symbols eligible for GC
         symbols = null;
 
-        // Force GC aggressively
-        for (int i = 0; i < 10; i++)
-        {
-            System.gc();
-            Thread.sleep(50);
-        }
+        forceGC();
 
         // Create a new symbol to trigger cleanup during intern()
         interner.intern("trigger_" + System.nanoTime());
@@ -215,5 +210,44 @@ class InternMapTest
         assertTrue(finalSize < sizeAfterCreation,
                    "Expected cleanup to reduce map size from " + sizeAfterCreation + ", but got " +
                    finalSize);
+    }
+
+    @Test
+    void internedValueNeedNotRetainKey()
+        throws InterruptedException
+    {
+        // String literals are themselves interned by the JDK, so don't use one.
+        String key1 = new String("key");
+        String key2 = new String(key1);
+        assertNotSame(key1, key2);
+
+        InternedString sym1 = interner.intern(key1);
+        assertEquals(key1, sym1.getValue());
+        assertNotSame(key1, sym1.getValue());  // InternedString has made a copy
+
+        assertSame(sym1, interner.intern(key1));
+        assertSame(sym1, interner.intern(key2));
+
+        key1 = null;
+        // At this point, we have no reference to key1, used to intern sym1.
+        // Even if that instance is collected, the interner should retain sym1
+        // since it's referenced from here.
+
+        forceGC();
+
+        assertSame(sym1, interner.intern(key2));
+    }
+
+    /**
+     * Attempt to force garbage collection.  This is not reliable.
+     */
+    private static void forceGC()
+        throws InterruptedException
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            System.gc();
+            Thread.sleep(50);
+        }
     }
 }

@@ -17,20 +17,19 @@ import java.util.function.Function;
  */
 public class InternMap <K, V>
 {
-    private final Map<K, WeakReference<V>> myWeakMap;
+    private final Map<V, WeakReference<V>> myMap;
     private final Function<K, V>           myValueFactory;
 
 
     public InternMap(Function<K, V> valueFactory)
     {
-        myValueFactory = valueFactory;
-        myWeakMap = new WeakHashMap<>();
+        this(valueFactory, 16);
     }
 
     public InternMap(Function<K, V> valueFactory, int initialCapacity)
     {
         myValueFactory = valueFactory;
-        myWeakMap = new WeakHashMap<>(initialCapacity);
+        myMap = new WeakHashMap<>(initialCapacity);
     }
 
 
@@ -42,13 +41,18 @@ public class InternMap <K, V>
      */
     public V intern(K key)
     {
-        V sym = myValueFactory.apply(requireNonNull(key));
+        // We do not want to assume that the key is held strongly by the value.
+        // We therefore cannot use the key directly with a WeakHashMap: it
+        // could be collected at any time, and then the corresponding map entry
+        // and our reference to a still-needed interned value.
+
+        V val = myValueFactory.apply(requireNonNull(key));
 
         // Prevent other threads from touching the intern table.
         // This doesn't prevent the GC from removing entries!
-        synchronized (myWeakMap)
+        synchronized (myMap)
         {
-            WeakReference<V> ref = myWeakMap.get(key);
+            WeakReference<V> ref = myMap.get(val);
             if (ref != null)
             {
                 // There's a chance that the entry for a string will exist but
@@ -57,10 +61,10 @@ public class InternMap <K, V>
                 if (interned != null) return interned;
             }
 
-            ref = new WeakReference<>(sym);
-            myWeakMap.put(key, ref);
+            ref = new WeakReference<>(val);
+            myMap.put(val, ref);
 
-            return sym;
+            return val;
         }
     }
 
@@ -71,6 +75,6 @@ public class InternMap <K, V>
      */
     public int size()
     {
-        return myWeakMap.size();
+        return myMap.size();
     }
 }

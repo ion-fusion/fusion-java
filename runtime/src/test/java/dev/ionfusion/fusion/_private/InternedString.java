@@ -7,20 +7,21 @@ import java.util.Objects;
 
 public class InternedString
 {
-    private final String value;
+    private final String myValue;
 
     InternedString(String value) {
-        this.value = value;
+        // We don't want to assume that the interned value keeps the key alive.
+        myValue = new String(value);
     }
 
-    public String getValue() { return value; }
+    public String getValue() { return myValue; }
 
     @Override
     public boolean equals(Object o) {
         return this == o || (o instanceof InternedString &&
-                             Objects.equals(value, ((InternedString) o).value));
+                             Objects.equals(myValue, ((InternedString) o).myValue));
     }
 
     @Override
-    public int hashCode() { return Objects.hashCode(value); }
+    public int hashCode() { return Objects.hashCode(myValue); }
 }
