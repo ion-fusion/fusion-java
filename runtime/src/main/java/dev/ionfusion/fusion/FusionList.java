@@ -80,14 +80,12 @@ final class FusionList
 
     static NullList nullList(Evaluator eval, BaseSymbol[] annotations)
     {
-        if (annotations.length == 0) return NULL_LIST;
-        return new NullList(annotations);
+        return NULL_LIST.annotate(eval, annotations);
     }
 
     static NullList nullList(Evaluator eval, String[] annotations)
     {
-        if (annotations.length == 0) return NULL_LIST;
-        return new NullList(internSymbols(annotations));
+        return nullList(eval, internSymbols(annotations));
     }
 
 
@@ -886,8 +884,9 @@ final class FusionList
         }
 
         @Override
-        public Object annotate(Evaluator eval, BaseSymbol[] annotations)
+        public NullList annotate(Evaluator eval, BaseSymbol[] annotations)
         {
+            if (annotations.length == 0) return NULL_LIST;
             return new NullList(annotations);
         }
 

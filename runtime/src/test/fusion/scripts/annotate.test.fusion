@@ -1,0 +1,10 @@
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(require "/fusion/experimental/check"
+         "/testutils")
+
+(define (test_value_is_singleton v)
+  (check_same v (annotate (annotate v "ann"))))
+
+(do test_value_is_singleton all_nulls)

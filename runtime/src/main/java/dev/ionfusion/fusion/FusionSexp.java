@@ -50,14 +50,12 @@ final class FusionSexp
 
     static NullSexp nullSexp(Evaluator eval, BaseSymbol[] annotations)
     {
-        if (annotations.length == 0) return NULL_SEXP;
-        return new NullSexp(annotations);
+        return NULL_SEXP.annotate(eval, annotations);
     }
 
     static NullSexp nullSexp(Evaluator eval, String[] annotations)
     {
-        if (annotations.length == 0) return NULL_SEXP;
-        return new NullSexp(internSymbols(annotations));
+        return NULL_SEXP.annotate(eval, internSymbols(annotations));
     }
 
     /**
@@ -70,14 +68,12 @@ final class FusionSexp
 
     static EmptySexp emptySexp(Evaluator eval, BaseSymbol[] annotations)
     {
-        if (annotations.length == 0) return EMPTY_SEXP;
-        return new EmptySexp(annotations);
+        return EMPTY_SEXP.annotate(eval, annotations);
     }
 
     static EmptySexp emptySexp(Evaluator eval, String[] annotations)
     {
-        if (annotations.length == 0) return EMPTY_SEXP;
-        return new EmptySexp(internSymbols(annotations));
+        return EMPTY_SEXP.annotate(eval, internSymbols(annotations));
     }
 
 
@@ -557,9 +553,9 @@ final class FusionSexp
         }
 
         @Override
-        public Object annotate(Evaluator eval, BaseSymbol[] annotations)
-            throws FusionException
+        public NullSexp annotate(Evaluator eval, BaseSymbol[] annotations)
         {
+            if (annotations.length == 0) return NULL_SEXP;
             return new NullSexp(annotations);
         }
 
@@ -637,9 +633,9 @@ final class FusionSexp
         }
 
         @Override
-        public Object annotate(Evaluator eval, BaseSymbol[] annotations)
-            throws FusionException
+        public EmptySexp annotate(Evaluator eval, BaseSymbol[] annotations)
         {
+            if (annotations.length == 0) return EMPTY_SEXP;
             return new EmptySexp(annotations);
         }
 

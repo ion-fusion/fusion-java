@@ -87,14 +87,12 @@ final class FusionStruct
 
     static NullStruct nullStruct(Evaluator eval, BaseSymbol[] annotations)
     {
-        if (annotations.length == 0) return NULL_STRUCT;
-        return new NullStruct(annotations);
+        return NULL_STRUCT.annotate(eval, annotations);
     }
 
     static NullStruct nullStruct(Evaluator eval, String[] annotations)
     {
-        if (annotations.length == 0) return NULL_STRUCT;
-        return new NullStruct(internSymbols(annotations));
+        return NULL_STRUCT.annotate(eval, internSymbols(annotations));
     }
 
 
@@ -622,9 +620,9 @@ final class FusionStruct
         }
 
         @Override
-        public Object annotate(Evaluator eval, BaseSymbol[] annotations)
-            throws FusionException
+        public NullStruct annotate(Evaluator eval, BaseSymbol[] annotations)
         {
+            if (annotations.length == 0) return NULL_STRUCT;
             return new NullStruct(annotations);
         }
 
