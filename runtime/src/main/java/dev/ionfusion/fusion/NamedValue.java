@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion;
 
+import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import java.io.IOException;
 
 
@@ -37,6 +38,14 @@ abstract class NamedValue
         if (myName == null)
         {
             myName = name;
+        }
+    }
+
+    static void inferObjectName(Object value, BaseSymbol name)
+    {
+        if (value instanceof NamedValue)
+        {
+            ((NamedValue)value).inferName(name.stringValue());
         }
     }
 

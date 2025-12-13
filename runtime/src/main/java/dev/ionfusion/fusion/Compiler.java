@@ -338,7 +338,7 @@ class Compiler
             }
         }
 
-        String[] names  = new String[idCount];
+        BaseSymbol[] names  = new BaseSymbol[idCount];
         int[] addresses = new int   [idCount];
 
         for (int i = 0; i < idCount; i++)
@@ -346,7 +346,7 @@ class Compiler
             SyntaxSymbol identifier = ids[i];
             Binding b = identifier.getBinding();
 
-            names[i] = b.getName().stringValue();
+            names[i] = b.getName();
             addresses[i] = ((ModuleDefinedBinding) b).myAddress;
         }
 
@@ -401,8 +401,7 @@ class Compiler
             @Override
             public Object visit(NsDefinedBinding b) throws FusionException
             {
-                String name = b.getName().stringValue();
-                return new CompiledNsDefineSyntax(name, b.myAddress, valueForm);
+                return new CompiledNsDefineSyntax(b.getName(), b.myAddress, valueForm);
             }
 
             @Override

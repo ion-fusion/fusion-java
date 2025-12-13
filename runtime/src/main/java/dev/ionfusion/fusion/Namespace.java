@@ -7,6 +7,7 @@ import static dev.ionfusion.fusion.BindingSite.makeDefineBindingSite;
 import static dev.ionfusion.fusion.BindingSite.makeImportBindingSite;
 import static dev.ionfusion.fusion.FusionIo.safeWriteToString;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
+import static dev.ionfusion.fusion.NamedValue.inferObjectName;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.ModuleNamespace.ModuleDefinedBinding;
@@ -523,14 +524,7 @@ abstract class Namespace
     {
         set(binding.myAddress, value);
 
-        if (value instanceof NamedValue)
-        {
-            String inferredName = binding.getName().stringValue();
-            if (inferredName != null)
-            {
-                ((NamedValue)value).inferName(inferredName);
-            }
-        }
+        inferObjectName(value, binding.getName());
     }
 
 
@@ -989,11 +983,11 @@ abstract class Namespace
     static class CompiledNsDefine
         implements CompiledForm
     {
-        private final String       myName;
+        private final BaseSymbol   myName;
         private final int          myAddress;
         private final CompiledForm myValueForm;
 
-        CompiledNsDefine(String name, int address, CompiledForm valueForm)
+        CompiledNsDefine(BaseSymbol name, int address, CompiledForm valueForm)
         {
             assert name != null;
             myName      = name;
@@ -1012,10 +1006,7 @@ abstract class Namespace
             NamespaceStore ns = store.namespace();
             ns.set(myAddress, value);
 
-            if (value instanceof NamedValue)
-            {
-                ((NamedValue)value).inferName(myName);
-            }
+            inferObjectName(value, myName);
 
             return voidValue(eval);
         }
@@ -1032,7 +1023,7 @@ abstract class Namespace
     static final class CompiledNsDefineSyntax
         extends CompiledNsDefine
     {
-        CompiledNsDefineSyntax(String name, int address,
+        CompiledNsDefineSyntax(BaseSymbol name, int address,
                                CompiledForm valueForm)
         {
             super(name, address, valueForm);
@@ -1067,11 +1058,11 @@ abstract class Namespace
     static class CompiledNsDefineValues
         implements CompiledForm
     {
-        private final String[]     myNames;
+        private final BaseSymbol[] myNames;
         private final int[]        myAddresses;
         private final CompiledForm myValuesForm;
 
-        CompiledNsDefineValues(String[] names,
+        CompiledNsDefineValues(BaseSymbol[] names,
                                int[] addresses,
                                CompiledForm valuesForm)
         {
@@ -1106,10 +1097,7 @@ abstract class Namespace
                 {
                     Object value = vals[i];
                     ns.set(myAddresses[i], value);
-                    if (value instanceof NamedValue)
-                    {
-                        ((NamedValue)value).inferName(myNames[i]);
-                    }
+                    inferObjectName(value, myNames[i]);
                 }
             }
             else

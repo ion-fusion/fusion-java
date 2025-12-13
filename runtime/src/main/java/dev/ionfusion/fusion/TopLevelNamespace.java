@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
+import static dev.ionfusion.fusion.NamedValue.inferObjectName;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.ModuleNamespace.ProvidedBinding;
@@ -267,10 +268,7 @@ final class TopLevelNamespace
 
             ns.set(binding.myAddress, value);
 
-            if (value instanceof NamedValue)
-            {
-                ((NamedValue)value).inferName(myId.stringValue());
-            }
+            inferObjectName(value, myId.getName());
 
             return voidValue(eval);
         }
@@ -355,10 +353,7 @@ final class TopLevelNamespace
 
             ns.set(binding.myAddress, value);
 
-            if (value instanceof NamedValue)
-            {
-                ((NamedValue) value).inferName(boundId.stringValue());
-            }
+            inferObjectName(value, boundId.getName());
         }
     }
 
