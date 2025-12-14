@@ -1033,6 +1033,13 @@ abstract class Namespace
             super(name, address, valueForm);
         }
 
+        /**
+         * Prepare the value supplied to `define_syntax`.  Only two types are
+         * allowed: {@link Procedure} and {@link SyntacticForm}. Allowing the
+         * latter is sketchy since those are not values that should ever be
+         * exposed to Fusion code, but it's used to bootstrap intrinsic forms
+         * via the FFI.
+         */
         @Override
         Object processValue(Evaluator eval, Store store, Object value)
             throws FusionException

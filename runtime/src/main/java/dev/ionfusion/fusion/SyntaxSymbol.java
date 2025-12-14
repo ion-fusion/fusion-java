@@ -118,11 +118,7 @@ final class SyntaxSymbol
     {
         // We intentionally don't copy the binding, since the wraps are
         // probably different, so the binding may be different.
-
-        SyntaxSymbol copy =
-            new SyntaxSymbol(wraps, getLocation(), getProperties(),
-                             getName());
-        return copy;
+        return new SyntaxSymbol(wraps, getLocation(), getProperties(), getName());
     }
 
 
@@ -186,7 +182,7 @@ final class SyntaxSymbol
             return myWraps.resolveBoundIdentifier(getName());
         }
         return new BoundIdentifier(new FreeBinding(getName()),
-                                   Collections.<MarkWrap>emptySet());
+                                   Collections.emptySet());
     }
 
     /**
@@ -267,7 +263,7 @@ final class SyntaxSymbol
 
     /**
      * Checks if this symbol is bound to a {@link SyntacticForm} in the given
-     * environment.  If so, cache the binding and return the form.  Otherwise
+     * environment.  If so, cache the binding and return the form.  Otherwise,
      * do nothing.
      *
      * @return may be null.
@@ -302,7 +298,7 @@ final class SyntaxSymbol
                 throw new SyntaxException(null, message, this);
             }
 
-            if (text.length() == 0)
+            if (text.isEmpty())
             {
                 String message =
                     "The empty symbol is not a valid expression; use `(quote '')` instead.";

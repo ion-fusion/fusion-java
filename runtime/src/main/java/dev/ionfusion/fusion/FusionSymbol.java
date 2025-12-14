@@ -120,10 +120,15 @@ final class FusionSymbol
             return falseBool(eval);
         }
 
+        /**
+         * Checks whether this symbol's text is not null and not empty.
+         *
+         * @return true IFF this is neither {@code null.symbol} nor {@code ''}.
+         */
         boolean isNonEmpty()
         {
             String value = stringValue();
-            return (value != null && value.length() != 0);
+            return (value != null && !value.isEmpty());
         }
 
         private boolean isKeyword()

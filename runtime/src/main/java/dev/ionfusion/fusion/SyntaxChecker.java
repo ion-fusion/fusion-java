@@ -151,6 +151,9 @@ class SyntaxChecker
     }
 
 
+    /**
+     * Requires an argument to be a non-null, non-empty symbol (and not a keyword).
+     */
     final SyntaxSymbol requiredIdentifier(String expectation, int argNum)
         throws FusionException
     {
@@ -174,6 +177,9 @@ class SyntaxChecker
         return id;
     }
 
+    /**
+     * Requires an argument to be a non-null, non-empty symbol (and not a keyword).
+     */
     final SyntaxSymbol requiredIdentifier(int argNum)
         throws FusionException
     {

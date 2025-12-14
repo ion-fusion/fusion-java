@@ -5,7 +5,9 @@ package dev.ionfusion.fusion.cli;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.isEmptyString;
+import static org.hamcrest.Matchers.emptyString;
+import static org.hamcrest.Matchers.is;
+
 import org.junit.jupiter.api.Test;
 
 public class ReplTest
@@ -19,7 +21,7 @@ public class ReplTest
         run("repl");
 
         assertThat(stdoutText, containsString("33908\n"));
-        assertThat(stderrText, isEmptyString());
+        assertThat(stderrText, is(emptyString()));
     }
 
     @Test
@@ -30,6 +32,6 @@ public class ReplTest
         run("repl");
 
         assertThat(stdoutText, containsString("(help ident ...)"));
-        assertThat(stderrText, isEmptyString());
+        assertThat(stderrText, is(emptyString()));
     }
 }
