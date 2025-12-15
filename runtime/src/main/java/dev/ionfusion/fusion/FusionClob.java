@@ -5,7 +5,6 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionBool.falseBool;
 import static dev.ionfusion.fusion.FusionBool.makeBool;
-import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.internSymbols;
 
 import com.amazon.ion.IonException;
 import com.amazon.ion.IonType;
@@ -32,7 +31,8 @@ public final class FusionClob
 
 
     abstract static class BaseClob
-        extends BaseLob
+        extends BaseLob<BaseClob>
+        implements AnnotatableValue<BaseClob>
     {
         private BaseClob() {}
 
@@ -304,8 +304,7 @@ public final class FusionClob
                                    String[]  annotations,
                                    byte[]    value)
     {
-        BaseClob base = forBytesNoCopy(eval, value);
-        return base.annotate(eval, internSymbols(annotations));
+        return forBytesNoCopy(eval, value).annotate(eval, annotations);
     }
 
 
@@ -321,8 +320,7 @@ public final class FusionClob
                                        Object fusionClob,
                                        String[] annotations)
     {
-        BaseClob base = (BaseClob) fusionClob;
-        return base.annotate(eval, internSymbols(annotations));
+        return ((BaseClob) fusionClob).annotate(eval, annotations);
     }
 
 

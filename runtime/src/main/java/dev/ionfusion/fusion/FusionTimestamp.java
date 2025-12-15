@@ -20,7 +20,6 @@ import static dev.ionfusion.fusion.FusionNumber.makeInt;
 import static dev.ionfusion.fusion.FusionNumber.unsafeNumberToBigDecimal;
 import static dev.ionfusion.fusion.FusionString.checkNullableStringArg;
 import static dev.ionfusion.fusion.FusionString.makeString;
-import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.internSymbols;
 import static dev.ionfusion.fusion.FusionVoid.isVoid;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.SimpleSyntaxValue.makeSyntax;
@@ -51,7 +50,7 @@ final class FusionTimestamp
 
     abstract static class BaseTimestamp
         extends BaseValue
-        implements AnnotatableValue
+        implements AnnotatableValue<BaseTimestamp>
     {
         private BaseTimestamp() {}
 
@@ -325,8 +324,7 @@ final class FusionTimestamp
                                        String[]  annotations,
                                        Timestamp value)
     {
-        BaseTimestamp base = makeTimestamp(eval, value);
-        return base.annotate(eval, internSymbols(annotations));
+        return makeTimestamp(eval, value).annotate(eval, annotations);
     }
 
 
@@ -342,8 +340,7 @@ final class FusionTimestamp
                                                  Object    fusionTimestamp,
                                                  String[]  annotations)
     {
-        BaseTimestamp base = (BaseTimestamp) fusionTimestamp;
-        return base.annotate(eval, internSymbols(annotations));
+        return ((BaseTimestamp) fusionTimestamp).annotate(eval, annotations);
     }
 
 

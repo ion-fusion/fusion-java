@@ -4,11 +4,14 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.internSymbols;
+import static dev.ionfusion.fusion.FusionBool.falseBool;
 import static dev.ionfusion.fusion.FusionUtils.EMPTY_OBJECT_ARRAY;
 import static dev.ionfusion.fusion.FusionUtils.EMPTY_STRING_ARRAY;
 
 import com.amazon.ion.IonValue;
 import com.amazon.ion.ValueFactory;
+import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+import dev.ionfusion.fusion.FusionBool.BaseBool;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import java.io.IOException;
 
@@ -133,7 +136,7 @@ public final class FusionValue
      *
      * @param value must be an annotatable Fusion value.
      * @param annotations must not be null and must not contain elements
-     * that are null or empty.
+     * that are null.
      *
      * @return a Fusion value.
      *
@@ -142,7 +145,7 @@ public final class FusionValue
     static Object annotate(Evaluator eval, Object value, String[] annotations)
         throws FusionException
     {
-        return ((AnnotatableValue) value).annotate(eval, internSymbols(annotations));
+        return ((AnnotatableValue) value).annotate(eval, annotations);
     }
 
     /**

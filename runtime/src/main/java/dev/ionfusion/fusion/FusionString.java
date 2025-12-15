@@ -16,7 +16,6 @@ import static dev.ionfusion.fusion.FusionNumber.makeInt;
 import static dev.ionfusion.fusion.FusionNumber.unsafeTruncateIntToJavaInt;
 import static dev.ionfusion.fusion.FusionString.CHAR_TYPES.LOWERCASE;
 import static dev.ionfusion.fusion.FusionString.CHAR_TYPES.UPPERCASE;
-import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.internSymbols;
 import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionText.checkRequiredTextArg;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
@@ -61,7 +60,7 @@ public final class FusionString
 
 
     abstract static class BaseString
-        extends BaseText
+        extends BaseText<BaseString>
     {
         private BaseString() {}
 
@@ -350,8 +349,7 @@ public final class FusionString
                                  String[]  annotations,
                                  String    value)
     {
-        BaseString base = makeString(eval, value);
-        return base.annotate(eval, internSymbols(annotations));
+        return makeString(eval, value).annotate(eval, annotations);
     }
 
 
@@ -367,8 +365,7 @@ public final class FusionString
                                            Object fusionString,
                                            String[] annotations)
     {
-        BaseString base = (BaseString) fusionString;
-        return base.annotate(eval, internSymbols(annotations));
+        return ((BaseString) fusionString).annotate(eval, annotations);
     }
 
 

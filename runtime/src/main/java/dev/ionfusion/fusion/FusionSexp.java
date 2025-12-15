@@ -53,9 +53,9 @@ final class FusionSexp
         return NULL_SEXP.annotate(eval, annotations);
     }
 
-    static NullSexp nullSexp(Evaluator eval, String[] annotations)
+    static BaseSexp nullSexp(Evaluator eval, String[] annotations)
     {
-        return NULL_SEXP.annotate(eval, internSymbols(annotations));
+        return NULL_SEXP.annotate(eval, annotations);
     }
 
     /**
@@ -71,9 +71,9 @@ final class FusionSexp
         return EMPTY_SEXP.annotate(eval, annotations);
     }
 
-    static EmptySexp emptySexp(Evaluator eval, String[] annotations)
+    static BaseSexp emptySexp(Evaluator eval, String[] annotations)
     {
-        return EMPTY_SEXP.annotate(eval, internSymbols(annotations));
+        return EMPTY_SEXP.annotate(eval, annotations);
     }
 
 
@@ -423,8 +423,8 @@ final class FusionSexp
     //========================================================================
 
 
-    static abstract class BaseSexp
-        extends BaseSequence
+    static abstract class BaseSexp<Self extends BaseSexp<Self>>
+        extends BaseSequence<Self>
     {
         BaseSexp() {}
 
@@ -464,10 +464,10 @@ final class FusionSexp
          * @return null if this is not a proper sexp.
          */
         @Override
-        BaseSexp sexpAppend(Evaluator eval, BaseSexp back)
+        <T extends BaseSexp<T>> BaseSexp<?> sexpAppend(Evaluator eval, BaseSexp<T> back)
             throws FusionException
         {
-            return (BaseSexp) back.annotate(eval, myAnnotations);
+            return back.annotate(eval, myAnnotations);
         }
 
         @Override
@@ -537,7 +537,7 @@ final class FusionSexp
 
 
     private static final class NullSexp
-        extends BaseSexp
+        extends BaseSexp<NullSexp>
     {
         private NullSexp() {}
 
@@ -623,7 +623,7 @@ final class FusionSexp
 
 
     private static final class EmptySexp
-        extends BaseSexp
+        extends BaseSexp<EmptySexp>
     {
         private EmptySexp() {}
 
@@ -689,7 +689,7 @@ final class FusionSexp
 
 
     static final class ImmutablePair
-        extends BaseSexp
+        extends BaseSexp<ImmutablePair>
     {
         private final Object myHead;
         private final Object myTail;
@@ -710,8 +710,7 @@ final class FusionSexp
 
 
         @Override
-        public Object annotate(Evaluator eval, BaseSymbol[] annotations)
-            throws FusionException
+        public ImmutablePair annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             return new ImmutablePair(annotations, myHead, myTail);
         }

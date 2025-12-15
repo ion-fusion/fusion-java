@@ -92,7 +92,7 @@ final class FusionStruct
 
     static NullStruct nullStruct(Evaluator eval, String[] annotations)
     {
-        return NULL_STRUCT.annotate(eval, internSymbols(annotations));
+        return NULL_STRUCT.annotate(eval, annotations);
     }
 
 
@@ -470,7 +470,8 @@ final class FusionStruct
     }
 
 
-    interface BaseStruct
+    interface BaseStruct<Self extends BaseStruct<Self>>
+        extends AnnotatableValue<Self>
     {
         void ionize(Evaluator eval, IonWriter out)
             throws IOException, IonException, FusionException, IonizeFailure;
@@ -555,15 +556,15 @@ final class FusionStruct
     }
 
 
-    interface ImmutableStruct
-        extends BaseStruct
+    interface ImmutableStruct<Self extends ImmutableStruct<Self>>
+        extends BaseStruct<Self>
     {
     }
 
 
     private static final class NullStruct
-        extends BaseCollection
-        implements ImmutableStruct
+        extends BaseCollection<NullStruct>
+        implements ImmutableStruct<NullStruct>
     {
         private NullStruct() {}
 
@@ -791,9 +792,9 @@ final class FusionStruct
     }
 
 
-    private abstract static class MapBasedStruct
-        extends BaseCollection
-        implements BaseStruct
+    private abstract static class MapBasedStruct<Self extends MapBasedStruct<Self>>
+        extends BaseCollection<Self>
+        implements BaseStruct<Self>
     {
         private MapBasedStruct(BaseSymbol[] annotations)
         {
@@ -1145,8 +1146,8 @@ final class FusionStruct
 
 
     private static abstract class NonNullImmutableStruct
-        extends MapBasedStruct
-        implements ImmutableStruct
+        extends MapBasedStruct<NonNullImmutableStruct>
+        implements ImmutableStruct<NonNullImmutableStruct>
     {
         private NonNullImmutableStruct(BaseSymbol[] annotations)
         {
@@ -1160,14 +1161,14 @@ final class FusionStruct
         }
 
         @Override
-        MapBasedStruct makeSimilar(MultiHashTrie<String, Object> map,
-                                   BaseSymbol[] annotations)
+        NonNullImmutableStruct makeSimilar(MultiHashTrie<String, Object> map,
+                                           BaseSymbol[] annotations)
         {
             return immutableStruct(map, annotations);
         }
 
         @Override
-        public Object annotate(Evaluator eval, BaseSymbol[] annotations)
+        public NonNullImmutableStruct annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             return makeSimilar(getMap(eval), annotations);
         }
@@ -1368,7 +1369,7 @@ final class FusionStruct
 
 
     private static final class MutableStruct
-        extends MapBasedStruct
+        extends MapBasedStruct<MutableStruct>
     {
         private MultiHashTrie<String, Object> myMap;
 
@@ -1399,8 +1400,8 @@ final class FusionStruct
         }
 
         @Override
-        MapBasedStruct makeSimilar(MultiHashTrie<String, Object> map,
-                                   BaseSymbol[] annotations)
+        MutableStruct makeSimilar(MultiHashTrie<String, Object> map,
+                                  BaseSymbol[] annotations)
         {
             return new MutableStruct(map, annotations);
         }
@@ -1411,8 +1412,7 @@ final class FusionStruct
         }
 
         @Override
-        public Object annotate(Evaluator eval, BaseSymbol[] annotations)
-            throws FusionException
+        public MutableStruct annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             return makeSimilar(getMap(eval), annotations);
         }

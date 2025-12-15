@@ -406,7 +406,7 @@ final class FusionList
      * lists.
      */
     abstract static class BaseList
-        extends BaseSequence
+        extends BaseSequence<BaseList>
     {
         /**
          * The elements within this list.
@@ -801,7 +801,7 @@ final class FusionList
          * Assumes ownership of arguments.
          */
         @Override
-        public Object annotate(Evaluator eval, BaseSymbol[] annotations)
+        public BaseList annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             // Since this instance is mutable, we cannot share the array.
             Object[] values = Arrays.copyOf(myValues, size());
@@ -850,7 +850,7 @@ final class FusionList
         }
 
         @Override
-        public Object annotate(Evaluator eval, BaseSymbol[] annotations)
+        public BaseList annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             // Since this instance is immutable, we can share the array.
             return makeSimilar(annotations, myValues);
@@ -1128,7 +1128,7 @@ final class FusionList
         }
 
         @Override
-        public Object annotate(Evaluator eval, BaseSymbol[] annotations)
+        public BaseList annotate(Evaluator eval, BaseSymbol[] annotations)
         {
             // Since this instance is immutable, we can share the array AFTER
             // we inject the children.

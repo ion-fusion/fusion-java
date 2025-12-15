@@ -4,7 +4,6 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionBool.makeBool;
-import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.internSymbols;
 import static dev.ionfusion.fusion.SimpleSyntaxValue.makeSyntax;
 
 import com.amazon.ion.IonException;
@@ -28,7 +27,7 @@ public final class FusionNull
 
     static class NullNull
         extends BaseValue
-        implements AnnotatableValue
+        implements AnnotatableValue<NullNull>
     {
         private NullNull() {}
 
@@ -163,12 +162,7 @@ public final class FusionNull
      */
     static NullNull makeNullNull(Evaluator eval, String[] annotations)
     {
-        if (annotations.length == 0)
-        {
-            return NULL_NULL;
-        }
-
-        return new AnnotatedNullNull(internSymbols(annotations));
+        return NULL_NULL.annotate(eval, annotations);
     }
 
 

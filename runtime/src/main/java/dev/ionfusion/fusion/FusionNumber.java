@@ -9,7 +9,6 @@ import static dev.ionfusion.fusion.FusionBool.trueBool;
 import static dev.ionfusion.fusion.FusionIo.safeWriteToString;
 import static dev.ionfusion.fusion.FusionString.checkNullableStringArg;
 import static dev.ionfusion.fusion.FusionString.makeString;
-import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.internSymbols;
 import static dev.ionfusion.fusion.SimpleSyntaxValue.makeSyntax;
 import static java.math.RoundingMode.CEILING;
 import static java.math.RoundingMode.FLOOR;
@@ -41,9 +40,9 @@ public final class FusionNumber
     private FusionNumber() {}
 
 
-    abstract static class BaseNumber
+    abstract static class BaseNumber<Self extends BaseNumber<Self>>
         extends BaseValue
-        implements AnnotatableValue
+        implements AnnotatableValue<Self>
     {
         private BaseNumber() {}
 
@@ -136,7 +135,7 @@ public final class FusionNumber
 
 
     abstract static class BaseInt
-        extends BaseNumber
+        extends BaseNumber<BaseInt>
     {
         private BaseInt() {}
 
@@ -574,7 +573,7 @@ public final class FusionNumber
 
 
     abstract static class BaseDecimal
-        extends BaseNumber
+        extends BaseNumber<BaseDecimal>
     {
         private BaseDecimal() {}
 
@@ -943,7 +942,7 @@ public final class FusionNumber
     // Float Representation
 
     abstract static class BaseFloat
-        extends BaseNumber
+        extends BaseNumber<BaseFloat>
     {
         private BaseFloat() {}
 
@@ -1469,8 +1468,7 @@ public final class FusionNumber
      */
     static BaseInt makeInt(Evaluator eval, String[] annotations, long value)
     {
-        BaseInt base = makeInt(eval, value);
-        return base.annotate(eval, internSymbols(annotations));
+        return makeInt(eval, value).annotate(eval, annotations);
     }
 
 
@@ -1486,8 +1484,7 @@ public final class FusionNumber
                            String[]   annotations,
                            BigInteger value)
     {
-        BaseInt base = makeInt(eval, value);
-        return base.annotate(eval, internSymbols(annotations));
+        return makeInt(eval, value).annotate(eval, annotations);
     }
 
 
@@ -1503,8 +1500,7 @@ public final class FusionNumber
                                      Object fusionInt,
                                      String[] annotations)
     {
-        BaseInt base = (BaseInt) fusionInt;
-        return base.annotate(eval, internSymbols(annotations));
+        return ((BaseInt) fusionInt).annotate(eval, annotations);
     }
 
 
@@ -1537,8 +1533,7 @@ public final class FusionNumber
                                    String[]   annotations,
                                    BigDecimal value)
     {
-        BaseDecimal base = makeDecimal(eval, value);
-        return base.annotate(eval, internSymbols(annotations));
+        return makeDecimal(eval, value).annotate(eval, annotations);
     }
 
 
@@ -1554,8 +1549,7 @@ public final class FusionNumber
                                              Object fusionDecimal,
                                              String[] annotations)
     {
-        BaseDecimal base = (BaseDecimal) fusionDecimal;
-        return base.annotate(eval, internSymbols(annotations));
+        return ((BaseDecimal) fusionDecimal).annotate(eval, annotations);
     }
 
 
@@ -1597,8 +1591,7 @@ public final class FusionNumber
                                String[]  annotations,
                                double    value)
     {
-        BaseFloat base = makeFloat(eval, value);
-        return base.annotate(eval, internSymbols(annotations));
+        return makeFloat(eval, value).annotate(eval, annotations);
     }
 
 
@@ -1614,8 +1607,7 @@ public final class FusionNumber
                                String[]  annotations,
                                Double    value)
     {
-        BaseFloat base = makeFloat(eval, value);
-        return base.annotate(eval, internSymbols(annotations));
+        return makeFloat(eval, value).annotate(eval, annotations);
     }
 
 
@@ -1631,8 +1623,7 @@ public final class FusionNumber
                                          Object    fusionFloat,
                                          String[]  annotations)
     {
-        BaseFloat base = (BaseFloat) fusionFloat;
-        return base.annotate(eval, internSymbols(annotations));
+        return ((BaseFloat) fusionFloat).annotate(eval, annotations);
     }
 
 

@@ -3,7 +3,6 @@
 
 package dev.ionfusion.fusion;
 
-import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.internSymbols;
 import static dev.ionfusion.fusion.SimpleSyntaxValue.makeSyntax;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -34,7 +33,7 @@ public final class FusionBool
 
     abstract static class BaseBool
         extends BaseValue
-        implements AnnotatableValue
+        implements AnnotatableValue<BaseBool>
     {
         private BaseBool() {}
 
@@ -371,8 +370,7 @@ public final class FusionBool
                              String[]  annotations,
                              boolean   value)
     {
-        BaseBool base = makeBool(eval, value);
-        return base.annotate(eval, internSymbols(annotations));
+        return makeBool(eval, value).annotate(eval, annotations);
     }
 
 
@@ -388,8 +386,7 @@ public final class FusionBool
                              String[]  annotations,
                              Boolean   value)
     {
-        BaseBool base = makeBool(eval, value);
-        return base.annotate(eval, internSymbols(annotations));
+        return makeBool(eval, value).annotate(eval, annotations);
     }
 
 
@@ -405,8 +402,7 @@ public final class FusionBool
                                        Object    fusionBool,
                                        String[]  annotations)
     {
-        BaseBool base = (BaseBool) fusionBool;
-        return base.annotate(eval, internSymbols(annotations));
+        return ((BaseBool) fusionBool).annotate(eval, annotations);
     }
 
 

@@ -3,20 +3,26 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.internSymbols;
 import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.unsafeSymbolsToJavaStrings;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 
-interface AnnotatableValue
+interface AnnotatableValue<Self extends AnnotatableValue<Self>>
 {
     /**
      * @param annotations must not be null and must not contain elements
      * that are null or annotated.
-     *
-     * @throws UnsupportedOperationException if this value isn't annotatable.
      */
-    Object annotate(Evaluator eval, BaseSymbol[] annotations)
-        throws FusionException;
+    Self annotate(Evaluator eval, BaseSymbol[] annotations);
+
+    /**
+     * @param annotations must not be null and must not contain null elements.
+     */
+    default Self annotate(Evaluator eval, String[] annotations)
+    {
+        return annotate(eval, internSymbols(annotations));
+    }
 
     /**
      * Determines whether this value has actual annotations.

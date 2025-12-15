@@ -16,6 +16,7 @@ import com.amazon.ion.IonWriter;
 import com.amazon.ion.ValueFactory;
 import com.amazon.ion.util.IonTextUtils;
 import dev.ionfusion.fusion.FusionBool.BaseBool;
+import dev.ionfusion.fusion.FusionText.BaseText;
 import dev.ionfusion.fusion._private.InternMap;
 import java.io.IOException;
 import java.util.Arrays;
@@ -27,7 +28,7 @@ final class FusionSymbol
 
 
     abstract static class BaseSymbol
-        extends FusionText.BaseText
+        extends BaseText<BaseSymbol>
     {
         static final BaseSymbol[] EMPTY_ARRAY = new BaseSymbol[0];
 
@@ -500,8 +501,7 @@ final class FusionSymbol
                                            Object fusionSymbol,
                                            String[] annotations)
     {
-        BaseSymbol base = (BaseSymbol) fusionSymbol;
-        return base.annotate(eval, BaseSymbol.internSymbols(annotations));
+        return ((BaseSymbol) fusionSymbol).annotate(eval, annotations);
     }
 
 

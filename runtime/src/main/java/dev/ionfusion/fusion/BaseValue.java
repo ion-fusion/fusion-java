@@ -277,22 +277,6 @@ abstract class BaseValue
 
 
     /**
-     * Gets the annotations on a Fusion value as Java strings.
-     *
-     * @return not null, but possibly empty.
-     *
-     * @deprecated
-     * Use {@link FusionValue#annotationsAsJavaStrings(Evaluator, Object)}.
-     */
-    @Deprecated
-    static String[] annotationsAsJavaStrings(Evaluator eval, Object value)
-        throws FusionException
-    {
-        return FusionValue.annotationsAsJavaStrings(eval, value);
-    }
-
-
-    /**
      * Returns a new {@link IonValue} representation of a Fusion value,
      * if its type falls within the Ion type system.
      * The {@link IonValue} will use the given factory and will not have a

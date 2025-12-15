@@ -17,9 +17,9 @@ final class FusionText
     private FusionText() {}
 
 
-    abstract static class BaseText
+    abstract static class BaseText<Self extends BaseText<Self>>
         extends BaseValue
-        implements AnnotatableValue
+        implements AnnotatableValue<Self>
     {
         BaseText() {}
 

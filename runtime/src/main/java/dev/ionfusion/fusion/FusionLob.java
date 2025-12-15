@@ -29,9 +29,9 @@ public final class FusionLob
     // Representation Classes
 
 
-    abstract static class BaseLob
+    abstract static class BaseLob<Self extends BaseLob<Self>>
         extends BaseValue
-        implements AnnotatableValue
+        implements AnnotatableValue<Self>
     {
         BaseLob() {}
 

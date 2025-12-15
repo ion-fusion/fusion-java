@@ -19,8 +19,8 @@ final class FusionSequence
     // Representation
 
 
-    abstract static class BaseSequence
-        extends BaseCollection
+    abstract static class BaseSequence<Self extends BaseSequence<Self>>
+        extends BaseCollection<Self>
     {
         BaseSequence() {}
 
@@ -64,7 +64,7 @@ final class FusionSequence
          *
          * @return null if this is an improper sexp.
          */
-        abstract BaseSexp sexpAppend(Evaluator eval, BaseSexp back)
+        abstract <T extends BaseSexp<T>> BaseSexp<?> sexpAppend(Evaluator eval, BaseSexp<T> back)
             throws FusionException;
 
         /**

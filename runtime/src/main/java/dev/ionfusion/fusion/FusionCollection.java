@@ -5,6 +5,7 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionNumber.makeInt;
 
+import dev.ionfusion.fusion.FusionSexp.ImmutablePair;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 
 
@@ -17,10 +18,13 @@ final class FusionCollection
     // Representation Classes
 
 
-    // TODO Annotation capability should move down; its a poor assumption here.
-    abstract static class BaseCollection
+    /**
+     * TODO PERF Annotation capability should move down; it adds space overhead
+     *   to every collection, most notably to {@link ImmutablePair}.
+     */
+    abstract static class BaseCollection<Self extends BaseCollection<Self>>
         extends BaseValue
-        implements AnnotatableValue
+        implements AnnotatableValue<Self>
     {
         /** Not null */
         final BaseSymbol[] myAnnotations;
