@@ -16,7 +16,6 @@ import com.amazon.ion.IonWriter;
 import com.amazon.ion.ValueFactory;
 import com.amazon.ion.util.IonTextUtils;
 import dev.ionfusion.fusion.FusionBool.BaseBool;
-import dev.ionfusion.fusion.FusionText.BaseText;
 import dev.ionfusion.fusion._private.InternMap;
 import java.io.IOException;
 import java.util.Arrays;
@@ -28,7 +27,9 @@ final class FusionSymbol
 
 
     abstract static class BaseSymbol
-        extends BaseText<BaseSymbol>
+        // This qualified use is necessary in some build contexts.
+        // See https://github.com/ion-fusion/fusion-java/pull/383 for example.
+        extends FusionText.BaseText<BaseSymbol>
     {
         static final BaseSymbol[] EMPTY_ARRAY = new BaseSymbol[0];
 
