@@ -27,7 +27,6 @@ import java.io.IOException;
  * <p>
  * The following capabilities are aggregated here:
  * <ul>
- *     <li>Annotations</li>
  *     <li>Checks for nullness, truthiness</li>
  *     <li>Equality</li>
  *     <li>Syntax Object construction</li>
@@ -85,9 +84,10 @@ abstract class BaseValue
      * is pushed eagerly.
      * <p>
      * TODO This needs to do cycle detection.
-     *   https://github.com/ion-fusion/fusion-java/issues/65
      *
      * @return null if something in this datum can't be converted into syntax.
+     *
+     * @see <a href="https://github.com/ion-fusion/fusion-java/issues/65">#65</a>
      */
     SyntaxValue datumToSyntaxMaybe(Evaluator      eval,
                                    SyntaxSymbol   context,
@@ -148,7 +148,9 @@ abstract class BaseValue
 
     /**
      * Builder for temporary IonWriters needed for {@link #write}ing
-     * lazily-injected lists and structs.
+     * lazily injected lists and structs.
+     *
+     * @see <a href="https://github.com/ion-fusion/fusion-java/issues/96">#96</a>
      *
      * @deprecated Try to avoid this.
      */

@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion;
 
+import static com.amazon.ion.IntegerSize.BIG_INTEGER;
 import static dev.ionfusion.fusion.FusionBool.makeBool;
 import static dev.ionfusion.fusion.FusionList.immutableList;
 import static dev.ionfusion.fusion.FusionList.nullList;
@@ -17,16 +18,16 @@ import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionTimestamp.makeTimestamp;
 import static dev.ionfusion.fusion.SourceLocation.forCurrentSpan;
 import static dev.ionfusion.fusion.SyntaxValue.STX_PROPERTY_ORIGINAL;
-import static com.amazon.ion.IntegerSize.BIG_INTEGER;
 import static java.lang.Boolean.TRUE;
-import dev.ionfusion.fusion.FusionList.BaseList;
-import dev.ionfusion.fusion.FusionSexp.BaseSexp;
+
 import com.amazon.ion.Decimal;
 import com.amazon.ion.IntegerSize;
 import com.amazon.ion.IonException;
 import com.amazon.ion.IonReader;
 import com.amazon.ion.IonType;
 import com.amazon.ion.Timestamp;
+import dev.ionfusion.fusion.FusionList.BaseList;
+import dev.ionfusion.fusion.FusionSexp.BaseSexp;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;

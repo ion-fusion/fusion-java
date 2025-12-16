@@ -672,8 +672,8 @@ abstract class Namespace
         ModuleNameResolver resolver = eval.findResolver();
 
         // Resolve the path WRT the *source* registry, so we can locate
-        // manually-declared modules loaded into it.
-        // See the file rkt/ns-attach.rkt for demonstration test case.
+        // manually declared modules loaded into it.
+        // See the file rkt/ns-attach.rkt for a demonstration test case.
         eval = eval.parameterizeCurrentNamespace(srcNamespace);
 
         ModuleIdentity id =

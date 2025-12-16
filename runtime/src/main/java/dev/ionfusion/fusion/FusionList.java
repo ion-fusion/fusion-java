@@ -410,7 +410,7 @@ final class FusionList
     {
         /**
          * The elements within this list.
-         *
+         * <p>
          * <b>WARNING!</b> The {@link LazyInjectingList} subclass may mutate
          * elements of this list while still appearing immutable. Every method
          * that reads from this array MUST be overridden there and properly
@@ -603,9 +603,10 @@ final class FusionList
 
         /**
          * TODO This needs to do cycle detection.
-         *   https://github.com/ion-fusion/fusion-java/issues/65
          *
          * @return null if an element can't be converted into syntax.
+         *
+         * @see <a href="https://github.com/ion-fusion/fusion-java/issues/65">#65</a>
          */
         @Override
         SyntaxValue datumToSyntaxMaybe(Evaluator      eval,
@@ -1067,7 +1068,7 @@ final class FusionList
         @Override
         Iterator<?> javaIterate(Evaluator eval)
         {
-            Iterator<Object> iterator = new Iterator<Object>()
+            return new Iterator<Object>()
             {
                 private int i = 0;
 
@@ -1090,7 +1091,6 @@ final class FusionList
                     throw new UnsupportedOperationException();
                 }
             };
-            return iterator;
         }
     }
 

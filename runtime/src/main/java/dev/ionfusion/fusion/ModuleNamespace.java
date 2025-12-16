@@ -17,7 +17,7 @@ import java.util.function.Function;
 
 /**
  * Extended prepare-time {@link Namespace} that knows it's a module.
- * This exists to create special bindings that can refer module variables that
+ * This exists to create special bindings that can refer to module variables that
  * are not exported (but that are accessible through macro-generated code).
  */
 final class ModuleNamespace
@@ -433,7 +433,7 @@ final class ModuleNamespace
 
 
     /**
-     * Helper to work-around inability of constructors to invoke virtual methods.
+     * Helper to work around inability of constructors to invoke virtual methods.
      */
     private static final Function<Namespace, SyntaxWraps> MAKE_SYNTAX_WRAPS =
         new Function<Namespace, SyntaxWraps>() {
@@ -499,8 +499,7 @@ final class ModuleNamespace
 
 
     /**
-     * Constructs a module that uses no other module. Any bindings will need to
-     * be created via {@link #bind(String, Object)}.
+     * Constructs a module that uses no other module.
      *
      * @param moduleId identifies this module.
      */
@@ -592,7 +591,7 @@ final class ModuleNamespace
 
 
     /**
-     * A reference to a module-level variable in the lexically-enclosing
+     * A reference to a module-level variable in the lexically enclosing
      * namespace.
      */
     static final class CompiledModuleVariableReference

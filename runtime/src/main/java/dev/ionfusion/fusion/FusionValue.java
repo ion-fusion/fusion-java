@@ -3,15 +3,11 @@
 
 package dev.ionfusion.fusion;
 
-import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.internSymbols;
-import static dev.ionfusion.fusion.FusionBool.falseBool;
 import static dev.ionfusion.fusion.FusionUtils.EMPTY_OBJECT_ARRAY;
 import static dev.ionfusion.fusion.FusionUtils.EMPTY_STRING_ARRAY;
 
 import com.amazon.ion.IonValue;
 import com.amazon.ion.ValueFactory;
-import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
-import dev.ionfusion.fusion.FusionBool.BaseBool;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import java.io.IOException;
 
