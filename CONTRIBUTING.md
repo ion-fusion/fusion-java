@@ -48,6 +48,34 @@ New syntactic forms are more advanced, since they require understanding Fusionâ€
 thoroughly.
 
 
+## Pull Request Expectations
+
+Before going further, we want you to understand what our team considers to be best practice.
+These are cultural expectations, and following them yourself (while here, at least) will
+accelerate merges and improve everyone's experience.
+
+* Work incrementally. Review early, review often. Don't wait until the code is polished, get
+  feedback on where you're going to ensure that we have the same goals. There's nothing worse than
+  being asked to rework a lot of code, so don't be embarrassed by that sketchy first draft.
+
+* Whenever possible, prefer small, single-topic PRs. We would much rather review multiple small PRs
+  than large combined changes. Not only are smaller changes easier to review, they are faster to
+  ship.
+
+* Submit refactoring steps separately from behavior changes. We approach these categories with
+  different mindsets: for refactoring we (by definition) expect no behavioral change, in other
+  cases we are looking for a specific functional change.
+
+* Are approach to AI use is cautious. Understand that you are responsible for what's PR content,
+  even if it's AI generated. We expect you to note where the AI contribution is non-trivial, and
+  especially if any manual prompting was involved. In general, we are aligned with the [Apache
+  Software Foundation's AI policy][asf] and require that commits be tagged `Generated-by:` when
+  they include non-trivial AI-generated content.  See [this commit](233dfd8) for an example.
+
+[asf]: https://www.apache.org/legal/generative-tooling.html
+[233dfd8]: https://github.com/ion-fusion/fusion-java/commit/233dfd834fc36c91f5f813ea3b06c81e7fbd9b84
+
+
 ## Whatâ€™s the process?
 
 1. If a relevant GitHub issue exists, comment on it to indicate your interest. We'll help get you
@@ -69,6 +97,7 @@ thoroughly.
 5. Post a pull request, and iterate as necessary. **Review early, review often!**
 6. Upon approval, your PR will be merged by a code owner, and in most cases the change will be part
    of the next release.
+
 
 ### Issue Management
 
