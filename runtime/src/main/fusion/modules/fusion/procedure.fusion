@@ -176,7 +176,7 @@ Equivalent to `(lambda () body ...)`.
 
 // TODO This should use (provide (rename_out (thunk ||)))
 // but the documentation is wrong.
-  (defpub ||
+  (defpub_syntax ||
     '''
     (|| body ...+)
 
@@ -184,7 +184,18 @@ Returns a zero-argument procedure that evaluates the `body` forms.
 Equivalent to `(lambda () body ...)`.
 
 See also [`|`](fusion/procedure.html#|).
-    ''' thunk)
+    '''
+    (lambda (stx)
+      (let [(body (unsafe_pair_tail (syntax_unwrap stx)))]
+        (if (is_pair body)
+          (datum_to_syntax
+            (pair (quote_syntax lambda)
+                  (pair (quote_syntax ())
+                        body))
+            (quote_syntax context)
+            stx)
+          (wrong_syntax stx "Expected at least one body form")))))
+
 
   (defpub (compose p1 p2)
     '''

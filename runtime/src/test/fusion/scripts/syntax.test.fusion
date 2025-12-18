@@ -24,6 +24,10 @@
 (datum_to_syntax [id] id)
 
 
+// Syntax forms cannot be used as expressions
+(expect_syntax_error (list 1 if 2))
+
+
 //==========================================================================
 // is_identifier
 

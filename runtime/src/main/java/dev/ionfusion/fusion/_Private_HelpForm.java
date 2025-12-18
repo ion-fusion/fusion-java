@@ -69,6 +69,7 @@ public final class _Private_HelpForm
     SyntaxValue expand(Expander expander, Environment env, SyntaxSexp stx)
         throws FusionException
     {
+        // TODO reject if not at top level
         final Evaluator eval = expander.getEvaluator();
 
         SyntaxChecker check = check(eval, stx);
@@ -87,7 +88,14 @@ public final class _Private_HelpForm
         for (int i = 1; i < arity; i++)
         {
             SyntaxSymbol identifier = check.requiredIdentifier(i);
-            children[i] = expander.expandExpression(env, identifier);
+
+            // We don't want to expand the identifier since it might be syntax
+            // and that will fail. But we do want to determine its binding so
+            // we can look up documentation at runtime. This may resolve to a
+            // FreeBinding, which will trigger an unbound-identifier error
+            // during compilation, which is appropriate.
+
+            identifier.resolve();
         }
 
         return stx.copyReplacingChildren(eval, children);

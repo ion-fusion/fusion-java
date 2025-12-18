@@ -305,6 +305,12 @@ final class SyntaxSymbol
                 throw new SyntaxException(null, message, this);
             }
 
+            if (resolveSyntaxMaybe(env) != null)
+            {
+                String message = "Invalid use of syntax form as identifier expression.";
+                throw new SyntaxException(null, message, this);
+            }
+
             Binding b = resolve();
             if (b instanceof FreeBinding)
             {

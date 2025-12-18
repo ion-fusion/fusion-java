@@ -7,9 +7,13 @@
 // Here's the bindings we expect to be available:
 (module check_bindings '/fusion/bool'
   [
-    and, cond, if, is_bool,
+    // These syntax forms cannot be verified this way.
+    // https://github.com/ion-fusion/fusion-java/issues/122
+    // and, cond, if, or, unless, when
+
+    is_bool,
     is_false, is_true, is_truthy, is_untruthy,
-    not, or, unless, when,
+    not,
   ])
 
 
