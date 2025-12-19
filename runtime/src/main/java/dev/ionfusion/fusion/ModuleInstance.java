@@ -112,15 +112,6 @@ final class ModuleInstance
         return Collections.unmodifiableSet(myProvidedBindings.keySet());
     }
 
-
-    /**
-     * @return null if the name isn't provided by this module.
-     */
-    ProvidedBinding resolveProvidedName(String name)
-    {
-        return resolveProvidedName(BaseSymbol.internSymbol(name));
-    }
-
     /**
      * @return null if the name isn't provided by this module.
      */
@@ -144,9 +135,7 @@ final class ModuleInstance
 
         for (BaseSymbol name : names)
         {
-            String text = name.stringValue();
-            BindingDoc doc = documentProvidedName(text);
-            bindings.put(text, doc);
+            bindings.put(name.stringValue(), documentProvidedName(name));
         }
 
         return new ModuleDocs(myIdentity, myDocs, bindings);
@@ -155,30 +144,17 @@ final class ModuleInstance
     /**
      * @return may be null.
      */
-    private BindingDoc documentProvidedName(String name)
+    private BindingDoc documentProvidedName(BaseSymbol name)
     {
         ModuleDefinedBinding binding = resolveProvidedName(name).target();
-
-        return documentProvidedName(binding);
-    }
-
-    private BindingDoc documentProvidedName(ModuleDefinedBinding binding)
-    {
-        BindingDoc doc;
-
         if (binding.myModuleId == myIdentity)
         {
-            doc = myStore.document(binding.myAddress);
-        }
-        else
-        {
-            ModuleInstance module =
-                myStore.getRegistry().lookup(binding.myModuleId);
-            assert module != null
-                : "Module not found: " + binding.myModuleId;
-            doc = module.myStore.document(binding.myAddress);
+            return myStore.document(binding.myAddress);
         }
 
-        return doc;
+        ModuleInstance module = myStore.getRegistry().lookup(binding.myModuleId);
+        assert module != null : "Module not found: " + binding.myModuleId;
+
+        return module.myStore.document(binding.myAddress);
     }
 }

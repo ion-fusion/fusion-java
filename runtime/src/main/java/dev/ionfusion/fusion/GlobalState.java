@@ -10,6 +10,7 @@ import com.amazon.ion.IonReader;
 import com.amazon.ion.IonStruct;
 import com.amazon.ion.IonSystem;
 import com.amazon.ion.system.IonReaderBuilder;
+import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.ModuleNamespace.ModuleDefinedBinding;
 import java.io.IOException;
 import java.io.InputStream;
@@ -190,7 +191,8 @@ final class GlobalState
      */
     private ModuleDefinedBinding kernelBinding(String name)
     {
-        ModuleDefinedBinding b = myKernelModule.resolveProvidedName(name).target();
+        BaseSymbol sym = FusionSymbol.makeSymbol(null, name);
+        ModuleDefinedBinding b = myKernelModule.resolveProvidedName(sym).target();
         assert b != null;
         return b;
     }
