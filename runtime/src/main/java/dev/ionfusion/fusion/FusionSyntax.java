@@ -4,7 +4,6 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionBool.makeBool;
-import static dev.ionfusion.fusion.SyntaxValue.STX_PROPERTY_ORIGIN;
 
 
 /**
@@ -123,7 +122,7 @@ final class FusionSyntax
     static Object syntaxOrigin(Evaluator eval, SyntaxValue stx)
         throws FusionException
     {
-        return stx.findProperty(eval, STX_PROPERTY_ORIGIN);
+        return stx.findProperty(eval, eval.getGlobalState().myStxPropOrigin);
     }
 
 

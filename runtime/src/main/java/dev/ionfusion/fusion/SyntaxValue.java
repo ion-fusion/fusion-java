@@ -6,7 +6,6 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionCompare.isSame;
 import static dev.ionfusion.fusion.FusionSexp.emptySexp;
 import static dev.ionfusion.fusion.FusionSexp.pair;
-import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.internSymbol;
 import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_OBJECT_ARRAY;
 import static java.lang.Boolean.TRUE;
 
@@ -23,8 +22,6 @@ abstract class SyntaxValue
 {
     /** A zero-length array. */
     static final SyntaxValue[] EMPTY_ARRAY = new SyntaxValue[0];
-
-    static final Object STX_PROPERTY_ORIGIN   = internSymbol("origin");
 
     /**
      * Private key used to identify syntax objects constructed by the reader.
@@ -131,6 +128,8 @@ abstract class SyntaxValue
                                   SyntaxSymbol origin)
         throws FusionException
     {
+        Object stxPropOrigin = eval.getGlobalState().myStxPropOrigin;
+
         Object[] oProps = origStx.myProperties;
         if (oProps == ORIGINAL_STX_PROPS) oProps = EMPTY_OBJECT_ARRAY;
 
@@ -153,7 +152,7 @@ abstract class SyntaxValue
                     if (isSame(eval, k, oProps[j]).isTrue())
                     {
                         Object o = oProps[j + 1];
-                        if (k == STX_PROPERTY_ORIGIN)
+                        if (k == stxPropOrigin)
                         {
                             assert origin != null;
                             o = pair(eval, origin, o);
@@ -164,7 +163,7 @@ abstract class SyntaxValue
                     }
                 }
 
-                if (origin != null && k == STX_PROPERTY_ORIGIN)
+                if (origin != null && k == stxPropOrigin)
                 {
                     Object o = emptySexp(eval);
                     o = pair(eval, origin, o);
@@ -196,7 +195,7 @@ abstract class SyntaxValue
                     }
                 }
 
-                if (origin != null && k == STX_PROPERTY_ORIGIN)
+                if (origin != null && k == stxPropOrigin)
                 {
                     v = pair(eval, origin, v);
                     origin = null;
@@ -213,7 +212,7 @@ abstract class SyntaxValue
             Object v = emptySexp(eval);
             v = pair(eval, origin, v);
 
-            merged[m++] = STX_PROPERTY_ORIGIN;
+            merged[m++] = stxPropOrigin;
             merged[m++] = v;
         }
 
