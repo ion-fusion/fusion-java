@@ -66,7 +66,7 @@ accelerate merges and improve everyone's experience.
   different mindsets: for refactoring we (by definition) expect no behavioral change, in other
   cases we are looking for a specific functional change.
 
-* Are approach to AI use is cautious. Understand that you are responsible for what's PR content,
+* Our approach to AI use is cautious. Understand that you are responsible for your PR's content,
   even if it's AI generated. We expect you to note where the AI contribution is non-trivial, and
   especially if any manual prompting was involved. In general, we are aligned with the [Apache
   Software Foundation's AI policy][asf] and require that commits be tagged `Generated-by:` when
