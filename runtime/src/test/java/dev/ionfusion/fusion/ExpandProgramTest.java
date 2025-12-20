@@ -18,6 +18,7 @@ import static dev.ionfusion.fusion.GlobalState.LAMBDA;
 import static dev.ionfusion.fusion.GlobalState.MODULE;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 
 
@@ -98,9 +99,9 @@ public class ExpandProgramTest
         Evaluator eval = evaluator();
         GlobalState globals = eval.getGlobalState();
 
-        Object kernelLambdaId = globals.kernelBoundIdentifier(eval, LAMBDA);
-        Object kernelModuleId = globals.kernelBoundIdentifier(eval, MODULE);
-        Object kernelDefValuesId = globals.kernelBoundIdentifier(eval, DEFINE_VALUES);
+        Object kernelLambdaId = globals.kernelBoundIdentifier(LAMBDA);
+        Object kernelModuleId = globals.kernelBoundIdentifier(MODULE);
+        Object kernelDefValuesId = globals.kernelBoundIdentifier(DEFINE_VALUES);
 
         CoreFormCollector collector = new CoreFormCollector();
 

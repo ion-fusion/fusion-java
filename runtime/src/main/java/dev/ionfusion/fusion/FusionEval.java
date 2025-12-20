@@ -9,6 +9,7 @@ import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.GlobalState.MODULE;
 import static dev.ionfusion.fusion.StandardReader.readSyntax;
 import static dev.ionfusion.fusion.Syntax.datumToSyntax;
+
 import com.amazon.ion.IonReader;
 import java.util.LinkedList;
 
@@ -206,7 +207,7 @@ final class FusionEval
             {
                 maybeKeyword = (SyntaxSymbol) ns.syntaxIntroduce(maybeKeyword);
                 SyntaxSymbol moduleKeyword =
-                    eval.getGlobalState().kernelBoundIdentifier(eval, MODULE);
+                    eval.getGlobalState().kernelBoundIdentifier(MODULE);
                 if (maybeKeyword.freeIdentifierEqual(moduleKeyword))
                 {
                     // Stash the resolved identifier back in the sexp.

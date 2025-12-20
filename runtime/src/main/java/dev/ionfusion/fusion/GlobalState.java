@@ -207,14 +207,16 @@ final class GlobalState
     /**
      * Creates a new identifier that's bound in this kernel.
      *
-     * @param eval not null.
      * @param name must be defined by this kernel!
      */
-    SyntaxSymbol kernelBoundIdentifier(Evaluator eval, String name)
+    SyntaxSymbol kernelBoundIdentifier(String name)
     {
-        SyntaxSymbol sym = SyntaxSymbol.make(eval, name);
-        sym = sym.copyReplacingBinding(kernelBinding(name));
-        return sym;
+        ModuleDefinedBinding b = kernelBinding(name);
+
+        BaseSymbol sym = b.getName();
+        assert sym.stringValue().equals(name);
+
+        return SyntaxSymbol.make(null, sym).copyReplacingBinding(b);
     }
 
     private static IonStruct kernelDocs(IonSystem system)
