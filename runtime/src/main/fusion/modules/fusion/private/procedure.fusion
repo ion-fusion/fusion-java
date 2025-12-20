@@ -1,0 +1,33 @@
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(module private_procedure "/fusion/private/builtins"
+
+  (require
+    "/fusion/experimental/syntax"
+    "/fusion/private/bind"
+    "/fusion/private/sexp"
+    "/fusion/unsafe/sexp")
+
+  (provide thunk_expander)
+
+  // This needs to be in a separate mod
+  (define (thunk_expander stx)
+    '''
+Shared implementation of `||` and `thunk`.
+
+This needs to be in a separate module because `define_syntax` bodies are
+compiled before `define`s are expanded, so they cannot reference helpers from
+the same module.  Racket has `define_for_syntax` to create helpers at the
+correct expansion phase.
+    '''
+    (let [(body (unsafe_pair_tail (syntax_unwrap stx)))]
+      (if (is_pair body)
+        (datum_to_syntax
+          (pair (quote_syntax lambda)
+                (pair (quote_syntax ())
+                      body))
+          (quote_syntax context)
+          stx)
+        (wrong_syntax stx "Expected at least one body form"))))
+)
