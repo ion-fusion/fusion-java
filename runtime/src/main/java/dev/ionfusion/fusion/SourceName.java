@@ -15,6 +15,11 @@ import java.nio.file.Path;
  */
 public class SourceName
 {
+    /**
+     * The standard extension for Fusion source code files.
+     */
+    public static final String FUSION_SOURCE_EXTENSION = ".fusion";
+
     private final String myDisplay;
 
     /**

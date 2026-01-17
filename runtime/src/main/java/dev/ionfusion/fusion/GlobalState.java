@@ -21,8 +21,6 @@ import java.io.InputStream;
  */
 final class GlobalState
 {
-    static final String FUSION_SOURCE_EXTENSION = ".fusion";
-
     static final String KERNEL_MODULE_NAME = "/fusion/private/kernel";
     static final ModuleIdentity KERNEL_MODULE_IDENTITY =
         ModuleIdentity.forAbsolutePath(KERNEL_MODULE_NAME);

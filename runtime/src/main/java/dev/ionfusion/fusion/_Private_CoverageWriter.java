@@ -4,7 +4,7 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.CoverageDatabase.SRCLOC_COMPARE;
-import static dev.ionfusion.fusion.GlobalState.FUSION_SOURCE_EXTENSION;
+import static dev.ionfusion.fusion.SourceName.FUSION_SOURCE_EXTENSION;
 import static dev.ionfusion.fusion._Private_Trampoline.discoverModulesInRepository;
 import static java.math.RoundingMode.HALF_EVEN;
 import static java.nio.file.Files.walkFileTree;

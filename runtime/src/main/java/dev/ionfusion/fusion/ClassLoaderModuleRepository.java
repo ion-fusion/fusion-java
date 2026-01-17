@@ -3,7 +3,7 @@
 
 package dev.ionfusion.fusion;
 
-import static dev.ionfusion.fusion.GlobalState.FUSION_SOURCE_EXTENSION;
+import static dev.ionfusion.fusion.SourceName.FUSION_SOURCE_EXTENSION;
 
 import java.net.URL;
 import java.util.function.Consumer;
