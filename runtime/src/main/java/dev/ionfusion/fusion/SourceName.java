@@ -105,7 +105,14 @@ public class SourceName
         return f == null ? null : f.toPath();
     }
 
-    URL getUrl()
+    /**
+     * Returns a URL for the source. The protocol can vary; at least {@code file}
+     * and {@code jar} are possible. In general, {@link URL#openStream()} is
+     * expected to work.
+     *
+     * @return null if this source cannot be identified as a URL.
+     */
+    public URL getUrl()
     {
         return null;
     }
@@ -115,8 +122,10 @@ public class SourceName
      * the file or URL.
      * The resource could be a script with several modules inside, and modules
      * declarations will eventually nest.
+     *
+     * @return the module associated with this source, if any.
      */
-    ModuleIdentity getModuleIdentity()
+    public ModuleIdentity getModuleIdentity()
     {
         return null;
     }
@@ -133,7 +142,7 @@ public class SourceName
     }
 
 
-    boolean equals(SourceName other)
+    public boolean equals(SourceName other)
     {
         return (other != null && myDisplay.equals(other.myDisplay));
     }
@@ -181,7 +190,7 @@ public class SourceName
         extends SourceName
     {
         private final ModuleIdentity myId;
-        private final File myFile;
+        private final File           myFile;
 
         ModuleSourceName(ModuleIdentity id, File file)
         {
@@ -194,11 +203,11 @@ public class SourceName
         public File getFile() { return myFile; }
 
         @Override
-        ModuleIdentity getModuleIdentity() { return myId; }
+        public ModuleIdentity getModuleIdentity() { return myId; }
     }
 
 
-    static SourceName forModule(ModuleIdentity id, File sourceFile)
+    public static SourceName forModule(ModuleIdentity id, File sourceFile)
     {
         assert sourceFile != null;
         return new ModuleSourceName(id, sourceFile);
@@ -225,17 +234,14 @@ public class SourceName
         }
 
         @Override
-        URL getUrl() { return myUrl; }
+        public URL getUrl() { return myUrl; }
 
         @Override
-        ModuleIdentity getModuleIdentity() { return myId; }
+        public ModuleIdentity getModuleIdentity() { return myId; }
     }
 
 
-    /**
-     * NOT FOR APPLICATION USE
-     */
-    static SourceName forUrl(ModuleIdentity id, URL url)
+    public static SourceName forUrl(ModuleIdentity id, URL url)
     {
         return new UrlSourceName(id, url);
     }
