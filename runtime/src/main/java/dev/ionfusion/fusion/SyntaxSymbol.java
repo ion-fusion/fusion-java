@@ -7,7 +7,8 @@ import static com.amazon.ion.util.IonTextUtils.printQuotedSymbol;
 import static dev.ionfusion.fusion.FusionBool.makeBool;
 import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionSyntax.checkIdentifierArg;
-import static dev.ionfusion.fusion.FusionUtils.EMPTY_OBJECT_ARRAY;
+import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_OBJECT_ARRAY;
+import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_STRING_ARRAY;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import java.util.Collections;
@@ -24,7 +25,7 @@ final class SyntaxSymbol
     {
         if (symbols == null || symbols.length == 0)
         {
-            return FusionUtils.EMPTY_STRING_ARRAY;
+            return EMPTY_STRING_ARRAY;
         }
         else
         {

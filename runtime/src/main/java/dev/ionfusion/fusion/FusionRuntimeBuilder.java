@@ -5,6 +5,7 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.ModuleIdentity.isValidAbsoluteModulePath;
 import static dev.ionfusion.fusion._Private_CoverageCollectorImpl.fromDirectory;
+import static dev.ionfusion.fusion._private.FusionUtils.readProperties;
 
 import com.amazon.ion.IonCatalog;
 import com.amazon.ion.system.SimpleCatalog;
@@ -281,7 +282,7 @@ public class FusionRuntimeBuilder
     {
         if (resource == null) return this;
 
-        Properties props = FusionUtils.readProperties(resource);
+        Properties props = readProperties(resource);
         return withConfigProperties(props);
     }
 

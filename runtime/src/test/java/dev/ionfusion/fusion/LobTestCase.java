@@ -6,10 +6,10 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionLob.unsafeLobBytesCopy;
 import static dev.ionfusion.fusion.FusionLob.unsafeLobBytesNoCopy;
 import static dev.ionfusion.fusion.FusionString.unsafeStringToJavaString;
-import static dev.ionfusion.fusion.FusionUtils.EMPTY_BYTE_ARRAY;
-import static dev.ionfusion.fusion.FusionUtils.EMPTY_STRING_ARRAY;
 import static dev.ionfusion.fusion.FusionValue.annotate;
 import static dev.ionfusion.fusion.FusionValue.isAnyNull;
+import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_BYTE_ARRAY;
+import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_STRING_ARRAY;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

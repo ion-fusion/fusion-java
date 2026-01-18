@@ -1,13 +1,13 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion;
+package dev.ionfusion.fusion._private;
 
-import com.amazon.ion.IonValue;
-import com.amazon.ion.IonWriter;
-import com.amazon.ion.system.IonTextWriterBuilder;
+import static dev.ionfusion.fusion._Private_Trampoline.newFusionException;
+import static java.nio.file.Files.newInputStream;
+
+import dev.ionfusion.fusion.FusionException;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -16,31 +16,18 @@ import java.util.Properties;
 /**
  *
  */
-final class FusionUtils
+public final class FusionUtils
 {
     /** This class is not to be instantiated. */
     private FusionUtils() { }
 
 
-    static final byte[]   EMPTY_BYTE_ARRAY   = new byte[0];
-    static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
-    static final String[] EMPTY_STRING_ARRAY = new String[0];
+    public static final byte[]   EMPTY_BYTE_ARRAY   = new byte[0];
+    public static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
+    public static final String[] EMPTY_STRING_ARRAY = new String[0];
 
 
-    /**
-     * @param value must not be null.
-     */
-    static IonValue cloneIfContained(IonValue value)
-    {
-        if (value.getContainer() != null)
-        {
-            value = value.clone();
-        }
-        return value;
-    }
-
-
-    static String friendlySuffix(long i)
+    private static String friendlySuffix(long i)
     {
         long lastDigit = i % 10;
         if (lastDigit == 1 && i != 11)
@@ -65,7 +52,7 @@ final class FusionUtils
      *
      * @param i the zero-based index to display.
      */
-    static String friendlyIndex(long i)
+    public static String friendlyIndex(long i)
     {
         i++;
         return i + friendlySuffix(i);
@@ -81,7 +68,7 @@ final class FusionUtils
      *
      * @throws IOException if thrown by {@code out}.
      */
-    static void writeFriendlyOrdinal(Appendable out, long i)
+    public static void writeFriendlyOrdinal(Appendable out, long i)
         throws IOException
     {
         out.append(Long.toString(i));
@@ -99,7 +86,7 @@ final class FusionUtils
      *
      * @throws IOException if thrown by {@code out}.
      */
-    static void writeFriendlyIndex(Appendable out, long i)
+    public static void writeFriendlyIndex(Appendable out, long i)
         throws IOException
     {
         writeFriendlyOrdinal(out, i + 1);
@@ -113,20 +100,12 @@ final class FusionUtils
      * @param out must not be null.
      * @param i the zero-based index to display.
      */
-    static void writeFriendlyIndex(StringBuilder out, long i)
+    public static void writeFriendlyIndex(StringBuilder out, long i)
     {
         i++;
         out.append(i);
         String suffix = friendlySuffix(i);
         out.append(suffix);
-    }
-
-    static void writeIon(Appendable out, IonValue v)
-        throws IOException
-    {
-        IonWriter writer = IonTextWriterBuilder.standard().build(out);
-        v.writeTo(writer);
-        writer.flush();
     }
 
 
@@ -151,7 +130,7 @@ final class FusionUtils
         {
             String message =
                 "Error reading properties from resource " + resource;
-            throw new FusionException(message, e);
+            throw newFusionException(message, e);
         }
     }
 
@@ -166,7 +145,7 @@ final class FusionUtils
     public static Properties readProperties(File file)
         throws FusionException
     {
-        try (InputStream stream = new FileInputStream(file))
+        try (InputStream stream = newInputStream(file.toPath()))
         {
             Properties props = new Properties();
             props.load(stream);
@@ -176,7 +155,7 @@ final class FusionUtils
         {
             String message =
                 "Error reading properties from file " + file;
-            throw new FusionException(message, e);
+            throw newFusionException(message, e);
         }
     }
 }

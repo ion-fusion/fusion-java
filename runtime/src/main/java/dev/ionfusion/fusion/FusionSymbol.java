@@ -7,7 +7,7 @@ import static dev.ionfusion.fusion.FusionBool.falseBool;
 import static dev.ionfusion.fusion.FusionBool.makeBool;
 import static dev.ionfusion.fusion.FusionBool.trueBool;
 import static dev.ionfusion.fusion.FusionString.makeString;
-import static dev.ionfusion.fusion.FusionUtils.EMPTY_STRING_ARRAY;
+import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_STRING_ARRAY;
 
 import com.amazon.ion.IonException;
 import com.amazon.ion.IonType;

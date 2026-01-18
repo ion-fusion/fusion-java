@@ -16,8 +16,8 @@ import static dev.ionfusion.fusion.FusionString.makeString;
 import static dev.ionfusion.fusion.FusionStruct.structFromIonStruct;
 import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionTimestamp.makeTimestamp;
-import static dev.ionfusion.fusion.FusionUtils.friendlyIndex;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
+import static dev.ionfusion.fusion._private.FusionUtils.friendlyIndex;
 
 import com.amazon.ion.IonBool;
 import com.amazon.ion.IonDatagram;

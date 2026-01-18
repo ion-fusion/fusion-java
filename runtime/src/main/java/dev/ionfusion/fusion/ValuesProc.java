@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_OBJECT_ARRAY;
 
 final class ValuesProc
     extends Procedure
@@ -16,7 +17,7 @@ final class ValuesProc
         {
             case 0:
             {
-                return FusionUtils.EMPTY_OBJECT_ARRAY;
+                return EMPTY_OBJECT_ARRAY;
             }
             case 1:
             {

@@ -18,6 +18,7 @@ import static dev.ionfusion.fusion.FusionValue.isAnyNull;
 import static dev.ionfusion.fusion.FusionVoid.isVoid;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.LetValuesForm.compilePlainLet;
+import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_OBJECT_ARRAY;
 
 import dev.ionfusion.fusion.FusionStruct.StructFieldVisitor;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
@@ -794,7 +795,7 @@ class Compiler
             Object[] args;
             if (argCount == 0)
             {
-                args = FusionUtils.EMPTY_OBJECT_ARRAY;
+                args = EMPTY_OBJECT_ARRAY;
             }
             else
             {

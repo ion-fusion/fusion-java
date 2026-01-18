@@ -14,8 +14,8 @@ import static dev.ionfusion.fusion.FusionIo.dispatchWrite;
 import static dev.ionfusion.fusion.FusionNumber.makeInt;
 import static dev.ionfusion.fusion.FusionNumber.unsafeTruncateIntToJavaInt;
 import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.internSymbols;
-import static dev.ionfusion.fusion.FusionUtils.EMPTY_OBJECT_ARRAY;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
+import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_OBJECT_ARRAY;
 
 import com.amazon.ion.IonList;
 import com.amazon.ion.IonSequence;
@@ -40,7 +40,7 @@ final class FusionList
     private FusionList() {}
 
     static final ImmutableList EMPTY_IMMUTABLE_LIST =
-        new ImmutableList(FusionUtils.EMPTY_OBJECT_ARRAY);
+        new ImmutableList(EMPTY_OBJECT_ARRAY);
 
     static final NullList NULL_LIST = new NullList();
 

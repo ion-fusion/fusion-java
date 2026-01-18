@@ -3,6 +3,8 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.fusion._private.FusionUtils.writeFriendlyOrdinal;
+
 import com.amazon.ion.IonReader;
 import com.amazon.ion.OffsetSpan;
 import com.amazon.ion.TextSpan;
@@ -331,7 +333,7 @@ public class SourceLocation
         }
         else
         {
-            FusionUtils.writeFriendlyOrdinal(out, ord);
+            writeFriendlyOrdinal(out, ord);
         }
     }
 

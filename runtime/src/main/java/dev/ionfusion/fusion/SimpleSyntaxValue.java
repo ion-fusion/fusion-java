@@ -3,7 +3,8 @@
 
 package dev.ionfusion.fusion;
 
-import static dev.ionfusion.fusion.FusionUtils.EMPTY_OBJECT_ARRAY;
+import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_OBJECT_ARRAY;
+
 import com.amazon.ion.IonException;
 import com.amazon.ion.IonWriter;
 import java.io.IOException;

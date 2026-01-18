@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.ModuleIdentity.isValidAbsoluteModulePath;
+import static dev.ionfusion.fusion._private.FusionUtils.readProperties;
 
 import java.io.File;
 import java.io.IOException;
@@ -116,7 +117,7 @@ final class CoverageConfiguration
         File myConfigFile = new File(dataDir, CONFIG_FILE_NAME);
         if (myConfigFile.exists())
         {
-            Properties props = FusionUtils.readProperties(myConfigFile);
+            Properties props = readProperties(myConfigFile);
 
             myModuleSelector =
                 new SimpleModuleIdentitySelector(myConfigFile, props);

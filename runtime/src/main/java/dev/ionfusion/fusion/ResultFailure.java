@@ -4,7 +4,7 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionIo.safeWrite;
-import static dev.ionfusion.fusion.FusionUtils.writeFriendlyIndex;
+import static dev.ionfusion.fusion._private.FusionUtils.writeFriendlyIndex;
 import java.io.IOException;
 
 /**

@@ -5,7 +5,7 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionSexp.immutableSexp;
 import static dev.ionfusion.fusion.FusionString.isString;
-import static dev.ionfusion.fusion.FusionUtils.EMPTY_STRING_ARRAY;
+import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_STRING_ARRAY;
 
 /**
  * The {@code lambda} syntactic form, which evaluates to a {@link Closure}.
@@ -132,7 +132,7 @@ final class LambdaForm
         throws FusionException
     {
         int size = formalsDecl.size();
-        if (size == 0) return FusionUtils.EMPTY_STRING_ARRAY;
+        if (size == 0) return EMPTY_STRING_ARRAY;
 
         String[] args = new String[size];
         for (int i = 0; i < size; i++)

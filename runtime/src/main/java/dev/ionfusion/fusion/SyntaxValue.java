@@ -7,7 +7,7 @@ import static dev.ionfusion.fusion.FusionCompare.isSame;
 import static dev.ionfusion.fusion.FusionSexp.emptySexp;
 import static dev.ionfusion.fusion.FusionSexp.pair;
 import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.internSymbol;
-import static dev.ionfusion.fusion.FusionUtils.EMPTY_OBJECT_ARRAY;
+import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_OBJECT_ARRAY;
 import static java.lang.Boolean.TRUE;
 
 import com.amazon.ion.IonValue;

@@ -6,6 +6,8 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.BindingSite.makeLocalBindingSite;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.SyntaxSymbol.ensureUniqueIdentifiers;
+import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_STRING_ARRAY;
+
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import java.util.Set;
 
@@ -104,7 +106,7 @@ final class LocalEnvironment
         {
             if (bindings == null || bindings.length == 0)
             {
-                return FusionUtils.EMPTY_STRING_ARRAY;
+                return EMPTY_STRING_ARRAY;
             }
             else
             {
