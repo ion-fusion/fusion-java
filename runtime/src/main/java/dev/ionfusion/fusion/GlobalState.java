@@ -67,6 +67,10 @@ final class GlobalState
     final Binding myKernelRenameOutBinding;
     final Binding myKernelRequireBinding;
 
+    /**
+     * The value of {@code (quote origin)}, used as a syntax property to mark
+     * original code.
+     */
     final Object myStxPropOrigin;
 
 
