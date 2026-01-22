@@ -7,9 +7,21 @@ final class RaiseProc
     extends Procedure1
 {
     @Override
-    Object doApply(Evaluator eval, Object arg)
+    Object doApply(Evaluator eval, Object value)
         throws FusionException
     {
-        return FusionException.raise(eval, arg);
+        if (value instanceof FusionException)
+        {
+            throw (FusionException) value;
+        }
+
+        if (value instanceof Throwable)
+        {
+            String message =
+                "Java Throwables cannot be raised from Fusion code";
+            throw new IllegalArgumentException(message, (Throwable) value);
+        }
+
+        throw new FusionUserException(value);
     }
 }
