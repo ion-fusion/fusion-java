@@ -3,6 +3,9 @@
 
 package dev.ionfusion.fusion;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableList;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +24,11 @@ import java.util.Objects;
 public class FusionException
     extends Exception
 {
-    private List<SourceLocation> myContinuation;
+    /**
+     * The Fusion stack trace, aggregated by {@code catch} clauses in the
+     * interpreter as the Java stack unwinds.
+     */
+    private List<SourceLocation> myContext;
 
     // Constructors aren't public because I don't want applications to create
     // exceptions directly or subclass them.
@@ -49,19 +56,18 @@ public class FusionException
      */
     void addContext(SourceLocation location)
     {
-        if (myContinuation == null)
+        if (myContext == null)
         {
-            myContinuation = new ArrayList<>(32);
-            myContinuation.add(location);
+            myContext = new ArrayList<>(32);
+            myContext.add(location);
         }
         else
         {
-            SourceLocation prev =
-                myContinuation.get(myContinuation.size() - 1);
+            // Collapse equal adjacent locations
+            SourceLocation prev = myContext.get(myContext.size() - 1);
             if (! Objects.equals(prev, location))
             {
-                // Collapse equal adjacent locations
-                myContinuation.add(location);
+                myContext.add(location);
             }
         }
     }
@@ -82,13 +88,19 @@ public class FusionException
 
 
     /**
-     * NOT FOR APPLICATION USE!
+     * Returns the Fusion stack trace of this exception.
+     * The first element in the list is the deepest stack frame, normally the
+     * site of the exception.
+     * <p>
+     * The list may contain null elements indicating notable gaps in the trace.
+     * In the default stack display, these appear as {@code ...} lines without
+     * locations.
      *
-     * @return the internal location list. May be null. DO NOT MODIFY!
+     * @return an immutable list; not null.
      */
-    List<SourceLocation> getContextLocations()
+    public List<SourceLocation> getContext()
     {
-        return myContinuation;
+        return (myContext == null ? emptyList() : unmodifiableList(myContext));
     }
 
 
@@ -97,9 +109,9 @@ public class FusionException
     void displayContinuation(Appendable out)
         throws IOException
     {
-        if (myContinuation != null)
+        if (myContext != null)
         {
-            for (SourceLocation loc : myContinuation)
+            for (SourceLocation loc : myContext)
             {
                 if (loc == null)
                 {

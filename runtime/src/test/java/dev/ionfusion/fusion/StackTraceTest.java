@@ -18,8 +18,8 @@ public class StackTraceTest
         throws Exception
     {
         FusionException e = assertEvalThrows(FusionException.class, code);
-        List<SourceLocation> locations = e.getContextLocations();
-        if (locations == null)
+        List<SourceLocation> locations = e.getContext();
+        if (locations.isEmpty())
         {
             // This is probably a parsing error, since the evaluator will
             // otherwise ensure a topmost locations.
