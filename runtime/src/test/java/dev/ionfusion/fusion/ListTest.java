@@ -6,13 +6,15 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionList.checkActualListArg;
 import static dev.ionfusion.fusion.FusionList.unsafeListElement;
 import static dev.ionfusion.fusion.FusionList.unsafeListSize;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import dev.ionfusion.fusion.FusionList.UnsafeListSizeProc;
+
 import com.amazon.ion.IonList;
 import com.amazon.ion.IonValue;
+import dev.ionfusion.fusion.FusionList.UnsafeListSizeProc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -341,6 +343,6 @@ public class ListTest
                                                   new UnsafeListSizeProc(),
                                                   0,
                                                   nullList));
-        assertTrue(e.getMessage().contains("non-null list"));
+        assertThat(e.getMessage(), containsString("non-null list"));
     }
 }

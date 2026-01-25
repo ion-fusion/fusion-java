@@ -34,6 +34,6 @@ final class AnnotateProc
             return FusionValue.annotate(eval, target, annotations);
         }
 
-        throw argFailure("annotatable type", 0, args);
+        throw argError(eval, "annotatable type", 0, args);
     }
 }

@@ -465,7 +465,7 @@ public final class FusionString
             return ((BaseString) arg).stringValue();
         }
 
-        throw who.argFailure(expectation, argNum, args);
+        throw who.argError(eval, expectation, argNum, args);
     }
 
 
@@ -496,7 +496,7 @@ public final class FusionString
         String result = checkStringArg(eval, who, expectation, argNum, args);
         if (result == null)
         {
-            throw who.argFailure(expectation, argNum, args);
+            throw who.argError(eval, expectation, argNum, args);
         }
         return result;
     }
@@ -515,7 +515,7 @@ public final class FusionString
         String result = checkStringArg(eval, who, expectation, argNum, args);
         if (result == null || result.isEmpty())
         {
-            throw who.argFailure(expectation, argNum, args);
+            throw who.argError(eval, expectation, argNum, args);
         }
         return result;
     }
@@ -624,7 +624,7 @@ public final class FusionString
             }
             catch (CharacterCodingException e)
             {
-                throw argFailure("valid Unicode string", 0, arg);
+                throw argError(eval, "valid Unicode string", 0, arg);
             }
         }
     }

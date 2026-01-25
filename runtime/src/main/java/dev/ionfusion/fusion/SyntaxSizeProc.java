@@ -12,7 +12,7 @@ final class SyntaxSizeProc
     Object doApply(Evaluator eval, Object arg)
         throws FusionException
     {
-        SyntaxSequence c = checkSyntaxSequenceArg(0, arg);
+        SyntaxSequence c = checkSyntaxSequenceArg(eval, 0, arg);
         return makeInt(eval, c.size());
     }
 }

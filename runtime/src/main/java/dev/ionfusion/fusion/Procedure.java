@@ -210,8 +210,8 @@ abstract class Procedure
 
 
     /**
-     * Creates, but does not throw, an exception that indicates a contract
-     * failure with a given argument.
+     * Creates, but does not throw, a Fusion {@code argument_error} indicating
+     * a contract failure with a given argument.
      *
      * @param expectation describes the expectation that was not met.  When
      * displayed, this string is prefixed by "procedure <i>p</i> expects",
@@ -223,17 +223,18 @@ abstract class Procedure
      *
      * @return a new exception.
      */
-    final ArgumentException argFailure(String expectation,
-                                       int badPos,
-                                       Object... actuals)
+    final FusionException argError(Evaluator eval,
+                                   String expectation,
+                                   int badPos,
+                                   Object... actuals)
     {
-        return new ArgumentException(this, expectation, badPos, actuals);
+        return new ArgumentException(identify(), expectation, badPos, actuals);
     }
 
 
-    final <T> T checkArg(Class<T> klass, String desc, int argNum,
+    final <T> T checkArg(Evaluator eval, Class<T> klass, String desc, int argNum,
                          Object... args)
-        throws ArgumentException
+        throws FusionException
     {
         try
         {
@@ -241,7 +242,7 @@ abstract class Procedure
         }
         catch (ClassCastException e)
         {
-            throw new ArgumentException(this, desc, argNum, args);
+            throw argError(eval, desc, argNum, args);
         }
     }
 
@@ -357,8 +358,8 @@ abstract class Procedure
 
 
     @Deprecated
-    final SyntaxValue checkSyntaxArg(int argNum, Object... args)
-        throws ArgumentException
+    final SyntaxValue checkSyntaxArg(Evaluator eval, int argNum, Object... args)
+        throws FusionException
     {
         try
         {
@@ -366,16 +367,17 @@ abstract class Procedure
         }
         catch (ClassCastException e)
         {
-            throw new ArgumentException(this, "Syntax value", argNum, args);
+            throw argError(eval, "Syntax value", argNum, args);
         }
     }
 
-    private <T extends SyntaxValue> T checkSyntaxArg(Class<T> klass,
+    private <T extends SyntaxValue> T checkSyntaxArg(Evaluator eval,
+                                                     Class<T> klass,
                                                      String typeName,
                                                      boolean nullable,
                                                      int argNum,
                                                      Object... args)
-        throws ArgumentException
+        throws FusionException
     {
         Object arg = args[argNum];
 
@@ -389,33 +391,35 @@ abstract class Procedure
         }
         catch (ClassCastException e) {}
 
-        throw new ArgumentException(this, typeName, argNum, args);
+        throw argError(eval, typeName, argNum, args);
     }
 
 
     @Deprecated
-    final SyntaxContainer checkSyntaxContainerArg(int argNum, Object... args)
-        throws ArgumentException
+    final SyntaxContainer checkSyntaxContainerArg(Evaluator eval, int argNum, Object... args)
+        throws FusionException
     {
-        return checkSyntaxArg(SyntaxContainer.class,
+        return checkSyntaxArg(eval,
+                              SyntaxContainer.class,
                               "syntax_list, sexp, or struct",
                               true /* nullable */, argNum, args);
     }
 
 
     @Deprecated
-    final SyntaxSequence checkSyntaxSequenceArg(int argNum, Object... args)
-        throws ArgumentException
+    final SyntaxSequence checkSyntaxSequenceArg(Evaluator eval, int argNum, Object... args)
+        throws FusionException
     {
-        return checkSyntaxArg(SyntaxSequence.class,
+        return checkSyntaxArg(eval,
+                              SyntaxSequence.class,
                               "syntax_list or syntax_sexp",
                               true /* nullable */, argNum, args);
     }
 
 
     /** Ensures that an argument is a {@link Procedure}. */
-    final Procedure checkProcArg(int argNum, Object... args)
-        throws ArgumentException
+    final Procedure checkProcArg(Evaluator eval, int argNum, Object... args)
+        throws FusionException
     {
         try
         {
@@ -423,7 +427,7 @@ abstract class Procedure
         }
         catch (ClassCastException e)
         {
-            throw new ArgumentException(this, "procedure", argNum, args);
+            throw argError(eval, "procedure", argNum, args);
         }
     }
 

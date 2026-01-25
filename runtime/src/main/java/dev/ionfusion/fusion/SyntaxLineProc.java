@@ -13,7 +13,7 @@ class SyntaxLineProc
     Object doApply(Evaluator eval, Object arg)
         throws FusionException
     {
-        SyntaxValue stx = checkSyntaxArg(0, arg);
+        SyntaxValue stx = checkSyntaxArg(eval, 0, arg);
         SourceLocation location = stx.getLocation();
         if (location != null)
         {

@@ -432,7 +432,7 @@ final class FusionEval
                 }
                 else
                 {
-                    throw argFailure("namespace", 1, args);
+                    throw argError(eval, "namespace", 1, args);
                 }
             }
 

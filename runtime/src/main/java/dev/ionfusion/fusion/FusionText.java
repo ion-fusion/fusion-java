@@ -110,14 +110,14 @@ final class FusionText
                                String    expectation,
                                int       argNum,
                                Object... args)
-        throws FusionException, ArgumentException
+        throws FusionException
     {
         Object arg = args[argNum];
         if (arg instanceof BaseText)
         {
             return ((BaseText) arg).stringValue();
         }
-        throw who.argFailure(expectation, argNum, args);
+        throw who.argError(eval, expectation, argNum, args);
     }
 
 
@@ -128,13 +128,13 @@ final class FusionText
                                        Procedure who,
                                        int       argNum,
                                        Object... args)
-        throws FusionException, ArgumentException
+        throws FusionException
     {
         String expectation = "non-null string or symbol";
         String result = checkTextArg(eval, who, expectation, argNum, args);
         if (result == null)
         {
-            throw who.argFailure(expectation, argNum, args);
+            throw who.argError(eval, expectation, argNum, args);
         }
         return result;
     }
@@ -149,13 +149,13 @@ final class FusionText
                                        Procedure who,
                                        int       argNum,
                                        Object... args)
-        throws FusionException, ArgumentException
+        throws FusionException
     {
         String expectation = "non-empty string or symbol";
         String result = checkTextArg(eval, who, expectation, argNum, args);
         if (result == null || result.isEmpty())
         {
-            throw who.argFailure(expectation, argNum, args);
+            throw who.argError(eval, expectation, argNum, args);
         }
         return result;
     }

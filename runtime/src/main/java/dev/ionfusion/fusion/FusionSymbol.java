@@ -584,7 +584,7 @@ final class FusionSymbol
             return ((BaseSymbol) arg).stringValue();
         }
 
-        throw who.argFailure(expectation, argNum, args);
+        throw who.argError(eval, expectation, argNum, args);
     }
 
 
@@ -615,7 +615,7 @@ final class FusionSymbol
         String result = checkSymbolArg(eval, who, expectation, argNum, args);
         if (result == null)
         {
-            throw who.argFailure(expectation, argNum, args);
+            throw who.argError(eval, expectation, argNum, args);
         }
         return result;
     }

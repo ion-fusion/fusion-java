@@ -16,7 +16,7 @@ final class WrongSyntaxProc
         throws FusionException
     {
         checkArityAtLeast(1, args);
-        SyntaxValue stx = checkSyntaxArg(0, args);
+        SyntaxValue stx = checkSyntaxArg(eval, 0, args);
 
         String name = null; // TODO infer name
         String message = safeDisplayManyToString(eval, args, 1);

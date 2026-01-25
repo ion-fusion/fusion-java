@@ -1884,7 +1884,7 @@ public final class FusionNumber
             }
         }
 
-        throw who.argFailure("32-bit int", argNum, args);
+        throw who.argError(eval, "32-bit int", argNum, args);
     }
 
 
@@ -1904,7 +1904,7 @@ public final class FusionNumber
             return ((LongInt) arg).myContent;
         }
 
-        throw who.argFailure("64-bit int", argNum, args);
+        throw who.argError(eval, "64-bit int", argNum, args);
     }
 
 
@@ -1925,7 +1925,7 @@ public final class FusionNumber
             return ((BaseInt) arg).truncateToBigInteger();
         }
 
-        throw who.argFailure(expectation, argNum, args);
+        throw who.argError(eval, expectation, argNum, args);
     }
 
 
@@ -1956,7 +1956,7 @@ public final class FusionNumber
         BigInteger result = checkIntArg(eval, who, expectation, argNum, args);
         if (result == null)
         {
-            throw who.argFailure(expectation, argNum, args);
+            throw who.argError(eval, expectation, argNum, args);
         }
         return result;
     }
@@ -1983,7 +1983,7 @@ public final class FusionNumber
             return ((BaseDecimal) arg).toBigDecimal();
         }
 
-        throw who.argFailure(expectation, argNum, args);
+        throw who.argError(eval, expectation, argNum, args);
     }
 
     static BigDecimal checkNullableDecimalArg(Evaluator eval,
@@ -2012,7 +2012,7 @@ public final class FusionNumber
             checkDecimalArg(eval, who, expectation, argNum, args);
         if (result == null)
         {
-            throw who.argFailure(expectation, argNum, args);
+            throw who.argError(eval, expectation, argNum, args);
         }
         return result;
     }
@@ -2039,7 +2039,7 @@ public final class FusionNumber
             return (BaseFloat) arg;
         }
 
-        throw who.argFailure(expectation, argNum, args);
+        throw who.argError(eval, expectation, argNum, args);
     }
 
 
@@ -2069,7 +2069,7 @@ public final class FusionNumber
         BaseFloat f = checkFloatArg(eval, who, expectation, argNum, args);
         if (f.isAnyNull())
         {
-            throw who.argFailure(expectation, argNum, args);
+            throw who.argError(eval, expectation, argNum, args);
         }
         return f.primitiveDoubleValue();
     }
@@ -2096,7 +2096,7 @@ public final class FusionNumber
             return ((BaseNumber) arg).toBigDecimal();
         }
 
-        throw who.argFailure(expectation, argNum, args);
+        throw who.argError(eval, expectation, argNum, args);
     }
 
     static BigDecimal checkNullableNumberArgToJavaBigDecimal(Evaluator eval,
@@ -2125,7 +2125,7 @@ public final class FusionNumber
            checkNumberArgToJavaBigDecimal(eval, who, expectation, argNum, args);
         if (result == null)
         {
-            throw who.argFailure(expectation, argNum, args);
+            throw who.argError(eval, expectation, argNum, args);
         }
         return result;
     }
@@ -2206,13 +2206,13 @@ public final class FusionNumber
                         }
                     }
 
-                    throw argFailure("non-null int or decimal", i, args);
+                    throw argError(eval, "non-null int or decimal", i, args);
                 }
 
                 return accum;
             }
 
-            throw argFailure("non-null int or decimal", 0, args);
+            throw argError(eval, "non-null int or decimal", 0, args);
         }
     }
 
@@ -2248,13 +2248,13 @@ public final class FusionNumber
                         }
                     }
 
-                    throw argFailure("non-null int or decimal", i, args);
+                    throw argError(eval,"non-null int or decimal", i, args);
                 }
 
                 return accum;
             }
 
-            throw argFailure("non-null int or decimal", 0, args);
+            throw argError(eval, "non-null int or decimal", 0, args);
         }
     }
 
@@ -2293,14 +2293,14 @@ public final class FusionNumber
                             }
                         }
 
-                        throw argFailure("non-null int or decimal", i, args);
+                        throw argError(eval, "non-null int or decimal", i, args);
                     }
 
                     return accum;
                 }
             }
 
-            throw argFailure("non-null int or decimal", 0, args);
+            throw argError(eval, "non-null int or decimal", 0, args);
         }
     }
 
@@ -2376,7 +2376,7 @@ public final class FusionNumber
             {
                 final Object rawCoefficient = args[0];
                 assert isFloat(eval, rawCoefficient);
-                throw argFailure("unable to convert non-number float in coefficient", 0, args);
+                throw argError(eval, "unable to convert non-number float in coefficient", 0, args);
             }
 
             return makeDecimal(eval, coefficient.scaleByPowerOfTen(exponent));
@@ -2499,13 +2499,13 @@ public final class FusionNumber
 
             String val = checkNullableStringArg(eval, this, 0, args);
 
-            BigDecimal bigDecimal = (val != null ? parse(val, args) : null);
+            BigDecimal bigDecimal = (val != null ? parse(eval, val, args) : null);
 
             return makeDecimal(eval, bigDecimal);
         }
 
-        BigDecimal parse(String text, Object[] args)
-            throws ArgumentException
+        BigDecimal parse(Evaluator eval, String text, Object[] args)
+            throws FusionException
         {
             try
             {
@@ -2518,7 +2518,7 @@ public final class FusionNumber
             }
             catch (NumberFormatException e) { }
 
-            throw argFailure("valid decimal content", 0, args);
+            throw argError(eval, "valid decimal content", 0, args);
         }
     }
 
@@ -2545,7 +2545,7 @@ public final class FusionNumber
                 }
             }
 
-            throw new ArgumentException(this, "non-null int or decimal", 0, arg0);
+            throw argError(eval, "non-null int or decimal", 0, arg0);
         }
     }
 
@@ -2572,7 +2572,7 @@ public final class FusionNumber
                 }
             }
 
-            throw new ArgumentException(this, "non-null int or decimal", 0, arg0);
+            throw argError(eval, "non-null int or decimal", 0, arg0);
         }
     }
 

@@ -5,6 +5,7 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionNumber.makeInt;
 import static dev.ionfusion.fusion.FusionString.checkNullableStringArg;
+
 import java.math.BigInteger;
 
 final class StringToIntProc
@@ -18,14 +19,14 @@ final class StringToIntProc
 
         String val = checkNullableStringArg(eval, this, 0, args);
 
-        BigInteger bigInt = (val != null ? parse(val, args) : null);
+        BigInteger bigInt = (val != null ? parse(eval, val, args) : null);
 
         return makeInt(eval, bigInt);
     }
 
 
-    BigInteger parse(String text, Object[] args)
-        throws ArgumentException
+    BigInteger parse(Evaluator eval, String text, Object[] args)
+        throws FusionException
     {
         try
         {
@@ -38,6 +39,6 @@ final class StringToIntProc
         }
         catch (NumberFormatException e) { }
 
-        throw argFailure("valid int content", 0, args);
+        throw argError(eval, "valid int content", 0, args);
     }
 }

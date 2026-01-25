@@ -12,14 +12,14 @@ final class SyntaxAppendProc
         throws FusionException
     {
         checkArityAtLeast(1, args);
-        SyntaxSequence seq = checkSyntaxSequenceArg(0, args);
+        SyntaxSequence seq = checkSyntaxSequenceArg(eval, 0, args);
         for (int i = 1; i < args.length; i++)
         {
-            SyntaxSequence next = checkSyntaxSequenceArg(i, args);
+            SyntaxSequence next = checkSyntaxSequenceArg(eval, i, args);
             seq = seq.makeAppended(eval, next);
             if (seq == null)
             {
-                throw new ArgumentException(this, "proper sequence", i-1, args);
+                throw argError(eval, "proper sequence", i-1, args);
             }
         }
         return seq;

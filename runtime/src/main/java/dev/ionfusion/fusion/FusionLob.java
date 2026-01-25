@@ -172,7 +172,7 @@ public final class FusionLob
             return arg;
         }
 
-        throw who.argFailure(expectation, argNum, args);
+        throw who.argError(eval, expectation, argNum, args);
     }
 
 
@@ -203,7 +203,7 @@ public final class FusionLob
         BaseLob result = (BaseLob) checkLobArg(eval, who, expectation, argNum, args);
         if (result.isAnyNull())
         {
-            throw who.argFailure(expectation, argNum, args);
+            throw who.argError(eval, expectation, argNum, args);
         }
         return result;
     }
@@ -238,7 +238,7 @@ public final class FusionLob
                 }
             }
 
-            throw argFailure("algorithm name; \"SHA-256\" or \"SHA-512\"", 1, arg0, arg1);
+            throw argError(eval, "algorithm name; \"SHA-256\" or \"SHA-512\"", 1, arg0, arg1);
         }
     }
 

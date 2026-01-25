@@ -19,8 +19,8 @@ final class CallWithHandlerProc
         throws FusionException
     {
         // TODO Check arity of both procs before installing the handler.
-        checkArg(Procedure.class, "1-arg procedure", 0, handler, thunk);
-        checkArg(Procedure.class, "0-arg procedure", 1, handler, thunk);
+        checkArg(eval, Procedure.class, "1-arg procedure", 0, handler, thunk);
+        checkArg(eval, Procedure.class, "0-arg procedure", 1, handler, thunk);
 
         try
         {

@@ -70,28 +70,6 @@ final class ArgumentException
         this(name, expectation, badPos, new Object[] { actual });
     }
 
-    /**
-     * @param badPos the zero-based index of the problematic value.
-     *   -1 means a specific position isn't implicated.
-     * @param actuals must not be null or zero-length.
-     */
-    ArgumentException(Procedure name, String expectation,
-                      int badPos, Object... actuals)
-    {
-        this(name.identify(), expectation, badPos, actuals);
-    }
-
-    /**
-     * @param badPos the index of the problematic argument.
-     *   -1 means a specific arg isn't implicated.
-     * @param actual must not be null.
-     */
-    ArgumentException(Procedure name, String expectation,
-                      int badPos, Object actual)
-    {
-        this(name.identify(), expectation, badPos, new Object[]{ actual });
-        assert actual != null;
-    }
 
     String getName()
     {

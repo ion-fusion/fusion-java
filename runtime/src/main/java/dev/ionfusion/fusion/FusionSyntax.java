@@ -159,7 +159,7 @@ final class FusionSyntax
                                       String    expectation,
                                       int       argNum,
                                       Object... args)
-        throws ArgumentException
+        throws FusionException
     {
         Object arg = args[argNum];
         if (arg instanceof SyntaxValue)
@@ -167,7 +167,7 @@ final class FusionSyntax
             return (SyntaxValue) arg;
         }
 
-        throw who.argFailure(expectation, argNum, args);
+        throw who.argError(eval, expectation, argNum, args);
     }
 
 
@@ -179,7 +179,7 @@ final class FusionSyntax
                                            String    expectation,
                                            int       argNum,
                                            Object... args)
-        throws ArgumentException
+        throws FusionException
     {
         Object arg = args[argNum];
         if (arg instanceof SyntaxSymbol)
@@ -187,7 +187,7 @@ final class FusionSyntax
             return (SyntaxSymbol) arg;
         }
 
-        throw who.argFailure(expectation, argNum, args);
+        throw who.argError(eval, expectation, argNum, args);
     }
 
 
@@ -228,7 +228,7 @@ final class FusionSyntax
             throws FusionException
         {
             checkArityExact(1, args);
-            SyntaxValue stx = checkSyntaxArg(0, args);
+            SyntaxValue stx = checkSyntaxArg(eval, 0, args);
             return stx.syntaxToDatum(eval);
         }
     }
@@ -242,7 +242,7 @@ final class FusionSyntax
             throws FusionException
         {
             checkArityExact(1, args);
-            SyntaxValue stx = checkSyntaxArg(0, args);
+            SyntaxValue stx = checkSyntaxArg(eval, 0, args);
             return stx.unwrap(eval);
         }
     }

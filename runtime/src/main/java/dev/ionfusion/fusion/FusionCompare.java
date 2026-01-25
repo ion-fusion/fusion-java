@@ -16,9 +16,10 @@ import static dev.ionfusion.fusion.FusionSymbol.isSymbol;
 import static dev.ionfusion.fusion.FusionSymbol.unsafeSymbolToJavaString;
 import static dev.ionfusion.fusion.FusionTimestamp.isTimestamp;
 import static dev.ionfusion.fusion.FusionTimestamp.unsafeTimestampToJavaTimestamp;
+
+import com.amazon.ion.Timestamp;
 import dev.ionfusion.fusion.FusionBool.BaseBool;
 import dev.ionfusion.fusion.FusionNumber.BaseNumber;
-import com.amazon.ion.Timestamp;
 import java.math.BigDecimal;
 
 /**
@@ -85,9 +86,9 @@ final class FusionCompare
     private static abstract class BaseCompareProc
         extends Procedure
     {
-        FusionException failure(Object[] args)
+        FusionException failure(Evaluator eval, Object[] args)
         {
-            return new ArgumentException(this, "comparable types", -1, args);
+            return argError(eval, "comparable types", -1, args);
         }
 
 
@@ -100,10 +101,10 @@ final class FusionCompare
             throws FusionException;
 
 
-        boolean compareStrings(String left, String right, Object[] args)
+        boolean compareStrings(Evaluator eval, String left, String right, Object[] args)
             throws FusionException
         {
-            throw failure(args);
+            throw failure(eval, args);
         }
 
 
@@ -149,7 +150,7 @@ final class FusionCompare
 
                 if (left != null && right != null)
                 {
-                    boolean r = compareStrings(left, right, args);
+                    boolean r = compareStrings(eval, left, right, args);
                     return makeBool(eval, r);
                 }
             }
@@ -161,7 +162,7 @@ final class FusionCompare
 
                 if (left != null && right != null)
                 {
-                    boolean r = compareStrings(left, right, args);
+                    boolean r = compareStrings(eval, left, right, args);
                     return makeBool(eval, r);
                 }
             }
@@ -178,7 +179,7 @@ final class FusionCompare
                 }
             }
 
-            throw failure(args);
+            throw failure(eval, args);
         }
     }
 

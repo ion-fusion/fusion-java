@@ -17,7 +17,7 @@ final class SyntaxGetProc
         throws FusionException
     {
         checkArityAtLeast(1, args);
-        SyntaxContainer stx = checkSyntaxContainerArg(0, args);
+        SyntaxContainer stx = checkSyntaxContainerArg(eval, 0, args);
         SyntaxValue value = stx;
 
         final int lastArg = args.length - 1;

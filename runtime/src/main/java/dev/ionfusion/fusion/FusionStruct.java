@@ -1489,7 +1489,7 @@ final class FusionStruct
             return arg;
         }
 
-        throw who.argFailure(expectation, argNum, args);
+        throw who.argError(eval, expectation, argNum, args);
     }
 
 
@@ -1881,7 +1881,7 @@ final class FusionStruct
                 {
                     String expectation =
                         "sequence of non-null strings or symbols";
-                    throw new ArgumentException(this, expectation, 0, args);
+                    throw argError(eval, expectation, 0, args);
                 }
 
                 Object valueObj = valueIterator.next();

@@ -48,7 +48,7 @@ final class FusionNamespace
             String language = checkRequiredStringArg(eval, this, 0, arg);
             if (! (language.startsWith("/") && 1 < language.length()))
             {
-                throw argFailure("absolute module path", 0, arg);
+                throw argError(eval, "absolute module path", 0, arg);
             }
 
             return makeNamespaceWithLanguage(eval, language, null);

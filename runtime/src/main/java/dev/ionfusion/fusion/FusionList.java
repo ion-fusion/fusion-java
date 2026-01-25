@@ -1251,7 +1251,7 @@ final class FusionList
             return arg;
         }
 
-        throw who.argFailure(expectation, argNum, args);
+        throw who.argError(eval, expectation, argNum, args);
     }
 
 
@@ -1282,7 +1282,7 @@ final class FusionList
         Object result = checkListArg(eval, who, expectation, argNum, args);
         if (isNullList(eval, result))
         {
-            throw who.argFailure(expectation, argNum, args);
+            throw who.argError(eval, expectation, argNum, args);
         }
         return result;
     }

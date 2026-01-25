@@ -24,7 +24,7 @@ final class ApplyProc
 
         int arity = args.length;
 
-        Procedure proc = checkProcArg(0, args);
+        Procedure proc = checkProcArg(eval, 0, args);
 
         Object rest = args[arity - 1];
         boolean restIsList = isList(eval, rest);
@@ -41,7 +41,7 @@ final class ApplyProc
         }
         else
         {
-            throw argFailure("list or sexp", arity - 1, args);
+            throw argError(eval, "list or sexp", arity - 1, args);
         }
 
         // TODO if proc accepts a rest argument, optimize this copying.

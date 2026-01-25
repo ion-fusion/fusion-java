@@ -28,7 +28,7 @@ class DatumToSyntaxProc
             //  https://github.com/ion-fusion/fusion-java/issues/68
             if (! isIdentifier(eval, args[1]))
             {
-                throw argFailure("syntax identifier", 1, args);
+                throw argError(eval, "syntax identifier", 1, args);
             }
             context = (SyntaxSymbol) args[1];
 
@@ -36,7 +36,7 @@ class DatumToSyntaxProc
             {
                 if (! isSyntax(eval, args[2]))
                 {
-                    throw argFailure("syntax object", 2, args);
+                    throw argError(eval, "syntax object", 2, args);
                 }
                 location = unsafeSyntaxLocation(eval, args[2]);
             }

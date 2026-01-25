@@ -257,7 +257,7 @@ final class Records
 
             // TODO Allow non-proc here, but the record always throws arity error.
             // That requires changing ArityFailure to not require an explicit arity.
-            throw argFailure("procedure", myProcIndex, args);
+            throw argError(eval, "procedure", myProcIndex, args);
         }
     }
 
@@ -300,26 +300,26 @@ final class Records
         {
             if (! myType.hasInstance(v))
             {
-                throw new ArgumentException(this, "instance of " + myType.myName,
+                throw argError(eval, "instance of " + myType.myName,
                                             0, v, index);
             }
 
             int i = checkIntArgToJavaInt(eval, this, 1, v, index);
             if (i < 0)
             {
-                throw new ArgumentException(this, "non-negative int",
+                throw argError(eval, "non-negative int",
                                             1, v, index);
             }
 
             int max = myType.myFieldCount - 1;
             if (max < 0)
             {
-                throw new ArgumentException(this, "no access to fields",
+                throw argError(eval, "no access to fields",
                                             -1, v, index);
             }
             if (max < i)
             {
-                throw new ArgumentException(this, "index up to " + max,
+                throw argError(eval, "index up to " + max,
                                             1, v, index);
             }
 
@@ -349,7 +349,7 @@ final class Records
             String name = checkRequiredSymbolArg(eval, this, 0, args);
             if (name.isEmpty())
             {
-                throw new ArgumentException(this, "non-empty symbol", 0, args);
+                throw argError(eval, "non-empty symbol", 0, args);
             }
 
             RecordType supertype = null;
@@ -360,13 +360,13 @@ final class Records
             else if (! isNullNull(eval, args[1]))
             {
                 String expected = "record type descriptor or null";
-                throw new ArgumentException(this, expected, 1, args);
+                throw argError(eval, expected, 1, args);
             }
 
             final int initFieldCount = checkIntArgToJavaInt(eval, this, 2, args);
             if (initFieldCount < 0)
             {
-                throw new ArgumentException(this, "non-negative int", 1, args);
+                throw argError(eval, "non-negative int", 1, args);
             }
 
             int argCount = args.length;
@@ -384,11 +384,11 @@ final class Records
 
                         if (procIndex < 0)
                         {
-                            throw argFailure("non-negative int", 3, args);
+                            throw argError(eval, "non-negative int", 3, args);
                         }
                         if (procIndex >= initFieldCount)
                         {
-                            throw argFailure("int less than field count", 3, args);
+                            throw argError(eval, "int less than field count", 3, args);
                         }
                         if (supertype != null)
                         {

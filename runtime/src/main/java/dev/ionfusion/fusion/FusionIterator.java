@@ -10,6 +10,7 @@ import static dev.ionfusion.fusion.FusionList.unsafeListIterator;
 import static dev.ionfusion.fusion.FusionSexp.isSexp;
 import static dev.ionfusion.fusion.FusionSexp.unsafeSexpIterator;
 import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_OBJECT_ARRAY;
+
 import com.amazon.ion.IonValue;
 import java.io.IOException;
 import java.util.Iterator;
@@ -20,10 +21,10 @@ import java.util.NoSuchElementException;
 class FusionIterator
     extends BaseValue
 {
-    static FusionIterator checkArg(Procedure who, int argNum, Object... args)
-        throws ArgumentException
+    static FusionIterator checkArg(Evaluator eval, Procedure who, int argNum, Object... args)
+        throws FusionException
     {
-        return who.checkArg(FusionIterator.class, "iterator", argNum, args);
+        return who.checkArg(eval, FusionIterator.class, "iterator", argNum, args);
     }
 
 
@@ -312,7 +313,7 @@ class FusionIterator
         Object doApply(Evaluator eval, Object arg)
             throws FusionException
         {
-            FusionIterator iter = FusionIterator.checkArg(this, 0, arg);
+            FusionIterator iter = FusionIterator.checkArg(eval, this, 0, arg);
             return iter.doHasNextTail(eval);
         }
     }
@@ -325,7 +326,7 @@ class FusionIterator
         Object doApply(Evaluator eval, Object arg)
             throws FusionException
         {
-            FusionIterator iter = FusionIterator.checkArg(this, 0, arg);
+            FusionIterator iter = FusionIterator.checkArg(eval, this, 0, arg);
             return iter.doNextTail(eval);
         }
     }

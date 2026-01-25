@@ -13,7 +13,7 @@ final class SyntaxSubseqProc
         throws FusionException
     {
         checkArityExact(2, args);
-        SyntaxSequence sequence = checkSyntaxSequenceArg(0, args);
+        SyntaxSequence sequence = checkSyntaxSequenceArg(eval, 0, args);
         int from = checkIntArgToJavaInt(eval, this, 1, args);
         int size = sequence.size();
 
@@ -22,7 +22,7 @@ final class SyntaxSubseqProc
         sequence = sequence.makeSubseq(eval, from);
         if (sequence == null)
         {
-            throw new ArgumentException(this, "proper sequence", 0, args);
+            throw argError(eval, "proper sequence", 0, args);
         }
         return sequence;
     }

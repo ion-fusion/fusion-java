@@ -854,7 +854,7 @@ public final class FusionIo
         {
             checkArityExact(2, args);
 
-            Procedure thunk = checkProcArg(1, args);
+            Procedure thunk = checkProcArg(eval, 1, args);
             // TODO check thunk arity
             //  https://github.com/ion-fusion/fusion-java/issues/76
 
@@ -910,7 +910,7 @@ public final class FusionIo
             Object lob = args[0];
             if (! isLob(eval, lob) || isAnyNull(eval, lob).isTrue())
             {
-                throw argFailure("non-null blob or clob", 0, args);
+                throw argError(eval, "non-null blob or clob", 0, args);
             }
 
             byte[] bytes = unsafeLobBytesNoCopy(eval, lob);

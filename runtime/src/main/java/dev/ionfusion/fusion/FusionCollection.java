@@ -103,7 +103,7 @@ final class FusionCollection
             return arg;
         }
 
-        throw who.argFailure(expectation, argNum, args);
+        throw who.argError(eval, expectation, argNum, args);
     }
 
 

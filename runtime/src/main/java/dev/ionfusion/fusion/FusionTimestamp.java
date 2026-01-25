@@ -407,7 +407,7 @@ final class FusionTimestamp
                                        String    expectation,
                                        int       argNum,
                                        Object... args)
-        throws FusionException, ArgumentException
+        throws FusionException
     {
         Object arg = args[argNum];
         if (arg instanceof BaseTimestamp)
@@ -415,7 +415,7 @@ final class FusionTimestamp
             return ((BaseTimestamp) arg).timestampValue();
         }
 
-        throw who.argFailure(expectation, argNum, args);
+        throw who.argError(eval, expectation, argNum, args);
     }
 
 
@@ -433,7 +433,7 @@ final class FusionTimestamp
     @Deprecated
     static Timestamp checkNullableArg(Procedure who, int argNum,
                                       Object... args)
-        throws FusionException, ArgumentException
+        throws FusionException
     {
         return checkNullableTimestampArg(null, who, argNum, args);
     }
@@ -446,14 +446,14 @@ final class FusionTimestamp
                                                Procedure who,
                                                int       argNum,
                                                Object... args)
-        throws FusionException, ArgumentException
+        throws FusionException
     {
         String expectation = "non-null timestamp";
         Timestamp result =
             checkTimestampArg(eval, who, expectation, argNum, args);
         if (result == null)
         {
-            throw who.argFailure(expectation, argNum, args);
+            throw who.argError(eval, expectation, argNum, args);
         }
         return result;
     }
@@ -470,7 +470,7 @@ final class FusionTimestamp
         switch (nonVoidArity)
         {
             case 4:
-                throw who.argFailure("minute field if given hour field", -1, args);
+                throw who.argError(eval, "minute field if given hour field", -1, args);
 
             case 6:
                 if (args[5] instanceof BaseDecimal)
@@ -480,7 +480,7 @@ final class FusionTimestamp
                     if (fractionalSecond.compareTo(BigDecimal.ZERO) < 0 ||
                         fractionalSecond.compareTo(new BigDecimal(60)) >= 0)
                     {
-                        throw who.argFailure("non-negative second value less than 60", 5, args);
+                        throw who.argError(eval, "non-negative second value less than 60", 5, args);
                     }
                 }
                 else
@@ -489,7 +489,7 @@ final class FusionTimestamp
 
                     if (second < 0 || second >= 60)
                     {
-                        throw who.argFailure("non-negative second value less than 60", 5, args);
+                        throw who.argError(eval, "non-negative second value less than 60", 5, args);
                     }
                 }
 
@@ -498,14 +498,14 @@ final class FusionTimestamp
 
                 if (minute < 0 || minute > 59)
                 {
-                    throw who.argFailure("minute field between 0 and 59 (inclusive)", 4, args);
+                    throw who.argError(eval, "minute field between 0 and 59 (inclusive)", 4, args);
                 }
 
                 hour = checkIntArgToJavaInt(eval, who, 3, args);
 
                 if (hour < 0 || hour > 23)
                 {
-                    throw who.argFailure("hour field between 0 and 23 (inclusive)", 3, args);
+                    throw who.argError(eval, "hour field between 0 and 23 (inclusive)", 3, args);
                 }
 
             case 3:
@@ -516,7 +516,7 @@ final class FusionTimestamp
 
                 if (month < 1 || month > 12)
                 {
-                    throw who.argFailure("month field between 1 and 12 (inclusive)", 1, args);
+                    throw who.argError(eval, "month field between 1 and 12 (inclusive)", 1, args);
                 }
 
             case 1:
@@ -524,7 +524,7 @@ final class FusionTimestamp
 
                 if (year < 1 || year > 9999)
                 {
-                    throw who.argFailure("year field between 1 and 9999 (inclusive)", 0, args);
+                    throw who.argError(eval, "year field between 1 and 9999 (inclusive)", 0, args);
                 }
         }
 
@@ -562,7 +562,7 @@ final class FusionTimestamp
         }
         catch (IllegalArgumentException e)
         {
-            throw who.argFailure("valid day field for the given month", 2, args);
+            throw who.argError(eval, "valid day field for the given month", 2, args);
         }
 
         return ionTimestamp;
@@ -570,7 +570,7 @@ final class FusionTimestamp
 
 
     private static int getNumArgs(Evaluator eval, Procedure proc, int arity, Object[] args)
-        throws ArgumentException
+        throws FusionException
     {
         int argNum = 0;
         while (argNum < arity && !isVoid(eval, args[argNum]))
@@ -583,7 +583,7 @@ final class FusionTimestamp
         {
             if (!isVoid(eval, args[argNum]))
             {
-                throw proc.argFailure("all void arguments following first void value", -1, args);
+                throw proc.argError(eval, "all void arguments following first void value", -1, args);
             }
             argNum++;
         }
@@ -632,19 +632,19 @@ final class FusionTimestamp
                     // Don't accept input "null.timestamp". That's shady.
                     if (result == null)
                     {
-                        throw argFailure("timestamp-formatted string", 0, arg);
+                        throw argError(eval, "timestamp-formatted string", 0, arg);
                     }
 
                     // Hack around Timestamp.valueOf() accepting stoppers.
                     char last = input.charAt(input.length() - 1);
                     if (! (last == 'Z' || last == 'T' || isDigit(last, 10)))
                     {
-                        throw argFailure("timestamp-formatted string", 0, arg);
+                        throw argError(eval, "timestamp-formatted string", 0, arg);
                     }
                 }
                 catch (IllegalArgumentException e)
                 {
-                    throw argFailure("timestamp-formatted string", 0, arg);
+                    throw argError(eval, "timestamp-formatted string", 0, arg);
                 }
             }
 
@@ -692,7 +692,7 @@ final class FusionTimestamp
 
             if (nonVoidArity < 1)
             {
-                throw argFailure("at least one non-void argument", -1, args);
+                throw argError(eval, "at least one non-void argument", -1, args);
             }
 
             Timestamp ionTimestamp = makeIonTimestamp(this, eval, args, offset, nonVoidArity);
@@ -833,14 +833,14 @@ final class FusionTimestamp
             Timestamp base = checkRequiredTimestampArg(eval, this, 0, args);
             if (base.getPrecision().ordinal() <= Precision.DAY.ordinal())
             {
-                throw argFailure("timestamp with precision MINUTE or finer", 0, args);
+                throw argError(eval, "timestamp with precision MINUTE or finer", 0, args);
             }
 
             Integer offset = isVoid(eval, args[1]) ? null : checkIntArgToJavaInt(eval, this, 1, args);
 
             if (offset != null && (offset <= -1440 || offset >= 1440))
             {
-                throw argFailure("offset between -1440 and 1440 (exclusive)", 1, args);
+                throw argError(eval, "offset between -1440 and 1440 (exclusive)", 1, args);
             }
 
             return makeTimestamp(eval, base.withLocalOffset(offset));
@@ -900,7 +900,7 @@ final class FusionTimestamp
         {
             if (! isIntOrDecimal(eval, arg) || isAnyNull(eval, arg).isTrue())
             {
-                throw argFailure("non-null int or decimal", 0, arg);
+                throw argError(eval, "non-null int or decimal", 0, arg);
             }
 
             BigDecimal epochMillis = unsafeNumberToBigDecimal(eval, arg);
