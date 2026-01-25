@@ -138,6 +138,7 @@ final class LocalEnvironment
                      SyntaxValue formForErrors)
         throws FusionException
     {
+        assert formForErrors != null;
         myEnclosure = enclosure;
         myNamespace = enclosure.namespace();
         myDepth = 1 + enclosure.getDepth();

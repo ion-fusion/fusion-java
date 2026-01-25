@@ -275,7 +275,7 @@ final class RequireForm
             }
             catch (FusionException e)
             {
-                e.addContext(spec);
+                e.addContext(spec.getLocation());
                 throw e;
             }
         }

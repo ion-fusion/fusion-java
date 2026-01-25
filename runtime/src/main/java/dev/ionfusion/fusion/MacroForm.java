@@ -88,7 +88,7 @@ final class MacroForm
         }
         catch (FusionException e)
         {
-            e.addContext(stx);
+            e.addContext(stx.getLocation());
             throw e;
         }
 

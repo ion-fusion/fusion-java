@@ -7,7 +7,6 @@ package dev.ionfusion.fusion;
 /**
  * Indicates failure to locate a required module.
  */
-@SuppressWarnings("serial")
 public final class ModuleNotFoundException
     extends FusionErrorException
 {
@@ -22,6 +21,9 @@ public final class ModuleNotFoundException
     ModuleNotFoundException(String message, SyntaxValue location)
     {
         this(message);
-        addContext(location);
+        if (location != null)
+        {
+            addContext(location.getLocation());
+        }
     }
 }

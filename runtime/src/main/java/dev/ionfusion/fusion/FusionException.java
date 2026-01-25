@@ -74,20 +74,6 @@ public class FusionException
 
 
     /**
-     * Prepends a now location to the continuation of this exception.
-     *
-     * @param stx can be null to indicate an unknown location.
-     */
-    void addContext(SyntaxValue stx)
-    {
-        if (stx != null)
-        {
-            addContext(stx.getLocation());
-        }
-    }
-
-
-    /**
      * Returns the Fusion stack trace of this exception.
      * The first element in the list is the deepest stack frame, normally the
      * site of the exception.

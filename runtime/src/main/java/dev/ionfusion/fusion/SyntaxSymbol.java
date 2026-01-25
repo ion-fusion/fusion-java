@@ -380,7 +380,7 @@ final class SyntaxSymbol
                         printQuotedSymbol(id.stringValue());
 
                 SyntaxException ex = new SyntaxException(null, message, id);
-                ex.addContext(formForErrors);
+                ex.addContext(formForErrors.getLocation());
                 throw ex;
             }
         }

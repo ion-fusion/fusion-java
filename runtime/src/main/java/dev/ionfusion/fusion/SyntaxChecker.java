@@ -17,6 +17,8 @@ class SyntaxChecker
 
     SyntaxChecker(Evaluator eval, String formName, SyntaxSequence form)
     {
+        assert form != null;
+
         myEvaluator = eval;
         myFormName = formName;
         myForm = form;
@@ -29,6 +31,8 @@ class SyntaxChecker
     SyntaxChecker(Evaluator eval, SyntaxSexp form)
         throws FusionException
     {
+        assert form != null;
+
         SyntaxSymbol id = form.firstIdentifier(eval);
 
         myEvaluator = eval;
@@ -37,6 +41,11 @@ class SyntaxChecker
     }
 
 
+    /**
+     * Gets the syntax form being checked.
+     *
+     * @return not null.
+     */
     SyntaxSequence form()
     {
         return myForm;
@@ -53,7 +62,7 @@ class SyntaxChecker
     SyntaxException failure(String message, SyntaxValue subform)
     {
         SyntaxException e = new SyntaxException(myFormName, message, subform);
-        e.addContext(myForm);
+        e.addContext(myForm.getLocation());
         return e;
     }
 
@@ -246,7 +255,7 @@ class SyntaxChecker
         {
             SyntaxException e =
                 new SyntaxException(myBaseForm.myFormName, message, myForm);
-            e.addContext(myBaseForm.myForm);
+            e.addContext(myBaseForm.myForm.getLocation());
             return e;
         }
 
@@ -255,7 +264,7 @@ class SyntaxChecker
         {
             SyntaxException e =
                 new SyntaxException(myBaseForm.myFormName, message, subform);
-            e.addContext(myBaseForm.myForm);
+            e.addContext(myBaseForm.myForm.getLocation());
             return e;
         }
 

@@ -6,9 +6,9 @@ package dev.ionfusion.fusion;
 import static com.amazon.ion.util.IonTextUtils.printQuotedSymbol;
 
 /**
- * Indicates an import of an identifier that is already bound.
+ * Indicates an import or definition of an identifier that is already bound
+ * and cannot be redefined.
  */
-@SuppressWarnings("serial")
 final class AmbiguousBindingFailure
     extends SyntaxException
 {
@@ -19,10 +19,16 @@ final class AmbiguousBindingFailure
               " is already defined or imported from elsewhere");
     }
 
+    /**
+     * @param expr may be null.
+     */
     public AmbiguousBindingFailure(String whatForm, String identifier,
                                    SyntaxValue expr)
     {
         this(whatForm, identifier);
-        addContext(expr);
+        if (expr != null)
+        {
+            addContext(expr.getLocation());
+        }
     }
 }

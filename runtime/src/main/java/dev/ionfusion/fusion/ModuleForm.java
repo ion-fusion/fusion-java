@@ -106,7 +106,7 @@ final class ModuleForm
             }
             catch (FusionException e)
             {
-                e.addContext(initialBindingsStx);
+                e.addContext(initialBindingsStx.getLocation());
                 throw e;
             }
 
@@ -184,7 +184,7 @@ final class ModuleForm
                     }
                     catch (FusionException e)
                     {
-                        e.addContext(form);
+                        e.addContext(form.getLocation());
                         throw e;
                     }
                     formIsExpanded = true;
@@ -200,7 +200,7 @@ final class ModuleForm
                     }
                     catch (FusionException e)
                     {
-                        e.addContext(form);
+                        e.addContext(form.getLocation());
                         throw e;
                     }
                     formIsExpanded = true;
