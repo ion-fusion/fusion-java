@@ -24,6 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.amazon.ion.IonCatalog;
 import com.amazon.ion.system.SimpleCatalog;
+import dev.ionfusion.runtime.embed.FusionRuntime;
+import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;

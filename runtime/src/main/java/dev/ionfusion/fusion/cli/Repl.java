@@ -4,10 +4,11 @@
 package dev.ionfusion.fusion.cli;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+
+import com.amazon.ion.IonException;
 import dev.ionfusion.fusion.ExitException;
 import dev.ionfusion.fusion.FusionException;
-import dev.ionfusion.fusion.TopLevel;
-import com.amazon.ion.IonException;
+import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.BufferedReader;
 import java.io.Console;
 import java.io.IOException;

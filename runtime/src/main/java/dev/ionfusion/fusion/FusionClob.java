@@ -15,6 +15,7 @@ import com.amazon.ion.util.IonTextUtils;
 import dev.ionfusion.fusion.FusionBool.BaseBool;
 import dev.ionfusion.fusion.FusionLob.BaseLob;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.IOException;
 import java.util.Arrays;
 

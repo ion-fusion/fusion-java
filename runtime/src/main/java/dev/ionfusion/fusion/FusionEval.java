@@ -13,6 +13,7 @@ import static dev.ionfusion.fusion.Syntax.datumToSyntax;
 import com.amazon.ion.IonReader;
 import dev.ionfusion.runtime.base.SourceLocation;
 import dev.ionfusion.runtime.base.SourceName;
+import dev.ionfusion.runtime.embed.TopLevel;
 import java.util.LinkedList;
 
 

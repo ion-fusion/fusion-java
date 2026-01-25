@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.amazon.ion.IonList;
 import com.amazon.ion.IonValue;
 import dev.ionfusion.fusion.FusionList.UnsafeListSizeProc;
+import dev.ionfusion.runtime.embed.TopLevel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

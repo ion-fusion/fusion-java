@@ -1,9 +1,12 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion;
+package dev.ionfusion.runtime.embed;
 
 import com.amazon.ion.IonReader;
+import dev.ionfusion.fusion.ExitException;
+import dev.ionfusion.fusion.FusionException;
+import dev.ionfusion.fusion.FusionInterruptedException;
 import dev.ionfusion.runtime.base.SourceName;
 import java.io.File;
 

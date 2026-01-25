@@ -31,13 +31,13 @@ extensions will probably break when that happens.
 
 The primary purpose of these APIs is to enable embedding the Fusion
 evaluator into Java applications. The central component for doing so is the
-{@link dev.ionfusion.fusion.FusionRuntime}. The runtime is a heavyweight object,
+{@link dev.ionfusion.runtime.embed.FusionRuntime}. The runtime is a heavyweight object,
 and the vast majority of applications should create exactly one runtime at
 launch or on demand. To acquire a runtime, you'll use a
 {@link dev.ionfusion.fusion.FusionRuntimeBuilder}.
 
 From the runtime, you can then acquire one or more
-{@link dev.ionfusion.fusion.TopLevel}s. Each {@code TopLevel} instace contains
+{@link dev.ionfusion.runtime.embed.TopLevel}s. Each {@code TopLevel} instace contains
 its own namespace in which bindings (that is, variables) can be {@code define}d
 and code can be evaluated.
 
@@ -78,9 +78,9 @@ Unless documented otherwise, these Java APIs do not provide thread-safety
 guarantees, nor does the Fusion language itself. If you need to evaluate
 Fusion code from multiple threads, you will need to provide your own
 synchronization. In most cases this will involve preventing threads from
-simultaneous use of the same {@link dev.ionfusion.fusion.TopLevel}.
+simultaneous use of the same {@link dev.ionfusion.runtime.embed.TopLevel}.
 <p>
-All evaluation APIs such as {@link dev.ionfusion.fusion.TopLevel#eval(String)}
+All evaluation APIs such as {@link dev.ionfusion.runtime.embed.TopLevel#eval(String)}
 can be cancelled by calling {@link java.lang.Thread#interrupt()} on the
 evaluation thread. The evaluator periodically checks the thread interrupt
 status, and cancels the computation when it is set. The evaluation API then
@@ -162,7 +162,7 @@ This applies to all data referenced by the injected object.
 <p>
 Injection is idempotent: injecting a Fusion value results in the same value.
 Unless otherwise specified, APIs that will inject Java objects (for example,
-{@link dev.ionfusion.fusion.TopLevel#call TopLevel.call()}) will also
+{@link dev.ionfusion.runtime.embed.TopLevel#call TopLevel.call()}) will also
 accept Fusion values that were previously injected or that were returned as
 a result of evaluating Fusion code.  However, injection involves a potentially
 expensive "type switch" and you'll get better performance by avoiding no-op

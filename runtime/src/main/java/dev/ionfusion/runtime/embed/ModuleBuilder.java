@@ -1,7 +1,9 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion;
+package dev.ionfusion.runtime.embed;
+
+import dev.ionfusion.fusion.FusionException;
 
 /**
  * Constructs "built-in" modules via Java code.

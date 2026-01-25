@@ -3,11 +3,11 @@
 
 package dev.ionfusion.fusion.cli;
 
+import com.amazon.ion.IonException;
 import dev.ionfusion.fusion.FusionException;
-import dev.ionfusion.fusion.FusionRuntime;
 import dev.ionfusion.fusion.FusionRuntimeBuilder;
 import dev.ionfusion.fusion._Private_Trampoline;
-import com.amazon.ion.IonException;
+import dev.ionfusion.runtime.embed.FusionRuntime;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

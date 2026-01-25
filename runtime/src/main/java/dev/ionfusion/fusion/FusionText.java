@@ -7,6 +7,7 @@ import static dev.ionfusion.fusion.FusionBool.falseBool;
 import static dev.ionfusion.fusion.FusionBool.trueBool;
 
 import dev.ionfusion.fusion.FusionBool.BaseBool;
+import dev.ionfusion.runtime.embed.TopLevel;
 
 
 /**

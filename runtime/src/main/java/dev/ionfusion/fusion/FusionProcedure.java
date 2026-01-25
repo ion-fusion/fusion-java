@@ -5,6 +5,8 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionBool.makeBool;
 
+import dev.ionfusion.runtime.embed.TopLevel;
+
 /**
  * Utilities for Fusion procedures.
  */

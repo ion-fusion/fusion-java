@@ -13,6 +13,7 @@ import static dev.ionfusion.runtime.base.ModuleIdentity.isValidAbsoluteModulePat
 import com.amazon.ion.IonReader;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import dev.ionfusion.runtime.base.SourceName;
+import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.File;
 import java.io.IOException;
 

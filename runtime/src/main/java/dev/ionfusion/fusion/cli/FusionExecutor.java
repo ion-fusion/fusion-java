@@ -8,8 +8,8 @@ import static dev.ionfusion.fusion.FusionVoid.isVoid;
 
 import dev.ionfusion.fusion.ExitException;
 import dev.ionfusion.fusion.FusionException;
-import dev.ionfusion.fusion.FusionRuntime;
-import dev.ionfusion.fusion.TopLevel;
+import dev.ionfusion.runtime.embed.FusionRuntime;
+import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.PrintWriter;
 
 /**

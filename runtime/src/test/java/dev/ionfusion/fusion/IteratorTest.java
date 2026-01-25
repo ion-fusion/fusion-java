@@ -6,6 +6,7 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionIterator.injectIonIterator;
 import static dev.ionfusion.fusion.FusionIterator.injectIterator;
 import com.amazon.ion.IonList;
+import dev.ionfusion.runtime.embed.TopLevel;
 import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 

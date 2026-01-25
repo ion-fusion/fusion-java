@@ -8,9 +8,9 @@ import static dev.ionfusion.fusion._Private_Trampoline.instantiateModuleDocs;
 import static dev.ionfusion.fusion._Private_Trampoline.loadModule;
 
 import dev.ionfusion.fusion.FusionException;
-import dev.ionfusion.fusion.TopLevel;
 import dev.ionfusion.fusion._private.doc.model.ModuleDocs;
 import dev.ionfusion.runtime.base.ModuleIdentity;
+import dev.ionfusion.runtime.embed.TopLevel;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;

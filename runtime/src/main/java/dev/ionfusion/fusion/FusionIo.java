@@ -11,11 +11,13 @@ import static dev.ionfusion.fusion.FusionString.checkRequiredStringArg;
 import static dev.ionfusion.fusion.FusionString.makeString;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static java.nio.charset.StandardCharsets.UTF_8;
+
 import com.amazon.ion.IonException;
 import com.amazon.ion.IonReader;
 import com.amazon.ion.IonValue;
 import com.amazon.ion.IonWriter;
 import com.amazon.ion.system.IonTextWriterBuilder;
+import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;

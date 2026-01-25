@@ -1,11 +1,13 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion;
+package dev.ionfusion.runtime.embed;
 
 import com.amazon.ion.IonCatalog;
 import com.amazon.ion.IonValue;
 import com.amazon.ion.ValueFactory;
+import dev.ionfusion.fusion.FusionException;
+import dev.ionfusion.fusion.FusionRuntimeBuilder;
 
 /**
  * Primary entry point for embedding Fusion within a Java program.

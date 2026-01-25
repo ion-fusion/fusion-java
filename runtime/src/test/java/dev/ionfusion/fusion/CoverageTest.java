@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.ionfusion.runtime.base.SourceLocation;
 import dev.ionfusion.runtime.base.SourceName;
+import dev.ionfusion.runtime.embed.TopLevel;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.jupiter.api.Test;

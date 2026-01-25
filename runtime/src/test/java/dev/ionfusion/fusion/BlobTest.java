@@ -7,6 +7,8 @@ import static dev.ionfusion.fusion.FusionBlob.isBlob;
 import static dev.ionfusion.fusion.FusionLob.isLob;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dev.ionfusion.runtime.embed.TopLevel;
+
 /**
  *
  */

@@ -27,6 +27,7 @@ import com.amazon.ion.IonSymbol;
 import com.amazon.ion.IonTimestamp;
 import com.amazon.ion.IonValue;
 import com.amazon.ion.Timestamp;
+import dev.ionfusion.runtime.embed.TopLevel;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import org.junit.jupiter.api.Test;

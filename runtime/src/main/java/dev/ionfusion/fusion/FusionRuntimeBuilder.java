@@ -9,6 +9,8 @@ import static dev.ionfusion.runtime.base.ModuleIdentity.isValidAbsoluteModulePat
 
 import com.amazon.ion.IonCatalog;
 import com.amazon.ion.system.SimpleCatalog;
+import dev.ionfusion.runtime.embed.FusionRuntime;
+import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.File;
 import java.io.OutputStream;
 import java.net.URL;

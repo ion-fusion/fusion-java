@@ -16,6 +16,7 @@ import com.amazon.ion.IonList;
 import com.amazon.ion.IonReader;
 import com.amazon.ion.IonValue;
 import com.amazon.ion.IonWriter;
+import dev.ionfusion.runtime.embed.TopLevel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

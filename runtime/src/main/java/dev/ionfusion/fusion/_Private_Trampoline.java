@@ -5,6 +5,7 @@ package dev.ionfusion.fusion;
 
 import dev.ionfusion.fusion._private.doc.model.ModuleDocs;
 import dev.ionfusion.runtime.base.ModuleIdentity;
+import dev.ionfusion.runtime.embed.TopLevel;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 import java.util.function.Predicate;

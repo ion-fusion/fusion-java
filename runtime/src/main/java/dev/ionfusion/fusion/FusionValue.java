@@ -9,6 +9,8 @@ import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_STRING_ARRAY;
 import com.amazon.ion.IonValue;
 import com.amazon.ion.ValueFactory;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+import dev.ionfusion.runtime.embed.FusionRuntime;
+import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.IOException;
 
 /**

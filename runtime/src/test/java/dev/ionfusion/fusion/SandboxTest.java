@@ -12,6 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dev.ionfusion.runtime.embed.SandboxBuilder;
+import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.File;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;

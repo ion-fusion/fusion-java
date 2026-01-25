@@ -9,6 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import com.amazon.ion.IonReader;
+import dev.ionfusion.runtime.embed.ModuleBuilder;
+import dev.ionfusion.runtime.embed.TopLevel;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;

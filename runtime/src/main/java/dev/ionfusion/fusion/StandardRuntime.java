@@ -14,6 +14,10 @@ import com.amazon.ion.IonValue;
 import com.amazon.ion.ValueFactory;
 import com.amazon.ion.system.IonSystemBuilder;
 import dev.ionfusion.runtime.base.ModuleIdentity;
+import dev.ionfusion.runtime.embed.FusionRuntime;
+import dev.ionfusion.runtime.embed.ModuleBuilder;
+import dev.ionfusion.runtime.embed.SandboxBuilder;
+import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.OutputStream;
 
 
