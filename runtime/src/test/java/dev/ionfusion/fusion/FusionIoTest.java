@@ -40,7 +40,7 @@ public class FusionIoTest
     @Test
     public void testReadMoreArgs()
     {
-        assertEvalThrows(ArityFailure.class,"(read \"hi\")");
+        expectArityExn("(read \"hi\")");
     }
 
 

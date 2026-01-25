@@ -3,8 +3,7 @@
 
 package dev.ionfusion.fusion;
 
-import static dev.ionfusion.fusion.FusionIo.writeMany;
-import java.io.IOException;
+import static dev.ionfusion.fusion.FusionIo.safeWriteMany;
 
 
 /**
@@ -14,72 +13,54 @@ import java.io.IOException;
 final class ArityFailure
     extends ContractException
 {
-    private final String myProcIdentity;
-    private final int myMinArity;
-    private final int myMaxArity;
-    private final Object[] myActuals;
-
-
-    ArityFailure(String procIdentity, int minArity, int maxArity,
-                 Object... actuals)
+    private ArityFailure(String message)
     {
-        super("arity failure");
-        assert procIdentity != null && actuals != null;
-        assert minArity <= maxArity;
-        myProcIdentity = procIdentity;
-        myMinArity = minArity;
-        myMaxArity = maxArity;
-        myActuals = actuals;
-    }
-
-    /**
-     * @param proc must not be null
-     */
-    ArityFailure(Procedure proc, int minArity, int maxArity,
-                 Object... actuals)
-    {
-        this(proc.identify(), minArity, maxArity, actuals);
+        super(message);
     }
 
 
-    protected void displayArityExpectation(Evaluator eval, Appendable out)
-        throws IOException, FusionException
+    private static void displayExpectation(StringBuilder out, int minArity, int maxArity)
     {
-        int base = myMinArity;
-        if (myMaxArity == Integer.MAX_VALUE)
+        int base = minArity;
+        if (maxArity == Integer.MAX_VALUE)
         {
             out.append("at least ");
-            out.append(Integer.toString(myMinArity));
+            out.append(minArity);
         }
         else
         {
-            out.append(Integer.toString(myMinArity));
+            out.append(minArity);
 
-            if (myMinArity != myMaxArity)
+            if (minArity != maxArity)
             {
                 out.append(" to ");
-                out.append(Integer.toString(myMaxArity));
-                base = myMaxArity;
+                out.append(maxArity);
+                base = maxArity;
             }
         }
         out.append(" argument");
         if (base != 1) out.append("s");
     }
 
-
-    @Override
-    void displayMessage(Evaluator eval, Appendable out)
-        throws IOException, FusionException
+    static FusionException makeArityError(Evaluator eval, String name,
+                                          int minArity, int maxArity,
+                                          Object... actuals)
     {
-        out.append(myProcIdentity);
+        assert name != null && actuals != null;
+        assert minArity <= maxArity;
+
+        StringBuilder out = new StringBuilder();
+        out.append(name);
         out.append(" expects ");
-        displayArityExpectation(eval, out);
+        displayExpectation(out, minArity, maxArity);
         out.append(", given ");
-        out.append(Integer.toString(myActuals.length));
-        if (myActuals.length != 0)
+        out.append(actuals.length);
+        if (actuals.length != 0)
         {
             out.append(":\n  ");
-            writeMany(eval, out, myActuals, "\n  ");
+            safeWriteMany(eval, out, actuals, "\n  ");
         }
+
+        return new ArityFailure(out.toString());
     }
 }

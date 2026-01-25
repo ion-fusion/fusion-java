@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.ArgumentException.makeArgumentError;
+import static dev.ionfusion.fusion.ArityFailure.makeArityError;
 
 import com.amazon.ion.util.IonTextUtils;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
@@ -99,11 +100,11 @@ abstract class Procedure
 
 
     final void checkArityExact(Evaluator eval, int arity, Object[] args)
-        throws ArityFailure
+        throws FusionException
     {
         if (args.length != arity)
         {
-            throw new ArityFailure(this, arity, arity, args);
+            throw makeArityError(eval, this.identify(), arity, arity, args);
         }
     }
 
@@ -116,7 +117,7 @@ abstract class Procedure
      */
     @Deprecated
     final void checkArityExact(Evaluator eval, Object[] args)
-        throws ArityFailure
+        throws FusionException
     {
         if (myArity < 0)
         {
@@ -131,21 +132,21 @@ abstract class Procedure
 
 
     final void checkArityAtLeast(Evaluator eval, int atLeast, Object[] args)
-        throws ArityFailure
+        throws FusionException
     {
         if (args.length < atLeast)
         {
-            throw new ArityFailure(this, atLeast, Integer.MAX_VALUE, args);
+            throw makeArityError(eval, this.identify(), atLeast, Integer.MAX_VALUE, args);
         }
     }
 
 
     final void checkArityRange(Evaluator eval, int atLeast, int atMost, Object[] args)
-        throws ArityFailure
+        throws FusionException
     {
         if (args.length < atLeast || args.length > atMost)
         {
-            throw new ArityFailure(this, atLeast, atMost, args);
+            throw makeArityError(eval, this.identify(), atLeast, atMost, args);
         }
     }
 

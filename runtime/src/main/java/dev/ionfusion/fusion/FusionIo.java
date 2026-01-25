@@ -505,13 +505,28 @@ public final class FusionIo
         }
     }
 
+    /**
+     * Like {@link #writeMany} but catches any exceptions.
+     */
+    static void safeWriteMany(Evaluator eval, Appendable out, Object[] values, String join)
+    {
+        try
+        {
+            writeMany(eval, out, values, join);
+        }
+        catch (Exception e)
+        {
+            displayFailure(out, e);
+        }
+    }
+
 
     static void displayFailure(Appendable out, Exception e)
     {
         try
         {
             out.append("{{{ FAILURE: ");
-            String message = e.getMessage();
+            String message = e.getMessage(); // TODO Don't include Fusion stack trace
             if (message == null)
             {
                 message = e.getClass().getName();
