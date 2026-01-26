@@ -8,6 +8,7 @@ import static dev.ionfusion.fusion.FusionIo.safeWriteToString;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.ModuleIdentity.isValidAbsoluteModulePath;
 import static dev.ionfusion.fusion.StandardReader.readSyntax;
+import static dev.ionfusion.fusion._private.FusionUtils.friendlyIndex;
 
 import com.amazon.ion.IonReader;
 import java.io.File;
@@ -246,17 +247,17 @@ final class StandardTopLevel
     public void define(String name, Object value)
         throws FusionException
     {
+        Object fv = myEvaluator.injectMaybe(value);
+        if (fv == null)
+        {
+            String msg =
+                "Expected injectable Java object but received " +
+                value.getClass().getName();
+            throw new IllegalArgumentException(msg);
+        }
+
         try
         {
-            Object fv = myEvaluator.injectMaybe(value);
-            if (fv == null)
-            {
-                String expected =
-                    "injectable Java type but received " +
-                        value.getClass().getName();
-                throw new ArgumentException("TopLevel.define", expected,
-                                            -1, value);
-            }
 
             myNamespace.bind(name, fv);
         }
@@ -315,24 +316,23 @@ final class StandardTopLevel
     private Object call(Procedure proc, Object... arguments)
         throws FusionInterruptedException, FusionException
     {
+        for (int i = 0; i < arguments.length; i++)
+        {
+            Object arg = arguments[i];
+            Object fv  = myEvaluator.injectMaybe(arg);
+            if (fv == null)
+            {
+                String msg =
+                    "Expected injectable Java object but received " +
+                    arg.getClass().getName() + " for " +
+                    friendlyIndex(i) + " argument";
+                throw new IllegalArgumentException(msg);
+            }
+            arguments[i] = fv;
+        }
+
         try
         {
-            for (int i = 0; i < arguments.length; i++)
-            {
-                Object arg = arguments[i];
-                Object fv = myEvaluator.injectMaybe(arg);
-                if (fv == null)
-                {
-                    String expected =
-                        "injectable Java type but received " +
-                            arg.getClass().getName();
-                    throw new ArgumentException("TopLevel.call",
-                                                expected,
-                                                i, arguments);
-                }
-                arguments[i] = fv;
-            }
-
             // TODO Should this set current_namespace?
             return myEvaluator.callNonTail(proc, arguments);
         }

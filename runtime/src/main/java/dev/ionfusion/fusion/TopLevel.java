@@ -189,6 +189,7 @@ public interface TopLevel
      * It is unspecified whether the value will be copied in whole or in part.
      *
      * @throws FusionException if an error occurs during evaluation
+     * @throws IllegalArgumentException if the {@code value} cannot be injected.
      */
     void define(String name, Object value)
         throws FusionException;
@@ -227,6 +228,8 @@ public interface TopLevel
      * Note that "no value" is not the same as "returns void".
      *
      * @throws FusionException if an error occurs during evaluation
+     * @throws IllegalArgumentException if {@code procedureName} is not bound to
+     * a procedure, or if one of the {@code arguments} cannot be injected.
      */
     Object call(String procedureName, Object... arguments)
         throws FusionException;
@@ -248,6 +251,8 @@ public interface TopLevel
      * Note that "no value" is not the same as "returns void".
      *
      * @throws FusionException if an error occurs during evaluation
+     * @throws IllegalArgumentException if {@code procedure} is not a procedure,
+     * or if one of the {@code arguments} cannot be injected.
      */
     Object call(Object procedure, Object... arguments)
         throws FusionException;
