@@ -364,10 +364,12 @@ final class FusionList
     /**
      * @param list must be a list; it is not type-checked!
      */
-    static IonList unsafeCopyToIonList(Object list, ValueFactory factory)
+    static IonList unsafeCopyToIonList(Evaluator eval,
+                                       Object list,
+                                       ValueFactory factory)
         throws FusionException
     {
-        return unsafeCopyToIonList(list, factory, true);
+        return unsafeCopyToIonList(eval, list, factory, true);
     }
 
 
@@ -376,11 +378,12 @@ final class FusionList
      *
      * @return null if the list and its elements cannot be ionized.
      */
-    static IonList unsafeCopyToIonListMaybe(Object list,
+    static IonList unsafeCopyToIonListMaybe(Evaluator eval,
+                                            Object list,
                                             ValueFactory factory)
         throws FusionException
     {
-        return unsafeCopyToIonList(list, factory, false);
+        return unsafeCopyToIonList(eval, list, factory, false);
     }
 
 
@@ -389,13 +392,14 @@ final class FusionList
      *
      * @return null if the list and its elements cannot be ionized.
      */
-    static IonList unsafeCopyToIonList(Object list,
+    static IonList unsafeCopyToIonList(Evaluator eval,
+                                       Object list,
                                        ValueFactory factory,
                                        boolean throwOnConversionFailure)
         throws FusionException
     {
         BaseList base = (BaseList) list;
-        return base.copyToIonValue(factory, throwOnConversionFailure);
+        return base.copyToIonValue(eval, factory, throwOnConversionFailure);
     }
 
 
@@ -662,7 +666,8 @@ final class FusionList
          *  UNLESS throwOnConversionFailure
          */
         @Override
-        IonList copyToIonValue(ValueFactory factory,
+        IonList copyToIonValue(Evaluator eval,
+                               ValueFactory factory,
                                boolean throwOnConversionFailure)
             throws FusionException
         {
@@ -670,7 +675,7 @@ final class FusionList
             IonValue[] ions = new IonValue[len];
             for (int i = 0; i < len; i++)
             {
-                IonValue ion = copyToIonValue(myValues[i], factory,
+                IonValue ion = copyToIonValue(eval, myValues[i], factory,
                                               throwOnConversionFailure);
                 if (ion == null)
                 {
@@ -953,7 +958,8 @@ final class FusionList
         }
 
         @Override
-        IonList copyToIonValue(ValueFactory factory,
+        IonList copyToIonValue(Evaluator eval,
+                               ValueFactory factory,
                                boolean throwOnConversionFailure)
             throws FusionException
         {
@@ -1158,7 +1164,8 @@ final class FusionList
         }
 
         @Override
-        IonList copyToIonValue(ValueFactory factory,
+        IonList copyToIonValue(Evaluator eval,
+                               ValueFactory factory,
                                boolean throwOnConversionFailure)
             throws FusionException
         {
@@ -1181,7 +1188,7 @@ final class FusionList
             }
             // else our elements have already been injected, copy as normal.
 
-            return super.copyToIonValue(factory, throwOnConversionFailure);
+            return super.copyToIonValue(eval, factory, throwOnConversionFailure);
         }
 
         @Override

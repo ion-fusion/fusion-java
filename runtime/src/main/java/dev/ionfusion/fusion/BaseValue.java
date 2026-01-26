@@ -206,7 +206,7 @@ abstract class BaseValue
      * @throws FusionException (when {@code throwOnConversionFailure})
      * if this value cannot be ionized.
      */
-    IonValue copyToIonValue(ValueFactory factory,
+    IonValue copyToIonValue(Evaluator eval, ValueFactory factory,
                             boolean throwOnConversionFailure)
         throws FusionException
     {
@@ -294,12 +294,12 @@ abstract class BaseValue
      * @throws FusionException if something goes wrong during ionization.
      *
      * @see FusionRuntime#ionizeMaybe(Object, ValueFactory)
-     * @see FusionValue#copyToIonValueMaybe(Object, ValueFactory)
+     * @see FusionValue#copyToIonValueMaybe(Evaluator, Object, ValueFactory)
      */
-    static IonValue copyToIonValueMaybe(Object value, ValueFactory factory)
+    static IonValue copyToIonValueMaybe(Evaluator eval, Object value, ValueFactory factory)
         throws FusionException
     {
-        return FusionValue.copyToIonValue(value, factory, false);
+        return FusionValue.copyToIonValue(eval, value, factory, false);
     }
 
 
@@ -313,12 +313,12 @@ abstract class BaseValue
      *
      * @throws FusionException if the value cannot be converted to Ion.
      *
-     * @see FusionValue#copyToIonValue(Object, ValueFactory)
+     * @see FusionValue#copyToIonValue(Evaluator, Object, ValueFactory)
      */
-    static IonValue copyToIonValue(Object value, ValueFactory factory)
+    static IonValue copyToIonValue(Evaluator eval, Object value, ValueFactory factory)
         throws FusionException
     {
-        return FusionValue.copyToIonValue(value, factory, true);
+        return FusionValue.copyToIonValue(eval, value, factory, true);
     }
 
 
@@ -334,13 +334,13 @@ abstract class BaseValue
      * @throws FusionException if the value cannot be converted to Ion.
      *
      * @see FusionRuntime#ionize(Object, ValueFactory)
-     * @see FusionValue#copyToIonValue(Object, ValueFactory, boolean)
+     * @see FusionValue#copyToIonValue(Evaluator, Object, ValueFactory, boolean)
      */
-    static IonValue copyToIonValue(Object value, ValueFactory factory,
+    static IonValue copyToIonValue(Evaluator eval, Object value, ValueFactory factory,
                                    boolean throwOnConversionFailure)
         throws FusionException
     {
-        return FusionValue.copyToIonValue(value,
+        return FusionValue.copyToIonValue(eval, value,
                                           factory,
                                           throwOnConversionFailure);
     }

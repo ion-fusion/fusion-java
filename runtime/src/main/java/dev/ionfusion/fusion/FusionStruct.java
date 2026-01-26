@@ -789,7 +789,7 @@ final class FusionStruct
         }
 
         @Override
-        IonValue copyToIonValue(ValueFactory factory,
+        IonValue copyToIonValue(Evaluator eval, ValueFactory factory,
                                 boolean throwOnConversionFailure)
             throws FusionException
         {
@@ -1136,7 +1136,7 @@ final class FusionStruct
         }
 
         @Override
-        IonValue copyToIonValue(ValueFactory factory,
+        IonValue copyToIonValue(Evaluator eval, ValueFactory factory,
                                 boolean throwOnConversionFailure)
             throws FusionException
         {
@@ -1149,7 +1149,7 @@ final class FusionStruct
                 String fieldName = entry.getKey();
 
                 Object value = entry.getValue();
-                IonValue ion = copyToIonValue(value, factory,
+                IonValue ion = copyToIonValue(eval, value, factory,
                                               throwOnConversionFailure);
                 if (ion == null) return null;
                 is.add(fieldName, ion);
@@ -1368,7 +1368,7 @@ final class FusionStruct
         }
 
         @Override
-        IonValue copyToIonValue(ValueFactory factory,
+        IonValue copyToIonValue(Evaluator eval, ValueFactory factory,
                                 boolean throwOnConversionFailure)
             throws FusionException
         {
@@ -1378,7 +1378,7 @@ final class FusionStruct
                 return factory.clone(s);
             }
 
-            return super.copyToIonValue(factory, throwOnConversionFailure);
+            return super.copyToIonValue(eval, factory, throwOnConversionFailure);
         }
     }
 

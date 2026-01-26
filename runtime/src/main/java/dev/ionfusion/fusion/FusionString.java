@@ -166,7 +166,7 @@ public final class FusionString
         }
 
         @Override
-        IonValue copyToIonValue(ValueFactory factory,
+        IonValue copyToIonValue(Evaluator eval, ValueFactory factory,
                                 boolean throwOnConversionFailure)
         {
             return factory.newNullString();
@@ -206,7 +206,7 @@ public final class FusionString
         }
 
         @Override
-        IonValue copyToIonValue(ValueFactory factory,
+        IonValue copyToIonValue(Evaluator eval, ValueFactory factory,
                                 boolean throwOnConversionFailure)
         {
             return factory.newString(myContent);
@@ -293,11 +293,11 @@ public final class FusionString
         }
 
         @Override
-        IonValue copyToIonValue(ValueFactory factory,
+        IonValue copyToIonValue(Evaluator eval, ValueFactory factory,
                                 boolean throwOnConversionFailure)
             throws FusionException
         {
-            IonValue iv = myValue.copyToIonValue(factory,
+            IonValue iv = myValue.copyToIonValue(eval, factory,
                                                  throwOnConversionFailure);
             iv.setTypeAnnotations(getAnnotationsAsJavaStrings());
             return iv;

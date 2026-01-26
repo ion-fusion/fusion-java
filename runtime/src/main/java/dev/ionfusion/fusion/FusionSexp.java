@@ -388,23 +388,26 @@ final class FusionSexp
     /**
      * @param sexp must be a proper sexp; it is not type-checked!
      */
-    static IonSexp unsafeCopyToIonSexp(Object sexp,
+    static IonSexp unsafeCopyToIonSexp(Evaluator eval,
+                                       Object sexp,
                                        ValueFactory factory,
                                        boolean throwOnConversionFailure)
         throws FusionException
     {
         BaseSexp base = (BaseSexp) sexp;
-        return base.copyToIonValue(factory, throwOnConversionFailure);
+        return base.copyToIonValue(eval, factory, throwOnConversionFailure);
     }
 
     /**
      * @param sexp must be a proper sexp; it is not type-checked!
      */
-    static IonSexp unsafeCopyToIonSexp(Object sexp, ValueFactory factory)
+    static IonSexp unsafeCopyToIonSexp(Evaluator eval,
+                                       Object sexp,
+                                       ValueFactory factory)
         throws FusionException
     {
         BaseSexp base = (BaseSexp) sexp;
-        return base.copyToIonValue(factory, true);
+        return base.copyToIonValue(eval, factory, true);
     }
 
     /**
@@ -412,12 +415,13 @@ final class FusionSexp
      *
      * @return null if the sexp and its contents cannot be ionized.
      */
-    static IonSexp unsafeCopyToIonSexpMaybe(Object sexp,
+    static IonSexp unsafeCopyToIonSexpMaybe(Evaluator eval,
+                                            Object sexp,
                                             ValueFactory factory)
         throws FusionException
     {
         BaseSexp base = (BaseSexp) sexp;
-        return base.copyToIonValue(factory, false);
+        return base.copyToIonValue(eval, factory, false);
     }
 
 
@@ -531,7 +535,7 @@ final class FusionSexp
         }
 
         @Override
-        abstract IonSexp copyToIonValue(ValueFactory factory,
+        abstract IonSexp copyToIonValue(Evaluator eval, ValueFactory factory,
                                         boolean throwOnConversionFailure)
             throws FusionException;
     }
@@ -597,8 +601,8 @@ final class FusionSexp
         }
 
         @Override
-        IonSexp copyToIonValue(ValueFactory factory,
-                              boolean throwOnConversionFailure)
+        IonSexp copyToIonValue(Evaluator eval, ValueFactory factory,
+                               boolean throwOnConversionFailure)
             throws FusionException
         {
             IonSexp sexp = factory.newNullSexp();
@@ -662,8 +666,8 @@ final class FusionSexp
         }
 
         @Override
-        IonSexp copyToIonValue(ValueFactory factory,
-                              boolean throwOnConversionFailure)
+        IonSexp copyToIonValue(Evaluator eval, ValueFactory factory,
+                               boolean throwOnConversionFailure)
             throws FusionException
         {
             IonSexp sexp = factory.newEmptySexp();
@@ -960,8 +964,8 @@ final class FusionSexp
         }
 
         @Override
-        IonSexp copyToIonValue(ValueFactory factory,
-                              boolean throwOnConversionFailure)
+        IonSexp copyToIonValue(Evaluator eval, ValueFactory factory,
+                               boolean throwOnConversionFailure)
             throws FusionException
         {
             IonSexp is = factory.newEmptySexp();
@@ -970,7 +974,7 @@ final class FusionSexp
             ImmutablePair pair = this;
             while (true)
             {
-                IonValue ion = copyToIonValue(pair.myHead, factory,
+                IonValue ion = copyToIonValue(eval, pair.myHead, factory,
                                               throwOnConversionFailure);
                 if (ion == null) return null;
 

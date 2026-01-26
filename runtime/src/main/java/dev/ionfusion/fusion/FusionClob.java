@@ -74,7 +74,7 @@ public final class FusionClob
         }
 
         @Override
-        IonValue copyToIonValue(ValueFactory factory,
+        IonValue copyToIonValue(Evaluator eval, ValueFactory factory,
                                 boolean throwOnConversionFailure)
             throws FusionException
         {
@@ -131,7 +131,7 @@ public final class FusionClob
         }
 
         @Override
-        IonValue copyToIonValue(ValueFactory factory,
+        IonValue copyToIonValue(Evaluator eval, ValueFactory factory,
                                 boolean throwOnConversionFailure)
             throws FusionException
         {
@@ -221,11 +221,11 @@ public final class FusionClob
         }
 
         @Override
-        IonValue copyToIonValue(ValueFactory factory,
+        IonValue copyToIonValue(Evaluator eval, ValueFactory factory,
                                 boolean throwOnConversionFailure)
             throws FusionException
         {
-            IonValue iv = myValue.copyToIonValue(factory,
+            IonValue iv = myValue.copyToIonValue(eval, factory,
                                                  throwOnConversionFailure);
             iv.setTypeAnnotations(getAnnotationsAsJavaStrings());
             return iv;

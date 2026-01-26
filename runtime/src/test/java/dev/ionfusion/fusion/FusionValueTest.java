@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.amazon.ion.IonInt;
 import com.amazon.ion.IonValue;
 import dev.ionfusion.runtime.embed.TopLevel;
@@ -33,11 +34,11 @@ public class FusionValueTest
     {
         Object fv = eval("12");
         checkLong(12, fv);
-        IonValue iv = FusionValue.copyToIonValue(fv, system());
+        IonValue iv = FusionValue.copyToIonValue(evaluator(), fv, system());
         assertEquals(12, ((IonInt)iv).intValue());
 
         fv = eval("(lambda () 12)");
-        assertSame(null, FusionValue.copyToIonValueMaybe(fv, system()));
+        assertSame(null, FusionValue.copyToIonValueMaybe(evaluator(), fv, system()));
     }
 
     @Test
@@ -46,7 +47,7 @@ public class FusionValueTest
     {
         Object fv = eval("(lambda () 12)");
         assertThrows(FusionException.class,
-                     () ->  FusionValue.copyToIonValue(fv, system()));
+                     () ->  FusionValue.copyToIonValue(evaluator(), fv, system()));
     }
 
     @Test

@@ -201,7 +201,7 @@ final class StandardRuntime
     public IonValue ionize(Object fusionValue, ValueFactory factory)
         throws FusionException
     {
-        return FusionValue.copyToIonValue(fusionValue, factory);
+        return FusionValue.copyToIonValue(myTopLevel.getEvaluator(), fusionValue, factory);
     }
 
 
@@ -209,7 +209,7 @@ final class StandardRuntime
     public IonValue ionizeMaybe(Object fusionValue, ValueFactory factory)
         throws FusionException
     {
-        return FusionValue.copyToIonValueMaybe(fusionValue, factory);
+        return FusionValue.copyToIonValueMaybe(myTopLevel.getEvaluator(), fusionValue, factory);
     }
 
 

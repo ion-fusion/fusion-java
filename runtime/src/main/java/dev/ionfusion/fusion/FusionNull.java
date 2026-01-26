@@ -67,7 +67,8 @@ public final class FusionNull
         }
 
         @Override
-        IonValue copyToIonValue(ValueFactory factory,
+        IonValue copyToIonValue(Evaluator eval,
+                                ValueFactory factory,
                                 boolean throwOnConversionFailure)
             throws FusionException
         {
@@ -115,7 +116,8 @@ public final class FusionNull
         }
 
         @Override
-        IonValue copyToIonValue(ValueFactory factory,
+        IonValue copyToIonValue(Evaluator eval,
+                                ValueFactory factory,
                                 boolean throwOnConversionFailure)
             throws FusionException
         {

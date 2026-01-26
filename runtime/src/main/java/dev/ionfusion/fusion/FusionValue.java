@@ -285,10 +285,10 @@ public final class FusionValue
      *
      * @see FusionRuntime#ionizeMaybe(Object, ValueFactory)
      */
-    static IonValue copyToIonValueMaybe(Object value, ValueFactory factory)
+    static IonValue copyToIonValueMaybe(Evaluator eval, Object value, ValueFactory factory)
         throws FusionException
     {
-        return copyToIonValue(value, factory, false);
+        return copyToIonValue(eval, value, factory, false);
     }
 
 
@@ -302,10 +302,10 @@ public final class FusionValue
      *
      * @throws FusionException if the value cannot be converted to Ion.
      */
-    static IonValue copyToIonValue(Object value, ValueFactory factory)
+    static IonValue copyToIonValue(Evaluator eval, Object value, ValueFactory factory)
         throws FusionException
     {
-        return copyToIonValue(value, factory, true);
+        return copyToIonValue(eval, value, factory, true);
     }
 
 
@@ -322,7 +322,8 @@ public final class FusionValue
      *
      * @see FusionRuntime#ionize(Object, ValueFactory)
      */
-    static IonValue copyToIonValue(Object       value,
+    static IonValue copyToIonValue(Evaluator    eval,
+                                   Object       value,
                                    ValueFactory factory,
                                    boolean      throwOnConversionFailure)
         throws FusionException
@@ -330,7 +331,7 @@ public final class FusionValue
         if (value instanceof BaseValue)
         {
             BaseValue fv = (BaseValue) value;
-            return fv.copyToIonValue(factory, throwOnConversionFailure);
+            return fv.copyToIonValue(eval, factory, throwOnConversionFailure);
         }
 
         if (throwOnConversionFailure)
