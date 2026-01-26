@@ -10,6 +10,7 @@ import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_OBJECT_ARRAY;
 import static java.lang.Boolean.TRUE;
 
 import com.amazon.ion.IonValue;
+import dev.ionfusion.runtime.base.SourceLocation;
 import java.util.Arrays;
 
 /**

@@ -3,7 +3,7 @@
 
 package dev.ionfusion.fusion._private;
 
-import dev.ionfusion.fusion.ModuleIdentity;
+import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.io.IOException;
 
 public class HtmlWriter

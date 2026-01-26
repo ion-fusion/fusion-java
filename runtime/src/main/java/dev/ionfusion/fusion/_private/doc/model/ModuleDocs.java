@@ -5,7 +5,7 @@ package dev.ionfusion.fusion._private.doc.model;
 
 import static java.util.Collections.emptyMap;
 
-import dev.ionfusion.fusion.ModuleIdentity;
+import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.text.BreakIterator;
 import java.util.Map;
 import java.util.Set;

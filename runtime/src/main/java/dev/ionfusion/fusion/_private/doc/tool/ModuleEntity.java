@@ -5,9 +5,9 @@ package dev.ionfusion.fusion._private.doc.tool;
 
 import static java.util.Comparator.comparing;
 
-import dev.ionfusion.fusion.ModuleIdentity;
 import dev.ionfusion.fusion._private.doc.model.BindingDoc;
 import dev.ionfusion.fusion._private.doc.model.ModuleDocs;
+import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.util.Collection;
 import java.util.SortedSet;
 import java.util.TreeSet;

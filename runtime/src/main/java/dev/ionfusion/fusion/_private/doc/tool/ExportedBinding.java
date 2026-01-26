@@ -5,8 +5,8 @@ package dev.ionfusion.fusion._private.doc.tool;
 
 import static java.util.Comparator.comparing;
 
-import dev.ionfusion.fusion.ModuleIdentity;
 import dev.ionfusion.fusion._private.doc.model.BindingDoc;
+import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.util.Comparator;
 import java.util.List;
 

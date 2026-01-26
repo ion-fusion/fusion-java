@@ -4,6 +4,8 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionValue.UNDEF;
+
+import dev.ionfusion.runtime.base.SourceLocation;
 import java.util.Arrays;
 
 final class LetrecForm

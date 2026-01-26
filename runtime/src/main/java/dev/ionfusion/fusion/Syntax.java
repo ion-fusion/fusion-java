@@ -4,6 +4,8 @@
 package dev.ionfusion.fusion;
 
 
+import dev.ionfusion.runtime.base.SourceLocation;
+
 /**
  * Utilities for working with {@link SyntaxValue}s.
  */

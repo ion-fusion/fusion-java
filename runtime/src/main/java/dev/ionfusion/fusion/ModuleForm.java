@@ -13,13 +13,14 @@ import static dev.ionfusion.fusion.FusionString.unsafeStringToJavaString;
 import static dev.ionfusion.fusion.FusionSyntax.unsafeSyntaxUnwrap;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.GlobalState.PROVIDE;
-import static dev.ionfusion.fusion.ModuleIdentity.isValidAbsoluteModulePath;
-import static dev.ionfusion.fusion.ModuleIdentity.isValidModuleName;
-import static dev.ionfusion.fusion.ModuleIdentity.isValidModulePath;
+import static dev.ionfusion.runtime.base.ModuleIdentity.isValidAbsoluteModulePath;
+import static dev.ionfusion.runtime.base.ModuleIdentity.isValidModuleName;
+import static dev.ionfusion.runtime.base.ModuleIdentity.isValidModulePath;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.ModuleNamespace.ProvidedBinding;
 import dev.ionfusion.fusion._private.doc.model.BindingDoc;
+import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.Iterator;

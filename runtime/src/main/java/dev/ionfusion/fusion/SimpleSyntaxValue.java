@@ -7,6 +7,7 @@ import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_OBJECT_ARRAY;
 
 import com.amazon.ion.IonException;
 import com.amazon.ion.IonWriter;
+import dev.ionfusion.runtime.base.SourceLocation;
 import java.io.IOException;
 
 /**

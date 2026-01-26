@@ -4,8 +4,8 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.CoverageDatabase.SRCLOC_COMPARE;
-import static dev.ionfusion.fusion.SourceName.FUSION_SOURCE_EXTENSION;
 import static dev.ionfusion.fusion._Private_Trampoline.discoverModulesInRepository;
+import static dev.ionfusion.runtime.base.SourceName.FUSION_SOURCE_EXTENSION;
 import static java.math.RoundingMode.HALF_EVEN;
 import static java.nio.file.Files.walkFileTree;
 
@@ -18,6 +18,9 @@ import com.amazon.ion.Timestamp;
 import com.amazon.ion.system.IonReaderBuilder;
 import dev.ionfusion.fusion._private.HtmlWriter;
 import dev.ionfusion.fusion._private.StreamWriter;
+import dev.ionfusion.runtime.base.ModuleIdentity;
+import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.SourceName;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

@@ -6,6 +6,7 @@ package dev.ionfusion.fusion;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 
+import dev.ionfusion.runtime.base.SourceLocation;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

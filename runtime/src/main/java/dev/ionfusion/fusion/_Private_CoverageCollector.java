@@ -3,6 +3,8 @@
 
 package dev.ionfusion.fusion;
 
+import dev.ionfusion.runtime.base.SourceLocation;
+
 /**
  * EXPERIMENTAL extension point for collecting code-coverage statistics.
  * <p>

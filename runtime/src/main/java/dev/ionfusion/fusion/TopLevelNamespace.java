@@ -8,6 +8,7 @@ import static dev.ionfusion.fusion.NamedValue.inferObjectName;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.ModuleNamespace.ProvidedBinding;
+import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.function.Function;

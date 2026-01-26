@@ -4,6 +4,8 @@
 package dev.ionfusion.fusion;
 
 
+import dev.ionfusion.runtime.base.SourceLocation;
+
 /**
  * Indicates inappropriate run-time use of a procedure or syntactic form;
  * that is, a failure to satisfy a feature's contract.

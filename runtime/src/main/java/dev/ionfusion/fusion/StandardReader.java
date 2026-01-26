@@ -16,8 +16,8 @@ import static dev.ionfusion.fusion.FusionString.makeString;
 import static dev.ionfusion.fusion.FusionStruct.nullStruct;
 import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionTimestamp.makeTimestamp;
-import static dev.ionfusion.fusion.SourceLocation.forCurrentSpan;
 import static dev.ionfusion.fusion.SyntaxValue.STX_PROPERTY_ORIGINAL;
+import static dev.ionfusion.runtime.base.SourceLocation.forCurrentSpan;
 import static java.lang.Boolean.TRUE;
 
 import com.amazon.ion.Decimal;
@@ -28,6 +28,8 @@ import com.amazon.ion.IonType;
 import com.amazon.ion.Timestamp;
 import dev.ionfusion.fusion.FusionList.BaseList;
 import dev.ionfusion.fusion.FusionSexp.BaseSexp;
+import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.SourceName;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;

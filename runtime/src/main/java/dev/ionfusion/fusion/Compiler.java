@@ -45,6 +45,7 @@ import dev.ionfusion.fusion.TopLevelNamespace.CompiledTopLevelVariableReference;
 import dev.ionfusion.fusion.TopLevelNamespace.TopLevelDefinedBinding;
 import dev.ionfusion.fusion._private.doc.model.BindingDoc;
 import dev.ionfusion.fusion._private.doc.model.BindingDoc.Kind;
+import dev.ionfusion.runtime.base.SourceLocation;
 
 /**
  * "Registers" used during compilation.

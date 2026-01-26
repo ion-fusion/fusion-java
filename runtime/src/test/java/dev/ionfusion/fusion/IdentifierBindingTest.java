@@ -13,6 +13,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.SourceName;
 import org.junit.jupiter.api.Test;
 
 

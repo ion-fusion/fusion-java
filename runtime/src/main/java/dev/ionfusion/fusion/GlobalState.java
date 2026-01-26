@@ -13,6 +13,7 @@ import com.amazon.ion.IonSystem;
 import com.amazon.ion.system.IonReaderBuilder;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.ModuleNamespace.ModuleDefinedBinding;
+import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.io.IOException;
 import java.io.InputStream;
 

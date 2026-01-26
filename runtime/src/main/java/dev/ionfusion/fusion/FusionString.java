@@ -33,6 +33,7 @@ import com.amazon.ion.util.IonTextUtils;
 import dev.ionfusion.fusion.FusionBool.BaseBool;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.FusionText.BaseText;
+import dev.ionfusion.runtime.base.SourceLocation;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;

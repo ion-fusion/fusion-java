@@ -6,7 +6,6 @@ package dev.ionfusion.fusion._private.doc.tool;
 import static java.nio.file.Files.isDirectory;
 
 import dev.ionfusion.fusion.FusionException;
-import dev.ionfusion.fusion.ModuleIdentity;
 import dev.ionfusion.fusion.TopLevel;
 import dev.ionfusion.fusion._private.StreamWriter;
 import dev.ionfusion.fusion._private.doc.model.MarkdownArticle;
@@ -15,6 +14,7 @@ import dev.ionfusion.fusion._private.doc.site.Site;
 import dev.ionfusion.fusion._private.doc.site.Template;
 import dev.ionfusion.fusion._private.doc.tool.layout.StreamingTemplate;
 import dev.ionfusion.fusion._private.doc.tool.mustache.MustacheTemplate;
+import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Predicate;

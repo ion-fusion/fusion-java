@@ -6,6 +6,7 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_OBJECT_ARRAY;
 
 import dev.ionfusion.fusion.FusionString.BaseString;
+import dev.ionfusion.runtime.base.SourceLocation;
 
 final class SyntaxString
     extends SyntaxText<SyntaxString>

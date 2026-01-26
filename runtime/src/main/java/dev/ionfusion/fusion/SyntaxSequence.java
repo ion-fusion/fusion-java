@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 
+import dev.ionfusion.runtime.base.SourceLocation;
 
 abstract class SyntaxSequence
     extends SyntaxContainer

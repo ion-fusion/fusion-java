@@ -3,6 +3,8 @@
 
 package dev.ionfusion.fusion;
 
+import dev.ionfusion.runtime.base.SourceLocation;
+
 /**
  * Exposes binding metadata about an identifier in Fusion source code.
  * <p>

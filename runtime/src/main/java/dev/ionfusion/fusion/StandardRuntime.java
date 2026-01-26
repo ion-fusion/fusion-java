@@ -4,8 +4,8 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.GlobalState.KERNEL_MODULE_IDENTITY;
-import static dev.ionfusion.fusion.ModuleIdentity.forAbsolutePath;
-import static dev.ionfusion.fusion.ModuleIdentity.isValidAbsoluteModulePath;
+import static dev.ionfusion.runtime.base.ModuleIdentity.forAbsolutePath;
+import static dev.ionfusion.runtime.base.ModuleIdentity.isValidAbsoluteModulePath;
 
 import com.amazon.ion.IonCatalog;
 import com.amazon.ion.IonReader;
@@ -13,6 +13,7 @@ import com.amazon.ion.IonSystem;
 import com.amazon.ion.IonValue;
 import com.amazon.ion.ValueFactory;
 import com.amazon.ion.system.IonSystemBuilder;
+import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.io.OutputStream;
 
 

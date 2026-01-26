@@ -10,6 +10,7 @@ import dev.ionfusion.fusion.ModuleNamespace.ProvidedBinding;
 import dev.ionfusion.fusion.Namespace.NsDefinedBinding;
 import dev.ionfusion.fusion.Namespace.RequiredBinding;
 import dev.ionfusion.fusion.TopLevelNamespace.TopLevelDefinedBinding;
+import dev.ionfusion.runtime.base.SourceLocation;
 
 /**
  * Bindings are used during expansion and compilation to identify a specific

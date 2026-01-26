@@ -7,6 +7,8 @@ import static dev.ionfusion.fusion.FusionIo.safeDisplay;
 import static dev.ionfusion.fusion.FusionIo.safeWriteToString;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 
+import dev.ionfusion.runtime.base.SourceLocation;
+
 final class AssertForm
     extends SyntacticForm
 {

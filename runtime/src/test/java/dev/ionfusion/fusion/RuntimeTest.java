@@ -23,6 +23,8 @@ import com.amazon.ion.IonWriter;
 import com.amazon.ion.SymbolTable;
 import com.amazon.ion.system.IonBinaryWriterBuilder;
 import com.amazon.ion.system.SimpleCatalog;
+import dev.ionfusion.runtime.base.ModuleIdentity;
+import dev.ionfusion.runtime.base.SourceName;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;

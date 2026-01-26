@@ -4,6 +4,8 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionIo.safeWrite;
+
+import dev.ionfusion.runtime.base.SourceLocation;
 import java.io.IOException;
 
 @SuppressWarnings("serial")

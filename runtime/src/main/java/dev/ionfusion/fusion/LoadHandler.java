@@ -10,6 +10,9 @@ import static dev.ionfusion.fusion.StandardReader.readSyntax;
 
 import com.amazon.ion.IonException;
 import com.amazon.ion.IonReader;
+import dev.ionfusion.runtime.base.ModuleIdentity;
+import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.SourceName;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

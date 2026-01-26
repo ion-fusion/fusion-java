@@ -10,6 +10,7 @@ import static dev.ionfusion.fusion.FusionString.makeString;
 import static dev.ionfusion.fusion.SimpleSyntaxValue.makeSyntax;
 
 import dev.ionfusion.fusion.FusionBool.BaseBool;
+import dev.ionfusion.runtime.base.SourceLocation;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;

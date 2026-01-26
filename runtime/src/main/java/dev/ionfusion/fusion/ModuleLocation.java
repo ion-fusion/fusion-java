@@ -4,6 +4,8 @@
 package dev.ionfusion.fusion;
 
 import com.amazon.ion.IonReader;
+import dev.ionfusion.runtime.base.ModuleIdentity;
+import dev.ionfusion.runtime.base.SourceName;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

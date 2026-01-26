@@ -15,10 +15,12 @@ import static dev.ionfusion.fusion.FusionSexp.unsafePairDot;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
 import static dev.ionfusion.fusion.FusionSexp.unsafeSexpSize;
+
+import com.amazon.ion.IonWriter;
 import dev.ionfusion.fusion.FusionSexp.BaseSexp;
 import dev.ionfusion.fusion.FusionSexp.ImmutablePair;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
-import com.amazon.ion.IonWriter;
+import dev.ionfusion.runtime.base.SourceLocation;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.IdentityHashMap;

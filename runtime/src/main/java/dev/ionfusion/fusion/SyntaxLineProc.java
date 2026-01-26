@@ -5,6 +5,8 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionNumber.makeInt;
 
+import dev.ionfusion.runtime.base.SourceLocation;
+
 
 class SyntaxLineProc
     extends Procedure1

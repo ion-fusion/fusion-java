@@ -3,9 +3,12 @@
 
 package dev.ionfusion.fusion;
 
-import static dev.ionfusion.fusion.ModuleIdentity.isValidAbsoluteModulePath;
 import static dev.ionfusion.fusion._private.FusionUtils.readProperties;
+import static dev.ionfusion.runtime.base.ModuleIdentity.isValidAbsoluteModulePath;
 
+import dev.ionfusion.runtime.base.ModuleIdentity;
+import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.SourceName;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

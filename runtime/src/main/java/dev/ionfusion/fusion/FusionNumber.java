@@ -23,6 +23,7 @@ import com.amazon.ion.ValueFactory;
 import com.amazon.ion.util.IonTextUtils;
 import dev.ionfusion.fusion.FusionBool.BaseBool;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+import dev.ionfusion.runtime.base.SourceLocation;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;

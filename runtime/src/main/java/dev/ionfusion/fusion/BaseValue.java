@@ -17,6 +17,7 @@ import com.amazon.ion.system.IonTextWriterBuilder;
 import com.amazon.ion.util.IonTextUtils;
 import dev.ionfusion.fusion.FusionBool.BaseBool;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+import dev.ionfusion.runtime.base.SourceLocation;
 import java.io.IOException;
 
 /**

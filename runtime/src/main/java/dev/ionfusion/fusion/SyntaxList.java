@@ -13,6 +13,7 @@ import static java.lang.System.arraycopy;
 import com.amazon.ion.IonWriter;
 import dev.ionfusion.fusion.FusionList.BaseList;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+import dev.ionfusion.runtime.base.SourceLocation;
 import java.io.IOException;
 
 final class SyntaxList

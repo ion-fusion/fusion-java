@@ -8,6 +8,7 @@ import com.amazon.ion.IonStruct;
 import com.amazon.ion.IonValue;
 import dev.ionfusion.fusion.Namespace.NsDefinedBinding;
 import dev.ionfusion.fusion._private.doc.model.BindingDoc.Kind;
+import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.util.Collection;
 
 

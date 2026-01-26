@@ -7,6 +7,8 @@ import static dev.ionfusion.fusion.BindingSite.makeExportBindingSite;
 import static dev.ionfusion.fusion.GlobalState.REQUIRE;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+import dev.ionfusion.runtime.base.ModuleIdentity;
+import dev.ionfusion.runtime.base.SourceLocation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;

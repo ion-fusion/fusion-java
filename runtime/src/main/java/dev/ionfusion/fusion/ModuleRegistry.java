@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 import dev.ionfusion.fusion.ModuleForm.CompiledModule;
+import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.util.HashMap;
 import java.util.Map;
 

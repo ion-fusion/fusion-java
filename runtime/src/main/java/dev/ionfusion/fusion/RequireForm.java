@@ -15,6 +15,7 @@ import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.GlobalState.REQUIRE;
 
 import dev.ionfusion.fusion.Namespace.RequireRenameMapping;
+import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;

@@ -34,6 +34,7 @@ import com.amazon.ion.ValueFactory;
 import dev.ionfusion.fusion.FusionBool.BaseBool;
 import dev.ionfusion.fusion.FusionNumber.BaseDecimal;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+import dev.ionfusion.runtime.base.SourceLocation;
 import java.io.IOException;
 import java.math.BigDecimal;
 

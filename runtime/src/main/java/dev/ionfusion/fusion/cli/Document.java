@@ -7,8 +7,8 @@ import static java.nio.file.Files.isDirectory;
 
 import com.amazon.ion.Timestamp;
 import dev.ionfusion.fusion.FusionRuntime;
-import dev.ionfusion.fusion.ModuleIdentity;
 import dev.ionfusion.fusion._private.doc.tool.SiteBuilder;
+import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.io.File;
 import java.io.PrintWriter;
 import java.nio.file.Path;

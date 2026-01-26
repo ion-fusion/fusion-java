@@ -4,6 +4,8 @@
 package dev.ionfusion.fusion;
 
 import static org.junit.jupiter.api.Assertions.fail;
+
+import dev.ionfusion.runtime.base.SourceLocation;
 import java.util.Iterator;
 import java.util.List;
 import org.junit.jupiter.api.Test;

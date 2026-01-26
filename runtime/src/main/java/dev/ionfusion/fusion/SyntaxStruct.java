@@ -3,10 +3,11 @@
 
 package dev.ionfusion.fusion;
 
-import dev.ionfusion.fusion.FusionStruct.ImmutableStruct;
-import dev.ionfusion.fusion.FusionStruct.StructFieldVisitor;
 import com.amazon.ion.IonException;
 import com.amazon.ion.IonWriter;
+import dev.ionfusion.fusion.FusionStruct.ImmutableStruct;
+import dev.ionfusion.fusion.FusionStruct.StructFieldVisitor;
+import dev.ionfusion.runtime.base.SourceLocation;
 import java.io.IOException;
 
 final class SyntaxStruct

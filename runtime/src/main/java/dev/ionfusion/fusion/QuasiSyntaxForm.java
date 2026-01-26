@@ -8,6 +8,7 @@ import static dev.ionfusion.fusion.FusionList.immutableList;
 import dev.ionfusion.fusion.FusionList.BaseList;
 import dev.ionfusion.fusion.FusionSexp.BaseSexp;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+import dev.ionfusion.runtime.base.SourceLocation;
 
 final class QuasiSyntaxForm
     extends QuasiBaseForm

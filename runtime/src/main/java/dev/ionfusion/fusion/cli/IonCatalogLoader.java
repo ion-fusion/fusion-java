@@ -4,8 +4,8 @@
 package dev.ionfusion.fusion.cli;
 
 import static com.amazon.ion.SystemSymbols.ION_SHARED_SYMBOL_TABLE;
-import dev.ionfusion.fusion.SourceLocation;
-import dev.ionfusion.fusion.SourceName;
+import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.SourceName;
 import com.amazon.ion.IonException;
 import com.amazon.ion.IonReader;
 import com.amazon.ion.IonSystem;

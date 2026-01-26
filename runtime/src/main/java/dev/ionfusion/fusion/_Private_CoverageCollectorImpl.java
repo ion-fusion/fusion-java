@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion;
 
+import dev.ionfusion.runtime.base.SourceLocation;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.ReferenceQueue;

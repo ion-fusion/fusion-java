@@ -6,7 +6,7 @@ package dev.ionfusion.fusion._private.doc.tool;
 import static dev.ionfusion.fusion._private.doc.tool.ExportedBinding.COMPARE_BY_MODULE;
 import static java.util.stream.Collectors.toList;
 
-import dev.ionfusion.fusion.ModuleIdentity;
+import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;

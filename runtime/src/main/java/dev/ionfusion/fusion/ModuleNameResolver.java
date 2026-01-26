@@ -9,9 +9,10 @@ import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
 import static dev.ionfusion.fusion.FusionSexp.unsafeSexpToJavaList;
 import static dev.ionfusion.fusion.FusionText.isText;
 import static dev.ionfusion.fusion.FusionText.unsafeTextToJavaString;
-import static dev.ionfusion.fusion.ModuleIdentity.isValidAbsoluteModulePath;
-import static dev.ionfusion.fusion.ModuleIdentity.isValidModulePath;
+import static dev.ionfusion.runtime.base.ModuleIdentity.isValidAbsoluteModulePath;
+import static dev.ionfusion.runtime.base.ModuleIdentity.isValidModulePath;
 
+import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

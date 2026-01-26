@@ -26,6 +26,7 @@ import dev.ionfusion.fusion.FusionIterator.AbstractIterator;
 import dev.ionfusion.fusion.FusionList.BaseList;
 import dev.ionfusion.fusion.FusionSequence.BaseSequence;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+import dev.ionfusion.runtime.base.SourceLocation;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;

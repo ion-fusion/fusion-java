@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 import dev.ionfusion.fusion.FusionText.BaseText;
+import dev.ionfusion.runtime.base.SourceLocation;
 
 abstract class SyntaxText<Sub extends SyntaxText>
     extends SimpleSyntaxValue

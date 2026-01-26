@@ -10,6 +10,7 @@ import dev.ionfusion.fusion.ModuleNamespace.ProvidedBinding;
 import dev.ionfusion.fusion.Namespace.NsDefinedBinding;
 import dev.ionfusion.fusion._private.doc.model.BindingDoc;
 import dev.ionfusion.fusion._private.doc.model.ModuleDocs;
+import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
