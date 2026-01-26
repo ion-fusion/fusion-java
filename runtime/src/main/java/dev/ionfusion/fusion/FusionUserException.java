@@ -3,7 +3,7 @@
 
 package dev.ionfusion.fusion;
 
-import java.io.IOException;
+import static dev.ionfusion.fusion.FusionIo.safeWriteToString;
 
 /**
  * Represents an arbitrary, non-exception Fusion value thrown by {@code raise}.
@@ -14,18 +14,29 @@ final class FusionUserException
 {
     private final Object myRaisedValue;
 
-    FusionUserException(Object raisedValue)
+    private FusionUserException(String message, Object raisedValue)
     {
-        super((String) null);
+        super(message);
         myRaisedValue = raisedValue;
     }
 
-    @Override
-    void displayMessage(Evaluator eval, Appendable out)
-        throws IOException, FusionException
+    /**
+     * @param raisedValue must not extend {@link Throwable}.
+     *
+     * @return a new exception.
+     */
+    static FusionException make(Evaluator eval, Object raisedValue)
     {
-        FusionIo.write(eval, out, myRaisedValue);
+        if (raisedValue instanceof Throwable)
+        {
+            String msg = "java.lang.Throwable cannot be raised from Fusion code";
+            throw new IllegalArgumentException(msg, (Throwable) raisedValue);
+        }
+
+        String msg = safeWriteToString(eval, raisedValue);
+        return new FusionUserException(msg, raisedValue);
     }
+
 
     @Override
     public final Object getRaisedValue()
