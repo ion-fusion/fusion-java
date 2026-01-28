@@ -30,6 +30,13 @@ java {
     }
 }
 
+// Enable some linting.  TODO Work toward -Xlint:all
+tasks.withType<JavaCompile>() {
+    options.compilerArgumentProviders.add {
+        listOf("-Xlint:serial")
+    }
+}
+
 tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()

@@ -426,6 +426,7 @@ final class FusionStruct
             throws FusionException;
     }
 
+    @SuppressWarnings("serial")
     static class TunneledFusionException
         extends RuntimeException
     {
@@ -863,9 +864,10 @@ final class FusionStruct
             throw new IllegalStateException("Cannot wrap mutable struct as syntax");
         }
 
-        private static final class VisitFailure extends RuntimeException
-        {
-        }
+        @SuppressWarnings("serial")
+        private static final class VisitFailure
+            extends RuntimeException
+        { }
 
         /**
          * TODO This needs to do cycle detection.

@@ -7,6 +7,7 @@ package dev.ionfusion.fusion;
 /**
  * Indicates failure to locate a required module.
  */
+@SuppressWarnings("serial")
 public final class ModuleNotFoundException
     extends FusionErrorException
 {

@@ -9,6 +9,7 @@ import static com.amazon.ion.util.IonTextUtils.printQuotedSymbol;
  * Indicates an import or definition of an identifier that is already bound
  * and cannot be redefined.
  */
+@SuppressWarnings("serial")
 final class AmbiguousBindingFailure
     extends SyntaxException
 {
