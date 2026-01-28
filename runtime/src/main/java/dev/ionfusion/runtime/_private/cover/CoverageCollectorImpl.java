@@ -27,7 +27,7 @@ import java.util.Set;
  * loaded from a file-based {@code ModuleRepository} as well as scripts from
  * other locations.
  * <p>
- * Instances of this class are interned in a weak-reference cache, keyed by
+ * Instances of this class are interned in a weak-reference cache, keyed by the
  * data directory.  This allows them to be shared by {@code FusionRuntime}
  * instances for as long as possible, and flushed to disk when they become
  * unreachable or the JVM exits.  This also ensures proper deduplication of the
@@ -40,6 +40,8 @@ import java.util.Set;
  * responsibility of coverage filtering, and brings significant complexity to
  * something that should be simple.  The Single Responsibility Principle
  * suggests it should be refactored into a dedicated class.
+ * See <a href="https://docs.racket-lang.org/reference/plumbers.html">Racket's
+ * plumbers</a>.
  *
  * @see CoverageConfiguration
  */

@@ -31,7 +31,7 @@ import java.util.Properties;
  * This builder provides several configuration points that determine the
  * capabilities of the resulting runtime system.
  * <p>
- * Configuration properties follow the standard JavaBeans idiom in order to be
+ * Configuration properties follow standard JavaBeans idioms to be
  * friendly to dependency injection systems. They also provide alternative
  * mutation methods that enable a more fluid style:
  *<pre>
@@ -63,7 +63,7 @@ import java.util.Properties;
  *
  * One of the runtime's main responsibilities is creation of {@link TopLevel}
  * namespaces in which evaluation can occur. The baseline semantics of such
- * evaluation is defined by the language used to create the namespace.
+ * evaluation are defined by the language used to create the namespace.
  * By default, all such namespaces are created with the bindings from the
  * {@code /fusion} language, but this default is controlled by the
  * configuration declared here.
@@ -599,7 +599,7 @@ public class FusionRuntimeBuilder
      * @param directory the desired repository.
      * If a relative path is given, it is immediately resolved as per
      * {@link File#getAbsolutePath()}.
-     * May be null to clear a previously-configured directory.
+     * May be null to clear a previously configured directory.
      *
      * @throws UnsupportedOperationException if this is immutable.
      * @throws IllegalArgumentException if the directory isn't a valid
@@ -643,7 +643,7 @@ public class FusionRuntimeBuilder
      * @param directory the desired repository.
      * If a relative path is given, it is immediately resolved as per
      * {@link File#getAbsolutePath()}.
-     * May be null to clear a previously-configured directory.
+     * May be null to clear a previously configured directory.
      *
      * @return this builder, if it's mutable; otherwise a new mutable builder.
      *
@@ -758,7 +758,7 @@ public class FusionRuntimeBuilder
      * @param directory the desired coverage data directory.
      * If a relative path is given, it is immediately resolved as per
      * {@link File#getAbsolutePath()}.
-     * May be null to clear a previously-configured directory.
+     * May be null to clear a previously configured directory.
      *
      * @throws UnsupportedOperationException if this is immutable.
      * @throws IllegalArgumentException if the file exists but isn't a
@@ -798,7 +798,7 @@ public class FusionRuntimeBuilder
      * @param directory the desired coverage data directory.
      * If a relative path is given, it is immediately resolved as per
      * {@link File#getAbsolutePath()}.
-     * May be null to clear a previously-configured directory.
+     * May be null to clear a previously configured directory.
      *
      * @return this builder, if it's mutable; otherwise a new mutable builder.
      *
@@ -922,7 +922,7 @@ public class FusionRuntimeBuilder
                 }
             }
 
-            // TODO Writing into a private coverageCollector property is wierd.
+            // TODO Writing into a private coverageCollector property is weird.
             //   This should move into build(), or in getCoverageCollector()?
             //   Note that the property exists so tests can inject a mock.
             if (b.myCoverageDataDirectory != null)
@@ -959,6 +959,8 @@ public class FusionRuntimeBuilder
      *
      * @return a new builder instance.
      *
+     * @throws IOException if there are problems reading the coverage database
+     * or other configuration files.
      * @throws IllegalStateException if the builder's configuration is
      * incomplete, inconsistent, or otherwise unusable.
      * @throws FusionException if there's a problem bootstrapping the runtime.

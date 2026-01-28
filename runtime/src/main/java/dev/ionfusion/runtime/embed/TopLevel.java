@@ -19,11 +19,11 @@ import java.io.File;
  * code outside of this library.
  * <p>
  * {@link TopLevel}s are <em>not</em> inherently thread-safe! It is not safe
- * to use the same instance from multiple threads, unless all such use is
+ * to use the same instance from multiple threads unless all such uses are
  * functional (that is, no mutations are made) with respect to any common data.
  * Put another way, this library does not perform any synchronization on
  * namespaces or user-visible data structures, so your application must take
- * steps to handle such synchronization when and if it is needed.
+ * steps to handle such synchronization when and if it is necessary.
  * <p>
  * Using thread-local {@link TopLevel}s is reasonable, if you can properly
  * isolate state changes between requests on the same thread.
@@ -43,8 +43,8 @@ import java.io.File;
  *   </li>
  *   <li>
  *     {@link FusionInterruptedException} is thrown if the evaluation is
- *     cancelled by calling {@link Thread#interrupt()} on the current thread.
- *     When this is thrown the thread's interrupt status will have been set.
+ *     canceled by calling {@link Thread#interrupt()} on the current thread.
+ *     When this is thrown, the thread's interrupt status will have been set.
  *   </li>
  * </ul>
  *
@@ -181,14 +181,14 @@ public interface TopLevel
      * <a href="{@docRoot}/overview-summary.html#inject">injecting</a> Java
      * values.
      * <p>
-     * If the name has already been defined in this namespace then the existing
+     * If the name has already been defined in this namespace, then the existing
      * variable is mutated to have the given value.
      * If the name has been previously imported into this namespace, then a
      * top-level definition is created or modified and will shadow the imported
      * binding in future expressions.
      *
      * @param name the top-level binding to introduce or mutate.
-     * @param value the value to bind, must be
+     * @param value the value to bind. Must be
      * <a href="{@docRoot}/overview-summary.html#inject">injectable</a>.
      * It is unspecified whether the value will be copied in whole or in part.
      *
@@ -203,7 +203,7 @@ public interface TopLevel
      * Finds a top-level binding for a given name and returns any defined
      * value.
      *
-     * @param name the binding to lookup and dereference.
+     * @param name the binding to look up and dereference.
      *
      * @return the bound value, or null if there's no top-level definition or
      * imported binding for the name.
@@ -229,7 +229,7 @@ public interface TopLevel
      * @return the resulting Fusion value.
      * May be null (if no value results) or an {@code Object[]} (if there are
      * multiple values).
-     * Note that "no value" is not the same as "returns void".
+     * Note that "no value" is different from "returns void".
      *
      * @throws FusionException if an error occurs during evaluation
      * @throws IllegalArgumentException if {@code procedureName} is not bound to
@@ -252,7 +252,7 @@ public interface TopLevel
      * @return the resulting Fusion value.
      * May be null (if no value results) or an {@code Object[]} (if there are
      * multiple values).
-     * Note that "no value" is not the same as "returns void".
+     * Note that "no value" is different from "returns void".
      *
      * @throws FusionException if an error occurs during evaluation
      * @throws IllegalArgumentException if {@code procedure} is not a procedure,

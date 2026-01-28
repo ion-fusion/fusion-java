@@ -4,7 +4,8 @@
 package dev.ionfusion.fusion;
 
 /**
- * Thrown to indicate that a Fusion computation was interrupted. When thrown,
+ * Thrown to indicate that a Fusion computation was interrupted via
+ * {@link Thread#interrupt()}. When thrown,
  * the current thread's interrupt status will have been set.
  * <p>
  * This is distinct from the standard {@link InterruptedException} because

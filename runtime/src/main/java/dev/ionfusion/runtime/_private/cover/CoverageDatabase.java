@@ -38,9 +38,8 @@ import java.util.Set;
  * control of its content.  In particular, no other process, and no other
  * {@code CoverageDatabase} instance, should access the directory until the
  * database is flushed via {@link #write()}.  This implies that instances need
- * to be interned or otherwise deduplicated, based on physical directory.
- * At present, {@link CoverageCollectorImpl} implements these
- * constraints.
+ * to be interned or otherwise deduplicated, based on their physical directory.
+ * At present, {@link CoverageCollectorImpl} implements these constraints.
  * <p>
  * TODO: The flushing protocol would be more obvious if this class implemented
  *       {@link java.io.Closeable}.
@@ -107,11 +106,10 @@ public class CoverageDatabase
 
 
     /**
-     * Records a Fusion repository that was used by a runtime while collecting
+     * Records a Fusion repository used by a runtime while collecting
      * coverage data.
-     * The coverage analyzer uses these to synthesize File repositories
-     * in order to discover modules that would have been instrumented but were
-     * never loaded.
+     * The coverage analyzer opens file-based repositories to discover modules
+     * that would have been instrumented but were never loaded.
      * <p>
      * TODO: This mechanism should be enhanced to support Jar repositories.
      *
@@ -148,6 +146,7 @@ public class CoverageDatabase
      */
     synchronized void locationInstrumented(SourceLocation loc)
     {
+        // TODO JAVA8 Use ConcurrentHashMap.computeIfAbsent()
         Boolean prev = myLocations.put(loc, Boolean.FALSE);
 
         // If already covered, don't un-cover it!
