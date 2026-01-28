@@ -1,10 +1,10 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion;
+package dev.ionfusion.fusion.cli;
 
-import static dev.ionfusion.fusion.CoverageDatabase.SRCLOC_COMPARE;
 import static dev.ionfusion.fusion._Private_Trampoline.discoverModulesInRepository;
+import static dev.ionfusion.runtime._private.cover.CoverageDatabase.SRCLOC_COMPARE;
 import static dev.ionfusion.runtime.base.SourceName.FUSION_SOURCE_EXTENSION;
 import static java.math.RoundingMode.HALF_EVEN;
 import static java.nio.file.Files.walkFileTree;
@@ -16,8 +16,11 @@ import com.amazon.ion.Span;
 import com.amazon.ion.SpanProvider;
 import com.amazon.ion.Timestamp;
 import com.amazon.ion.system.IonReaderBuilder;
+import dev.ionfusion.fusion.FusionException;
 import dev.ionfusion.fusion._private.HtmlWriter;
 import dev.ionfusion.fusion._private.StreamWriter;
+import dev.ionfusion.runtime._private.cover.CoverageConfiguration;
+import dev.ionfusion.runtime._private.cover.CoverageDatabase;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import dev.ionfusion.runtime.base.SourceLocation;
 import dev.ionfusion.runtime.base.SourceName;
@@ -41,7 +44,7 @@ import java.util.Set;
 /**
  *
  */
-public final class _Private_CoverageWriter
+public final class CoverageReportWriter
 {
     private final static String CSS =
         "body { color:black }" +
@@ -172,7 +175,7 @@ public final class _Private_CoverageWriter
     private boolean coverageState;
 
 
-    public _Private_CoverageWriter(File dataDir)
+    public CoverageReportWriter(File dataDir)
         throws FusionException, IOException
     {
         myDatabase = new CoverageDatabase(dataDir.toPath());

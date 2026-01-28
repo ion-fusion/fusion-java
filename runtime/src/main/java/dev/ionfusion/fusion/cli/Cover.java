@@ -3,7 +3,6 @@
 
 package dev.ionfusion.fusion.cli;
 
-import dev.ionfusion.fusion._Private_CoverageWriter;
 import java.io.File;
 import java.io.PrintWriter;
 
@@ -76,8 +75,7 @@ class Cover
         public int execute(PrintWriter out, PrintWriter err)
             throws Exception
         {
-            _Private_CoverageWriter renderer =
-                new _Private_CoverageWriter(myDataDir);
+            CoverageReportWriter renderer = new CoverageReportWriter(myDataDir);
 
             renderer.renderFullReport(myReportDir);
 

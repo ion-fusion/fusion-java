@@ -1,8 +1,9 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion;
+package dev.ionfusion.runtime._private.cover;
 
+import dev.ionfusion.fusion._Private_CoverageCollector;
 import dev.ionfusion.runtime.base.SourceLocation;
 import dev.ionfusion.runtime.embed.FusionRuntime;
 import java.io.File;
@@ -23,7 +24,7 @@ import java.util.Set;
  * unit testing where each test case uses a fresh {@link FusionRuntime}.
  * <p>
  * At present, only file-based sources are instrumented. This includes sources
- * loaded from a file-based {@link ModuleRepository} as well as scripts from
+ * loaded from a file-based {@code ModuleRepository} as well as scripts from
  * other locations.
  * <p>
  * Instances of this class are interned in a weak-reference cache, keyed by
@@ -42,7 +43,7 @@ import java.util.Set;
  *
  * @see CoverageConfiguration
  */
-public final class _Private_CoverageCollectorImpl
+public final class CoverageCollectorImpl
     implements _Private_CoverageCollector
 {
     // TODO Remove _Private_ prefix from this class; it's not used outside of
@@ -55,7 +56,7 @@ public final class _Private_CoverageCollectorImpl
     private final CoverageDatabase myDatabase;
 
 
-    private _Private_CoverageCollectorImpl(File dataDir)
+    private CoverageCollectorImpl(File dataDir)
         throws IOException
     {
         myConfig   = new CoverageConfiguration(dataDir);
@@ -69,19 +70,19 @@ public final class _Private_CoverageCollectorImpl
      * TODO: Can we streamline this to {@code ReferenceQueue<Closeable>}?
      */
     private static final
-    ReferenceQueue<_Private_CoverageCollectorImpl> ourReferenceQueue =
+    ReferenceQueue<CoverageCollectorImpl> ourReferenceQueue =
         new ReferenceQueue<>();
 
 
     // TODO A soft reference might be even better, to retain the collector as
     //      long as possible.
     private static final class CollectorRef
-        extends WeakReference<_Private_CoverageCollectorImpl>
+        extends WeakReference<CoverageCollectorImpl>
     {
         private File             myFile;
         private CoverageDatabase myDatabase;
 
-        CollectorRef(_Private_CoverageCollectorImpl referent)
+        CollectorRef(CoverageCollectorImpl referent)
         {
             super(referent, ourReferenceQueue);
 
@@ -207,7 +208,7 @@ public final class _Private_CoverageCollectorImpl
 
         if (ourShutdownHook == null)
         {
-            ourShutdownHook = new Thread(_Private_CoverageCollectorImpl::emptyCache);
+            ourShutdownHook = new Thread(CoverageCollectorImpl::emptyCache);
 
             Runtime.getRuntime().addShutdownHook(ourShutdownHook);
         }
@@ -296,8 +297,7 @@ public final class _Private_CoverageCollectorImpl
         }
     }
 
-    public static synchronized
-    _Private_CoverageCollectorImpl fromDirectory(File dataDir)
+    public static synchronized CoverageCollectorImpl fromDirectory(File dataDir)
         throws IOException
     {
         initCache();
@@ -306,7 +306,7 @@ public final class _Private_CoverageCollectorImpl
         // don't lead to collectors overwriting each other's database.
         dataDir = dataDir.getCanonicalFile();
 
-        _Private_CoverageCollectorImpl collector;
+        CoverageCollectorImpl collector;
 
         CollectorRef ref = ourCollectorCache.get(dataDir);
         if (ref != null)
@@ -332,7 +332,7 @@ public final class _Private_CoverageCollectorImpl
 
         try
         {
-            collector = new _Private_CoverageCollectorImpl(dataDir);
+            collector = new CoverageCollectorImpl(dataDir);
         }
         catch (IOException e)
         {
@@ -344,7 +344,7 @@ public final class _Private_CoverageCollectorImpl
         return collector;
     }
 
-    public static _Private_CoverageCollectorImpl fromDirectory(String dataDir)
+    public static CoverageCollectorImpl fromDirectory(String dataDir)
         throws IOException
     {
         return fromDirectory(new File(dataDir));
@@ -355,7 +355,7 @@ public final class _Private_CoverageCollectorImpl
     // Managing the coverage data
 
 
-    void noteRepository(File repoDir)
+    public void noteRepository(File repoDir)
     {
         myDatabase.noteRepository(repoDir);
     }

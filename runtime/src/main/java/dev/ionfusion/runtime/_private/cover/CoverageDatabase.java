@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion;
+package dev.ionfusion.runtime._private.cover;
 
 import static com.amazon.ion.IonType.LIST;
 import static com.amazon.ion.IonType.STRING;
@@ -39,13 +39,13 @@ import java.util.Set;
  * {@code CoverageDatabase} instance, should access the directory until the
  * database is flushed via {@link #write()}.  This implies that instances need
  * to be interned or otherwise deduplicated, based on physical directory.
- * At present, {@link _Private_CoverageCollectorImpl} implements these
+ * At present, {@link CoverageCollectorImpl} implements these
  * constraints.
  * <p>
  * TODO: The flushing protocol would be more obvious if this class implemented
  *       {@link java.io.Closeable}.
  */
-class CoverageDatabase
+public class CoverageDatabase
 {
     private static final class SourceNameComparator
         implements Comparator<SourceName>
@@ -80,7 +80,7 @@ class CoverageDatabase
         }
     }
 
-    static final Comparator<SourceLocation> SRCLOC_COMPARE =
+    public static final Comparator<SourceLocation> SRCLOC_COMPARE =
         new SourceLocationComparator();
 
 
@@ -124,7 +124,7 @@ class CoverageDatabase
     }
 
 
-    synchronized Set<File> getRepositories()
+    public synchronized Set<File> getRepositories()
     {
         return myRepositories;
     }
@@ -171,7 +171,7 @@ class CoverageDatabase
 
 
     /** Has a location been covered? */
-    synchronized boolean locationCovered(SourceLocation loc)
+    public synchronized boolean locationCovered(SourceLocation loc)
     {
         Boolean covered = myLocations.get(loc);
         return (covered != null && covered);
@@ -179,7 +179,7 @@ class CoverageDatabase
 
 
     // TODO Collect this eagerly
-    synchronized Set<SourceName> sourceNames()
+    public synchronized Set<SourceName> sourceNames()
     {
         Set<SourceName> names = new HashSet<>();
 
@@ -211,13 +211,13 @@ class CoverageDatabase
     /**
      * @return not null.
      */
-    synchronized Set<SourceLocation> locations()
+    public synchronized Set<SourceLocation> locations()
     {
         return myLocations.keySet();
     }
 
 
-    synchronized SourceLocation[] sortedLocations(SourceName name)
+    public synchronized SourceLocation[] sortedLocations(SourceName name)
     {
         ArrayList<SourceLocation> locsList = new ArrayList<>();
 

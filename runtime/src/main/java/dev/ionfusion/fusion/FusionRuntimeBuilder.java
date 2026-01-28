@@ -3,12 +3,13 @@
 
 package dev.ionfusion.fusion;
 
-import static dev.ionfusion.fusion._Private_CoverageCollectorImpl.fromDirectory;
 import static dev.ionfusion.fusion._private.FusionUtils.readProperties;
+import static dev.ionfusion.runtime._private.cover.CoverageCollectorImpl.fromDirectory;
 import static dev.ionfusion.runtime.base.ModuleIdentity.isValidAbsoluteModulePath;
 
 import com.amazon.ion.IonCatalog;
 import com.amazon.ion.system.SimpleCatalog;
+import dev.ionfusion.runtime._private.cover.CoverageCollectorImpl;
 import dev.ionfusion.runtime.embed.FusionRuntime;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.File;
@@ -926,7 +927,7 @@ public class FusionRuntimeBuilder
             //   Note that the property exists so tests can inject a mock.
             if (b.myCoverageDataDirectory != null)
             {
-                _Private_CoverageCollectorImpl c =
+                CoverageCollectorImpl c =
                     fromDirectory(b.myCoverageDataDirectory);
 
                 // Register the active repositories with the collector.

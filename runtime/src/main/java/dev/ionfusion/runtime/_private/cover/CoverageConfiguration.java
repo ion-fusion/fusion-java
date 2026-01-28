@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion;
+package dev.ionfusion.runtime._private.cover;
 
 import static dev.ionfusion.fusion._private.FusionUtils.readProperties;
 import static dev.ionfusion.runtime.base.ModuleIdentity.isValidAbsoluteModulePath;
@@ -54,7 +54,7 @@ import java.util.function.Predicate;
  * synthetic, unresolvable module paths that cannot be selected via the
  * module-based properties above.
  */
-final class CoverageConfiguration
+public final class CoverageConfiguration
 {
     private static final String CONFIG_FILE_NAME          = "config.properties";
     private static final String PROPERTY_INCLUDED_MODULES = "IncludedModules";
@@ -114,7 +114,7 @@ final class CoverageConfiguration
     }
 
 
-    CoverageConfiguration(File dataDir)
+    public CoverageConfiguration(File dataDir)
         throws IOException
     {
         File myConfigFile = new File(dataDir, CONFIG_FILE_NAME);
@@ -161,7 +161,7 @@ final class CoverageConfiguration
     /**
      * @return not null.
      */
-    Set<Path> getIncludedSourceDirs()
+    public Set<Path> getIncludedSourceDirs()
     {
         return myIncludedSourceDirs;
     }
@@ -182,7 +182,7 @@ final class CoverageConfiguration
      *
      * @param file may be null.
      */
-    boolean fileIsSelected(Path file)
+    public boolean fileIsSelected(Path file)
     {
         return (file != null) && myIncludedSourceDirs.stream().anyMatch(file::startsWith);
     }
@@ -236,7 +236,7 @@ final class CoverageConfiguration
          * @param configFile where the {@code props} came from; used only for error messages.
          * @param props must not be null.
          *
-         * @throws FusionException if an entry is not an absolute module path.
+         * @throws IOException if an entry is not an absolute module path.
          */
         public SimpleModuleIdentitySelector(File configFile, Properties props)
             throws IOException
