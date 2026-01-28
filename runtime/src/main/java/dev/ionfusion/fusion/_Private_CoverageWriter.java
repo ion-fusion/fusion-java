@@ -309,7 +309,9 @@ public final class _Private_CoverageWriter
         // modules that are not used and don't appear in the database.
         for (File f : myDatabase.getRepositories())
         {
-            discoverModulesInRepository(f.toPath(), myConfig.myModuleSelector, myModules::add);
+            discoverModulesInRepository(f.toPath(),
+                                        myConfig::moduleIsSelected,
+                                        myModules::add);
         }
 
         // Now do the same thing for non-repository source trees.
@@ -324,9 +326,8 @@ public final class _Private_CoverageWriter
             if (sourceName != null)
             {
                 ModuleIdentity id = sourceName.getModuleIdentity();
-                // TODO Why doesn't this use myConfig.moduleIsSelected(id) ?
                 // TODO Why would this selector differ from the collection-time?
-                if (id != null && myConfig.myModuleSelector.test(id))
+                if (myConfig.moduleIsSelected(id))
                 {
                     myModules.add(id);
 

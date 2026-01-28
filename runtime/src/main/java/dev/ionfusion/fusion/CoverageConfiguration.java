@@ -62,7 +62,7 @@ final class CoverageConfiguration
     private static final String PROPERTY_INCLUDED_SOURCES = "IncludedSources";
 
 
-    final Predicate<ModuleIdentity> myModuleSelector;
+    private final Predicate<ModuleIdentity> myModuleSelector;
 
     /**
      * Each element is an absolute path to a directory.
@@ -167,7 +167,7 @@ final class CoverageConfiguration
     }
 
 
-    private boolean moduleIsSelected(ModuleIdentity id)
+    public boolean moduleIsSelected(ModuleIdentity id)
     {
         // If no module identity, we must match a requested source directory.
         if (id == null) return false;
