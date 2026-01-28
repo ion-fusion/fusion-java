@@ -80,12 +80,12 @@ final class CoverageConfiguration
      * @return a set of absolute module paths, or null if the {@code propertyName}
      * doesn't have an entry in the {@code props}.
      *
-     * @throws FusionException if an entry is not an absolute module path.
+     * @throws IOException if an entry is not an absolute module path.
      */
     private static Set<String> readModuleSet(File       configFile,
                                              Properties props,
                                              String     propertyName)
-        throws FusionException
+        throws IOException
     {
         String mods = props.getProperty(propertyName);
         if (mods == null) return null;
@@ -106,7 +106,7 @@ final class CoverageConfiguration
                     "Configuration error in " + configFile
                     + ": " + propertyName
                     + " contains an invalid absolute module path: " + mod;
-                throw new FusionException(message);
+                throw new IOException(message);
             }
         }
 
@@ -115,7 +115,7 @@ final class CoverageConfiguration
 
 
     CoverageConfiguration(File dataDir)
-        throws FusionException, IOException
+        throws IOException
     {
         File myConfigFile = new File(dataDir, CONFIG_FILE_NAME);
         if (myConfigFile.exists())
@@ -143,7 +143,7 @@ final class CoverageConfiguration
                             "Configuration error in " + myConfigFile
                             + ": " + PROPERTY_INCLUDED_SOURCES
                             + " contains an invalid directory: " + source;
-                        throw new FusionException(message);
+                        throw new IOException(message);
                     }
                 }
             }
@@ -251,7 +251,7 @@ final class CoverageConfiguration
          * @throws FusionException if an entry is not an absolute module path.
          */
         public SimpleModuleIdentitySelector(File configFile, Properties props)
-            throws FusionException
+            throws IOException
         {
             myIncludedModules =
                 readModuleSet(configFile, props, PROPERTY_INCLUDED_MODULES);

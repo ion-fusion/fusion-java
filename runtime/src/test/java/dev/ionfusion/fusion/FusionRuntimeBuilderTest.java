@@ -45,7 +45,7 @@ public class FusionRuntimeBuilderTest
 
 
     private FusionRuntime build(FusionRuntimeBuilder b)
-        throws FusionException
+        throws Exception
     {
         b = b.withBootstrapRepository(fusionBootstrapDirectory().toFile());
         return b.build();
@@ -252,7 +252,7 @@ public class FusionRuntimeBuilderTest
 
     @Test
     public void testBuildingDefaultIonCatalog()
-        throws FusionException
+        throws Exception
     {
         FusionRuntimeBuilder b = standard();
         FusionRuntime r = build(b);
@@ -286,7 +286,7 @@ public class FusionRuntimeBuilderTest
 
     private void checkCurrentOutputPort(OutputStream expected,
                                         FusionRuntimeBuilder b)
-        throws FusionException
+        throws Exception
     {
         TopLevel t = build(b).makeTopLevel(GlobalState.KERNEL_MODULE_NAME);
         Object actual = t.eval("(current_output_port)");
@@ -334,7 +334,7 @@ public class FusionRuntimeBuilderTest
 
 
     private void checkCurrentDirectory(String expectedDir, FusionRuntimeBuilder b)
-        throws FusionException
+        throws Exception
     {
         TopLevel t = build(b).getDefaultTopLevel();
         t.requireModule("/fusion/io");
@@ -460,7 +460,7 @@ public class FusionRuntimeBuilderTest
     }
 
     private _Private_CoverageCollector makeCollector(Path dir)
-        throws FusionException
+        throws Exception
     {
         FusionRuntime r =
             runtimeBuilder().copy()

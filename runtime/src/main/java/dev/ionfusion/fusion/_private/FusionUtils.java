@@ -3,10 +3,8 @@
 
 package dev.ionfusion.fusion._private;
 
-import static dev.ionfusion.fusion._Private_Trampoline.newFusionException;
 import static java.nio.file.Files.newInputStream;
 
-import dev.ionfusion.fusion.FusionException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -115,10 +113,10 @@ public final class FusionUtils
     /**
      * Reads properties from a URL.
      *
-     * @throws FusionException if there's a problem reading the resource.
+     * @throws IOException if there's a problem reading the resource.
      */
     public static Properties readProperties(URL resource)
-        throws FusionException
+        throws IOException
     {
         try (InputStream stream = resource.openStream())
         {
@@ -130,7 +128,7 @@ public final class FusionUtils
         {
             String message =
                 "Error reading properties from resource " + resource;
-            throw newFusionException(message, e);
+            throw new IOException(message, e);
         }
     }
 
@@ -140,10 +138,10 @@ public final class FusionUtils
      *
      * @param file must be a readable properties file.
      *
-     * @throws FusionException if there's a problem reading the file.
+     * @throws IOException if there's a problem reading the file.
      */
     public static Properties readProperties(File file)
-        throws FusionException
+        throws IOException
     {
         try (InputStream stream = newInputStream(file.toPath()))
         {
@@ -153,9 +151,8 @@ public final class FusionUtils
         }
         catch (IOException e)
         {
-            String message =
-                "Error reading properties from file " + file;
-            throw newFusionException(message, e);
+            String message = "Error reading properties from file " + file;
+            throw new IOException(message, e);
         }
     }
 }

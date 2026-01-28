@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 import dev.ionfusion.runtime.base.SourceLocation;
+import java.io.IOException;
 
 /**
  * EXPERIMENTAL extension point for collecting code-coverage statistics.
@@ -55,5 +56,5 @@ public interface _Private_CoverageCollector
     //      Perhaps close() would be better?  save()?
     // This appears to be unused.
     void flushMetrics()
-        throws FusionException;
+        throws IOException;
 }

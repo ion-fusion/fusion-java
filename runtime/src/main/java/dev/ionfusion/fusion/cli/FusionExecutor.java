@@ -10,6 +10,7 @@ import dev.ionfusion.fusion.ExitException;
 import dev.ionfusion.fusion.FusionException;
 import dev.ionfusion.runtime.embed.FusionRuntime;
 import dev.ionfusion.runtime.embed.TopLevel;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
@@ -31,7 +32,7 @@ abstract class FusionExecutor
 
 
     FusionRuntime runtime()
-        throws FusionException, UsageException
+        throws IOException, FusionException, UsageException
     {
         return myGlobalOptions.runtime();
     }

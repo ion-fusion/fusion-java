@@ -192,7 +192,7 @@ final class GlobalOptions
     }
 
     FusionRuntime runtime()
-        throws FusionException, UsageException
+        throws IOException, FusionException, UsageException
     {
         // Lazily loading a runtime that can be global across commands.
         if (myRuntime == null)

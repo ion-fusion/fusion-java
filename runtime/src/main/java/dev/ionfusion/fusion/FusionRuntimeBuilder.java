@@ -12,6 +12,7 @@ import com.amazon.ion.system.SimpleCatalog;
 import dev.ionfusion.runtime.embed.FusionRuntime;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -227,32 +228,24 @@ public class FusionRuntimeBuilder
      * @return this builder, if it's mutable or if no properties were
      * recognized; otherwise a new mutable builder.
      *
-     * @throws FusionException if there's a problem applying the properties.
+     * @throws IllegalArgumentException if there's a problem applying the properties.
      */
     public FusionRuntimeBuilder withConfigProperties(Properties props)
-        throws FusionException
     {
         FusionRuntimeBuilder b = this;
 
-        try
+        String path = props.getProperty(PROPERTY_BOOTSTRAP_REPOSITORY);
+        if (path != null)
         {
-            String path = props.getProperty(PROPERTY_BOOTSTRAP_REPOSITORY);
-            if (path != null)
-            {
-                File f = new File(path);
-                b = b.withBootstrapRepository(f);
-            }
-
-            path = props.getProperty(PROPERTY_COVERAGE_DATA_DIR);
-            if (path != null)
-            {
-                File f = new File(path);
-                b = b.withCoverageDataDirectory(f);
-            }
+            File f = new File(path);
+            b = b.withBootstrapRepository(f);
         }
-        catch (IllegalArgumentException e)
+
+        path = props.getProperty(PROPERTY_COVERAGE_DATA_DIR);
+        if (path != null)
         {
-            throw new FusionException(e.getMessage());
+            File f = new File(path);
+            b = b.withCoverageDataDirectory(f);
         }
 
         return b;
@@ -276,11 +269,11 @@ public class FusionRuntimeBuilder
      * @return this builder, if it's mutable or if no properties were
      * recognized; otherwise a new mutable builder.
      *
-     * @throws FusionException if there's a problem reading the resource or
-     * applying the properties.
+     * @throws IOException if there's a problem reading the resource.
+     * @throws IllegalArgumentException if there's a problem applying the properties.
      */
     public FusionRuntimeBuilder withConfigProperties(URL resource)
-        throws FusionException
+        throws IOException
     {
         if (resource == null) return this;
 
@@ -311,14 +304,14 @@ public class FusionRuntimeBuilder
      * @return this builder, if it's mutable or if no properties were
      * recognized; otherwise a new mutable builder.
      *
-     * @throws FusionException if there's a problem reading the resource or
-     * applying the properties.
+     * @throws IOException if there's a problem reading the resource.
+     * @throws IllegalArgumentException if there's a problem applying the properties.
      *
      * @see Class#getResource(String)
      */
     public FusionRuntimeBuilder withConfigProperties(Class<?> classForLoading,
                                                      String resourceName)
-        throws FusionException
+        throws IOException
     {
         URL url = classForLoading.getResource(resourceName);
         return withConfigProperties(url);
@@ -861,7 +854,7 @@ public class FusionRuntimeBuilder
 
 
     private FusionRuntimeBuilder fillDefaults()
-        throws FusionException
+        throws IOException
     {
         // Ensure that we don't modify the user's builder.
         FusionRuntimeBuilder b = copy();
@@ -970,11 +963,12 @@ public class FusionRuntimeBuilder
      * @throws FusionException if there's a problem bootstrapping the runtime.
      */
     public FusionRuntime build()
-        throws IllegalStateException, FusionException
+        throws IOException, IllegalStateException, FusionException
     {
+        FusionRuntimeBuilder b = fillDefaults();
+
         try
         {
-            FusionRuntimeBuilder b = fillDefaults();
             return new StandardRuntime(b);
         }
         catch (FusionInterrupt e)

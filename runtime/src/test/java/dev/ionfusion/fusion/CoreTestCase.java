@@ -30,6 +30,7 @@ import com.amazon.ion.system.IonSystemBuilder;
 import dev.ionfusion.runtime.embed.FusionRuntime;
 import dev.ionfusion.runtime.embed.TopLevel;
 import dev.ionfusion.testing.StdioTestCase;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.file.Path;
@@ -107,7 +108,14 @@ public class CoreTestCase
     {
         if (myRuntime == null)
         {
-            myRuntime = runtimeBuilder().build();
+            try
+            {
+                myRuntime = runtimeBuilder().build();
+            }
+            catch (IOException e)
+            {
+                throw new RuntimeException(e);
+            }
         }
         return myRuntime;
     }

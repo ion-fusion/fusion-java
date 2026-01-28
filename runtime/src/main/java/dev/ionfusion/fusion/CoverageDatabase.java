@@ -566,5 +566,10 @@ class CoverageDatabase
                 }
             }
         }
+        catch (IOException e)
+        {
+            String msg = "Error reading coverage data at " + myStorageFile;
+            throw new IOException(msg, e);
+        }
     }
 }

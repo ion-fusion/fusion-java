@@ -1,7 +1,10 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion;import java.nio.file.Path;
+package dev.ionfusion.fusion;
+
+import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class TestSetup
@@ -77,7 +80,14 @@ public class TestSetup
         // This has no effect in an IDE, since this file is not on its copy of
         // the test classpath.  In scripted builds, this provides the coverage
         // configuration. Historically, it also provided the bootstrap repo.
-        b = b.withConfigProperties(TestSetup.class, "/fusion.properties");
+        try
+        {
+            b = b.withConfigProperties(TestSetup.class, "/fusion.properties");
+        }
+        catch (IOException e)
+        {
+            throw new FusionException(e);
+        }
 
         return b;
     }

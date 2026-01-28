@@ -56,7 +56,7 @@ public final class _Private_CoverageCollectorImpl
 
 
     private _Private_CoverageCollectorImpl(File dataDir)
-        throws FusionException, IOException
+        throws IOException
     {
         myConfig   = new CoverageConfiguration(dataDir);
         myDatabase = new CoverageDatabase(dataDir.toPath());
@@ -199,7 +199,6 @@ public final class _Private_CoverageCollectorImpl
      * Called before each access to the {@link #ourCollectorCache}.
      */
     private static synchronized void initCache()
-        throws FusionException
     {
         if (ourCollectorCache == null)
         {
@@ -218,18 +217,11 @@ public final class _Private_CoverageCollectorImpl
                 }
             };
 
-            try
-            {
-                Runtime.getRuntime().addShutdownHook(ourShutdownHook);
-            }
-            catch (IllegalStateException e)
-            {
-                throw new FusionException("The JMV is shutting down.");
-            }
+            Runtime.getRuntime().addShutdownHook(ourShutdownHook);
         }
         else if (ourShutdownHasStarted)
         {
-            throw new FusionException("The JMV is shutting down.");
+            throw new IllegalStateException("The JVM is shutting down.");
         }
     }
 
@@ -266,7 +258,7 @@ public final class _Private_CoverageCollectorImpl
             }
             catch (IllegalStateException e)
             {
-                // The JMV is shutting down. Nothing to do.
+                // The JVM is shutting down. Nothing to do.
             }
 
             Flusher.stop();
@@ -314,20 +306,13 @@ public final class _Private_CoverageCollectorImpl
 
     public static synchronized
     _Private_CoverageCollectorImpl fromDirectory(File dataDir)
-        throws FusionException
+        throws IOException
     {
         initCache();
 
         // Canonicalize the dataDir, so different paths to the same directory
         // don't lead to collectors overwriting each other's database.
-        try
-        {
-            dataDir = dataDir.getCanonicalFile();
-        }
-        catch (IOException e)
-        {
-            throw new FusionException("Error getting canonical path", e);
-        }
+        dataDir = dataDir.getCanonicalFile();
 
         _Private_CoverageCollectorImpl collector;
 
@@ -348,7 +333,7 @@ public final class _Private_CoverageCollectorImpl
             }
             catch (IOException e)
             {
-                throw new FusionException("Error writing coverage data", e);
+                throw new IOException("Error writing coverage data", e);
             }
             // ref is now useless. Fall through and create a new one.
         }
@@ -359,7 +344,7 @@ public final class _Private_CoverageCollectorImpl
         }
         catch (IOException e)
         {
-            throw new FusionException("Error reading coverage data", e);
+            throw new IOException("Error reading coverage data", e);
         }
 
         addToCache(dataDir, new CollectorRef(collector));
@@ -368,7 +353,7 @@ public final class _Private_CoverageCollectorImpl
     }
 
     public static _Private_CoverageCollectorImpl fromDirectory(String dataDir)
-        throws FusionException
+        throws IOException
     {
         return fromDirectory(new File(dataDir));
     }
@@ -408,7 +393,7 @@ public final class _Private_CoverageCollectorImpl
 
     @Override
     public void flushMetrics()
-        throws FusionException
+        throws IOException
     {
         try
         {
@@ -416,7 +401,7 @@ public final class _Private_CoverageCollectorImpl
         }
         catch (IOException e)
         {
-            throw new FusionException("Error writing coverage data", e);
+            throw new IOException("Error writing Fusion coverage data", e);
         }
     }
 }
