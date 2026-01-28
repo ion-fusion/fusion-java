@@ -208,15 +208,7 @@ public final class _Private_CoverageCollectorImpl
 
         if (ourShutdownHook == null)
         {
-            // TODO JAVA8 Use a lambda
-            ourShutdownHook = new Thread()
-            {
-                @Override
-                public void run()
-                {
-                    emptyCache();
-                }
-            };
+            ourShutdownHook = new Thread(_Private_CoverageCollectorImpl::emptyCache);
 
             try
             {

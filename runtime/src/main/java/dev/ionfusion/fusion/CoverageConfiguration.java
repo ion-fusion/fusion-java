@@ -150,7 +150,7 @@ final class CoverageConfiguration
         }
         else
         {
-            myModuleSelector = new TrueModuleIdentitySelector();
+            myModuleSelector = (id) -> true;
         }
     }
 
@@ -210,18 +210,6 @@ final class CoverageConfiguration
 
 
     //=========================================================================
-
-
-    // TODO JAVA8 makes this unnecessary; use a trivial lambda instead.
-    private static class TrueModuleIdentitySelector
-        implements Predicate<ModuleIdentity>
-    {
-        @Override
-        public boolean test(ModuleIdentity id)
-        {
-            return true;
-        }
-    }
 
 
     /**
