@@ -95,7 +95,8 @@ the expected and actual values.
     "/fusion/experimental/syntax"
     "/fusion/ffi/java"
     "/fusion/parameter"
-    "/fusion/private/continuation")
+    "/fusion/private/continuation"
+    "/fusion/private/io")
 
 
   (define check_stack_param
@@ -105,6 +106,9 @@ the expected and actual values.
 
   (define CheckExn (java_class "dev.ionfusion.fusion.CheckException"))
 
+  (define make_check_error
+    (java_new "dev.ionfusion.fusion.CheckException$MakeCheckErrorProc"))
+
   (defpub (is_check_error v)
     '''
 Determines whether a value is a `check_error` exception, a subtype of
@@ -113,13 +117,53 @@ Determines whether a value is a `check_error` exception, a subtype of
     (java_instance_of CheckExn v))
 
 
+  (define (display_field_val name value)
+    (display name ": ")
+    (writeln value))
+
+  (define (display_field frame name)
+    (when (has_key frame name)
+      (display_field_val name (element frame name))))
+
+  (define (display_frame frame)
+    (displayln)
+    (display_field frame "name")
+    (display_field frame "expression")
+    (if (or (has_key frame "actual")
+            (has_key frame "expected"))
+      (begin (display_field frame "actual")
+             (display_field frame "expected"))
+      (display_field frame "args"))
+    (for [((name value) (remove_keys frame
+                          "name" "expression" "actual" "expected" "args"))]
+      (display_field_val name value)))
+
+  (define (display_stack stack)
+    // Elements without a `name` are merged into the next one that does.
+    (let loop [(frame null),
+               (stack stack)]
+      (if (is_pair stack)
+        (lets [(entry (head stack)),
+               (frame (if frame (struct_merge frame entry) entry)),
+               (has_name (has_key frame "name"))]
+          (if has_name
+            (begin (display_frame frame)
+                   (loop null (tail stack)))
+            (loop frame (tail stack))))
+        (when frame
+          (display_frame frame)))))
+
+
   (defpub (fail_check)
     '''
 Raises a `check_error`, using the current context stack as populated by the
 dynamically enclosing checks.
     '''
-    (raise (java_new "dev.ionfusion.fusion.CheckException"
-             (current_continuation_mark_sexp check_stack_param))))
+    (lets [(stack (current_continuation_mark_sexp check_stack_param)),
+           (msg (with_output_to_string
+                  (display "Check failure:")
+                  (display_stack stack)))]
+      (raise (make_check_error msg))))
 
 
   // Not public: the signature is awkward.

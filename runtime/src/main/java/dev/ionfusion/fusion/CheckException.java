@@ -3,116 +3,33 @@
 
 package dev.ionfusion.fusion;
 
-import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
-import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
-import static dev.ionfusion.fusion.FusionStruct.unsafeStructElt;
-import static dev.ionfusion.fusion.FusionStruct.unsafeStructHasKey;
-import static dev.ionfusion.fusion.FusionStruct.unsafeStructKeys;
-import static dev.ionfusion.fusion.FusionStruct.unsafeStructMerge;
-import static dev.ionfusion.fusion.FusionStruct.unsafeStructRemoveKeys;
-import java.io.IOException;
+import static dev.ionfusion.fusion.FusionString.checkNonEmptyStringArg;
 
+/**
+ * Only needed so that {@code is_check_error} can detect it.
+ */
 @SuppressWarnings("serial")
 final class CheckException
     extends FusionErrorException
 {
-    private final Object myStack;
-
-    CheckException(Object stack)
+    CheckException(String message)
     {
-        super("check failure");
-        myStack = stack;
-    }
-
-    private void displayField(Evaluator eval, Appendable out,
-                              String fieldName, Object value)
-        throws IOException, FusionException
-    {
-        out.append(fieldName);
-        out.append(": ");
-        FusionIo.write(eval, out, value);
-        out.append('\n');
-    }
-
-    private void displayField(Evaluator eval, Appendable out,
-                              Object frame, String fieldName)
-        throws IOException, FusionException
-    {
-        if (unsafeStructHasKey(eval, frame, fieldName))
-        {
-            Object v = unsafeStructElt(eval, frame, fieldName);
-            displayField(eval, out, fieldName, v);
-        }
-    }
-
-    private void displayFrame(final Evaluator  eval,
-                              final Appendable out,
-                              Object frame)
-        throws IOException, FusionException
-    {
-        displayField(eval, out, frame, "name");
-        displayField(eval, out, frame, "expression");
-
-        if (unsafeStructHasKey(eval, frame, "actual") ||
-            unsafeStructHasKey(eval, frame, "expected"))
-        {
-            displayField(eval, out, frame, "actual");
-            displayField(eval, out, frame, "expected");
-        }
-        else
-        {
-            displayField(eval, out, frame, "args");
-        }
-
-        frame = unsafeStructRemoveKeys(eval, frame,
-                                       new String[]{ "name",
-                                                     "expression",
-                                                     "actual",
-                                                     "expected",
-                                                     "args" });
-
-        for (String fieldName : unsafeStructKeys(eval, frame))
-        {
-            Object value = unsafeStructElt(eval, frame, fieldName);
-            displayField(eval, out, fieldName, value);
-        }
+        super(message);
     }
 
 
-    @Override
-    void displayMessage(Evaluator eval, Appendable out)
-        throws IOException, FusionException
+    /**
+     * In Fusion this is {@code make_check_error}.
+     */
+    static final class MakeCheckErrorProc
+        extends Procedure1
     {
-        out.append("Check failure:");
-
-        Object frame = null;
-        for (Object stack = myStack;
-             FusionSexp.isPair(eval, stack);
-             stack = unsafePairTail(eval, stack))
+        @Override
+        Object doApply(Evaluator eval, Object message)
+            throws FusionException
         {
-            Object entry = unsafePairHead(eval, stack);
-
-            if (frame == null)
-            {
-                frame = entry;
-            }
-            else
-            {
-                frame = unsafeStructMerge(eval, frame, entry);
-            }
-
-            if (unsafeStructHasKey(eval, frame, "name"))
-            {
-                out.append('\n');
-                displayFrame(eval, out, frame);
-                frame = null;
-            }
-        }
-
-        if (frame != null)
-        {
-            out.append('\n');
-            displayFrame(eval, out, frame);
+            String msg = checkNonEmptyStringArg(eval, this, 0, message);
+            return new CheckException(msg);
         }
     }
 }
