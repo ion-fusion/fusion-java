@@ -338,12 +338,12 @@ public class ListTest
         Evaluator eval = evaluator();
         Object nullList = FusionList.nullList(eval);
 
-        Throwable e =
+        FusionException e =
             assertThrows(ArgumentException.class,
                          () -> checkActualListArg(eval,
                                                   new UnsafeListSizeProc(),
                                                   0,
                                                   nullList));
-        assertThat(e.getMessage(), containsString("non-null list"));
+        assertThat(e.getBaseMessage(), containsString("non-null list"));
     }
 }

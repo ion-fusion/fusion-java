@@ -30,11 +30,9 @@ public class ArgumentExceptionTest
         assertEquals(exception.getBadPos(), sanitized.getBadPos());
         assertEquals(exception.getActualsLength(), sanitized.getActualsLength());
 
-        StringBuilder buff = new StringBuilder();
-        sanitized.displayMessage(evaluator(), buff);
         assertEquals(
             "testSanitized expects nop as 1st argument, given " + REDACTED_STRING,
-            buff.toString());
+            sanitized.getBaseMessage());
     }
 
     @Test
@@ -52,13 +50,11 @@ public class ArgumentExceptionTest
         assertEquals(exception.getBadPos(), sanitized.getBadPos());
         assertEquals(exception.getActualsLength(), sanitized.getActualsLength());
 
-        StringBuilder buff = new StringBuilder();
-        sanitized.displayMessage(evaluator(), buff);
         assertEquals(
             "testSanitized expects nop\nArguments were:" +
             "\n  " + REDACTED_STRING +
             "\n  " + REDACTED_STRING +
             "\n  " + REDACTED_STRING,
-            buff.toString());
+            sanitized.getBaseMessage());
     }
 }

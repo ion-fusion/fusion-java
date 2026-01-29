@@ -48,7 +48,37 @@ final class ArgumentException
      */
     public static ArgumentException makeArgumentError(Evaluator eval, String name, String expectation, int badPos, Object... actuals)
     {
-        return new ArgumentException(name, expectation, badPos, actuals);
+        StringBuilder b = new StringBuilder();
+        b.append(name);
+        b.append(" expects ");
+        b.append(expectation);
+
+        int actualsLen = actuals.length;
+        if (0 <= badPos)
+        {
+            b.append(" as ");
+            writeFriendlyIndex(b, badPos);
+            b.append(" argument, given ");
+            safeWrite(eval, b, actuals[actualsLen == 1 ? 0 : badPos]);
+        }
+
+        if (actualsLen != 1 || badPos < 0)
+        {
+            b.append(badPos < 0
+                         ? "\nArguments were:"
+                         : "\nOther arguments were:");
+
+            for (int i = 0; i < actualsLen; i++)
+            {
+                if (i != badPos)
+                {
+                    b.append("\n  ");
+                    safeWrite(eval, b, actuals[i]);
+                }
+            }
+        }
+
+        return new ArgumentException(b.toString(), name, expectation, badPos, actuals);
     }
 
     /**
@@ -56,10 +86,11 @@ final class ArgumentException
      *   -1 means a specific position isn't implicated.
      * @param actuals must not be null or zero-length.
      */
-    private ArgumentException(String name, String expectation,
+    private ArgumentException(String message,
+                              String name, String expectation,
                               int badPos, Object... actuals)
     {
-        super("arg type failure");
+        super(message);
         assert name != null && actuals.length != 0;
 
         // We allow badPos to be anything if there's only one actual provided.
@@ -90,40 +121,5 @@ final class ArgumentException
     int getActualsLength()
     {
         return myActuals.length;
-    }
-
-    @Override
-    void displayMessage(Evaluator eval, Appendable b)
-        throws IOException, FusionException
-    {
-        int actualsLen = myActuals.length;
-
-        b.append(myName);
-        b.append(" expects ");
-        b.append(myExpectation);
-
-        if (0 <= myBadPos)
-        {
-            b.append(" as ");
-            writeFriendlyIndex(b, myBadPos);
-            b.append(" argument, given ");
-            safeWrite(eval, b, myActuals[actualsLen == 1 ? 0 : myBadPos]);
-        }
-
-        if (actualsLen != 1 || myBadPos < 0)
-        {
-            b.append(myBadPos < 0
-                     ? "\nArguments were:"
-                     : "\nOther arguments were:");
-
-            for (int i = 0; i < actualsLen; i++)
-            {
-                if (i != myBadPos)
-                {
-                    b.append("\n  ");
-                    safeWrite(eval, b, myActuals[i]);
-                }
-            }
-        }
     }
 }
