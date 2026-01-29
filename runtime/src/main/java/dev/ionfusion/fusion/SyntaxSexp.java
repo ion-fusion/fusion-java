@@ -366,7 +366,7 @@ final class SyntaxSexp
 
 
     @Override
-    Object unwrap(Evaluator eval)
+    BaseSexp<?> unwrap(Evaluator eval)
         throws FusionException
     {
         pushWraps(eval);

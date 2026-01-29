@@ -3,6 +3,9 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
+
+import dev.ionfusion.fusion.FusionSexp.BaseSexp;
 import dev.ionfusion.fusion.ModuleNamespace.CompiledImportedVariableReference;
 import dev.ionfusion.fusion.TopLevelNamespace.CompiledTopLevelVariableReference;
 import dev.ionfusion.fusion._private.doc.model.BindingDoc;
@@ -106,7 +109,10 @@ public final class _Private_HelpForm
     CompiledForm compile(Compiler comp, Environment env, SyntaxSexp stx)
         throws FusionException
     {
-        CompiledForm[] children = comp.compileExpressions(env, stx, 1);
+        Evaluator eval = comp.getEvaluator();
+        BaseSexp<?> forms = (BaseSexp<?>) unsafePairTail(eval, stx.unwrap(eval));
+
+        CompiledForm[] children = comp.compileExpressions(env, forms);
         return new CompiledHelp(children);
     }
 

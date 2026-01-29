@@ -41,6 +41,6 @@ final class BeginForm
     CompiledForm compile(Compiler comp, Environment env, SyntaxSexp stx)
         throws FusionException
     {
-        return comp.compileBegin(env, stx, 1, stx.size());
+        return comp.compileBegin(env, stx, 1);
     }
 }

@@ -6,8 +6,10 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionIo.safeWrite;
 import static dev.ionfusion.fusion.FusionList.immutableList;
 import static dev.ionfusion.fusion.FusionList.unsafeListElement;
+import static dev.ionfusion.fusion.FusionSexp.isPair;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
+import static dev.ionfusion.fusion.FusionSexp.unsafePairTailN;
 import static dev.ionfusion.fusion.FusionString.stringToJavaString;
 import static dev.ionfusion.fusion.FusionStruct.emptyStruct;
 import static dev.ionfusion.fusion.FusionStruct.immutableStruct;
@@ -20,6 +22,7 @@ import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.LetValuesForm.compilePlainLet;
 import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_OBJECT_ARRAY;
 
+import dev.ionfusion.fusion.FusionSexp.BaseSexp;
 import dev.ionfusion.fusion.FusionStruct.StructFieldVisitor;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.LambdaForm.CompiledLambdaBase;
@@ -203,62 +206,45 @@ class Compiler
     /**
      * Compiles a sequence of individual expressions.
      *
-     * @return not null, but perhaps {@link CompiledForm#EMPTY_ARRAY}.
+     * @return not null, but perhaps empty.
      */
-    CompiledForm[] compileExpressions(Environment env, SyntaxSequence source,
-                                      int from, int to)
+    CompiledForm[] compileExpressions(Environment env, BaseSexp<?> exprs)
         throws FusionException
     {
-        int size = to - from;
-
-        if (size == 0) return CompiledForm.EMPTY_ARRAY;
-
+        int size = exprs.size();
         CompiledForm[] forms = new CompiledForm[size];
-        for (int i = from; i < to; i++)
+        for (int i = 0; i < size; i++)
         {
-            SyntaxValue form = source.get(myEval, i);
-            forms[i - from] = compileExpression(env, form);
+            SyntaxValue form = (SyntaxValue) unsafePairHead(myEval, exprs);
+            forms[i] = compileExpression(env, form);
+            exprs = (BaseSexp<?>) unsafePairTail(myEval, exprs);
         }
 
         return forms;
     }
 
 
-    /**
-     * Compiles a sequence of individual expressions.
-     *
-     * @return not null, but perhaps {@link CompiledForm#EMPTY_ARRAY}.
-     */
-    CompiledForm[] compileExpressions(Environment env, SyntaxSequence source,
-                                      int from)
-        throws FusionException
-    {
-        return compileExpressions(env, source, from, source.size());
-    }
-
-
-    /**
-     * Compiles a sequence of expressions as if in a {@code begin} expression.
-     */
-    final CompiledForm compileBegin(Environment env, SyntaxSexp stx,
-                                    int from, int to)
-        throws FusionException
-    {
-        int size = to - from;
-
-        if (size == 0) return new CompiledConstant(voidValue(myEval));
-
-        if (size == 1) return compileExpression(env, stx.get(myEval, from));
-
-        CompiledForm[] subforms = compileExpressions(env, stx, from, to);
-        // TODO Perhaps eliminate forms that are constants?
-        return new CompiledBegin(subforms);
-    }
-
     CompiledForm compileBegin(Environment env, SyntaxSexp stx, int from)
         throws FusionException
     {
-        return compileBegin(env, stx, from, stx.size());
+        BaseSexp<?> exprs = stx.unwrap(myEval);
+        exprs = (BaseSexp<?>) unsafePairTailN(myEval, exprs, from);
+
+        // Empty body
+        if (!isPair(myEval, exprs))
+        {
+            return new CompiledConstant(voidValue(myEval));
+        }
+
+        // Single body expression
+        if (!isPair(myEval, unsafePairTail(myEval, exprs)))
+        {
+            return compileExpression(env, (SyntaxValue) unsafePairHead(myEval, exprs));
+        }
+
+        CompiledForm[] subforms = compileExpressions(env, exprs);
+        // TODO Perhaps eliminate forms that are constants?
+        return new CompiledBegin(subforms);
     }
 
 
@@ -266,9 +252,13 @@ class Compiler
                                                      SyntaxSexp  stx)
         throws FusionException
     {
-        SyntaxValue procExpr = stx.get(myEval, 0);
+        BaseSexp<?> forms = stx.unwrap(myEval);
+
+        SyntaxValue procExpr = (SyntaxValue) unsafePairHead(myEval, forms);
         CompiledForm procForm = compileExpression(env, procExpr);
-        CompiledForm[] argForms = compileExpressions(env, stx, 1);
+
+        BaseSexp<?> argExprs = (BaseSexp<?>) unsafePairTail(myEval, forms);
+        CompiledForm[] argForms = compileExpressions(env, argExprs);
 
         if (procForm instanceof CompiledLambdaExact)
         {

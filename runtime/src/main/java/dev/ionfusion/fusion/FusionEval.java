@@ -4,6 +4,9 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionIo.isEof;
+import static dev.ionfusion.fusion.FusionSexp.isPair;
+import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
+import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
 import static dev.ionfusion.fusion.FusionSyntax.isSyntax;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.GlobalState.MODULE;
@@ -111,10 +114,8 @@ final class FusionEval
                 if (beginStx != null)
                 {
                     // Splice 'begin' elements into the top-level sequence.
-                    for (int i = beginStx.size() - 1; i != 0;  i--)
-                    {
-                        forms.push(beginStx.get(eval, i));
-                    }
+                    Object body = unsafePairTail(eval, beginStx.unwrap(eval));
+                    pushSexpElements(eval, forms, body);
                     stx = null;
                 }
                 else
@@ -141,6 +142,20 @@ final class FusionEval
         {
             e.addContext(topLocation);
             throw e;
+        }
+    }
+
+    /**
+     * Push the sexp elements on the stack, in reverse order.
+     */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private static void pushSexpElements(Evaluator eval, LinkedList stack, Object sexp)
+        throws FusionException
+    {
+        if (isPair(eval, sexp))
+        {
+            pushSexpElements(eval, stack, unsafePairTail(eval, sexp));
+            stack.push(unsafePairHead(eval, sexp));
         }
     }
 

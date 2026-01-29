@@ -5,8 +5,11 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionIo.safeDisplay;
 import static dev.ionfusion.fusion.FusionIo.safeWriteToString;
+import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
+import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 
+import dev.ionfusion.fusion.FusionSexp.BaseSexp;
 import dev.ionfusion.runtime.base.SourceLocation;
 
 final class AssertForm
@@ -26,10 +29,13 @@ final class AssertForm
         throws FusionException
     {
         Evaluator eval = comp.getEvaluator();
-        SyntaxValue testFormSyntax = stx.get(eval, 1);
+        BaseSexp<?> forms = (BaseSexp<?>) unsafePairTail(eval, stx.unwrap(eval));
+
+        SyntaxValue testFormSyntax = (SyntaxValue) unsafePairHead(eval, forms);
         CompiledForm testForm = comp.compileExpression(env, testFormSyntax);
 
-        CompiledForm[] messageForms = comp.compileExpressions(env, stx, 2);
+        BaseSexp<?> message = (BaseSexp<?>) unsafePairTail(eval, forms);
+        CompiledForm[] messageForms = comp.compileExpressions(env, message);
 
         SourceLocation location = testFormSyntax.getLocation();
         String expression = safeWriteToString(eval, testFormSyntax);

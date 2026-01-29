@@ -100,12 +100,10 @@ final class Expander
         if (! (stx instanceof SyntaxSexp)) return stx;
 
         SyntaxSexp sexp = (SyntaxSexp) stx;
-        if (sexp.size() == 0) return stx;
+        if (sexp.hasNoChildren()) return stx;
 
-        SyntaxValue first = sexp.get(myEval, 0);
-        if (! (first instanceof SyntaxSymbol)) return stx;
-
-        SyntaxSymbol maybeMacro = (SyntaxSymbol) first;
+        SyntaxSymbol maybeMacro = sexp.firstIdentifier(myEval);
+        if (maybeMacro == null) return stx;
 
         SyntacticForm form = maybeMacro.resolveSyntaxMaybe(env);
         if (form instanceof MacroForm)
