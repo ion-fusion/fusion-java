@@ -123,7 +123,7 @@ final class LoadHandler
         try
         {
             SyntaxSexp moduleDeclaration = (SyntaxSexp) firstTopLevel;
-            if (moduleDeclaration.size() > 1)
+            if (moduleDeclaration.size(eval) > 1)
             {
                 SyntaxSymbol moduleSym = (SyntaxSymbol)
                     moduleDeclaration.get(eval, 0);

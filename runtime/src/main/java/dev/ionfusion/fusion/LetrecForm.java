@@ -24,7 +24,7 @@ final class LetrecForm
             check.subformSeq("sequence of bindings", 1);
         SyntaxSequence bindingForms = checkBindings.form();
 
-        final int numBindings = bindingForms.size();
+        final int numBindings = bindingForms.size(eval);
         SyntaxSymbol[] boundNames = new SyntaxSymbol[numBindings];
         for (int i = 0; i < numBindings; i++)
         {
@@ -87,7 +87,7 @@ final class LetrecForm
 
         SyntaxSequence bindingForms = (SyntaxSequence) stx.get(eval, 1);
 
-        final int numBindings = bindingForms.size();
+        final int numBindings = bindingForms.size(eval);
 
         CompiledForm  [] valueForms = new CompiledForm  [numBindings];
         SourceLocation[] valueLocns = new SourceLocation[numBindings];

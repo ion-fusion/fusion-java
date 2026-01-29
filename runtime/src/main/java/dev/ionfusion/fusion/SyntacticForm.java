@@ -39,7 +39,7 @@ abstract class SyntacticForm
     {
         final Evaluator eval = expander.getEvaluator();
 
-        int size = stx.size();
+        int size = stx.size(eval);
 
         SyntaxValue[] expandedChildren = new SyntaxValue[size];
         expandedChildren[0] = stx.get(eval, 0);

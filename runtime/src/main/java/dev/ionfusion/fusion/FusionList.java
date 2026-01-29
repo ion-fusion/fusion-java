@@ -452,6 +452,11 @@ final class FusionList
         }
 
         @Override
+        final int size(Evaluator eval)
+        {
+            return size();
+        }
+
         int size()
         {
             return myValues.length;
@@ -703,7 +708,7 @@ final class FusionList
             int newLen = myLen;
             for (Object arg : args)
             {
-                newLen += ((BaseSequence) arg).size();
+                newLen += ((BaseSequence) arg).size(eval);
             }
 
             if (newLen == myLen) return this; // Nothing to append
@@ -714,7 +719,7 @@ final class FusionList
             for (Object arg : args)
             {
                 BaseSequence v = (BaseSequence) arg;
-                int argLen = v.size();
+                int argLen = v.size(eval);
 
                 v.unsafeCopy(eval, 0, copy, pos, argLen);
                 pos += argLen;
@@ -1036,7 +1041,7 @@ final class FusionList
             int newLen = mySize;
             for (Object arg : args)
             {
-                newLen += ((BaseSequence) arg).size();
+                newLen += ((BaseSequence) arg).size(eval);
             }
 
             // Note that mySize <= myValues.length
@@ -1051,7 +1056,7 @@ final class FusionList
                 for (Object arg : args)
                 {
                     BaseSequence v = (BaseSequence) arg;
-                    int argLen = v.size();
+                    int argLen = v.size(eval);
 
                     v.unsafeCopy(eval, 0, newValues, pos, argLen);
                     pos += argLen;

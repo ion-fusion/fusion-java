@@ -76,7 +76,7 @@ public final class _Private_HelpForm
         final Evaluator eval = expander.getEvaluator();
 
         SyntaxChecker check = check(eval, stx);
-        int arity = stx.size();
+        int arity = stx.size(eval);
 
         SyntaxValue[] children = stx.extract(eval);
 

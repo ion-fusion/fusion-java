@@ -48,7 +48,7 @@ final class LambdaForm
         {
             SyntaxChecker checkFormals =
                 check.subformSexp("formal arguments", 1);
-            args = determineArgs(checkFormals);
+            args = determineArgs(eval, checkFormals);
         }
 
         // When there's no args, we can avoid an empty binding rib at runtime.
@@ -98,11 +98,12 @@ final class LambdaForm
     }
 
 
-    private static SyntaxSymbol[] determineArgs(SyntaxChecker checkArgs)
+    private static SyntaxSymbol[] determineArgs(Evaluator eval,
+                                                SyntaxChecker checkArgs)
         throws FusionException
     {
         SyntaxSexp argSexp = (SyntaxSexp) checkArgs.form();
-        int size = argSexp.size();
+        int size = argSexp.size(eval);
         if (size == 0) return SyntaxSymbol.EMPTY_ARRAY;
 
         SyntaxSymbol[] args = new SyntaxSymbol[size];
@@ -116,14 +117,14 @@ final class LambdaForm
     //========================================================================
 
 
-    private static int countFormals(SyntaxValue formalsDecl)
+    private static int countFormals(Evaluator eval, SyntaxValue formalsDecl)
         throws FusionException
     {
         // (lambda rest ___)
         if (formalsDecl instanceof SyntaxSymbol) return 1;
 
         // (lambda (formal ...) ___)
-        return ((SyntaxSexp) formalsDecl).size();
+        return ((SyntaxSexp) formalsDecl).size(eval);
     }
 
 
@@ -131,7 +132,7 @@ final class LambdaForm
                                               SyntaxSexp formalsDecl)
         throws FusionException
     {
-        int size = formalsDecl.size();
+        int size = formalsDecl.size(eval);
         if (size == 0) return EMPTY_STRING_ARRAY;
 
         String[] args = new String[size];
@@ -151,7 +152,7 @@ final class LambdaForm
         Evaluator eval = comp.getEvaluator();
 
         SyntaxValue formalsDecl = stx.get(eval, 1);
-        if (countFormals(formalsDecl) != 0)
+        if (countFormals(eval, formalsDecl) != 0)
         {
             // Dummy environment to keep track of depth
             env = new LocalEnvironment(env);

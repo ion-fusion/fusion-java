@@ -211,7 +211,7 @@ class Compiler
     CompiledForm[] compileExpressions(Environment env, BaseSexp<?> exprs)
         throws FusionException
     {
-        int size = exprs.size();
+        int size = exprs.size(myEval);
         CompiledForm[] forms = new CompiledForm[size];
         for (int i = 0; i < size; i++)
         {
@@ -310,7 +310,7 @@ class Compiler
     CompiledForm compileDefineValues(final Environment env, SyntaxSexp stx)
         throws FusionException
     {
-        int arity = stx.size();
+        int arity = stx.size(myEval);
         SyntaxValue valueSource = stx.get(myEval, arity - 1);
         final CompiledForm valuesForm = compileExpression(env, valueSource);
 
@@ -376,7 +376,7 @@ class Compiler
     CompiledForm compileDefineSyntax(final Environment env, SyntaxSexp stx)
         throws FusionException
     {
-        int arity = stx.size();
+        int arity = stx.size(myEval);
         SyntaxValue valueSource = stx.get(myEval, arity-1);
         final CompiledForm valueForm = compileExpression(env, valueSource);
 
@@ -625,7 +625,7 @@ class Compiler
 
         boolean allConstant = true;
 
-        int len = stx.size();
+        int len = stx.size(myEval);
         CompiledForm[] children = new CompiledForm[len];
         for (int i = 0; i < len; i++)
         {

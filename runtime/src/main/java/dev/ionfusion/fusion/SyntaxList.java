@@ -178,7 +178,7 @@ final class SyntaxList
 
 
     @Override
-    final int size()
+    final int size(Evaluator eval)
     {
         return myImmutableList.size();
     }
@@ -212,8 +212,8 @@ final class SyntaxList
     SyntaxSequence makeAppended(Evaluator eval, SyntaxSequence that)
         throws FusionException
     {
-        int thisLength = this.size();
-        int thatLength = that.size();
+        int thisLength = this.size(eval);
+        int thatLength = that.size(eval);
         int newLength  = thisLength + thatLength;
 
         if (newLength == 0) return this;
@@ -272,10 +272,9 @@ final class SyntaxList
     SyntaxValue doExpand(Expander expander, Environment env)
         throws FusionException
     {
-        int len = size();
-        if (len == 0) return this;
-
         Evaluator eval = expander.getEvaluator();
+        int len = size(eval);
+        if (len == 0) return this;
 
         Object list = unwrap(eval);
 

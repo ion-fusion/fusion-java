@@ -27,7 +27,7 @@ final class SyntaxGetProc
             {
                 int index = checkIntArgToJavaInt(eval, this, i, args);
                 SyntaxSequence s = (SyntaxSequence) stx;
-                if (s.size() <= index)
+                if (s.size(eval) <= index)
                 {
                     return voidValue(eval);
                 }

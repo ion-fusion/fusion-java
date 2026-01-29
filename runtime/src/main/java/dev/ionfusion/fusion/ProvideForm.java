@@ -37,10 +37,11 @@ final class ProvideForm
 
         Namespace moduleNamespace = (Namespace) env;
 
-        ArrayList<SyntaxValue> expanded = new ArrayList<>(form.size());
+        int size = form.size(eval);
+        ArrayList<SyntaxValue> expanded = new ArrayList<>(size);
         expanded.add(form.get(eval, 0));
 
-        for (int i = 1; i < form.size(); i++)
+        for (int i = 1; i < size; i++)
         {
             SyntaxValue spec = form.get(eval, i);
             Object datum = spec.unwrap(eval);

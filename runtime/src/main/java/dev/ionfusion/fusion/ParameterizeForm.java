@@ -22,7 +22,7 @@ final class ParameterizeForm
             check.subformSeq("sequence of parameterizations", 1);
         SyntaxSequence bindingForms = checkBindings.form();
 
-        final int numBindings = bindingForms.size();
+        final int numBindings = bindingForms.size(eval);
         SyntaxValue[] expandedForms = new SyntaxValue[numBindings];
         for (int i = 0; i < numBindings; i++)
         {
@@ -72,7 +72,7 @@ final class ParameterizeForm
 
         SyntaxSequence bindingForms = (SyntaxSequence) stx.get(eval, 1);
 
-        final int numBindings = bindingForms.size();
+        final int numBindings = bindingForms.size(eval);
 
         CompiledForm[] parameterForms = new CompiledForm[numBindings];
         CompiledForm[] valueForms     = new CompiledForm[numBindings];

@@ -13,6 +13,6 @@ final class SyntaxSizeProc
         throws FusionException
     {
         SyntaxSequence c = checkSyntaxSequenceArg(eval, 0, arg);
-        return makeInt(eval, c.size());
+        return makeInt(eval, c.size(eval));
     }
 }

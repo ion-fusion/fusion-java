@@ -302,10 +302,10 @@ final class SyntaxSexp
 
 
     @Override
-    int size()
+    int size(Evaluator eval)
         throws FusionException
     {
-        return mySexp.size();
+        return mySexp.size(eval);
     }
 
 
@@ -512,7 +512,7 @@ final class SyntaxSexp
     {
         Evaluator eval = expander.getEvaluator();
 
-        int len = size();
+        int len = size(eval);
         if (len == 0)
         {
             String message =
@@ -567,7 +567,8 @@ final class SyntaxSexp
                                     IdentityHashMap<Binding, Object> stops)
         throws FusionException
     {
-        int len = size();
+        Evaluator eval = expander.getEvaluator();
+        int len = size(eval);
         if (len == 0)
         {
             String message =
@@ -575,7 +576,6 @@ final class SyntaxSexp
             throw new SyntaxException(null, message, this);
         }
 
-        Evaluator eval = expander.getEvaluator();
         SyntaxValue first = get(eval, 0); // calls pushAnyWraps()
         if (first instanceof SyntaxSymbol)
         {

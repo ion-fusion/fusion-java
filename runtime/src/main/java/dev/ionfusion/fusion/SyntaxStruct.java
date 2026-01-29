@@ -179,12 +179,11 @@ final class SyntaxStruct
     SyntaxValue doExpand(final Expander expander, final Environment env)
         throws FusionException
     {
+        final Evaluator eval = expander.getEvaluator();
         if (myStruct.size() == 0)
         {
             return this;
         }
-
-        final Evaluator eval = expander.getEvaluator();
 
         StructFieldVisitor visitor = new StructFieldVisitor() {
             @Override

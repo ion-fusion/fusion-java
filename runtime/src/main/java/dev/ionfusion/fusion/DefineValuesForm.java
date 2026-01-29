@@ -106,7 +106,7 @@ final class DefineValuesForm
                     check.subformSeq("documentation sequence", 2);
 
                 int idCount = boundIds.length;
-                if (docs.form().size() != idCount)
+                if (docs.form().size(eval) != idCount)
                 {
                     throw docs.failure("expected " + idCount + " doc strings");
                 }
@@ -139,7 +139,7 @@ final class DefineValuesForm
             formChecker.subformSexp("sexp of identifiers to bind", 1);
 
         SyntaxSexp argSexp = (SyntaxSexp) subformChecker.form();
-        int size = argSexp.size();
+        int size = argSexp.size(eval);
         for (int i = 0; i < size; i++)
         {
             // Prepare the identifiers so they resolve to their own binding.

@@ -22,7 +22,7 @@ final class LetValuesForm
             check.subformSeq("sequence of bindings", 1);
         SyntaxSequence bindingForms = checkBindings.form();
 
-        final int numBindingForms = bindingForms.size();
+        final int numBindingForms = bindingForms.size(eval);
 
         // Gather the bound names
         ArrayList<SyntaxSymbol> boundNameList =
@@ -36,7 +36,8 @@ final class LetValuesForm
             SyntaxChecker checkBoundNames =
                 checkPair.subformSexp("binding name sequence", 0);
 
-            for (int j = 0; j < checkBoundNames.form().size(); j++)
+            int size = checkBoundNames.form().size(eval);
+            for (int j = 0; j < size; j++)
             {
                 SyntaxSymbol name =
                     checkBoundNames.requiredIdentifier("binding name", j);
@@ -73,7 +74,8 @@ final class LetValuesForm
 
             SyntaxSexp names = (SyntaxSexp) binding.get(eval, 0);
             SyntaxValue[] wrappedNames = names.extract(eval);
-            for (int j = 0; j < names.size(); j++)
+            int size = names.size(eval);
+            for (int j = 0; j < size; j++)
             {
                 // Wrap the bound names so they resolve to their own binding.
                 SyntaxSymbol name = boundNames[bindingPos];
@@ -127,7 +129,7 @@ final class LetValuesForm
         SyntaxSequence bindingForms = (SyntaxSequence) expr.get(eval, 1);
 
         // The number of bindings is >= the number of binding forms.
-        final int numBindingForms = bindingForms.size();
+        final int numBindingForms = bindingForms.size(eval);
 
         int[] valueCounts = new int[numBindingForms];
         CompiledForm[]   valueForms = new CompiledForm  [numBindingForms];
@@ -140,7 +142,7 @@ final class LetValuesForm
             SyntaxSexp binding = (SyntaxSexp) bindingForms.get(eval, i);
 
             SyntaxSexp names = (SyntaxSexp) binding.get(eval, 0);
-            int size = names.size();
+            int size = names.size(eval);
             bindingCount += size;
             valueCounts[i] = size;
 

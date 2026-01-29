@@ -72,7 +72,7 @@ class SyntaxChecker
     void arityExact(int count)
         throws FusionException
     {
-        if (myForm.size() != count)
+        if (myForm.size(myEvaluator) != count)
         {
             throw failure("expected " + (count-1) + " subforms");
         }
@@ -86,7 +86,7 @@ class SyntaxChecker
     final int arityAtLeast(int count)
         throws FusionException
     {
-        int size = myForm.size();
+        int size = myForm.size(myEvaluator);
         if (size < count)
         {
             throw failure("expect at least " + (count-1) + " subforms");
@@ -272,7 +272,7 @@ class SyntaxChecker
         void arityExact(int count)
             throws FusionException
         {
-            if (myForm.size() != count)
+            if (myForm.size(myEvaluator) != count)
             {
                 String message =
                     "expected " + count + " subforms in " + myFormName;

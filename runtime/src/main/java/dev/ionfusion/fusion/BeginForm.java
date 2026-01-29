@@ -20,7 +20,7 @@ final class BeginForm
         // TODO handle splicing in internal-defn context
         //  https://github.com/ion-fusion/fusion-java/issues/67
 
-        int size = stx.size();
+        int size = stx.size(eval);
 
         SyntaxValue[] expandedChildren = new SyntaxValue[size];
         expandedChildren[0] = stx.get(eval, 0);

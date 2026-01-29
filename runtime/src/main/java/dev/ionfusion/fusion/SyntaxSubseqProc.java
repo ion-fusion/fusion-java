@@ -15,7 +15,7 @@ final class SyntaxSubseqProc
         checkArityExact(2, args);
         SyntaxSequence sequence = checkSyntaxSequenceArg(eval, 0, args);
         int from = checkIntArgToJavaInt(eval, this, 1, args);
-        int size = sequence.size();
+        int size = sequence.size(eval);
 
         if (size < from) from = size;
 

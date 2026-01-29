@@ -20,7 +20,7 @@ abstract class SyntaxSequence
     }
 
 
-    abstract int size()
+    abstract int size(Evaluator eval)
         throws FusionException;
 
 

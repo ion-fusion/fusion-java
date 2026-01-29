@@ -52,7 +52,7 @@ final class FusionCollection
             return myAnnotations;
         }
 
-        abstract int size()
+        abstract int size(Evaluator eval)
             throws FusionException;
     }
 
@@ -78,7 +78,7 @@ final class FusionCollection
     static int unsafeCollectionSize(Evaluator eval, Object collection)
         throws FusionException
     {
-        return ((BaseCollection) collection).size();
+        return ((BaseCollection) collection).size(eval);
     }
 
 

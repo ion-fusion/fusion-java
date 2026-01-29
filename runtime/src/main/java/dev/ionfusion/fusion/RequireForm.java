@@ -58,7 +58,7 @@ final class RequireForm
 
         int arity = check.arityAtLeast(2);
 
-        ArrayList<SyntaxValue> expanded = new ArrayList<>(stx.size());
+        ArrayList<SyntaxValue> expanded = new ArrayList<>(stx.size(eval));
         expanded.add(stx.get(eval, 0));
 
         for (int i = 1; i < arity; i++)
@@ -255,7 +255,7 @@ final class RequireForm
         // would happen if resolving at runtime gave a different result.
 
         ModuleIdentity baseModule = env.namespace().getResolutionBase();
-        int arity = stx.size();
+        int arity = stx.size(eval);
 
         SyntaxChecker check = new SyntaxChecker(eval, REQUIRE, stx);
 
@@ -310,7 +310,7 @@ final class RequireForm
                     // Resolver has type-checked the module-path for us.
                     SyntaxText context = (SyntaxText) pathStx;
 
-                    int idCount = sexp.size() - 2;
+                    int idCount = sexp.size(eval) - 2;
                     RequireRenameMapping[] mappings =
                         new RequireRenameMapping[idCount];
                     for (int i = 0; i < idCount; i++)

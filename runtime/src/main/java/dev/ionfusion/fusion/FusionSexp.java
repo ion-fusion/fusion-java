@@ -282,7 +282,7 @@ final class FusionSexp
     static int unsafeSexpSize(Evaluator eval, Object sexp)
         throws FusionException
     {
-        return ((BaseSexp) sexp).size();
+        return ((BaseSexp) sexp).size(eval);
     }
 
 
@@ -435,7 +435,7 @@ final class FusionSexp
         }
 
         @Override
-        int size() throws FusionException { return 0; }
+        int size(Evaluator eval) throws FusionException { return 0; }
 
         @Override
         Object elt(Evaluator eval, int pos)
@@ -524,7 +524,7 @@ final class FusionSexp
                                        SourceLocation loc)
             throws FusionException
         {
-            assert size() == 0;
+            assert size(eval) == 0;
 
             SyntaxValue stx = SyntaxSexp.make(eval, loc, this);
             return Syntax.applyContext(eval, context, stx);
@@ -721,7 +721,7 @@ final class FusionSexp
 
 
         @Override
-        int size()
+        int size(Evaluator eval)
             throws FusionException
         {
             int size = 1;

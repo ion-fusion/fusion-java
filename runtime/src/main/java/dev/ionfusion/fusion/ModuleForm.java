@@ -69,7 +69,7 @@ final class ModuleForm
 
         // Ensure there's a name and language. We check for a body below, but
         // want a different error message for that situation.
-        if (source.size() < 3)
+        if (source.size(eval) < 3)
         {
             throw check.failure("Malformed module declaration");
         }
@@ -117,7 +117,7 @@ final class ModuleForm
         }
 
 
-        if (source.size() < 4)
+        if (source.size(eval) < 4)
         {
             throw check.failure("Module has no body");
         }
@@ -215,7 +215,7 @@ final class ModuleForm
                 {
                     // Splice 'begin' into the module-begin sequence
                     SyntaxSymbol beginId = (SyntaxSymbol) sexp.get(eval, 0);
-                    int last = sexp.size() - 1;
+                    int last = sexp.size(eval) - 1;
                     for (int i = last; i != 0;  i--)
                     {
                         SyntaxValue expr = sexp.get(eval, i);

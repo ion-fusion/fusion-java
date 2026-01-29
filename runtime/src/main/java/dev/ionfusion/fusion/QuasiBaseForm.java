@@ -68,7 +68,7 @@ abstract class QuasiBaseForm
     {
         final Evaluator eval = expander.getEvaluator();
 
-        int size = stx.size();
+        int size = stx.size(eval);
         if (size == 0) return stx;
 
         SyntaxValue[] children = stx.extract(eval);
@@ -123,7 +123,7 @@ abstract class QuasiBaseForm
     {
         final Evaluator eval = expander.getEvaluator();
 
-        int size = stx.size();
+        int size = stx.size(eval);
         if (size == 0) return stx;
 
         Object list = stx.unwrap(eval);
@@ -210,7 +210,7 @@ abstract class QuasiBaseForm
     {
         Evaluator eval = comp.getEvaluator();
 
-        int size = stx.size();
+        int size = stx.size(eval);
         if (size == 0) return constant(eval, stx);
 
         // Look for an (unquote ...) or (unsyntax ...) form
@@ -260,7 +260,7 @@ abstract class QuasiBaseForm
         throws FusionException
     {
         Evaluator eval = comp.getEvaluator();
-        int size = stx.size();
+        int size = stx.size(eval);
         if (size == 0) return constant(eval, stx);
 
         boolean same = true;

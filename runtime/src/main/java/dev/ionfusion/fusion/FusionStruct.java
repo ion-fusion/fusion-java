@@ -605,6 +605,12 @@ final class FusionStruct
 
 
         @Override
+        public int size(Evaluator eval)
+        {
+            return 0;
+        }
+
+        @Override
         public int size()
         {
             return 0;
@@ -809,6 +815,12 @@ final class FusionStruct
         MapBasedStruct makeSimilar(MultiHashTrie<String, Object> map)
         {
             return makeSimilar(map, myAnnotations);
+        }
+
+        @Override
+        public final int size(Evaluator eval)
+        {
+            return size();
         }
 
         @Override
