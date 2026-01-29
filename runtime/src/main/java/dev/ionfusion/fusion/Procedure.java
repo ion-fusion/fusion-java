@@ -3,19 +3,9 @@
 
 package dev.ionfusion.fusion;
 
-import static dev.ionfusion.fusion.FusionCollection.checkNullableCollectionArg;
-import static dev.ionfusion.fusion.FusionList.checkNullableListArg;
-import static dev.ionfusion.fusion.FusionNumber.checkIntArgToJavaInt;
-import static dev.ionfusion.fusion.FusionNumber.checkIntArgToJavaLong;
-import static dev.ionfusion.fusion.FusionNumber.checkNullableIntArg;
-import static dev.ionfusion.fusion.FusionNumber.checkRequiredIntArg;
-import static dev.ionfusion.fusion.FusionSequence.checkNullableSequenceArg;
-import static dev.ionfusion.fusion.FusionStruct.checkNullableStructArg;
-
 import com.amazon.ion.util.IonTextUtils;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import java.io.IOException;
-import java.math.BigInteger;
 
 /**
  * Base class for invocable procedures, both built-in and user-defined.
@@ -244,116 +234,6 @@ abstract class Procedure
         {
             throw argError(eval, desc, argNum, args);
         }
-    }
-
-
-
-    /**
-     * Checks that an argument fits safely into Java's {@code int} type.
-     *
-     * @deprecated Use helpers in {@link FusionNumber}.
-     */
-    @Deprecated
-    final int checkIntArg(int argNum, Object... args)
-        throws FusionException, ArgumentException
-    {
-        return checkIntArgToJavaInt(/*eval*/ null,           // NOT SUPPORTED!
-                                    this, argNum, args);
-    }
-
-
-    /**
-     * Checks that an argument fits safely into Java's {@code long} type.
-     *
-     * @deprecated Use helpers in {@link FusionNumber}.
-     */
-    @Deprecated
-    final long checkLongArg(int argNum, Object... args)
-        throws FusionException, ArgumentException
-    {
-        return checkIntArgToJavaLong(/*eval*/ null,          // NOT SUPPORTED!
-                                     this, argNum, args);
-    }
-
-
-    /**
-     * @return not null.
-     *
-     * @deprecated Use helpers in {@link FusionNumber}.
-     */
-    @Deprecated
-    final BigInteger checkBigIntArg(int argNum, Object... args)
-        throws FusionException, ArgumentException
-    {
-        return checkRequiredIntArg(/*eval*/ null,            // NOT SUPPORTED!
-                                   this, argNum, args);
-    }
-
-    /**
-     * @return may be null.
-     *
-     * @deprecated Use helpers in {@link FusionNumber}.
-     */
-    @Deprecated
-    final BigInteger checkBigIntArg(Evaluator eval, int argNum, Object... args)
-        throws FusionException, ArgumentException
-    {
-        return checkNullableIntArg(eval, this, argNum, args);
-    }
-
-
-    /**
-     * Expects a collection argument, including typed nulls.
-     *
-     * @deprecated Use
-     * {@link FusionCollection#checkNullableCollectionArg(Evaluator, Procedure, int, Object...)}
-     */
-    @Deprecated
-    final Object checkCollectionArg(Evaluator eval, int argNum, Object... args)
-        throws FusionException, ArgumentException
-    {
-        return checkNullableCollectionArg(eval, this, argNum, args);
-    }
-
-
-    /**
-     * Expects a sequence argument, including typed nulls.
-     *
-     * @deprecated Use
-     * {@link FusionSequence#checkNullableSequenceArg(Evaluator, Procedure, int, Object...)}
-     */
-    @Deprecated
-    final Object checkSequenceArg(Evaluator eval, int argNum, Object... args)
-        throws FusionException, ArgumentException
-    {
-        return checkNullableSequenceArg(eval, this, argNum, args);
-    }
-
-    /**
-     * Expects a list argument, including null.list.
-     *
-     * @deprecated Use
-     * {@link FusionList#checkNullableListArg(Evaluator, Procedure, int, Object...)}
-     */
-    @Deprecated
-    final Object checkListArg(Evaluator eval, int argNum, Object... args)
-        throws FusionException, ArgumentException
-    {
-        return checkNullableListArg(eval, this, argNum, args);
-    }
-
-
-    /**
-     * Expects a struct argument, including null.struct.
-     *
-     * @deprecated Use
-     * {@link FusionStruct#checkNullableStructArg(Evaluator, Procedure, int, Object...)}
-     */
-    @Deprecated
-    final Object checkStructArg(Evaluator eval, int argNum, Object... args)
-        throws FusionException, ArgumentException
-    {
-        return checkNullableStructArg(eval, this, argNum, args);
     }
 
 

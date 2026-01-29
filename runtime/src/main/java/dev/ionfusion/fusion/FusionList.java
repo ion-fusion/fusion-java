@@ -1257,6 +1257,8 @@ final class FusionList
 
 
     /**
+     * Checks that an argument is a Fusion list, including {@code null.list}.
+     *
      * @return the Fusion list, not null (but maybe {@code null.list}).
      */
     static Object checkNullableListArg(Evaluator eval,

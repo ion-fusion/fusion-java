@@ -1497,6 +1497,8 @@ final class FusionStruct
 
 
     /**
+     * Checks that an argument is a Fusion list, including {@code null.struct}.
+     *
      * @return the Fusion struct, not null.
      */
     static Object checkNullableStructArg(Evaluator eval,

@@ -108,6 +108,8 @@ final class FusionCollection
 
 
     /**
+     * Checks that an argument is a Fusion collection, including typed nulls.
+     *
      * @return the Fusion collection, not null.
      */
     static Object checkNullableCollectionArg(Evaluator eval,

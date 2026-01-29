@@ -146,6 +146,8 @@ final class FusionSequence
 
 
     /**
+     * Checks that an argument is a Fusion sequence, including typed nulls.
+     *
      * @return the Fusion sequence, not null.
      */
     static Object checkNullableSequenceArg(Evaluator eval,

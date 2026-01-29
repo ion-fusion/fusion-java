@@ -1932,7 +1932,9 @@ public final class FusionNumber
 
 
     /**
-     * @return may be null.
+     * Checks that an argument is a Fusion int, including {@code null.int}.
+     *
+     * @return the integer value; null when the argument is {@code null.int}.
      */
     static BigInteger checkNullableIntArg(Evaluator eval,
                                           Procedure who,
@@ -1946,6 +1948,8 @@ public final class FusionNumber
 
 
     /**
+     * Checks that an argument is an actual Fusion int.
+     *
      * @return not null
      */
     static BigInteger checkRequiredIntArg(Evaluator eval,
