@@ -98,14 +98,14 @@ public final class FusionBool
         @Override
         IonValue copyToIonValue(ValueFactory factory,
                                 boolean throwOnConversionFailure)
-            throws FusionException, IonizeFailure
+            throws FusionException
         {
             return factory.newNullBool();
         }
 
         @Override
         void ionize(Evaluator eval, IonWriter out)
-            throws IOException, IonException, FusionException, IonizeFailure
+            throws IOException, IonException, FusionException
         {
             out.writeNull(IonType.BOOL);
         }
@@ -155,14 +155,14 @@ public final class FusionBool
         @Override
         IonValue copyToIonValue(ValueFactory factory,
                                 boolean throwOnConversionFailure)
-            throws FusionException, IonizeFailure
+            throws FusionException
         {
             return factory.newBool(true);
         }
 
         @Override
         void ionize(Evaluator eval, IonWriter out)
-            throws IOException, IonException, FusionException, IonizeFailure
+            throws IOException, IonException, FusionException
         {
             out.writeBool(true);
         }
@@ -211,14 +211,14 @@ public final class FusionBool
         @Override
         IonValue copyToIonValue(ValueFactory factory,
                                 boolean throwOnConversionFailure)
-            throws FusionException, IonizeFailure
+            throws FusionException
         {
             return factory.newBool(false);
         }
 
         @Override
         void ionize(Evaluator eval, IonWriter out)
-            throws IOException, IonException, FusionException, IonizeFailure
+            throws IOException, IonException, FusionException
         {
             out.writeBool(false);
         }
@@ -298,7 +298,7 @@ public final class FusionBool
         @Override
         IonValue copyToIonValue(ValueFactory factory,
                                 boolean throwOnConversionFailure)
-            throws FusionException, IonizeFailure
+            throws FusionException
         {
             IonValue iv = myValue.copyToIonValue(factory,
                                                  throwOnConversionFailure);
@@ -308,7 +308,7 @@ public final class FusionBool
 
         @Override
         void ionize(Evaluator eval, IonWriter out)
-            throws IOException, IonException, FusionException, IonizeFailure
+            throws IOException, IonException, FusionException
         {
             out.setTypeAnnotations(getAnnotationsAsJavaStrings());
             myValue.ionize(eval, out);

@@ -122,10 +122,10 @@ abstract class BaseValue
      * @param out the output stream; not null.
      *
      * @throws IOException Propagated from the output stream.
-     * @throws IonizeFailure if the data cannot be ionized.
+     * @throws FusionException if the data cannot be ionized.
      */
     void ionize(Evaluator eval, IonWriter out)
-        throws IOException, IonException, FusionException, IonizeFailure
+        throws IOException, IonException, FusionException
     {
         throw new IonizeFailure(this);
     }
@@ -203,12 +203,12 @@ abstract class BaseValue
 
 
     /**
-     * @throws IonizeFailure (when {@code throwOnConversionFailure})
+     * @throws FusionException (when {@code throwOnConversionFailure})
      * if this value cannot be ionized.
      */
     IonValue copyToIonValue(ValueFactory factory,
                             boolean throwOnConversionFailure)
-        throws FusionException, IonizeFailure
+        throws FusionException
     {
         if (throwOnConversionFailure)
         {
@@ -338,7 +338,7 @@ abstract class BaseValue
      */
     static IonValue copyToIonValue(Object value, ValueFactory factory,
                                    boolean throwOnConversionFailure)
-        throws FusionException, IonizeFailure
+        throws FusionException
     {
         return FusionValue.copyToIonValue(value,
                                           factory,

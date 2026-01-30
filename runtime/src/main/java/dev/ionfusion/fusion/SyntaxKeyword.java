@@ -102,7 +102,7 @@ final class SyntaxKeyword
 
     @Override
     void ionize(Evaluator eval, IonWriter writer)
-        throws IOException, IonException, FusionException, IonizeFailure
+        throws IOException, IonException, FusionException
     {
         // TODO __ ??
         super.ionize(eval, writer);

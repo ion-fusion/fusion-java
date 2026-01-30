@@ -325,7 +325,7 @@ public final class FusionValue
     static IonValue copyToIonValue(Object       value,
                                    ValueFactory factory,
                                    boolean      throwOnConversionFailure)
-        throws FusionException, IonizeFailure
+        throws FusionException
     {
         if (value instanceof BaseValue)
         {

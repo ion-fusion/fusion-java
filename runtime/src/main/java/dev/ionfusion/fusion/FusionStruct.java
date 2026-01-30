@@ -476,7 +476,7 @@ final class FusionStruct
         extends AnnotatableValue<Self>
     {
         void ionize(Evaluator eval, IonWriter out)
-            throws IOException, IonException, FusionException, IonizeFailure;
+            throws IOException, IonException, FusionException;
 
         void write(Evaluator eval, Appendable out)
             throws IOException, FusionException;

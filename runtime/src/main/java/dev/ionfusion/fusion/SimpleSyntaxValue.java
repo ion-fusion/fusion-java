@@ -109,7 +109,7 @@ class SimpleSyntaxValue
 
     @Override
     void ionize(Evaluator eval, IonWriter writer)
-        throws IOException, IonException, FusionException, IonizeFailure
+        throws IOException, IonException, FusionException
     {
         myDatum.ionize(eval, writer);
     }

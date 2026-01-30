@@ -208,7 +208,7 @@ final class SyntaxStruct
 
     @Override
     void ionize(Evaluator eval, IonWriter writer)
-        throws IOException, IonException, FusionException, IonizeFailure
+        throws IOException, IonException, FusionException
     {
         myStruct.ionize(eval, writer);
     }

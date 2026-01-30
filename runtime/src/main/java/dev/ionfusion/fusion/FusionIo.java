@@ -218,9 +218,8 @@ public final class FusionIo
      * @param out the output stream; not null.
      * @param value must not be null.
      *
-     * @throws IonizeFailure if some part of the value cannot be ionized.
-     * @throws FusionException if there's an exception thrown by the output
-     * stream.
+     * @throws FusionException if some part of the value cannot be ionized, or
+     * if there's an exception thrown by the output stream.
      */
     static void ionize(Evaluator eval, IonWriter out, Object value)
         throws FusionException
