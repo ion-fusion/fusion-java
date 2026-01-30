@@ -6,6 +6,7 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionBool.falseBool;
 import static dev.ionfusion.fusion.FusionBool.makeBool;
 import static dev.ionfusion.fusion.FusionBool.trueBool;
+import static dev.ionfusion.fusion.FusionIo.makeIonizeError;
 import static dev.ionfusion.fusion.FusionIo.safeWriteToString;
 import static dev.ionfusion.fusion.FusionValue.sameAnnotations;
 
@@ -127,7 +128,7 @@ abstract class BaseValue
     void ionize(Evaluator eval, IonWriter out)
         throws IOException, IonException, FusionException
     {
-        throw new IonizeFailure(this);
+        throw makeIonizeError(eval, this);
     }
 
 
@@ -212,7 +213,7 @@ abstract class BaseValue
     {
         if (throwOnConversionFailure)
         {
-            throw new IonizeFailure(this);
+            throw makeIonizeError(eval, this);
         }
 
         return null;

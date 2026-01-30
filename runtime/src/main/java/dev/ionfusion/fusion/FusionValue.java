@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.fusion.FusionIo.makeIonizeError;
 import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_OBJECT_ARRAY;
 import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_STRING_ARRAY;
 
@@ -336,7 +337,7 @@ public final class FusionValue
 
         if (throwOnConversionFailure)
         {
-            throw new IonizeFailure(value);
+            throw makeIonizeError(eval, value);
         }
 
         return null;

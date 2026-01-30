@@ -104,7 +104,7 @@ public final class FusionIo
         }
         catch (ClassCastException e)
         {
-            throw new IonizeFailure(value);
+            throw makeIonizeError(eval, value);
         }
 
         fv.ionize(eval, out);
@@ -206,6 +206,14 @@ public final class FusionIo
 
     //========================================================================
     // Basic output procedures
+
+
+    static ContractException makeIonizeError(Evaluator eval, Object unIonizableValue)
+    {
+        String message = "Cannot ionize non-Ionizable data: " +
+                         safeWriteToString(eval, unIonizableValue);
+        return new IonizeFailure(message, unIonizableValue);
+    }
 
 
     /**

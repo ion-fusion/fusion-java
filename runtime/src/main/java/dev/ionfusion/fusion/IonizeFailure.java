@@ -3,9 +3,6 @@
 
 package dev.ionfusion.fusion;
 
-import static dev.ionfusion.fusion.FusionIo.safeWrite;
-import java.io.IOException;
-
 /**
  * Indicates a failure to convert a Fusion value into Ion.
  */
@@ -15,19 +12,10 @@ final class IonizeFailure
 {
     private final Object myUnIonizableValue;
 
-    IonizeFailure(Object unIonizableValue)
+    IonizeFailure(String message, Object unIonizableValue)
     {
-        super(null);
+        super(message);
 
         myUnIonizableValue = unIonizableValue;
-    }
-
-
-    @Override
-    void displayMessage(Evaluator eval, Appendable out)
-        throws IOException, FusionException
-    {
-        out.append("Cannot ionize non-Ionizable data: ");
-        safeWrite(eval, out, myUnIonizableValue);
     }
 }

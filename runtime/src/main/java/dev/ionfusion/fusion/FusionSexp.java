@@ -11,6 +11,7 @@ import static dev.ionfusion.fusion.FusionCompare.EqualityTier.STRICT_EQUAL;
 import static dev.ionfusion.fusion.FusionCompare.EqualityTier.TIGHT_EQUAL;
 import static dev.ionfusion.fusion.FusionIo.dispatchIonize;
 import static dev.ionfusion.fusion.FusionIo.dispatchWrite;
+import static dev.ionfusion.fusion.FusionIo.makeIonizeError;
 import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.internSymbols;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 
@@ -991,7 +992,7 @@ final class FusionSexp
                 }
                 else if (throwOnConversionFailure)
                 {
-                    throw new IonizeFailure(this);
+                    throw makeIonizeError(eval, this);
                 }
                 else
                 {
@@ -1057,7 +1058,7 @@ final class FusionSexp
                 }
                 else
                 {
-                    throw new IonizeFailure(this);
+                    throw makeIonizeError(eval, this);
                 }
             }
             out.stepOut();
