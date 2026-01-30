@@ -666,8 +666,10 @@ final class FusionList
                                boolean throwOnConversionFailure)
             throws FusionException
         {
+            IonList list = factory.newEmptyList();
+
+            // Can be < myValues.length for stretchy lists:
             int len = size();
-            IonValue[] ions = new IonValue[len];
             for (int i = 0; i < len; i++)
             {
                 IonValue ion = copyToIonValue(myValues[i], factory,
@@ -678,10 +680,9 @@ final class FusionList
                     return null;
                 }
 
-                ions[i] = ion;
+                list.add(ion);
             }
 
-            IonList list = factory.newList(ions);
             list.setTypeAnnotations(getAnnotationsAsJavaStrings());
             return list;
         }
@@ -1166,15 +1167,14 @@ final class FusionList
             {
                 if (myValues[0] instanceof IonValue)
                 {
-                    int len = size();
-                    IonValue[] ions = new IonValue[len];
+                    IonList list = factory.newEmptyList();
 
+                    int len = size();
                     for (int i = 0; i < len; i++)
                     {
-                        ions[i] = factory.clone((IonValue) myValues[i]);
+                        list.add(factory.clone((IonValue) myValues[i]));
                     }
 
-                    IonList list = factory.newList(ions);
                     list.setTypeAnnotations(getAnnotationsAsJavaStrings());
                     return list;
                 }
