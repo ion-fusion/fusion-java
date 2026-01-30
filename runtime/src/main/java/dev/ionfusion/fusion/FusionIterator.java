@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.fusion.ArgumentException.makeArgumentError;
 import static dev.ionfusion.fusion.FusionBool.boolToJavaBoolean;
 import static dev.ionfusion.fusion.FusionBool.makeBool;
 import static dev.ionfusion.fusion.FusionList.isList;
@@ -49,7 +50,7 @@ class FusionIterator
             return unsafeSexpIterator(eval, value);
         }
 
-        throw new ArgumentException("iterate", "iterable", 0, value);
+        throw makeArgumentError(eval, "iterate", "iterable", 0, value);
     }
 
 

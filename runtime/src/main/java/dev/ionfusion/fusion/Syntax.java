@@ -4,6 +4,8 @@
 package dev.ionfusion.fusion;
 
 
+import static dev.ionfusion.fusion.ArgumentException.makeArgumentError;
+
 import dev.ionfusion.runtime.base.SourceLocation;
 
 /**
@@ -86,10 +88,11 @@ final class Syntax
         {
             if (whosCalling == null) whosCalling = "datum_to_syntax";
 
-            throw new ArgumentException(whosCalling,
-                                        "syntax object or ionizable data",
-                                        -1,
-                                        datum);
+            throw makeArgumentError(eval,
+                                    whosCalling,
+                                    "syntax object or ionizable data",
+                                    -1,
+                                    datum);
         }
 
         return stx;

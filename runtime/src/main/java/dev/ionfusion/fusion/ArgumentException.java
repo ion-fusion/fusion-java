@@ -26,11 +26,12 @@ final class ArgumentException
             }
         };
 
-    static ArgumentException makeSanitizedException(ArgumentException e) {
+    static ArgumentException makeSanitizedException(Evaluator eval, ArgumentException e)
+    {
         Object[] values = new Object[e.myActuals.length];
         Arrays.fill(values, REDACTED_VALUE);
-        return new ArgumentException(
-            e.getName(), e.getExpectation(), e.getBadPos(), values);
+        return makeArgumentError(eval, e.getName(), e.getExpectation(),
+                                 e.getBadPos(), values);
     }
 
     private final String   myName;
@@ -39,13 +40,24 @@ final class ArgumentException
     private final Object[] myActuals;
 
 
+
     /**
      * @param badPos the zero-based index of the problematic value.
      *   -1 means a specific position isn't implicated.
      * @param actuals must not be null or zero-length.
      */
-    ArgumentException(String name, String expectation,
-                      int badPos, Object... actuals)
+    public static ArgumentException makeArgumentError(Evaluator eval, String name, String expectation, int badPos, Object... actuals)
+    {
+        return new ArgumentException(name, expectation, badPos, actuals);
+    }
+
+    /**
+     * @param badPos the zero-based index of the problematic value.
+     *   -1 means a specific position isn't implicated.
+     * @param actuals must not be null or zero-length.
+     */
+    private ArgumentException(String name, String expectation,
+                              int badPos, Object... actuals)
     {
         super("arg type failure");
         assert name != null && actuals.length != 0;
@@ -57,17 +69,6 @@ final class ArgumentException
         myExpectation = expectation;
         myBadPos = badPos;
         myActuals = actuals;
-    }
-
-    /**
-     * @param badPos the zero-based index of the problematic value.
-     *   -1 means a specific position isn't implicated.
-     * @param actual must not be null.
-     */
-    ArgumentException(String name, String expectation,
-                      int badPos, Object actual)
-    {
-        this(name, expectation, badPos, new Object[] { actual });
     }
 
 
