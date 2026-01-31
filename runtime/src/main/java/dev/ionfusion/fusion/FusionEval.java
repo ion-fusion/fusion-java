@@ -439,7 +439,7 @@ final class FusionEval
         Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityRange(1, 2, args);
+            checkArityRange(eval, 1, 2, args);
 
             Namespace ns = null;
             if (args.length == 2)

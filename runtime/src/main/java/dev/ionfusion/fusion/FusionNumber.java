@@ -2272,7 +2272,7 @@ public final class FusionNumber
         Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityAtLeast(1, args);
+            checkArityAtLeast(eval, 1, args);
 
             Object arg0 = args[0];
             if (arg0 instanceof BaseInt || arg0 instanceof BaseDecimal)
@@ -2339,7 +2339,7 @@ public final class FusionNumber
         Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityExact(2, args);
+            checkArityExact(eval, 2, args);
 
             BigDecimal dividend = checkRequiredDecimalArg(eval, this, 0, args);
             BigDecimal divisor  = checkRequiredDecimalArg(eval, this, 1, args);
@@ -2356,7 +2356,7 @@ public final class FusionNumber
         Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityRange(1, 2, args);
+            checkArityRange(eval, 1, 2, args);
 
             final int exponent;
             if (args.length == 2)
@@ -2411,7 +2411,7 @@ public final class FusionNumber
         Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityExact(3, args);
+            checkArityExact(eval, 3, args);
 
             BigDecimal dividend = checkRequiredDecimalArg(eval, this, 0, args);
             BigDecimal divisor  = checkRequiredDecimalArg(eval, this, 1, args);
@@ -2431,7 +2431,7 @@ public final class FusionNumber
         Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityExact(2, args);
+            checkArityExact(eval, 2, args);
 
             BigDecimal value = checkRequiredDecimalArg(eval, this, 0, args);
             int        scale = checkIntArgToJavaInt   (eval, this, 1, args);
@@ -2450,7 +2450,7 @@ public final class FusionNumber
         Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityExact(1, args);
+            checkArityExact(eval, 1, args);
 
             BigDecimal value = checkRequiredDecimalArg(eval, this, 0, args);
 
@@ -2468,7 +2468,7 @@ public final class FusionNumber
         Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityExact(1, args);
+            checkArityExact(eval, 1, args);
 
             BigDecimal val = checkNullableDecimalArg(eval, this, 0, args);
             String text = null;
@@ -2501,7 +2501,7 @@ public final class FusionNumber
         Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityExact(1, args);
+            checkArityExact(eval, 1, args);
 
             String val = checkNullableStringArg(eval, this, 0, args);
 
@@ -2589,7 +2589,7 @@ public final class FusionNumber
         @Override
         Object doApply(Evaluator eval, Object[] args) throws FusionException
         {
-            checkArityRange(0, 1, args);
+            checkArityRange(eval, 0, 1, args);
 
             if (args.length == 0)
             {

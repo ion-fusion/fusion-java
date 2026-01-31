@@ -677,7 +677,7 @@ final class FusionTimestamp
         Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityRange(1, 7, args);
+            checkArityRange(eval, 1, 7, args);
 
             Integer offset = null;
             int arity = args.length;
@@ -830,7 +830,7 @@ final class FusionTimestamp
         Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityExact(2, args);
+            checkArityExact(eval, 2, args);
 
             Timestamp base = checkRequiredTimestampArg(eval, this, 0, args);
             if (base.getPrecision().ordinal() <= Precision.DAY.ordinal())

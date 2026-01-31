@@ -861,7 +861,7 @@ public final class FusionIo
         Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityExact(2, args);
+            checkArityExact(eval, 2, args);
 
             Procedure thunk = checkProcArg(eval, 1, args);
             // TODO check thunk arity

@@ -223,7 +223,7 @@ final class Records
         Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityExact(myInitFieldCount, args);
+            checkArityExact(eval, myInitFieldCount, args);
             // TODO apply guardian
             return new PlainRecordInstance(myType, args);
         }
@@ -246,7 +246,7 @@ final class Records
         Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityExact(myInitFieldCount, args);
+            checkArityExact(eval, myInitFieldCount, args);
 
             // TODO apply guardian
             Object proc = args[myProcIndex];
@@ -344,7 +344,7 @@ final class Records
         Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityRange(3, 4, args);
+            checkArityRange(eval, 3, 4, args);
 
             String name = checkRequiredSymbolArg(eval, this, 0, args);
             if (name.isEmpty())

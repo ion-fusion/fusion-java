@@ -172,7 +172,7 @@ final class FusionSequence
         Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityAtLeast(1, args);
+            checkArityAtLeast(eval, 1, args);
             int arity = args.length;
 
             Object first = checkNullableSequenceArg(eval, this, 0, args);
@@ -195,7 +195,7 @@ final class FusionSequence
         Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityAtLeast(1, args);
+            checkArityAtLeast(eval, 1, args);
             int arity = args.length;
 
             Object first = checkNullableSequenceArg(eval, this, 0, args);

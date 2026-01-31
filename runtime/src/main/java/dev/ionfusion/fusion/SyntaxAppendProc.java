@@ -11,7 +11,7 @@ final class SyntaxAppendProc
     Object doApply(Evaluator eval, Object[] args)
         throws FusionException
     {
-        checkArityAtLeast(1, args);
+        checkArityAtLeast(eval, 1, args);
         SyntaxSequence seq = checkSyntaxSequenceArg(eval, 0, args);
         for (int i = 1; i < args.length; i++)
         {

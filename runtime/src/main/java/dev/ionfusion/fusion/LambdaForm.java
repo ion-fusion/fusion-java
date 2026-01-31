@@ -251,7 +251,7 @@ final class LambdaForm
         Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityExact(args);
+            checkArityExact(eval, args);
 
             Store localStore = new LocalStore(myEnclosure, args);
 
@@ -293,7 +293,7 @@ final class LambdaForm
         Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityExact(0, args);
+            checkArityExact(eval, 0, args);
 
             // No local store is created to wrap myEnclosure!
             return eval.bounceTailForm(myEnclosure, myBody);
@@ -335,7 +335,7 @@ final class LambdaForm
         Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityExact(1, args);
+            checkArityExact(eval, 1, args);
 
             Store localStore = new LocalStore1(myEnclosure, args[0]);
 
@@ -378,7 +378,7 @@ final class LambdaForm
         Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityExact(2, args);
+            checkArityExact(eval, 2, args);
 
             Store localStore = new LocalStore2(myEnclosure, args[0], args[1]);
 

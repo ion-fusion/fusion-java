@@ -5,6 +5,7 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionNumber.checkIntArgToJavaInt;
 import static dev.ionfusion.fusion.FusionText.checkRequiredTextArg;
+
 import java.util.Arrays;
 
 
@@ -15,7 +16,7 @@ final class RaiseArityErrorProc
     Object doApply(Evaluator eval, Object[] args)
         throws FusionException
     {
-        checkArityAtLeast(2, args);
+        checkArityAtLeast(eval, 2, args);
 
         String name      = checkRequiredTextArg(eval, this, 0, args);
         int arity        = checkIntArgToJavaInt(eval, this, 1, args);

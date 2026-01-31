@@ -18,7 +18,7 @@ class DatumToSyntaxProc
     Object doApply(Evaluator eval, Object[] args)
         throws FusionException
     {
-        checkArityRange(1, 3, args);
+        checkArityRange(eval, 1, 3, args);
 
         Object         datum    = args[0];
         SyntaxSymbol   context  = null;

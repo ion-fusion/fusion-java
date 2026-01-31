@@ -14,7 +14,7 @@ final class RaiseContractErrorProc
     Object doApply(Evaluator eval, Object[] args)
         throws FusionException
     {
-        checkArityExact(2, args);
+        checkArityExact(eval, 2, args);
 
         String name    = checkRequiredTextArg(eval, this, 0, args);
         String message = checkRequiredStringArg(eval, this, 1, args);

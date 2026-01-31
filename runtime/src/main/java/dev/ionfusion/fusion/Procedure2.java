@@ -18,7 +18,7 @@ abstract class Procedure2
     final Object doApply(Evaluator eval, Object[] args)
         throws FusionException
     {
-        checkArityExact(2, args);
+        checkArityExact(eval, 2, args);
         return doApply(eval, args[0], args[1]);
     }
 }

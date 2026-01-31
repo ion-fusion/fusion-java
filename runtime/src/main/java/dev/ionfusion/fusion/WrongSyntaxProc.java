@@ -15,7 +15,7 @@ final class WrongSyntaxProc
     Object doApply(Evaluator eval, Object[] args)
         throws FusionException
     {
-        checkArityAtLeast(1, args);
+        checkArityAtLeast(eval, 1, args);
         SyntaxValue stx = checkSyntaxArg(eval, 0, args);
 
         String name = null; // TODO infer name
