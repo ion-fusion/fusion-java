@@ -358,17 +358,21 @@ final class SyntaxSymbol
 
     /**
      * Verifies that a set of identifiers are unique with respect to
-     * {@link #boundIdentifierEqual)}.
+     * {@link #boundIdentifierEqual}.
      *
+     * @param eval
      * @param identifiers must not be null.
      * @param formForErrors the syntax form to be implicated in error messages.
      *
      * @throws SyntaxException if a duplicate is found.
      */
-    static void ensureUniqueIdentifiers(SyntaxSymbol[] identifiers,
+    static void ensureUniqueIdentifiers(Evaluator      eval,
+                                        SyntaxSymbol[] identifiers,
                                         SyntaxValue    formForErrors)
         throws SyntaxException
     {
+        if (identifiers.length <= 1) return;
+
         // TODO Avoid a hashmap when count==2, do a simple comparison.
         BoundIdMap<SyntaxSymbol> ids = new BoundIdMap<>();
         for (SyntaxSymbol id : identifiers)

@@ -5,7 +5,6 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.BindingSite.makeLocalBindingSite;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
-import static dev.ionfusion.fusion.SyntaxSymbol.ensureUniqueIdentifiers;
 import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_STRING_ARRAY;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
@@ -130,15 +129,9 @@ final class LocalEnvironment
 
     /**
      * Expand-time environment construction.
-     *
-     * @throws FusionException if there's a duplicate identifier.
      */
-    LocalEnvironment(Environment enclosure,
-                     SyntaxSymbol[] identifiers,
-                     SyntaxValue formForErrors)
-        throws FusionException
+    LocalEnvironment(Environment enclosure, SyntaxSymbol[] identifiers)
     {
-        assert formForErrors != null;
         myEnclosure = enclosure;
         myNamespace = enclosure.namespace();
         myDepth = 1 + enclosure.getDepth();
@@ -147,11 +140,6 @@ final class LocalEnvironment
         //   85% of local envs have 1 entry, 12% have 2.
         //   99% have 3 or fewer entries and none have more than 5.
         int count = identifiers.length;
-        if (count > 1)
-        {
-            ensureUniqueIdentifiers(identifiers, formForErrors);
-        }
-
         myBindings = new LocalBinding[count];
         for (int i = 0; i < count; i++)
         {

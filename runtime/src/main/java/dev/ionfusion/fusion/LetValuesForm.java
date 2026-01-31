@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.ResultFailure.makeResultError;
+import static dev.ionfusion.fusion.SyntaxSymbol.ensureUniqueIdentifiers;
 
 import dev.ionfusion.runtime.base.SourceLocation;
 import java.util.ArrayList;
@@ -62,7 +63,8 @@ final class LetValuesForm
         else
         {
             boundNames = boundNameList.toArray(SyntaxSymbol.EMPTY_ARRAY);
-            bodyEnv = new LocalEnvironment(env, boundNames, stx);
+            ensureUniqueIdentifiers(eval, boundNames, stx);
+            bodyEnv = new LocalEnvironment(env, boundNames);
             localWrap = new EnvironmentWrap(bodyEnv);
         }
 
