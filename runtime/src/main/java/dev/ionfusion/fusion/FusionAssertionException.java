@@ -5,31 +5,19 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionIo.safeWrite;
 
-import dev.ionfusion.runtime.base.SourceLocation;
-import java.io.IOException;
-
 @SuppressWarnings("serial")
-public final class FusionAssertionException
+final class FusionAssertionException
     extends FusionErrorException
 {
-    private final String myExpression;
-    private final Object myResult;
+    private final String myUserMessage;
 
     /**
-     * @param message may be null.
-     * @param location may be null.
-     * @param result must not be null.
+     * @param userMessage may be null.
      */
-    FusionAssertionException(String message,
-                             SourceLocation location,
-                             String expression,
-                             Object result)
+    private FusionAssertionException(String displayMessage, String userMessage)
     {
-        super(message);
-        myExpression = expression;
-        myResult = result;
-
-        addContext(location);
+        super(displayMessage);
+        myUserMessage = userMessage;
     }
 
     /**
@@ -39,20 +27,28 @@ public final class FusionAssertionException
      */
     public String getUserMessage()
     {
-        return getBaseMessage();
+        return myUserMessage;
     }
 
-    @Override
-    void displayMessage(Evaluator eval, Appendable out)
-        throws IOException, FusionException
-    {
-        out.append("Assertion failure: ");
 
-        super.displayMessage(eval, out);
+    static FusionException makeAssertError(Evaluator eval,
+                                           String userMessage,
+                                           String expression,
+                                           Object result)
+    {
+        StringBuilder out = new StringBuilder("Assertion failure: ");
+
+        if (userMessage != null)
+        {
+            out.append(userMessage);
+        }
 
         out.append("\nExpression: ");
-        out.append(myExpression);
+        safeWrite(eval, out, expression);
+
         out.append("\nResult:     ");
-        safeWrite(eval, out, myResult);
+        safeWrite(eval, out, result);
+
+        return new FusionAssertionException(out.toString(), userMessage);
     }
 }
