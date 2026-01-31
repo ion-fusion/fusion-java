@@ -9,6 +9,7 @@ import static dev.ionfusion.fusion.FusionList.isList;
 import static dev.ionfusion.fusion.FusionList.unsafeListIterator;
 import static dev.ionfusion.fusion.FusionSexp.isSexp;
 import static dev.ionfusion.fusion.FusionSexp.unsafeSexpIterator;
+import static dev.ionfusion.fusion.ResultFailure.makeResultError;
 import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_OBJECT_ARRAY;
 
 import com.amazon.ion.IonValue;
@@ -134,8 +135,7 @@ class FusionIterator
         Object o = eval.callNonTail(myHasNextProc);
         if (boolToJavaBoolean(eval, o) == null)
         {
-            throw new ResultFailure("iterator has_next_proc",
-                                    "true or false", o);
+            throw makeResultError(eval, "iterator has_next_proc", "true or false", o);
         }
         return o;
     }
@@ -146,8 +146,7 @@ class FusionIterator
         Boolean b = boolToJavaBoolean(eval, o);
         if (b == null)
         {
-            throw new ResultFailure("iterator has_next_proc", "true or false",
-                                    o);
+            throw makeResultError(eval, "iterator has_next_proc", "true or false", o);
         }
         return b;
     }
@@ -254,9 +253,7 @@ class FusionIterator
             Object injected = eval.injectMaybe(orig);
             if (injected == null)
             {
-                throw new ResultFailure("iterator_next",
-                                        "injectable Java type",
-                                        0, orig);
+                throw makeResultError(eval, "iterator_next", "injectable Java type", orig);
             }
             return injected;
         }

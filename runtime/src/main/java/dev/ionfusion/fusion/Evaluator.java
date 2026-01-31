@@ -17,6 +17,7 @@ import static dev.ionfusion.fusion.FusionStruct.structFromIonStruct;
 import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionTimestamp.makeTimestamp;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
+import static dev.ionfusion.fusion.ResultFailure.makeResultError;
 import static dev.ionfusion.fusion._private.FusionUtils.friendlyIndex;
 
 import com.amazon.ion.IonBool;
@@ -571,8 +572,7 @@ class Evaluator
             Object[] valuesArray = (Object[]) values;
             String expectation =
                 "1 result but received " + valuesArray.length;
-            throw new ResultFailure(formIdentifier,
-                                    expectation, -1, valuesArray);
+            throw makeResultError(this, formIdentifier, expectation, valuesArray);
         }
     }
 
