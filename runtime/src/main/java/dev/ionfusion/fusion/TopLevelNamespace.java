@@ -6,6 +6,7 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.NamedValue.inferObjectName;
 import static dev.ionfusion.fusion.ResultFailure.makeResultError;
+import static dev.ionfusion.fusion.UnboundIdentifierException.makeUnboundError;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.ModuleNamespace.ProvidedBinding;
@@ -423,7 +424,7 @@ final class TopLevelNamespace
                         NsDefinedBinding binding = ns.resolveDefinition(myId);
                         if (binding == null)
                         {
-                            throw new UnboundIdentifierException(myId);
+                            throw makeUnboundError(myId);
                         }
 
                         myAddress = binding.myAddress;

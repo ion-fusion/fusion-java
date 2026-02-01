@@ -3,8 +3,10 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.fusion.AmbiguousBindingFailure.makeAmbiguousBindingError;
 import static dev.ionfusion.fusion.BindingSite.makeExportBindingSite;
 import static dev.ionfusion.fusion.GlobalState.REQUIRE;
+import static dev.ionfusion.fusion.UnboundIdentifierException.makeUnboundError;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.ModuleIdentity;
@@ -201,9 +203,8 @@ final class ModuleNamespace
                                   SyntaxValue formForErrors)
             throws AmbiguousBindingFailure
         {
-            String name = identifier.stringValue();
-            throw new AmbiguousBindingFailure("module-level definition",
-                                              name, formForErrors);
+            throw makeAmbiguousBindingError("module-level definition",
+                                            identifier, formForErrors);
         }
 
         @Override
@@ -213,9 +214,7 @@ final class ModuleNamespace
             throws AmbiguousBindingFailure
         {
             if (this.sameTarget(provided)) return this;
-
-            String name = localId.stringValue();
-            throw new AmbiguousBindingFailure(REQUIRE, name, formForErrors);
+            throw makeAmbiguousBindingError(REQUIRE, localId, formForErrors);
         }
 
         @Override
@@ -324,8 +323,7 @@ final class ModuleNamespace
             throws AmbiguousBindingFailure
         {
             // A definition already exists, we can't redefine.
-            String name = identifier.stringValue();
-            throw new AmbiguousBindingFailure(null, name, formForErrors);
+            throw makeAmbiguousBindingError(null, identifier, formForErrors);
         }
 
         @Override
@@ -335,8 +333,7 @@ final class ModuleNamespace
             throws AmbiguousBindingFailure
         {
             // A definition already exists, we can't require the same id.
-            String name = localId.stringValue();
-            throw new AmbiguousBindingFailure(null, name, formForErrors);
+            throw makeAmbiguousBindingError(null, localId, formForErrors);
         }
 
         @Override
@@ -622,7 +619,7 @@ final class ModuleNamespace
             BaseSymbol name = ns.getDefinedName(myAddress);
             SyntaxSymbol id = SyntaxSymbol.make(myLocation, name);
 
-            throw new UnboundIdentifierException(id);
+            throw makeUnboundError(id);
         }
     }
 }

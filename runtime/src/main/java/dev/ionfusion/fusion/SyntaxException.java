@@ -3,9 +3,8 @@
 
 package dev.ionfusion.fusion;
 
+import static com.amazon.ion.util.IonTextUtils.printQuotedSymbol;
 import static dev.ionfusion.fusion.FusionIo.safeWrite;
-import com.amazon.ion.util.IonTextUtils;
-import java.io.IOException;
 
 /**
  * Indicates a compile-time syntax error.
@@ -14,57 +13,77 @@ import java.io.IOException;
 public class SyntaxException
     extends FusionErrorException
 {
-    private final String myName;
-    /** May be null. */
-    private final SyntaxValue mySource;
-
-
-    /**
-     * @param whatForm may be null.
-     * @param message must not be null.
-     */
-    SyntaxException(String whatForm, String message)
+    SyntaxException(String message)
     {
         super(message);
-        myName = whatForm;
-        mySource = null;
-    }
-
-    /**
-     * @param whatForm may be null.
-     * @param message must not be null.
-     * @param source the innermost continuation location; may be null.
-     */
-    SyntaxException(String whatForm, String message, SyntaxValue source)
-    {
-        super(message);
-        myName = whatForm;
-        mySource = source;
-
-        if (mySource != null)
-        {
-            addContext(source.getLocation());
-        }
     }
 
 
-    @Override
-    void displayMessage(Evaluator eval, Appendable out)
-        throws IOException, FusionException
+    static String composeMessage(Evaluator eval,
+                                 String whatForm,
+                                 String details,
+                                 SyntaxValue source)
     {
+        StringBuilder out = new StringBuilder();
         out.append("Bad syntax");
-        if (myName != null)
+
+        if (whatForm != null)
         {
             out.append(" for ");
-            IonTextUtils.printQuotedSymbol(out, myName);
+            out.append(printQuotedSymbol(whatForm));
         }
         out.append(": ");
-        super.displayMessage(eval, out);
+        out.append(details);
 
-        if (mySource != null)
+        if (source != null)
         {
             out.append("\nSource: ");
-            safeWrite(eval, out, mySource);
+            safeWrite(eval, out, source);
         }
+
+        return out.toString();
+    }
+
+    static String composeMessage(String formName, String details)
+    {
+        return composeMessage(null, formName, details, null);
+    }
+
+
+    static String composeMessage(String details)
+    {
+        return composeMessage(null, null, details, null);
+    }
+
+
+    /**
+     * @param eval may be null IFF {@code source} is null.
+     * @param whatForm may be null.
+     * @param details must not be null.
+     * @param source is written in the error message and supplies the innermost
+     * stack location; may be null.
+     */
+    static SyntaxException makeSyntaxError(Evaluator eval,
+                                           String whatForm,
+                                           String details,
+                                           SyntaxValue source)
+    {
+        String message = composeMessage(eval, whatForm, details, source);
+        SyntaxException e = new SyntaxException(message);
+        if (source != null)
+        {
+            e.addContext(source.getLocation());
+        }
+        return e;
+    }
+
+
+    /**
+     * @param details must not be null.
+     */
+    static SyntaxException makeSyntaxError(String details)
+    {
+        String message = composeMessage(details);
+        return new SyntaxException(message);
     }
 }

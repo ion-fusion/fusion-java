@@ -4,6 +4,8 @@
 package dev.ionfusion.fusion;
 
 
+import static dev.ionfusion.fusion.UnboundIdentifierException.makeUnboundError;
+
 /**
  * Implementation of {@code #%top}, which is introduced when identifiers are
  * macro-expanded in a scope where the identifier is not bound.
@@ -80,7 +82,7 @@ final class TopForm
                 }
             }
 
-            throw new UnboundIdentifierException(id);
+            throw makeUnboundError(id);
         }
 
         children[1] = id;

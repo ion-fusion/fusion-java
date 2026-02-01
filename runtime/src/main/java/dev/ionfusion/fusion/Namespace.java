@@ -10,6 +10,7 @@ import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.NamedValue.inferObjectName;
 import static dev.ionfusion.fusion.ResultFailure.makeResultError;
+import static dev.ionfusion.fusion.UnboundIdentifierException.makeUnboundError;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.ModuleNamespace.ModuleDefinedBinding;
@@ -743,7 +744,7 @@ abstract class Namespace
                 //   the unbound id so it reports the entire require form (when
                 //   this gets wrapped.
                 SyntaxSymbol sym = SyntaxSymbol.make(null, exportedId);
-                throw new UnboundIdentifierException(sym);
+                throw makeUnboundError(sym);
             }
 
             installRequiredBinding(eval, mapping.myLocalIdentifier, provided);

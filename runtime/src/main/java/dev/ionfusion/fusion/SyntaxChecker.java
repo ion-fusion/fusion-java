@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionValue.isAnyNull;
+import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 
 
 /**
@@ -56,12 +57,12 @@ class SyntaxChecker
 
     SyntaxException failure(String message)
     {
-        return new SyntaxException(myFormName, message, myForm);
+        return makeSyntaxError(myEvaluator, myFormName, message, myForm);
     }
 
     SyntaxException failure(String message, SyntaxValue subform)
     {
-        SyntaxException e = new SyntaxException(myFormName, message, subform);
+        SyntaxException e = makeSyntaxError(myEvaluator, myFormName, message, subform);
         e.addContext(myForm.getLocation());
         return e;
     }
@@ -254,7 +255,7 @@ class SyntaxChecker
         SyntaxException failure(String message)
         {
             SyntaxException e =
-                new SyntaxException(myBaseForm.myFormName, message, myForm);
+                makeSyntaxError(myEvaluator, myBaseForm.myFormName, message, myForm);
             e.addContext(myBaseForm.myForm.getLocation());
             return e;
         }
@@ -263,7 +264,7 @@ class SyntaxChecker
         SyntaxException failure(String message, SyntaxValue subform)
         {
             SyntaxException e =
-                new SyntaxException(myBaseForm.myFormName, message, subform);
+                makeSyntaxError(myEvaluator, myBaseForm.myFormName, message, subform);
             e.addContext(myBaseForm.myForm.getLocation());
             return e;
         }
