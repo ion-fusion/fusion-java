@@ -20,6 +20,14 @@ import java.util.Objects;
  * one to throw arbitrary values, not just "exception" types.  Within the
  * FusionJava implementation, all such values are wrapped in
  * {@link FusionException}s.
+ * <p>
+ * To show Fusion stack traces when these Java exceptions are printed,
+ * {@link #getMessage()} consists of two parts: the <em>base message</em>} (a
+ * description of the exception) and the <em>context</em> (the Fusion stack
+ * trace).
+ * Rather than simply printing the Java exception, applications and tools may
+ * produce better messages by getting the components individually via
+ * {@link #getBaseMessage()} and {@link #getContext()}.
  */
 @SuppressWarnings("serial")
 public class FusionException
@@ -31,31 +39,29 @@ public class FusionException
      */
     private List<SourceLocation> myContext;
 
-    // Constructors aren't public because I don't want applications to create
-    // exceptions directly or subclass them.
 
-    FusionException(String message)
+    public FusionException(String message)
     {
         super(message);
     }
 
-    FusionException(String message, Throwable cause)
+    public FusionException(String message, Throwable cause)
     {
         super(message, cause);
     }
 
-    FusionException(Throwable cause)
+    public FusionException(Throwable cause)
     {
         super(cause.getMessage(), cause);
     }
 
 
     /**
-     * Prepends a now location to the continuation of this exception.
+     * Prepends a location to the continuation trace of this exception.
      *
      * @param location can be null to indicate an unknown location.
      */
-    void addContext(SourceLocation location)
+    public void addContext(SourceLocation location)
     {
         if (myContext == null)
         {
@@ -91,9 +97,7 @@ public class FusionException
     }
 
 
-    // Before making this public, think about whether it needs Evaluator
-    // and should throw FusionException
-    void displayContinuation(Appendable out)
+    private void displayContinuation(Appendable out)
         throws IOException
     {
         if (myContext != null)
@@ -123,45 +127,47 @@ public class FusionException
      *
      * @return the Fusion value raised by Fusion code.
      */
-    Object getRaisedValue()
+    public Object getRaisedValue()
     {
         return this;
     }
 
     /**
-     * Returns the message string given to the exception constructor.
-     * This should be used instead of {@link #getMessage()} since the latter is
-     * overridden here to delegate to {@link #displayMessage}.
+     * Returns the base message of this exception.
+     * <p>
+     * This should be preferred over {@link #getMessage()} since the latter
+     * includes the Fusion continuation trace.
+     *
+     * @return the base message.
      */
-    String getBaseMessage()
+    public String getBaseMessage()
     {
         return super.getMessage();
     }
 
-    void displayMessage(Evaluator eval, Appendable out)
-        throws IOException, FusionException
-    {
-        String superMessage = getBaseMessage();
-        if (superMessage != null)
-        {
-            out.append(superMessage);
-        }
-    }
-
     /**
-     * @return the base message, followed by the Fusion continuation trace.
+     * Returns the base message of this exception, followed by the Fusion stack
+     * trace.
+     *
+     * @return not null.
      */
     @Override
     public final String getMessage()
     {
         StringBuilder out = new StringBuilder();
 
+        String base = getBaseMessage();
+        if (base == null)
+        {
+            base = getClass().getSimpleName();
+        }
+        out.append(base);
+
         try
         {
-            displayMessage(null, out);
             displayContinuation(out);
         }
-        catch (IOException | FusionException e)
+        catch (IOException e)
         {
             // Swallow these, we can't do anything with it at the moment.
         }
