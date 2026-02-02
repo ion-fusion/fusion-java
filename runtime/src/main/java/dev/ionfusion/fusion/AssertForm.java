@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.fusion.FusionAssertionException.makeAssertError;
 import static dev.ionfusion.fusion.FusionIo.safeDisplay;
 import static dev.ionfusion.fusion.FusionIo.safeWriteToString;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
@@ -77,7 +78,7 @@ final class AssertForm
                 return voidValue(eval);
             }
 
-            String message;
+            String userMessage = null;
             int size = myMessageForms.length;
             if (size != 0)
             {
@@ -89,14 +90,14 @@ final class AssertForm
                     // Use safe API so we don't throw a different exception
                     safeDisplay(eval, buf, messageValue);
                 }
-                message = buf.toString();
-            }
-            else
-            {
-                message = null;
+                userMessage = buf.toString();
             }
 
-            throw new FusionAssertionException(message, myLocation, myExpression, result);
+            FusionException exn =
+                makeAssertError(eval, userMessage, myExpression, result);
+            exn.addContext(myLocation);
+
+            throw exn;
         }
     }
 }
