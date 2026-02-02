@@ -3,6 +3,8 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.fusion.ResultFailure.makeResultError;
+
 import dev.ionfusion.runtime.base.SourceLocation;
 import java.util.ArrayList;
 
@@ -359,8 +361,7 @@ final class LetValuesForm
                         String expectation =
                             expectedCount + " results but received " +
                             actualCount;
-                        throw new ResultFailure("local-binding form",
-                                                expectation, -1, vals);
+                        throw makeResultError(eval, "local-binding form", expectation, vals);
                     }
 
                     System.arraycopy(vals, 0,
@@ -372,8 +373,7 @@ final class LetValuesForm
                 {
                     String expectation =
                         expectedCount + " results but received 1";
-                    throw new ResultFailure("local-binding form",
-                                            expectation, -1, values);
+                    throw makeResultError(eval, "local-binding form", expectation, values);
                 }
             }
 

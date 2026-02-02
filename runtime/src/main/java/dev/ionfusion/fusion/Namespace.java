@@ -9,6 +9,7 @@ import static dev.ionfusion.fusion.FusionIo.safeWriteToString;
 import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.NamedValue.inferObjectName;
+import static dev.ionfusion.fusion.ResultFailure.makeResultError;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.ModuleNamespace.ModuleDefinedBinding;
@@ -1100,8 +1101,7 @@ abstract class Namespace
                 {
                     String expectation =
                         expectedCount + " results but received " + actualCount;
-                    throw new ResultFailure("module-level definition",
-                                            expectation, -1, vals);
+                    throw makeResultError(eval, "module-level definition", expectation, vals);
                 }
 
                 NamespaceStore ns = store.namespace();
@@ -1116,8 +1116,7 @@ abstract class Namespace
             else
             {
                 String expectation = expectedCount + " results but received 1";
-                throw new ResultFailure("module-level definition",
-                                        expectation, -1, values);
+                throw makeResultError(eval, "module-level definition", expectation, values);
             }
 
             return voidValue(eval);

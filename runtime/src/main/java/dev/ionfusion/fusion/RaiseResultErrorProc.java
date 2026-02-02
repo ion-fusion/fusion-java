@@ -5,7 +5,7 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionString.checkRequiredStringArg;
 import static dev.ionfusion.fusion.FusionText.checkRequiredTextArg;
-
+import static dev.ionfusion.fusion.ResultFailure.makeResultError;
 
 
 final class RaiseResultErrorProc
@@ -23,6 +23,6 @@ final class RaiseResultErrorProc
 
         if (name.isEmpty()) name = "unknown procedure";
 
-        throw new ResultFailure(name, expected, actual);
+        throw makeResultError(eval, name, expected, actual);
     }
 }

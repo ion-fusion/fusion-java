@@ -5,7 +5,6 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionIo.safeWrite;
 import static dev.ionfusion.fusion._private.FusionUtils.writeFriendlyIndex;
-import java.io.IOException;
 
 /**
  * Indicates a contractual failure of a result from some computation.
@@ -14,96 +13,67 @@ import java.io.IOException;
 final class ResultFailure
     extends ContractException
 {
-    private final String     myName;
-    private final String     myExpectation;
-    private final int        myBadPos;
-    private final Object[]   myActuals;
-
+    private ResultFailure(String message)
+    {
+        super(message);
+    }
 
 
     /**
      *
      * @param name must not be null.
+     * @param expectation must not be null.
      * @param badPos the zero-based index of the problematic value.
-     *   -1 means a specific position isn't implicated.
-     * @param actual must not be null.
-     */
-    ResultFailure(String name, String expectation,
-                  int badPos, Object actual)
-    {
-        super("result failure");
-        assert name != null && actual != null;
-
-        myName = name;
-        myExpectation = expectation;
-        myBadPos = badPos;
-        myActuals = new Object[]{ actual };
-    }
-
-    /**
-     *
-     * @param name must not be null.
-     * @param actual must not be null.
-     */
-    ResultFailure(String name, String expectation, Object actual)
-    {
-        this(name, expectation, -1, actual);
-    }
-
-    /**
-     *
-     * @param name
-     * @param expectation
-     * @param badPos the zero-based index of the problematic value.
-     *   -1 means a specific position isn't implicated.
+     * If negative, a specific position isn't implicated.
      * @param actuals must not be null.
      */
-    ResultFailure(String name, String expectation,
-                  int badPos, Object[] actuals)
+    static FusionException makeResultError(Evaluator eval,
+                                           String    name,
+                                           String    expectation,
+                                           int       badPos,
+                                           Object... actuals)
     {
-        super("result failure");
         assert name != null;
         assert badPos < actuals.length;
 
-        myName = name;
-        myExpectation = expectation;
-        myBadPos = badPos;
-        myActuals = actuals;
-    }
+        StringBuilder out = new StringBuilder();
 
+        int actualsLen = actuals.length;
 
-    @Override
-    void displayMessage(Evaluator eval, Appendable out)
-        throws IOException, FusionException
-    {
-        int actualsLen = myActuals.length;
-
-        out.append(myName);
+        out.append(name);
         out.append(" expects ");
-        out.append(myExpectation);
+        out.append(expectation);
 
-        if (0 <= myBadPos)
+        if (0 <= badPos)
         {
             out.append(" as ");
-            writeFriendlyIndex(out, myBadPos);
+            writeFriendlyIndex(out, badPos);
             out.append(" result, given ");
-            safeWrite(eval, out, myActuals[actualsLen == 1 ? 0 : myBadPos]);
+            safeWrite(eval, out, actuals[actualsLen == 1 ? 0 : badPos]);
         }
 
-        if (actualsLen > 1 || (myBadPos < 0 && actualsLen != 0))
+        if (actualsLen > 1 || (badPos < 0 && actualsLen != 0))
         {
-            out.append(myBadPos < 0
-                     ? "\nResults were:"
-                     : "\nOther results were:");
+            out.append(badPos < 0 ? "\nResults were:" : "\nOther results were:");
 
             for (int i = 0; i < actualsLen; i++)
             {
-                if (i != myBadPos)
+                if (i != badPos)
                 {
                     out.append("\n  ");
-                    safeWrite(eval, out, myActuals[i]);
+                    safeWrite(eval, out, actuals[i]);
                 }
             }
         }
+
+        return new ResultFailure(out.toString());
+    }
+
+    static FusionException makeResultError(Evaluator eval,
+                                           String    name,
+                                           String    expectation,
+                                           Object... actuals)
+    {
+        return makeResultError(eval, name, expectation, -1, actuals);
     }
 }
