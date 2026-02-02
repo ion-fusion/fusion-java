@@ -3,11 +3,6 @@
 
 package dev.ionfusion.fusion;
 
-import static dev.ionfusion.fusion.FusionIterator.injectIonIterator;
-import static dev.ionfusion.fusion.FusionIterator.injectIterator;
-import com.amazon.ion.IonList;
-import dev.ionfusion.runtime.embed.TopLevel;
-import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
 
@@ -74,51 +69,5 @@ public class IteratorTest
 
         expectContractExn("(iterator_map_splicing 1 empty_iterator)");
         expectContractExn("(iterator_map_splicing value_iterator [])");
-    }
-
-
-    //========================================================================
-    // Injection APIs
-
-    private static final String ITER_HAS_NEXT = "(iterator_has_next iter)";
-    private static final String ITER_NEXT = "(iterator_next iter)";
-
-    @Test
-    public void testIteratorInjecting()
-        throws Exception
-    {
-        ArrayList<Object> list = new ArrayList<>();
-        list.add("str");
-        list.add(12);
-        list.add(null);
-
-        TopLevel top = topLevel();
-        top.define("iter", injectIterator(null, list.iterator()));
-        assertString("str", ITER_NEXT);
-        assertEval(12, ITER_NEXT);
-        assertVoid(ITER_NEXT);
-        assertEval(false, ITER_HAS_NEXT);
-    }
-
-    @Test
-    public void testIonIteratorInjecting()
-        throws Exception
-    {
-        IonList list = (IonList) system().singleValue("['''str''', 12, null]");
-
-        TopLevel top = topLevel();
-        top.define("iter", injectIterator(null, list.iterator()));
-        assertEval(true, ITER_HAS_NEXT);
-        assertString("str", ITER_NEXT);
-        assertEval(12, ITER_NEXT);
-        assertEval("null.null", ITER_NEXT);
-        assertEval(false, ITER_HAS_NEXT);
-
-        top.define("iter", injectIonIterator(null, list.iterator()));
-        assertEval(true, ITER_HAS_NEXT);
-        assertString("str", ITER_NEXT);
-        assertEval(12, ITER_NEXT);
-        assertEval("null.null", ITER_NEXT);
-        assertEval(false, ITER_HAS_NEXT);
     }
 }

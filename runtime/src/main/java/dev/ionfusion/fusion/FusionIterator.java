@@ -59,7 +59,6 @@ class FusionIterator
      * Builds a Fusion iterator from a Java iterator, without injecting its
      * elements.
      *
-     * @see #injectIterator(Evaluator, Iterator)
      * @see #injectIonIterator(Evaluator, Iterator)
      */
     static FusionIterator iterate(Evaluator eval, Iterator<?> iterator)
@@ -68,24 +67,9 @@ class FusionIterator
     }
 
 
-
-    /**
-     * Builds a Fusion iterator from a Java iterator, lazily injecting each
-     * value.
-     *
-     * @see #iterate(Evaluator, Iterator)
-     * @see #injectIonIterator(Evaluator, Iterator)
-     */
-    static Object injectIterator(Evaluator eval, Iterator<?> iterator)
-    {
-        return new InjectingIteratorAdaptor(iterator);
-    }
-
-
     /**
      * Builds a Fusion iterator from an IonValue iterator, lazily injecting
-     * each {@code IonValue}.  This is slightly more efficient than
-     * {@link FusionIterator#injectIterator(Evaluator, Iterator)}.
+     * each {@code IonValue}.
      */
     static Object injectIonIterator(Evaluator eval,
                                     Iterator<IonValue> iterator)
@@ -233,30 +217,6 @@ class FusionIterator
             {
                 throw new ContractException("iterator_next: no such element");
             }
-        }
-    }
-
-
-    /** Custom class avoid some dynamic dispatch. */
-    private static final class InjectingIteratorAdaptor
-        extends IteratorAdaptor
-    {
-        InjectingIteratorAdaptor(Iterator<?> iter)
-        {
-            super(iter);
-        }
-
-        @Override
-        public Object next(Evaluator eval)
-            throws FusionException
-        {
-            Object orig = myIterator.next();
-            Object injected = eval.injectMaybe(orig);
-            if (injected == null)
-            {
-                throw makeResultError(eval, "iterator_next", "injectable Java type", orig);
-            }
-            return injected;
         }
     }
 
