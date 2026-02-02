@@ -1,12 +1,11 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion;
+package dev.ionfusion.runtime.base;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 
-import dev.ionfusion.runtime.base.SourceLocation;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

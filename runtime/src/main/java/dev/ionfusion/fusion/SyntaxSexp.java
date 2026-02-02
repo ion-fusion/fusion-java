@@ -21,6 +21,7 @@ import com.amazon.ion.IonWriter;
 import dev.ionfusion.fusion.FusionSexp.BaseSexp;
 import dev.ionfusion.fusion.FusionSexp.ImmutablePair;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.SourceLocation;
 import java.io.IOException;
 import java.lang.reflect.Array;

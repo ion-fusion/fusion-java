@@ -20,6 +20,7 @@ import static dev.ionfusion.fusion.FusionTimestamp.unsafeTimestampToJavaTimestam
 import com.amazon.ion.Timestamp;
 import dev.ionfusion.fusion.FusionBool.BaseBool;
 import dev.ionfusion.fusion.FusionNumber.BaseNumber;
+import dev.ionfusion.runtime.base.FusionException;
 import java.math.BigDecimal;
 
 /**

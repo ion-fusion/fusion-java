@@ -4,8 +4,8 @@
 package dev.ionfusion.fusion._private.doc.tool;
 
 import com.amazon.ion.Timestamp;
-import dev.ionfusion.fusion.FusionException;
 import dev.ionfusion.fusion.util.FusionJarInfo;
+import dev.ionfusion.runtime.base.FusionException;
 
 /**
  * Holds site-wide information available to templates.

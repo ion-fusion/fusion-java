@@ -3,6 +3,8 @@
 
 package dev.ionfusion.fusion;
 
+import dev.ionfusion.runtime.base.FusionException;
+
 /**
  * Thrown to indicate that a Fusion computation was interrupted via
  * {@link Thread#interrupt()}. When thrown,

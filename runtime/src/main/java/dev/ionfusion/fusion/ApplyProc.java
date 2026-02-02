@@ -12,6 +12,8 @@ import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
 import static dev.ionfusion.fusion.FusionSexp.unsafeSexpSize;
 
+import dev.ionfusion.runtime.base.FusionException;
+
 
 final class ApplyProc
     extends Procedure

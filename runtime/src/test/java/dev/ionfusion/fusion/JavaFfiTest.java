@@ -5,6 +5,7 @@ package dev.ionfusion.fusion;
 
 import static com.amazon.ion.util.IonTextUtils.printString;
 import dev.ionfusion.fusion.FusionNumber.SumProc;
+import dev.ionfusion.runtime.base.FusionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

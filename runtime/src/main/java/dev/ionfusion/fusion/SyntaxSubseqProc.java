@@ -5,6 +5,8 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionNumber.checkIntArgToJavaInt;
 
+import dev.ionfusion.runtime.base.FusionException;
+
 final class SyntaxSubseqProc
     extends Procedure
 {

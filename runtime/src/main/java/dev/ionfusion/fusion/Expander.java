@@ -6,6 +6,8 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionValue.isAnnotated;
 import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 
+import dev.ionfusion.runtime.base.FusionException;
+
 /**
  * "Registers" used during macro expansion
  */

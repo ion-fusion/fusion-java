@@ -13,6 +13,7 @@ import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_OBJECT_ARRAY;
 import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_STRING_ARRAY;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.SourceLocation;
 import java.util.Collections;
 import java.util.Set;

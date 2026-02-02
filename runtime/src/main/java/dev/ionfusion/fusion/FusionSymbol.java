@@ -17,6 +17,7 @@ import com.amazon.ion.ValueFactory;
 import com.amazon.ion.util.IonTextUtils;
 import dev.ionfusion.fusion.FusionBool.BaseBool;
 import dev.ionfusion.fusion._private.InternMap;
+import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.SourceLocation;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.IOException;

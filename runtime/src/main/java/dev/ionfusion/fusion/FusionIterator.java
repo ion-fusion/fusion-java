@@ -14,6 +14,7 @@ import static dev.ionfusion.fusion.ResultFailure.makeResultError;
 import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_OBJECT_ARRAY;
 
 import com.amazon.ion.IonValue;
+import dev.ionfusion.runtime.base.FusionException;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;

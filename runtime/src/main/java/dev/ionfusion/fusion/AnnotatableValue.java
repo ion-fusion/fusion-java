@@ -7,6 +7,7 @@ import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.internSymbols;
 import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.unsafeSymbolsToJavaStrings;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+import dev.ionfusion.runtime.base.FusionException;
 
 interface AnnotatableValue<Self extends AnnotatableValue<Self>>
 {

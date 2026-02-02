@@ -11,6 +11,7 @@ import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 
 import dev.ionfusion.fusion.FusionSexp.BaseSexp;
+import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.SourceLocation;
 
 final class AssertForm

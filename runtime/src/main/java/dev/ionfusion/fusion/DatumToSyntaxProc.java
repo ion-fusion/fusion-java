@@ -8,6 +8,7 @@ import static dev.ionfusion.fusion.FusionSyntax.isSyntax;
 import static dev.ionfusion.fusion.FusionSyntax.unsafeSyntaxLocation;
 import static dev.ionfusion.fusion.Syntax.datumToSyntax;
 
+import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.SourceLocation;
 
 

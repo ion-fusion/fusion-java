@@ -158,7 +158,7 @@ See the [Racket Guide on Exceptions][racket-exn] for more details.
             stx)))))
 
 
-  (define FusionExn     (java_class "dev.ionfusion.fusion.FusionException"))
+  (define FusionExn     (java_class "dev.ionfusion.runtime.base.FusionException"))
   (define FusionUserExn (java_class "dev.ionfusion.fusion.FusionUserException"))
 
   (provide is_exn)

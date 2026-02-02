@@ -3,6 +3,8 @@
 
 package dev.ionfusion.fusion;
 
+import dev.ionfusion.runtime.base.FusionException;
+
 /**
  * This class is an internal procedure used by the with_handlers form.
  * It evaluates a thunk, catches FusionExceptions returned by the evaluation,

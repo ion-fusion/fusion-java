@@ -4,6 +4,8 @@
 package dev.ionfusion.fusion;
 
 
+import dev.ionfusion.runtime.base.FusionException;
+
 /**
  * The {@code if} syntactic form.
  */

@@ -8,6 +8,8 @@ import static dev.ionfusion.fusion.FusionString.isString;
 import static dev.ionfusion.fusion.SyntaxSymbol.ensureUniqueIdentifiers;
 import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_STRING_ARRAY;
 
+import dev.ionfusion.runtime.base.FusionException;
+
 /**
  * The {@code lambda} syntactic form, which evaluates to a {@link Closure}.
  */

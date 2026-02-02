@@ -6,6 +6,8 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionIo.safeWriteToString;
 import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 
+import dev.ionfusion.runtime.base.FusionException;
+
 /**
  * Runtime representation of Fusion macros, performing syntax expansion.
  */

@@ -6,6 +6,7 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionNumber.checkIntArgToJavaInt;
 import static dev.ionfusion.fusion.FusionNumber.makeInt;
 
+import dev.ionfusion.runtime.base.FusionException;
 import org.junit.jupiter.api.Test;
 
 public class TailCallTest

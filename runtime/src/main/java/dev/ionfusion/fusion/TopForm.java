@@ -6,6 +6,8 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.UnboundIdentifierException.makeUnboundError;
 
+import dev.ionfusion.runtime.base.FusionException;
+
 /**
  * Implementation of {@code #%top}, which is introduced when identifiers are
  * macro-expanded in a scope where the identifier is not bound.

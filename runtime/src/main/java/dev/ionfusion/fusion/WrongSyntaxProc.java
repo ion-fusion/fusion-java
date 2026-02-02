@@ -6,6 +6,8 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionIo.safeDisplayManyToString;
 import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 
+import dev.ionfusion.runtime.base.FusionException;
+
 /**
  * Fusion procedure to raise a syntax error.
  */

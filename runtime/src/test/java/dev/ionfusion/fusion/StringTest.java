@@ -6,6 +6,7 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionString.unsafeStringToJavaString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.amazon.ion.util.IonTextUtils;
+import dev.ionfusion.runtime.base.FusionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

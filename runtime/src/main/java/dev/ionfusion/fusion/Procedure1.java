@@ -3,6 +3,8 @@
 
 package dev.ionfusion.fusion;
 
+import dev.ionfusion.runtime.base.FusionException;
+
 /**
  * A procedure of exactly one argument.
  * This class performs arity checking before invoking the subclass

@@ -6,8 +6,8 @@ package dev.ionfusion.runtime.embed;
 import com.amazon.ion.IonCatalog;
 import com.amazon.ion.IonValue;
 import com.amazon.ion.ValueFactory;
-import dev.ionfusion.fusion.FusionException;
 import dev.ionfusion.fusion.FusionRuntimeBuilder;
+import dev.ionfusion.runtime.base.FusionException;
 
 /**
  * Primary entry point for embedding Fusion within a Java program.

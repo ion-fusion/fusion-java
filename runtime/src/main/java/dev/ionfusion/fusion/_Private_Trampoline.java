@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 import dev.ionfusion.fusion._private.doc.model.ModuleDocs;
+import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.nio.file.Path;

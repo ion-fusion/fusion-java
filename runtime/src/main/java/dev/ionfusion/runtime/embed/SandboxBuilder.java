@@ -3,8 +3,8 @@
 
 package dev.ionfusion.runtime.embed;
 
-import dev.ionfusion.fusion.FusionException;
 import dev.ionfusion.fusion.FusionRuntimeBuilder;
+import dev.ionfusion.runtime.base.FusionException;
 
 /**
  * Constructs {@link TopLevel} namespaces for evaluating code with limited

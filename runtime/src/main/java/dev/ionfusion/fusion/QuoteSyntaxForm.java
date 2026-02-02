@@ -3,6 +3,8 @@
 
 package dev.ionfusion.fusion;
 
+import dev.ionfusion.runtime.base.FusionException;
+
 final class QuoteSyntaxForm
     extends SyntacticForm
 {

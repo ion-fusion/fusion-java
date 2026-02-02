@@ -5,6 +5,8 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionString.checkRequiredStringArg;
 
+import dev.ionfusion.runtime.base.FusionException;
+
 final class JavaClassProc
     extends Procedure1
 {

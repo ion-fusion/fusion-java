@@ -5,6 +5,8 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionIo.safeWriteToString;
 
+import dev.ionfusion.runtime.base.FusionException;
+
 
 final class ParameterizeForm
     extends SyntacticForm

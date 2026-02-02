@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.amazon.ion.IonInt;
 import com.amazon.ion.IonValue;
+import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.embed.TopLevel;
 import org.junit.jupiter.api.Test;
 

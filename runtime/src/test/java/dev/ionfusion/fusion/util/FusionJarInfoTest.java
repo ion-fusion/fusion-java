@@ -6,7 +6,7 @@ package dev.ionfusion.fusion.util;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.startsWith;
 
-import dev.ionfusion.fusion.FusionException;
+import dev.ionfusion.runtime.base.FusionException;
 import org.junit.jupiter.api.Test;
 
 /**
