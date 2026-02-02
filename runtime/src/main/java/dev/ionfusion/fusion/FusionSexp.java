@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.fusion.ArgumentException.makeArgumentError;
 import static dev.ionfusion.fusion.FusionBool.falseBool;
 import static dev.ionfusion.fusion.FusionBool.makeBool;
 import static dev.ionfusion.fusion.FusionBool.trueBool;
@@ -489,16 +490,16 @@ final class FusionSexp
                 back = ((BaseSequence) sequences[i]).sexpAppend(eval, back);
                 if (back == null)
                 {
-                    throw new ArgumentException("append", "proper sequence",
-                                                i+1, sequences[i]);
+                    throw makeArgumentError(eval, "append", "proper sequence",
+                                            i+1, sequences[i]);
                 }
             }
 
             BaseSexp result = sexpAppend(eval, back);
             if (result == null)
             {
-                throw new ArgumentException("append", "proper sequence",
-                                            0, this);
+                throw makeArgumentError(eval, "append", "proper sequence",
+                                        0, this);
             }
             return result;
         }
@@ -741,7 +742,7 @@ final class FusionSexp
                 return size;
             }
 
-            throw new ArgumentException("size", "proper sexp", 0, this);
+            throw makeArgumentError(eval, "size", "proper sexp", 0, this);
         }
 
         @Override
@@ -1172,8 +1173,8 @@ final class FusionSexp
             }
             catch (ClassCastException e)
             {
-                throw new ArgumentException("iterator_next", "proper sexp",
-                                            0, this);
+                throw makeArgumentError(eval, "iterator_next", "proper sexp",
+                                        0, this);
             }
         }
     }

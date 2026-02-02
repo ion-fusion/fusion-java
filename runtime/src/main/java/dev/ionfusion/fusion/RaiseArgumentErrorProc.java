@@ -3,9 +3,11 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.fusion.ArgumentException.makeArgumentError;
 import static dev.ionfusion.fusion.FusionNumber.checkIntArgToJavaInt;
 import static dev.ionfusion.fusion.FusionString.checkRequiredStringArg;
 import static dev.ionfusion.fusion.FusionText.checkRequiredTextArg;
+
 import java.util.Arrays;
 
 
@@ -34,6 +36,6 @@ final class RaiseArgumentErrorProc
             badPos = -1;
         }
 
-        throw new ArgumentException(name, expected, badPos, actuals);
+        throw makeArgumentError(eval, name, expected, badPos, actuals);
     }
 }

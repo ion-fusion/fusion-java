@@ -3,7 +3,9 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.fusion.ArgumentException.makeArgumentError;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 
 /**
@@ -18,10 +20,10 @@ public class ArgumentExceptionTest
     public void testSanitizedFactoryMethod()
         throws Exception
     {
-        ArgumentException exception = new ArgumentException(
-            "testSanitized", "nop", 0, "super secret data");
+        ArgumentException exception = makeArgumentError(evaluator(),
+                                                        "testSanitized", "nop", 0, "super secret data");
         ArgumentException sanitized =
-            ArgumentException.makeSanitizedException(exception);
+            ArgumentException.makeSanitizedException(evaluator(), exception);
 
         assertEquals(exception.getName(), sanitized.getName());
         assertEquals(exception.getExpectation(), sanitized.getExpectation());
@@ -39,11 +41,11 @@ public class ArgumentExceptionTest
     public void testSanitizedFactoryMethodWithMultiple()
         throws Exception
     {
-        ArgumentException exception = new ArgumentException(
-            "testSanitized", "nop", -1, "super secret data 1",
-            "super secret data 2", "super secret data 3");
+        ArgumentException exception = makeArgumentError(evaluator(),
+                                                        "testSanitized", "nop", -1, "super secret data 1",
+                                                        "super secret data 2", "super secret data 3");
         ArgumentException sanitized =
-            ArgumentException.makeSanitizedException(exception);
+            ArgumentException.makeSanitizedException(evaluator(), exception);
 
         assertEquals(exception.getName(), sanitized.getName());
         assertEquals(exception.getExpectation(), sanitized.getExpectation());

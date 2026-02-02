@@ -3,6 +3,8 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.fusion.ArgumentException.makeArgumentError;
+
 import com.amazon.ion.util.IonTextUtils;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import java.io.IOException;
@@ -218,7 +220,7 @@ abstract class Procedure
                                    int badPos,
                                    Object... actuals)
     {
-        return new ArgumentException(identify(), expectation, badPos, actuals);
+        return makeArgumentError(eval, identify(), expectation, badPos, actuals);
     }
 
 
