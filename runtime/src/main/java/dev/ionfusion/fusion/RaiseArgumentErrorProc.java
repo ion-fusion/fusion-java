@@ -18,7 +18,7 @@ final class RaiseArgumentErrorProc
     Object doApply(Evaluator eval, Object[] args)
         throws FusionException
     {
-        checkArityAtLeast(4, args);
+        checkArityAtLeast(eval, 4, args);
 
         String name     = checkRequiredTextArg(eval, this, 0, args);
         String expected = checkRequiredStringArg(eval, this, 1, args);

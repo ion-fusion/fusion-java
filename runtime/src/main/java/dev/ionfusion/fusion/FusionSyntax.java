@@ -229,7 +229,7 @@ final class FusionSyntax
         Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityExact(1, args);
+            checkArityExact(eval, 1, args);
             SyntaxValue stx = checkSyntaxArg(eval, 0, args);
             return stx.syntaxToDatum(eval);
         }
@@ -243,7 +243,7 @@ final class FusionSyntax
         Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityExact(1, args);
+            checkArityExact(eval, 1, args);
             SyntaxValue stx = checkSyntaxArg(eval, 0, args);
             return stx.unwrap(eval);
         }
@@ -257,7 +257,7 @@ final class FusionSyntax
         Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityRange(2, 3, args);
+            checkArityRange(eval, 2, 3, args);
 
             SyntaxValue stx =
                 FusionSyntax.checkSyntaxArg(eval, this, "syntax object", 0, args);
@@ -281,7 +281,7 @@ final class FusionSyntax
         Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityExact(3, args);
+            checkArityExact(eval, 3, args);
 
             SyntaxValue newStx =
                 FusionSyntax.checkSyntaxArg(eval, this, "syntax object", 0, args);
@@ -302,7 +302,7 @@ final class FusionSyntax
         Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityExact(1, args);
+            checkArityExact(eval, 1, args);
 
             SyntaxValue stx =
                 FusionSyntax.checkSyntaxArg(eval, this, "syntax object", 0, args);

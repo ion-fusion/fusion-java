@@ -794,7 +794,7 @@ public final class FusionString
         Object doApply(Evaluator eval, Object[] args)
                 throws FusionException
         {
-            checkArityExact(2, args);
+            checkArityExact(eval, 2, args);
             String string = checkRequiredStringArg(eval, this, 0, args);
             String values = checkRequiredStringArg(eval, this, 1, args);
             return makeBool(eval, string.contains(values));
@@ -809,7 +809,7 @@ public final class FusionString
         Object doApply(Evaluator eval, Object[] args)
                 throws FusionException
         {
-            checkArityExact(2, args);
+            checkArityExact(eval, 2, args);
             String string = checkRequiredStringArg(eval, this, 0, args);
             String suffix = checkRequiredStringArg(eval, this, 1, args);
             return makeBool(eval, string.endsWith(suffix));
@@ -824,7 +824,7 @@ public final class FusionString
         Object doApply(Evaluator eval, Object[] args)
                 throws FusionException
         {
-            checkArityExact(2, args);
+            checkArityExact(eval, 2, args);
             String string    = checkRequiredStringArg(eval, this, 0, args);
             String substring = checkRequiredStringArg(eval, this, 1, args);
             int indexOf = string.indexOf(substring);
@@ -873,7 +873,7 @@ public final class FusionString
         Object doApply(Evaluator eval, Object[] args)
                 throws FusionException
         {
-            checkArityAtLeast(1, args);
+            checkArityAtLeast(eval, 1, args);
             String separator = checkRequiredTextArg(eval, this, 0, args);
 
             StringBuilder resultBuilder = new StringBuilder();
@@ -900,7 +900,7 @@ public final class FusionString
         Object doApply(Evaluator eval, Object[] args)
                 throws FusionException
         {
-            checkArityExact(3, args);
+            checkArityExact(eval, 3, args);
 
             String string = checkNullableStringArg(eval, this, 0, args);
             String from = checkRequiredStringArg(eval, this, 1, args);
@@ -930,7 +930,7 @@ public final class FusionString
         Object doApply(Evaluator eval, Object[] args)
                 throws FusionException
         {
-            checkArityExact(2, args);
+            checkArityExact(eval, 2, args);
             String string    = checkRequiredStringArg(eval, this, 0, args);
             String separator = checkRequiredStringArg(eval, this, 1, args);
             String[] splitResult = string.split(prepareSeparator(separator));
@@ -967,7 +967,7 @@ public final class FusionString
         Object doApply(Evaluator eval, Object[] args)
                 throws FusionException
         {
-            checkArityExact(2, args);
+            checkArityExact(eval, 2, args);
             String string = checkRequiredStringArg(eval, this, 0, args);
             String prefix = checkRequiredStringArg(eval, this, 1, args);
             return makeBool(eval, string.startsWith(prefix));

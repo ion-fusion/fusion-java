@@ -12,7 +12,7 @@ final class SyntaxSubseqProc
     Object doApply(Evaluator eval, Object[] args)
         throws FusionException
     {
-        checkArityExact(2, args);
+        checkArityExact(eval, 2, args);
         SyntaxSequence sequence = checkSyntaxSequenceArg(eval, 0, args);
         int from = checkIntArgToJavaInt(eval, this, 1, args);
         int size = sequence.size(eval);

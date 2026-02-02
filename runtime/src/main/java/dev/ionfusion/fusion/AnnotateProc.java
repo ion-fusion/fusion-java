@@ -13,7 +13,7 @@ final class AnnotateProc
     Object doApply(Evaluator eval, Object[] args)
         throws FusionException
     {
-        checkArityAtLeast(1, args);
+        checkArityAtLeast(eval, 1, args);
         int arity = args.length;
 
         // We don't try to optimize this by looking for symbol args and

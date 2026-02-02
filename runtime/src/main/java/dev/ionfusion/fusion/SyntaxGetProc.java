@@ -16,7 +16,7 @@ final class SyntaxGetProc
     Object doApply(Evaluator eval, Object[] args)
         throws FusionException
     {
-        checkArityAtLeast(1, args);
+        checkArityAtLeast(eval, 1, args);
         SyntaxContainer stx = checkSyntaxContainerArg(eval, 0, args);
         SyntaxValue value = stx;
 

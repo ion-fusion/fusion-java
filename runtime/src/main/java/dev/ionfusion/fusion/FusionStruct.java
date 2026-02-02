@@ -1876,7 +1876,7 @@ final class FusionStruct
         final Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityExact(2, args);
+            checkArityExact(eval, 2, args);
             Object names =  checkNullableListArg(eval, this, 0, args);
             Object values = checkNullableListArg(eval, this, 1, args);
 
@@ -1958,7 +1958,7 @@ final class FusionStruct
         final Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityAtLeast(1, args);
+            checkArityAtLeast(eval, 1, args);
 
             Object struct = checkNullableStructArg(eval, this, 0, args);
 

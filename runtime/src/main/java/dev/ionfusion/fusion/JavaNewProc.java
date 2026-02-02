@@ -5,6 +5,7 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionText.checkNonEmptyTextArg;
 import static java.util.Arrays.copyOfRange;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
@@ -20,7 +21,7 @@ final class JavaNewProc
     Object doApply(Evaluator eval, Object[] args)
         throws FusionException
     {
-        checkArityAtLeast(1, args);
+        checkArityAtLeast(eval, 1, args);
         String className = checkNonEmptyTextArg(eval, this, 0, args);
 
         Class<?> klass = determineClass(className);

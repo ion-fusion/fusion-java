@@ -28,7 +28,7 @@ abstract class Procedure
 
     /**
      * @param argNames are used to determine the result
-     *   of {@link #checkArityExact(Object[])}.
+     *   of {@link #checkArityExact(Evaluator, Object[])}.
      *
      * @deprecated since Release 17, 2014-06-18.
      */
@@ -98,7 +98,7 @@ abstract class Procedure
     // Type-checking helpers
 
 
-    final void checkArityExact(int arity, Object[] args)
+    final void checkArityExact(Evaluator eval, int arity, Object[] args)
         throws ArityFailure
     {
         if (args.length != arity)
@@ -112,10 +112,10 @@ abstract class Procedure
      * Checks arity against the documented argument names.
      *
      * @deprecated since Release 17, 2014-06-18.
-     * Use {@link #checkArityExact(int, Object[])} instead.
+     * Use {@link #checkArityExact(Evaluator, int, Object[])} instead.
      */
     @Deprecated
-    final void checkArityExact(Object[] args)
+    final void checkArityExact(Evaluator eval, Object[] args)
         throws ArityFailure
     {
         if (myArity < 0)
@@ -126,11 +126,11 @@ abstract class Procedure
                 "un-deprecated checkArity methods.";
             throw new IllegalStateException(message);
         }
-        checkArityExact(myArity, args);
+        checkArityExact(eval, myArity, args);
     }
 
 
-    final void checkArityAtLeast(int atLeast, Object[] args)
+    final void checkArityAtLeast(Evaluator eval, int atLeast, Object[] args)
         throws ArityFailure
     {
         if (args.length < atLeast)
@@ -140,7 +140,7 @@ abstract class Procedure
     }
 
 
-    final void checkArityRange(int atLeast, int atMost, Object[] args)
+    final void checkArityRange(Evaluator eval, int atLeast, int atMost, Object[] args)
         throws ArityFailure
     {
         if (args.length < atLeast || args.length > atMost)

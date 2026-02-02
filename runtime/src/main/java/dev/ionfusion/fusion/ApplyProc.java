@@ -20,7 +20,7 @@ final class ApplyProc
     Object doApply(Evaluator eval, Object[] args)
         throws FusionException
     {
-        checkArityAtLeast(2, args);
+        checkArityAtLeast(eval, 2, args);
 
         int arity = args.length;
 

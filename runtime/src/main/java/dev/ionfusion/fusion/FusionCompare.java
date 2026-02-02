@@ -112,7 +112,7 @@ final class FusionCompare
         final Object doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityExact(2, args);
+            checkArityExact(eval, 2, args);
 
             Object arg0 = args[0];
             Object arg1 = args[1];
@@ -271,7 +271,7 @@ final class FusionCompare
         final BaseBool doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityExact(2, args);
+            checkArityExact(eval, 2, args);
 
             Object arg0 = args[0];
             Object arg1 = args[1];
@@ -288,7 +288,7 @@ final class FusionCompare
         final BaseBool doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityExact(2, args);
+            checkArityExact(eval, 2, args);
 
             Object arg0 = args[0];
             Object arg1 = args[1];
@@ -305,7 +305,7 @@ final class FusionCompare
         final BaseBool doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityExact(2, args);
+            checkArityExact(eval, 2, args);
 
             Object arg0 = args[0];
             Object arg1 = args[1];
@@ -322,7 +322,7 @@ final class FusionCompare
         final BaseBool doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityExact(2, args);
+            checkArityExact(eval, 2, args);
 
             Object arg0 = args[0];
             Object arg1 = args[1];
@@ -339,7 +339,7 @@ final class FusionCompare
         final BaseBool doApply(Evaluator eval, Object[] args)
             throws FusionException
         {
-            checkArityExact(2, args);
+            checkArityExact(eval, 2, args);
 
             Object arg0 = args[0];
             Object arg1 = args[1];

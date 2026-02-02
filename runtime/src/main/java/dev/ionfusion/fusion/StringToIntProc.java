@@ -15,7 +15,7 @@ final class StringToIntProc
     Object doApply(Evaluator eval, Object[] args)
         throws FusionException
     {
-        checkArityExact(1, args);
+        checkArityExact(eval, 1, args);
 
         String val = checkNullableStringArg(eval, this, 0, args);
 

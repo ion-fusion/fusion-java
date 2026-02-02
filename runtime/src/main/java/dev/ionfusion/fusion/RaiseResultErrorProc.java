@@ -15,7 +15,7 @@ final class RaiseResultErrorProc
     Object doApply(Evaluator eval, Object[] args)
         throws FusionException
     {
-        checkArityExact(3, args);
+        checkArityExact(eval, 3, args);
 
         String name     = checkRequiredTextArg(eval, this, 0, args);
         String expected = checkRequiredStringArg(eval, this, 1, args);
