@@ -5,6 +5,7 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionSexp.immutableSexp;
 import static dev.ionfusion.fusion.FusionString.isString;
+import static dev.ionfusion.fusion.SyntaxSymbol.ensureUniqueIdentifiers;
 import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_STRING_ARRAY;
 
 /**
@@ -58,7 +59,8 @@ final class LambdaForm
         SyntaxWrap localWrap = null;
         if (args.length != 0)
         {
-            env = new LocalEnvironment(env, args, stx);
+            ensureUniqueIdentifiers(eval, args, stx);
+            env = new LocalEnvironment(env, args);
             localWrap = new EnvironmentWrap(env);
         }
 

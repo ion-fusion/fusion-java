@@ -11,6 +11,7 @@ import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
 import static dev.ionfusion.fusion.FusionString.isString;
 import static dev.ionfusion.fusion.FusionSyntax.unsafeSyntaxUnwrap;
 import static dev.ionfusion.fusion.GlobalState.DEFINE_VALUES;
+import static dev.ionfusion.fusion.SyntaxSymbol.ensureUniqueIdentifiers;
 
 /**
  * Implementation of the fundamental definition syntax form.
@@ -148,7 +149,7 @@ final class DefineValuesForm
 
         // Check for duplicate identifiers
         SyntaxSymbol[] ids = argSexp.extract(eval, SyntaxSymbol.class);
-        SyntaxSymbol.ensureUniqueIdentifiers(ids, formChecker.form());
+        ensureUniqueIdentifiers(eval, ids, formChecker.form());
         return ids;
     }
 

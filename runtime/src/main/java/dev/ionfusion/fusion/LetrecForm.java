@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionValue.UNDEF;
+import static dev.ionfusion.fusion.SyntaxSymbol.ensureUniqueIdentifiers;
 
 import dev.ionfusion.runtime.base.SourceLocation;
 import java.util.Arrays;
@@ -33,8 +34,9 @@ final class LetrecForm
             checkPair.arityExact(2);
             boundNames[i] = checkPair.requiredIdentifier("bound name", 0);
         }
+        ensureUniqueIdentifiers(eval, boundNames, stx);
 
-        Environment bodyEnv = new LocalEnvironment(env, boundNames, stx);
+        Environment bodyEnv = new LocalEnvironment(env, boundNames);
         SyntaxWrap localWrap = new EnvironmentWrap(bodyEnv);
 
         // Expand the bound-value expressions
