@@ -522,7 +522,6 @@ public class CoreTestCase
 
 
     void expectArityExn(String expr)
-        throws Exception
     {
         assertEvalThrows(ArityFailure.class, expr);
     }

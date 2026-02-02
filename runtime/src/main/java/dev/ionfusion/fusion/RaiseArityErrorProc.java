@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.fusion.ArityFailure.makeArityError;
 import static dev.ionfusion.fusion.FusionNumber.checkIntArgToJavaInt;
 import static dev.ionfusion.fusion.FusionText.checkRequiredTextArg;
 
@@ -24,6 +25,6 @@ final class RaiseArityErrorProc
 
         if (name.isEmpty()) name = "unknown procedure";
 
-        throw new ArityFailure(name, arity, arity, actuals);
+        throw makeArityError(eval, name, arity, arity, actuals);
     }
 }
