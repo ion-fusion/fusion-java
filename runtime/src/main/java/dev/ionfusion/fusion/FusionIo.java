@@ -212,7 +212,7 @@ public final class FusionIo
     {
         String message = "Cannot ionize non-Ionizable data: " +
                          safeWriteToString(eval, unIonizableValue);
-        return new IonizeFailure(message, unIonizableValue);
+        return new ContractException(message);
     }
 
 
