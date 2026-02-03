@@ -20,6 +20,8 @@ import static dev.ionfusion.fusion.FusionValue.isAnyNull;
 import static dev.ionfusion.fusion.FusionVoid.isVoid;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.LetValuesForm.compilePlainLet;
+import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
+import static dev.ionfusion.fusion.UnboundIdentifierException.makeUnboundError;
 import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_OBJECT_ARRAY;
 
 import dev.ionfusion.fusion.FusionSexp.BaseSexp;
@@ -269,8 +271,7 @@ class Compiler
                     "procedure expects " + lambda.myArgNames.length +
                     " arguments but application has " + argForms.length +
                     " expressions";
-                 throw new SyntaxException("procedure application", message,
-                                           stx);
+                 throw makeSyntaxError(myEval, "procedure application", message, stx);
             }
 
             SourceLocation[] argLocs = extractArgLocations(stx,
@@ -440,7 +441,7 @@ class Compiler
             @Override
             Object visit(FreeBinding b) throws FusionException
             {
-                throw new UnboundIdentifierException(identifier);
+                throw makeUnboundError(identifier);
             }
 
             @Override
@@ -544,7 +545,7 @@ class Compiler
             Object visit(LocalBinding b) throws FusionException
             {
                 String message = "#%top not implemented for local binding.";
-                throw new SyntaxException("#%top", message, id);
+                throw makeSyntaxError(myEval, "#%top", message, id);
             }
 
             @Override
@@ -557,14 +558,14 @@ class Compiler
             Object visit(ModuleDefinedBinding b) throws FusionException
             {
                 String message = "#%top not implemented for module binding.";
-                throw new SyntaxException("#%top", message, id);
+                throw makeSyntaxError(myEval, "#%top", message, id);
             }
 
             @Override
             Object visit(RequiredBinding b) throws FusionException
             {
                 String message = "#%top not implemented for imported binding.";
-                throw new SyntaxException("#%top", message, id);
+                throw makeSyntaxError(myEval, "#%top", message, id);
             }
         };
 

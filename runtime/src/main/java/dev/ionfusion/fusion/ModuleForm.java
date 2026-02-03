@@ -13,6 +13,7 @@ import static dev.ionfusion.fusion.FusionString.unsafeStringToJavaString;
 import static dev.ionfusion.fusion.FusionSyntax.unsafeSyntaxUnwrap;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.GlobalState.PROVIDE;
+import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 import static dev.ionfusion.runtime.base.ModuleIdentity.isValidAbsoluteModulePath;
 import static dev.ionfusion.runtime.base.ModuleIdentity.isValidModuleName;
 import static dev.ionfusion.runtime.base.ModuleIdentity.isValidModulePath;
@@ -429,9 +430,7 @@ final class ModuleForm
     {
         if (! isValidModuleName(moduleNameSymbol.stringValue()))
         {
-            throw new SyntaxException("declared module name",
-                                      "Expected a valid module name",
-                                      moduleNameSymbol);
+            throw makeSyntaxError(eval, "module", "invalid module name", moduleNameSymbol);
         }
 
         // When the module name resolver loads a module from a repository, as

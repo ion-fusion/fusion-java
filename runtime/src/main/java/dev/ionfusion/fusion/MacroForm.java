@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionIo.safeWriteToString;
+import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 
 /**
  * Runtime representation of Fusion macros, performing syntax expansion.
@@ -71,6 +72,8 @@ final class MacroForm
     private SyntaxValue doExpandOnce(Expander expander, SyntaxSexp stx)
         throws FusionException
     {
+        Evaluator eval = expander.getEvaluator();
+
         Object expanded;
         try
         {
@@ -84,7 +87,7 @@ final class MacroForm
             // http://docs.racket-lang.org/reference/syntax-model.html#(part._expand-steps)
 
             // But BEWARE: this is called during partial expansion!
-            expanded = expander.getEvaluator().callNonTail(myTransformer, stx);
+            expanded = eval.callNonTail(myTransformer, stx);
         }
         catch (FusionException e)
         {
@@ -100,9 +103,8 @@ final class MacroForm
         {
             String message =
                 "Transformer returned non-syntax result: " +
-                safeWriteToString(expander.getEvaluator(), expanded);
-            throw new SyntaxException(myTransformer.identify(), message,
-                                      stx);
+                safeWriteToString(eval, expanded);
+            throw makeSyntaxError(eval, myTransformer.identify(), message, stx);
         }
     }
 

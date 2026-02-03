@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionValue.isAnnotated;
+import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 
 /**
  * "Registers" used during macro expansion
@@ -75,7 +76,7 @@ final class Expander
             String message =
                 "Annotations not supported in raw syntax. You probably " +
                 "want to quote this.";
-            throw new SyntaxException(null, message, stx);
+            throw makeSyntaxError(myEval, null, message, stx);
         }
 
         return stx.doExpand(this, env);

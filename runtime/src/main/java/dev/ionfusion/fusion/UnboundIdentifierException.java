@@ -3,7 +3,7 @@
 
 package dev.ionfusion.fusion;
 
-import com.amazon.ion.util.IonTextUtils;
+import static com.amazon.ion.util.IonTextUtils.printQuotedSymbol;
 
 /**
  * Indicates a reference to an unbound identifier.
@@ -16,19 +16,26 @@ public final class UnboundIdentifierException
 
 
     /**
-     * @param identifier must not be null.
+     * @param name must not be null.
      */
-    UnboundIdentifierException(SyntaxSymbol identifier)
+    private UnboundIdentifierException(String message, String name)
     {
-        super(null, "", identifier);
-        myText = identifier.stringValue();
+        super(message);
+        myText = name;
     }
 
-    @Override
-    String getBaseMessage()
+
+    static UnboundIdentifierException makeUnboundError(SyntaxSymbol identifier)
     {
-        return "unbound identifier. The symbol " + IonTextUtils.printQuotedSymbol(myText) +
-                   " has no binding where it's used, so check for correct spelling and imports.";
+        String name = identifier.stringValue();
+        String details =
+            "unbound identifier. The symbol " + printQuotedSymbol(name) +
+            " has no binding where it's used, so check for correct spelling and imports.";
+        String message = composeMessage(details);
+
+        UnboundIdentifierException e = new UnboundIdentifierException(message, name);
+        e.addContext(identifier.getLocation());
+        return e;
     }
 
     /**

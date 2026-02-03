@@ -7,6 +7,7 @@ import static dev.ionfusion.fusion.FusionEval.callCurrentEval;
 import static dev.ionfusion.fusion.FusionString.makeString;
 import static dev.ionfusion.fusion.GlobalState.MODULE;
 import static dev.ionfusion.fusion.StandardReader.readSyntax;
+import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 
 import com.amazon.ion.IonException;
 import com.amazon.ion.IonReader;
@@ -104,8 +105,7 @@ final class LoadHandler
         if (reader.getType() == null && reader.next() == null)
         {
             String message = "Module source has no top-level forms";
-            SyntaxException e =
-                new SyntaxException(null /* syntax form */, message);
+            SyntaxException e = makeSyntaxError(message);
             e.addContext(SourceLocation.forName(sourceName));
             throw e;
         }
@@ -114,8 +114,7 @@ final class LoadHandler
         if (reader.next() != null)
         {
             String message = "Module source has more than one top-level form";
-            SyntaxException e =
-                new SyntaxException(null /* syntax form */, message);
+            SyntaxException e = makeSyntaxError(message);
             e.addContext(SourceLocation.forCurrentSpan(reader, sourceName));
             throw e;
         }
@@ -136,7 +135,7 @@ final class LoadHandler
         catch (ClassCastException e) { /* fall through */ }
 
         String message = "Top-level form isn't (module ...)";
-        throw new SyntaxException(null /* syntax form */, message, firstTopLevel);
+        throw makeSyntaxError(eval, null /* syntax form */, message, firstTopLevel);
     }
 
 

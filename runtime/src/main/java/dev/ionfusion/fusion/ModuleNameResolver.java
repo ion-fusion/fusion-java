@@ -9,6 +9,7 @@ import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
 import static dev.ionfusion.fusion.FusionSexp.unsafeSexpToJavaList;
 import static dev.ionfusion.fusion.FusionText.isText;
 import static dev.ionfusion.fusion.FusionText.unsafeTextToJavaString;
+import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 import static dev.ionfusion.runtime.base.ModuleIdentity.isValidAbsoluteModulePath;
 import static dev.ionfusion.runtime.base.ModuleIdentity.isValidModulePath;
 
@@ -132,7 +133,7 @@ final class ModuleNameResolver
             return resolveModulePath(eval, baseModule, path, load, pathStx);
         }
 
-        throw new SyntaxException("module path", "unrecognized form", pathStx);
+        throw makeSyntaxError(eval, "module path", "unrecognized form", pathStx);
     }
 
 
@@ -180,7 +181,7 @@ final class ModuleNameResolver
         if (! isValidModulePath(modulePath))
         {
             String message = "Invalid module path: " + printString(modulePath);
-            throw new SyntaxException(null, message, stxForErrors);
+            throw makeSyntaxError(eval, null, message, stxForErrors);
         }
 
         ModuleRegistry reg = eval.findCurrentNamespace().getRegistry();

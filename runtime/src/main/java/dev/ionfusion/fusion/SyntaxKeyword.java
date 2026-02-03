@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_OBJECT_ARRAY;
 
 import com.amazon.ion.IonException;
@@ -83,10 +84,10 @@ final class SyntaxKeyword
 
 
     @Override
-    SyntaxValue doExpand(Expander eval, Environment env)
+    SyntaxValue doExpand(Expander expander, Environment env)
         throws SyntaxException
     {
-        throw new SyntaxException(null, "Keywords are not expressions", this);
+        throw makeSyntaxError(expander.getEvaluator(), null, "Keywords are not expressions", this);
     }
 
 

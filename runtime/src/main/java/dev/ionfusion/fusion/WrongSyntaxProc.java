@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionIo.safeDisplayManyToString;
+import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 
 /**
  * Fusion procedure to raise a syntax error.
@@ -21,6 +22,6 @@ final class WrongSyntaxProc
         String name = null; // TODO infer name
         String message = safeDisplayManyToString(eval, args, 1);
 
-        throw new SyntaxException(name, message, stx);
+        throw makeSyntaxError(eval, name, message, stx);
     }
 }

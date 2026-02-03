@@ -7,6 +7,8 @@ import static com.amazon.ion.util.IonTextUtils.printQuotedSymbol;
 import static dev.ionfusion.fusion.FusionBool.makeBool;
 import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionSyntax.checkIdentifierArg;
+import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
+import static dev.ionfusion.fusion.UnboundIdentifierException.makeUnboundError;
 import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_OBJECT_ARRAY;
 import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_STRING_ARRAY;
 
@@ -287,6 +289,8 @@ final class SyntaxSymbol
     SyntaxValue doExpand(Expander expander, Environment env)
         throws FusionException
     {
+        Evaluator eval = expander.getEvaluator();
+
         if (myBoundId == null)        // Otherwise we've already been expanded
         {
             // FIXME Ensure that this validation always happens when necessary,
@@ -297,26 +301,25 @@ final class SyntaxSymbol
             {
                 String message =
                     "`null.symbol` is not a valid expression; use `(quote null.symbol)` instead.";
-                throw new SyntaxException(null, message, this);
+                throw makeSyntaxError(eval, null, message, this);
             }
 
             if (text.isEmpty())
             {
                 String message =
                     "The empty symbol is not a valid expression; use `(quote '')` instead.";
-                throw new SyntaxException(null, message, this);
+                throw makeSyntaxError(eval, null, message, this);
             }
 
             if (resolveSyntaxMaybe(env) != null)
             {
                 String message = "Invalid use of syntax form as identifier expression.";
-                throw new SyntaxException(null, message, this);
+                throw makeSyntaxError(eval, null, message, this);
             }
 
             Binding b = resolve();
             if (b instanceof FreeBinding)
             {
-                Evaluator eval = expander.getEvaluator();
                 BaseSymbol topSym = makeSymbol(eval, "#%top");
                 SyntaxSymbol top =
                     new SyntaxSymbol(myWraps,
@@ -325,7 +328,7 @@ final class SyntaxSymbol
                                      topSym);
                 if (top.resolve() instanceof FreeBinding)
                 {
-                    throw new UnboundIdentifierException(this);
+                    throw makeUnboundError(this);
                 }
 
                 assert ! FusionValue.isAnnotated(eval, myDatum);
@@ -384,7 +387,7 @@ final class SyntaxSymbol
                     "duplicate binding identifier: " +
                         printQuotedSymbol(id.stringValue());
 
-                SyntaxException ex = new SyntaxException(null, message, id);
+                SyntaxException ex = makeSyntaxError(eval, null, message, id);
                 ex.addContext(formForErrors.getLocation());
                 throw ex;
             }

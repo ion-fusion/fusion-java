@@ -15,6 +15,7 @@ import static dev.ionfusion.fusion.FusionSexp.unsafePairDot;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
 import static dev.ionfusion.fusion.FusionSexp.unsafeSexpSize;
+import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 
 import com.amazon.ion.IonWriter;
 import dev.ionfusion.fusion.FusionSexp.BaseSexp;
@@ -517,7 +518,7 @@ final class SyntaxSexp
         {
             String message =
                 "not a valid syntactic form. You probably want to quote this.";
-            throw new SyntaxException(null, message, this);
+            throw makeSyntaxError(eval, null, message, this);
         }
 
         SyntacticForm form = syntaxForm(eval, env);
@@ -573,7 +574,7 @@ final class SyntaxSexp
         {
             String message =
                 "not a valid syntactic form. You probably want to quote this.";
-            throw new SyntaxException(null, message, this);
+            throw makeSyntaxError(eval, null, message, this);
         }
 
         SyntaxValue first = get(eval, 0); // calls pushAnyWraps()
