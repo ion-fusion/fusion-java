@@ -5,6 +5,8 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionIo.safeWriteMany;
 
+import dev.ionfusion.runtime.base.FusionException;
+
 
 /**
  * Indicates a failure applying a procedure with the wrong number of arguments.

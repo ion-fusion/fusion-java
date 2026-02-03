@@ -3,7 +3,7 @@
 
 package dev.ionfusion.runtime.embed;
 
-import dev.ionfusion.fusion.FusionException;
+import dev.ionfusion.runtime.base.FusionException;
 
 /**
  * Constructs "built-in" modules via Java code.

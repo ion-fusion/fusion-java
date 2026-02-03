@@ -12,6 +12,7 @@ import static dev.ionfusion.fusion.Syntax.datumToSyntax;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.Namespace.NsDefinedBinding;
+import dev.ionfusion.runtime.base.FusionException;
 import java.util.ArrayList;
 
 

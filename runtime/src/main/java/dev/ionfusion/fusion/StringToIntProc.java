@@ -6,6 +6,7 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionNumber.makeInt;
 import static dev.ionfusion.fusion.FusionString.checkNullableStringArg;
 
+import dev.ionfusion.runtime.base.FusionException;
 import java.math.BigInteger;
 
 final class StringToIntProc

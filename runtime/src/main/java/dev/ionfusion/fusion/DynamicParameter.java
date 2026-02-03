@@ -5,6 +5,8 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionString.stringToJavaString;
 
+import dev.ionfusion.runtime.base.FusionException;
+
 
 /**
  *

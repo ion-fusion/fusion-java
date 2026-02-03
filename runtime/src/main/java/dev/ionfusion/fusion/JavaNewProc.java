@@ -6,6 +6,7 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionText.checkNonEmptyTextArg;
 import static java.util.Arrays.copyOfRange;
 
+import dev.ionfusion.runtime.base.FusionException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;

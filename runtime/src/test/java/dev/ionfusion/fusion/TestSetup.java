@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion;
 
+import dev.ionfusion.runtime.base.FusionException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;

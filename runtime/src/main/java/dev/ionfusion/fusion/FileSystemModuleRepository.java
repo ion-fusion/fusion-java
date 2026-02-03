@@ -6,6 +6,7 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.runtime.base.ModuleIdentity.isValidModuleName;
 import static dev.ionfusion.runtime.base.SourceName.FUSION_SOURCE_EXTENSION;
 
+import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.io.File;
 import java.util.function.Consumer;

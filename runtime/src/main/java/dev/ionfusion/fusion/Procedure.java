@@ -8,6 +8,7 @@ import static dev.ionfusion.fusion.ArityFailure.makeArityError;
 
 import com.amazon.ion.util.IonTextUtils;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+import dev.ionfusion.runtime.base.FusionException;
 import java.io.IOException;
 
 /**

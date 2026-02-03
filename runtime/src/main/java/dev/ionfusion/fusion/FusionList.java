@@ -28,6 +28,7 @@ import dev.ionfusion.fusion.FusionCompare.EqualityTier;
 import dev.ionfusion.fusion.FusionSequence.BaseSequence;
 import dev.ionfusion.fusion.FusionSexp.BaseSexp;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.SourceLocation;
 import java.io.IOException;
 import java.util.Arrays;

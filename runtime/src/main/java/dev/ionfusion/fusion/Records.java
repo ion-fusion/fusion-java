@@ -12,6 +12,7 @@ import static dev.ionfusion.fusion.FusionSymbol.checkRequiredSymbolArg;
 import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+import dev.ionfusion.runtime.base.FusionException;
 import java.io.IOException;
 import java.math.BigInteger;
 

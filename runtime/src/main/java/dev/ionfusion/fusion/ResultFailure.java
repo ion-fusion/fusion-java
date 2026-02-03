@@ -6,6 +6,8 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionIo.safeWrite;
 import static dev.ionfusion.fusion._private.FusionUtils.writeFriendlyIndex;
 
+import dev.ionfusion.runtime.base.FusionException;
+
 /**
  * Indicates a contractual failure of a result from some computation.
  */

@@ -5,6 +5,8 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionString.checkNonEmptyStringArg;
 
+import dev.ionfusion.runtime.base.FusionException;
+
 
 final class LoadProc
     extends Procedure1

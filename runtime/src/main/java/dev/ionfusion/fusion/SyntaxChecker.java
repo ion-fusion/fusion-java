@@ -6,6 +6,8 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionValue.isAnyNull;
 import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 
+import dev.ionfusion.runtime.base.FusionException;
+
 
 /**
  * Helper class for checking syntactic forms.

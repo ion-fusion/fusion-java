@@ -4,6 +4,8 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionNumber.checkIntArgToJavaLong;
+
+import dev.ionfusion.runtime.base.FusionException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import org.junit.jupiter.api.BeforeEach;

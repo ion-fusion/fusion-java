@@ -5,6 +5,8 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionList.unsafeListElement;
 
+import dev.ionfusion.runtime.base.FusionException;
+
 /**
  * Base class for quasiquote and quasisyntax.
  */

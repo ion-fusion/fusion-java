@@ -3,8 +3,8 @@
 
 package dev.ionfusion.fusion.util;
 
-import dev.ionfusion.fusion.FusionException;
 import dev.ionfusion.fusion._Private_Trampoline;
+import dev.ionfusion.runtime.base.FusionException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;

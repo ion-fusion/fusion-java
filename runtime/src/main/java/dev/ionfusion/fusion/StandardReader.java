@@ -28,6 +28,7 @@ import com.amazon.ion.IonType;
 import com.amazon.ion.Timestamp;
 import dev.ionfusion.fusion.FusionList.BaseList;
 import dev.ionfusion.fusion.FusionSexp.BaseSexp;
+import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.SourceLocation;
 import dev.ionfusion.runtime.base.SourceName;
 import java.math.BigInteger;

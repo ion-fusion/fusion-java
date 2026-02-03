@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+import dev.ionfusion.runtime.base.FusionException;
 
 /**
  * Base class for syntactic forms.

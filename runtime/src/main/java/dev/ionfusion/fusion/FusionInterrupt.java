@@ -4,6 +4,8 @@
 package dev.ionfusion.fusion;
 
 
+import dev.ionfusion.runtime.base.FusionException;
+
 /**
  * Internal exception thrown when a Fusion evaluation is interrupted via
  * {@link Thread#interrupt()}.

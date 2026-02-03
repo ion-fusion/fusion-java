@@ -6,6 +6,8 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionList.immutableList;
 import static dev.ionfusion.fusion.FusionValue.annotations;
 
+import dev.ionfusion.runtime.base.FusionException;
+
 final class TypeAnnotationsProc
     extends Procedure1
 {

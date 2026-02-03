@@ -7,6 +7,7 @@ import static dev.ionfusion.fusion.ArityFailure.makeArityError;
 import static dev.ionfusion.fusion.FusionNumber.checkIntArgToJavaInt;
 import static dev.ionfusion.fusion.FusionText.checkRequiredTextArg;
 
+import dev.ionfusion.runtime.base.FusionException;
 import java.util.Arrays;
 
 

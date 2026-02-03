@@ -8,6 +8,8 @@ import static dev.ionfusion.fusion.FusionList.unsafeListAdd;
 import static dev.ionfusion.fusion.FusionSequence.checkNullableSequenceArg;
 import static dev.ionfusion.fusion.FusionSexp.unsafeSexpAdd;
 
+import dev.ionfusion.runtime.base.FusionException;
+
 
 final class AddProc
     extends Procedure2

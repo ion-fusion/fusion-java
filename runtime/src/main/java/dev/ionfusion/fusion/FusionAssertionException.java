@@ -5,6 +5,8 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionIo.safeWrite;
 
+import dev.ionfusion.runtime.base.FusionException;
+
 @SuppressWarnings("serial")
 final class FusionAssertionException
     extends FusionErrorException

@@ -13,6 +13,8 @@ import static dev.ionfusion.fusion.FusionSyntax.unsafeSyntaxUnwrap;
 import static dev.ionfusion.fusion.GlobalState.DEFINE_VALUES;
 import static dev.ionfusion.fusion.SyntaxSymbol.ensureUniqueIdentifiers;
 
+import dev.ionfusion.runtime.base.FusionException;
+
 /**
  * Implementation of the fundamental definition syntax form.
  *

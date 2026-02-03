@@ -7,6 +7,8 @@ import static dev.ionfusion.fusion.FusionString.checkRequiredStringArg;
 import static dev.ionfusion.fusion.FusionText.checkRequiredTextArg;
 import static dev.ionfusion.fusion.ResultFailure.makeResultError;
 
+import dev.ionfusion.runtime.base.FusionException;
+
 
 final class RaiseResultErrorProc
     extends Procedure

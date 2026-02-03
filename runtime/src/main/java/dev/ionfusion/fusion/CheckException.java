@@ -5,6 +5,8 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionString.checkNonEmptyStringArg;
 
+import dev.ionfusion.runtime.base.FusionException;
+
 /**
  * Only needed so that {@code is_check_error} can detect it.
  */

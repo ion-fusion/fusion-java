@@ -7,6 +7,7 @@ import static dev.ionfusion.fusion.FusionNumber.makeInt;
 
 import dev.ionfusion.fusion.FusionSexp.ImmutablePair;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+import dev.ionfusion.runtime.base.FusionException;
 
 
 final class FusionCollection

@@ -6,6 +6,8 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionString.checkRequiredStringArg;
 import static dev.ionfusion.fusion.FusionText.checkRequiredTextArg;
 
+import dev.ionfusion.runtime.base.FusionException;
+
 
 final class RaiseContractErrorProc
     extends Procedure

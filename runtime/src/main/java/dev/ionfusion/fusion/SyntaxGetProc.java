@@ -9,6 +9,8 @@ import static dev.ionfusion.fusion.FusionText.checkRequiredTextArg;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion._private.FusionUtils.writeFriendlyIndex;
 
+import dev.ionfusion.runtime.base.FusionException;
+
 final class SyntaxGetProc
     extends Procedure
 {

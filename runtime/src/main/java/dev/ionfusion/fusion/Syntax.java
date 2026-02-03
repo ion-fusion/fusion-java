@@ -6,6 +6,7 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.ArgumentException.makeArgumentError;
 
+import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.SourceLocation;
 
 /**
