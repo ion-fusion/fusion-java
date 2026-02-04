@@ -667,10 +667,10 @@ public final class CoverageReportWriter
     }
 
 
-    private void renderIndex(File outputDir)
+    private void renderIndex(Path indexFile)
         throws IOException
     {
-        try (StreamWriter out = new StreamWriter(outputDir, "index.html"))
+        try (StreamWriter out = new StreamWriter(indexFile))
         {
             HtmlWriter indexHtml = new HtmlWriter(out);
             indexHtml.renderHeadWithInlineCss("Fusion Code Coverage", CSS);
@@ -699,7 +699,10 @@ public final class CoverageReportWriter
     }
 
 
-    public void renderFullReport(File outputDir)
+    /**
+     * @return the path of the index file.
+     */
+    public Path renderFullReport(File outputDir)
         throws FusionException, IOException
     {
         analyze();
@@ -707,6 +710,9 @@ public final class CoverageReportWriter
         prepareRelativeNames();
 
         renderSourceFiles(outputDir);
-        renderIndex(outputDir);
+
+        Path indexFile = outputDir.toPath().resolve("index.html");
+        renderIndex(indexFile);
+        return indexFile;
     }
 }

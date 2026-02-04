@@ -4,10 +4,13 @@
 package dev.ionfusion.fusion.cli;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.isEmptyString;
+import static org.hamcrest.Matchers.emptyString;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
@@ -98,8 +101,9 @@ public class CoverTest
         // I'm surprised this works without any coverage data!
         run(0, "report_coverage", dataDir, reportDir);
         assertThat(stdoutText,
-                   containsString("Wrote Fusion coverage report to " + reportDir));
-        assertThat(stderrText, isEmptyString());
+                   allOf(containsString("Wrote Fusion coverage report to "),
+                         containsString(reportDir)));
+        assertThat(stderrText, is(emptyString()));
 
         assertTrue(new File(reportDir, "index.html").isFile());
     }
