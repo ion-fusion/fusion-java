@@ -44,7 +44,7 @@ jobs:
 
     # Run build
     - name: Build with Gradle Wrapper
-      run: ./gradlew release
+      run: ./gradlew build
 
     # Upload an artifact release for later jobs to consume
     - name: Upload distribution

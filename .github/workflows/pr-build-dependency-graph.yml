@@ -41,7 +41,7 @@ jobs:
       uses: gradle/actions/setup-gradle@v4
 
     - name: Build with Gradle Wrapper
-      run: ./gradlew release
+      run: ./gradlew build
 
   generate-dependency-graph:
     runs-on: ubuntu-latest
