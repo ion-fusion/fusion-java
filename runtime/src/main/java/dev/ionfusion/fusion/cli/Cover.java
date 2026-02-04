@@ -5,6 +5,7 @@ package dev.ionfusion.fusion.cli;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.nio.file.Path;
 
 /**
  *
@@ -77,10 +78,10 @@ class Cover
         {
             CoverageReportWriter renderer = new CoverageReportWriter(myDataDir);
 
-            renderer.renderFullReport(myReportDir);
+            Path index = renderer.renderFullReport(myReportDir);
 
             out.print("Wrote Fusion coverage report to ");
-            out.println(myReportDir.getPath());
+            out.println(index.toUri());
 
             return 0;
         }
