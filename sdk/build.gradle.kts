@@ -120,15 +120,3 @@ distributions {
         }
     }
 }
-
-
-//=============================================================================
-// Distribution
-
-// Gradle doesn't seem to have an equivalent "do everything" task.
-tasks.register("release") {
-    group = "Build"
-    description = "Build all artifacts and reports"
-
-    dependsOn(tasks.assemble, tasks.check)
-}
