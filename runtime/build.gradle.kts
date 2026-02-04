@@ -160,7 +160,7 @@ val fcovTestReport = tasks.register<JavaExec>("fcovTestReport") {
 }
 
 
-// Signal to test task to collect coverage data.
+// Signal the test task to collect Fusion coverage data.
 var fcovRunning = false
 gradle.taskGraph.whenReady {
     fcovRunning = hasTask(fcovTestReport.get())
@@ -195,10 +195,7 @@ tasks.javadoc {
 //=============================================================================
 // Distribution
 
-// Gradle doesn't seem to have an equivalent "do everything" task.
-tasks.register("release") {
-    group = "Build"
-    description = "Build all artifacts and reports"
-
-    dependsOn(tasks.build, tasks.jacocoTestReport, fcovTestReport)
+tasks.build {
+    // To speed up the dev workflow, only enable FCOV when doing a full build.
+    dependsOn(tasks.jacocoTestReport, fcovTestReport)
 }

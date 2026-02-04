@@ -41,3 +41,9 @@ tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }
+
+// Temporary alias until we migrate tooling
+// TODO https://github.com/ion-fusion/fusion-java/issues/429
+tasks.register("release") {
+    dependsOn(tasks.build)  // build depends on assemble & check
+}
