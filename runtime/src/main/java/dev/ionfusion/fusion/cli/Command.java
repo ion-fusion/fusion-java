@@ -362,6 +362,18 @@ abstract class Command
     }
 
 
+    /**
+     * Prepare a command executor based on the global options, any local options,
+     * and the remaining command-line arguments.
+     * <p>
+     * This implementation ignores the {@code options} and inkoves
+     * {@link #makeExecutor(GlobalOptions, String[])}.
+     *
+     * @return null if the arguments are inappropriate or insufficient.
+     *
+     * @throws UsageException if there are command-line errors preventing the
+     * command from being used.
+     */
     Executor makeExecutor(GlobalOptions globals,
                           Object        options,
                           String[]      arguments)
