@@ -5,6 +5,8 @@ package dev.ionfusion.runtime._private.cover;
 
 import static dev.ionfusion.fusion._private.FusionUtils.readProperties;
 import static dev.ionfusion.runtime.base.ModuleIdentity.isValidAbsoluteModulePath;
+import static java.nio.file.Files.exists;
+import static java.util.Collections.emptySet;
 
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import dev.ionfusion.runtime.base.SourceLocation;
@@ -67,7 +69,23 @@ public final class CoverageConfiguration
     /**
      * Each element is an absolute path to a directory.
      */
-    private final Set<Path> myIncludedSourceDirs = new HashSet<>();
+    private final Set<Path> myIncludedSourceDirs;
+
+
+    /**
+     * The default configuration: includes all modules, but no source files.
+     */
+    private CoverageConfiguration()
+    {
+        this((id) -> true, emptySet());
+    }
+
+    private CoverageConfiguration(Predicate<ModuleIdentity> moduleSelector,
+                                  Set<Path>                 includedSourceDirs)
+    {
+        myModuleSelector     = moduleSelector;
+        myIncludedSourceDirs = includedSourceDirs;
+    }
 
 
     /**
@@ -82,7 +100,7 @@ public final class CoverageConfiguration
      *
      * @throws IOException if an entry is not an absolute module path.
      */
-    private static Set<String> readModuleSet(File       configFile,
+    private static Set<String> readModuleSet(Path       configFile,
                                              Properties props,
                                              String     propertyName)
         throws IOException
@@ -114,44 +132,54 @@ public final class CoverageConfiguration
     }
 
 
-    public CoverageConfiguration(File dataDir)
+    public static CoverageConfiguration forDataDir(Path dataDir)
         throws IOException
     {
-        File myConfigFile = new File(dataDir, CONFIG_FILE_NAME);
-        if (myConfigFile.exists())
+        Path configFile = dataDir.resolve(CONFIG_FILE_NAME);
+        if (exists(configFile))
         {
-            Properties props = readProperties(myConfigFile);
+            return forConfigFile(configFile);
+        }
 
-            myModuleSelector =
-                new SimpleModuleIdentitySelector(myConfigFile, props);
+        // No config file in the data dir, so use the default configuration.
+        return new CoverageConfiguration();
+    }
 
-            String sources = props.getProperty(PROPERTY_INCLUDED_SOURCES);
-            if (sources != null)
+
+    public static CoverageConfiguration forConfigFile(Path configFile)
+        throws IOException
+    {
+        Properties props = readProperties(configFile);
+
+        Predicate<ModuleIdentity> moduleSelector =
+            new SimpleModuleIdentitySelector(configFile, props);
+
+        Set<Path> includedSourceDirs = new HashSet<>();
+
+        String sources = props.getProperty(PROPERTY_INCLUDED_SOURCES);
+        if (sources != null)
+        {
+            for (String source : sources.split(File.pathSeparator))
             {
-                for (String source : sources.split(File.pathSeparator))
-                {
-                    if (source.isEmpty()) continue;
+                if (source.isEmpty()) continue;
 
-                    Path p = Paths.get(source).toAbsolutePath();
-                    if (Files.isDirectory(p))
-                    {
-                        myIncludedSourceDirs.add(p);
-                    }
-                    else
-                    {
-                        String message =
-                            "Configuration error in " + myConfigFile
-                            + ": " + PROPERTY_INCLUDED_SOURCES
-                            + " contains an invalid directory: " + source;
-                        throw new IOException(message);
-                    }
+                Path p = Paths.get(source).toAbsolutePath();
+                if (Files.isDirectory(p))
+                {
+                    includedSourceDirs.add(p);
+                }
+                else
+                {
+                    String message =
+                        "Configuration error in " + configFile
+                        + ": " + PROPERTY_INCLUDED_SOURCES
+                        + " contains an invalid directory: " + source;
+                    throw new IOException(message);
                 }
             }
         }
-        else
-        {
-            myModuleSelector = (id) -> true;
-        }
+
+        return new CoverageConfiguration(moduleSelector, includedSourceDirs);
     }
 
 
@@ -238,7 +266,7 @@ public final class CoverageConfiguration
          *
          * @throws IOException if an entry is not an absolute module path.
          */
-        public SimpleModuleIdentitySelector(File configFile, Properties props)
+        public SimpleModuleIdentitySelector(Path configFile, Properties props)
             throws IOException
         {
             myIncludedModules =

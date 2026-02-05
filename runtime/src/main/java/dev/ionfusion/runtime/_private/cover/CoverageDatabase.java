@@ -100,7 +100,14 @@ public class CoverageDatabase
 
         if (Files.exists(myStorageFile))
         {
-            read();
+            try
+            {
+                read();
+            }
+            catch (IOException e)
+            {
+                throw new IOException("Error reading coverage data", e);
+            }
         }
     }
 
