@@ -3,6 +3,9 @@
 
 package dev.ionfusion.runtime._private.cover;
 
+import static java.nio.file.Files.createDirectories;
+import static java.nio.file.Files.isDirectory;
+
 import dev.ionfusion.fusion._private.InternMap;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -23,13 +26,27 @@ public final class CoverageCollectorFactory
     public static CoverageCollectorImpl fromDirectory(Path dataDir)
         throws IOException
     {
+        CoverageConfiguration config = CoverageConfiguration.forDataDir(dataDir);
+        return fromDirectory(config, dataDir);
+    }
+
+
+    public static CoverageCollectorImpl fromDirectory(CoverageConfiguration config,
+                                                      Path dataDir)
+        throws IOException
+    {
+        if (! isDirectory(dataDir))
+        {
+            // This fails if dataDir is a symlink!
+            createDirectories(dataDir);
+        }
+
         // Canonicalize the path for more reliable session sharing.
         Path sessionsDir = dataDir.toRealPath().resolve("sessions");
 
         try
         {
-            CoverageConfiguration config  = CoverageConfiguration.forDataDir(dataDir);
-            CoverageSession       session = ourSessions.intern(sessionsDir);
+            CoverageSession session = ourSessions.intern(sessionsDir);
             return new CoverageCollectorImpl(config, session);
         }
         catch (UncheckedIOException e) // from createSession()

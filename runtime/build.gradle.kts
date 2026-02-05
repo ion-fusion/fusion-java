@@ -32,6 +32,7 @@ val mainFusionRepo = layout.projectDirectory.dir("src/main/fusion")
 val testFusionRepo = layout.projectDirectory.dir("src/test/fusion")
 
 // New output paths for Fusion code coverage.
+val fcovConfig = layout.projectDirectory.file("fcov.properties")
 val fcovDataDir = layout.buildDirectory.dir("fcov")
 val fcovReportDir = reporting.baseDirectory.dir("fcov")
 
@@ -62,15 +63,14 @@ tasks.test {
     // dev.ionfusion.fusion.ClassLoaderModuleRepositoryTest uses ftst-repo.jar.
     dependsOn(ftstRepo)
 
-    // Collect Fusion coverage data IFF a report is being generated.
-    mustRunAfter(fcovConfigure)
-
+    inputs.file(fcovConfig)
     inputs.dir(testFusionRepo)
 
     jvmArgumentProviders.add {
         if (fcovRunning) {
             logger.lifecycle("Enabling Fusion code coverage instrumentation")
-            listOf("-Ddev.ionfusion.fusion.coverage.DataDir=" + fcovDataDir.get().asFile.path)
+            listOf("-Ddev.ionfusion.fusion.coverage.DataDir=" + fcovDataDir.get().asFile.path,
+                   "-Ddev.ionfusion.fusion.coverage.Config=" + fcovConfig.asFile.path)
         }
         else {
             listOf()
@@ -127,21 +127,9 @@ tasks.check {
 }
 
 
-// TODO Clean fcovDataDir somewhere
-
-val fcovConfigure = tasks.register<WriteProperties>("fcovConfigure") {
-    destinationFile = fcovDataDir.get().file("config.properties")
-
-    property("IncludedModules", "/fusion")
-
-    // Enable this if you want to check that tests are being run.
-    // TODO Figure out why this causes report generation to fail.
-//    property("IncludedSources", "ftst")
-}
-
 // Name is ick but mirrors jacocoTestReport
 val fcovTestReport = tasks.register<JavaExec>("fcovTestReport") {
-    dependsOn(fcovConfigure, tasks.test)
+    dependsOn(tasks.test)
 
     group = "verification"
     description = "Generates Fusion code coverage report"
@@ -153,6 +141,7 @@ val fcovTestReport = tasks.register<JavaExec>("fcovTestReport") {
     classpath = sourceSets["main"].runtimeClasspath
     mainClass = "dev.ionfusion.fusion.cli.Cli"
     args = listOf("report_coverage",
+                  "--configFile", fcovConfig.asFile.path,
                   fcovDataDir.get().asFile.path,
                   fcovReportDir.get().asFile.path)
 
