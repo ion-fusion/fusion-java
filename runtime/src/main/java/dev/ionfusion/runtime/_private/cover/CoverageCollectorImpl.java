@@ -58,11 +58,12 @@ public final class CoverageCollectorImpl
     private final CoverageDatabase myDatabase;
 
 
-    private CoverageCollectorImpl(File dataDir)
+    private CoverageCollectorImpl(CoverageConfiguration config,
+                                  CoverageDatabase      database)
         throws IOException
     {
-        myConfig   = new CoverageConfiguration(dataDir);
-        myDatabase = new CoverageDatabase(dataDir.toPath());
+        myConfig   = config;
+        myDatabase = database;
     }
 
 
@@ -332,14 +333,12 @@ public final class CoverageCollectorImpl
             // ref is now useless. Fall through and create a new one.
         }
 
-        try
-        {
-            collector = new CoverageCollectorImpl(dataDir);
-        }
-        catch (IOException e)
-        {
-            throw new IOException("Error reading coverage data", e);
-        }
+        CoverageConfiguration config =
+            CoverageConfiguration.forDataDir(dataDir.toPath());
+        CoverageDatabase database =
+            new CoverageDatabase(dataDir.toPath());
+
+        collector = new CoverageCollectorImpl(config, database);
 
         addToCache(dataDir, new CollectorRef(collector));
 

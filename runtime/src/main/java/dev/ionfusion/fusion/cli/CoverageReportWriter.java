@@ -175,11 +175,11 @@ public final class CoverageReportWriter
     private boolean coverageState;
 
 
-    public CoverageReportWriter(File dataDir)
+    public CoverageReportWriter(Path dataDir)
         throws FusionException, IOException
     {
-        myDatabase = new CoverageDatabase(dataDir.toPath());
-        myConfig   = new CoverageConfiguration(dataDir);
+        myDatabase = new CoverageDatabase(dataDir);
+        myConfig   = CoverageConfiguration.forDataDir(dataDir);
 
         myModules                 = new HashSet<>();
         mySourceFiles             = new HashSet<>();

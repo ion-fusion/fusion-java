@@ -5,10 +5,10 @@ package dev.ionfusion.fusion._private;
 
 import static java.nio.file.Files.newInputStream;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.Properties;
 
 /**
@@ -140,10 +140,10 @@ public final class FusionUtils
      *
      * @throws IOException if there's a problem reading the file.
      */
-    public static Properties readProperties(File file)
+    public static Properties readProperties(Path file)
         throws IOException
     {
-        try (InputStream stream = newInputStream(file.toPath()))
+        try (InputStream stream = newInputStream(file))
         {
             Properties props = new Properties();
             props.load(stream);

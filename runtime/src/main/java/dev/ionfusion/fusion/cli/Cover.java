@@ -76,7 +76,7 @@ class Cover
         public int execute(PrintWriter out, PrintWriter err)
             throws Exception
         {
-            CoverageReportWriter renderer = new CoverageReportWriter(myDataDir);
+            CoverageReportWriter renderer = new CoverageReportWriter(myDataDir.toPath());
 
             Path index = renderer.renderFullReport(myReportDir);
 
