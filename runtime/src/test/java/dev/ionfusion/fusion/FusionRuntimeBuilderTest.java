@@ -446,7 +446,8 @@ public class FusionRuntimeBuilderTest
         throws Exception
     {
         Path dir1 = tmpDir.toPath();
-        Path dir2 = newFolder(tmpDir, "linkholder").toPath();
+        Path dir2 = dir1.resolve(getClass().getSimpleName() + "-linkholder");
+        Files.createDirectory(dir2);
 
         Path link = dir2.resolve("link");
         Files.createSymbolicLink(link, dir1);
@@ -517,14 +518,5 @@ public class FusionRuntimeBuilderTest
     {
         assertThrows(UnsupportedOperationException.class,
                      () -> standard().immutable().setDocumenting(true));
-    }
-
-    private static File newFolder(File root, String... subDirs) throws IOException {
-        String subFolder = String.join("/", subDirs);
-        File result = new File(root, subFolder);
-        if (!result.mkdirs()) {
-            throw new IOException("Couldn't create folders " + root);
-        }
-        return result;
     }
 }
