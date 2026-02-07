@@ -159,9 +159,9 @@ public final class CoverageReportWriter
     private final CoverageDatabase                  myDatabase;
     private final CoverageConfiguration             myConfig;
     private final Set<ModuleIdentity>               myModules;
-    private final Set<File>                         mySourceFiles;
+    private final Set<Path>                         mySourceFiles;
     private final Map<ModuleIdentity, SourceName>   myNamesForModules;
-    private final Map<File, SourceName>             myNamesForFiles;
+    private final Map<Path, SourceName>             myNamesForFiles;
     private final Map<SourceName, CoverageInfoPair> myFileCoverages;
     private final Map<SourceName, String>           myRelativeNamesForSources;
 
@@ -208,7 +208,7 @@ public final class CoverageReportWriter
                 {
                     if (myConfig.fileIsSelected(entry))
                     {
-                        mySourceFiles.add(entry.toFile());
+                        mySourceFiles.add(entry);
                     }
                 }
                 return FileVisitResult.CONTINUE;
@@ -257,10 +257,10 @@ public final class CoverageReportWriter
         for (SourceName sourceName : sourceNames)
         {
             // Skip URL-based sources.
-            File file = sourceName.getFile();
+            Path file = sourceName.getPath();
             if (file != null)
             {
-                Path path   = file.getCanonicalFile().toPath();
+                Path path   = file.toRealPath();
                 Path parent = path.getParent();
                 if (prefix == null)
                 {
@@ -284,10 +284,10 @@ public final class CoverageReportWriter
         {
             // TODO Determine this on demand, it's only needed twice per source.
             //      so this code is more complicated than its worth.
-            File file = sourceName.getFile();
+            Path file = sourceName.getPath();
             if (file != null)
             {
-                Path path        = file.getCanonicalFile().toPath();
+                Path path        = file.toRealPath();
                 Path shorterPath = path.subpath(prefixLen, path.getNameCount());
                 myRelativeNamesForSources.put(sourceName, shorterPath.toString());
             }
@@ -340,7 +340,7 @@ public final class CoverageReportWriter
                 }
                 else
                 {
-                    File f = sourceName.getFile();
+                    Path f = sourceName.getPath();
                     if (f != null)
                     {
                         mySourceFiles.add(f);
@@ -364,9 +364,9 @@ public final class CoverageReportWriter
         return modules;
     }
 
-    private File[] sortedFiles()
+    private Path[] sortedFiles()
     {
-        File[] result = mySourceFiles.toArray(new File[0]);
+        Path[] result = mySourceFiles.toArray(new Path[0]);
         Arrays.sort(result);
         return result;
     }
@@ -458,10 +458,10 @@ public final class CoverageReportWriter
                 sourceHtml.append("at ");
 
                 String path;
-                File file = name.getFile();
+                Path file = name.getPath();
                 if (file != null)
                 {
-                    path = file.getAbsolutePath();
+                    path = file.toRealPath().toString();
                 }
                 else
                 {
@@ -582,13 +582,13 @@ public final class CoverageReportWriter
     }
 
 
-    private void renderSourceFiles(File outputDir)
+    private void renderSourceFiles(Path outputDir)
         throws IOException
     {
         for (SourceName name : myDatabase.sourceNames())
         {
-            String relativeName = relativeName(name);
-            try (StreamWriter sourceHtml = new StreamWriter(outputDir, relativeName))
+            Path outFile = outputDir.resolve(relativeName(name));
+            try (StreamWriter sourceHtml = new StreamWriter(outFile))
             {
                 renderSource(new HtmlWriter(sourceHtml), name);
             }
@@ -702,7 +702,7 @@ public final class CoverageReportWriter
     /**
      * @return the path of the index file.
      */
-    public Path renderFullReport(File outputDir)
+    public Path renderFullReport(Path outputDir)
         throws FusionException, IOException
     {
         analyze();
@@ -711,7 +711,7 @@ public final class CoverageReportWriter
 
         renderSourceFiles(outputDir);
 
-        Path indexFile = outputDir.toPath().resolve("index.html");
+        Path indexFile = outputDir.resolve("index.html");
         renderIndex(indexFile);
         return indexFile;
     }
