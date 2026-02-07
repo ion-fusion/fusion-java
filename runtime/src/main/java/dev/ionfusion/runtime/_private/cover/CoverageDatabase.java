@@ -6,6 +6,10 @@ package dev.ionfusion.runtime._private.cover;
 import static com.amazon.ion.IonType.LIST;
 import static com.amazon.ion.IonType.STRING;
 import static com.amazon.ion.IonType.STRUCT;
+import static java.nio.file.Files.createDirectories;
+import static java.nio.file.Files.createTempFile;
+import static java.nio.file.Files.isRegularFile;
+import static java.nio.file.Files.newDirectoryStream;
 
 import com.amazon.ion.IonReader;
 import com.amazon.ion.IonType;
@@ -20,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -93,22 +98,43 @@ public class CoverageDatabase
     private final Map<SourceLocation,Boolean> myLocations = new HashMap<>();
 
 
-    public CoverageDatabase(Path dataDir)
+    private CoverageDatabase(Path session)
+    {
+        myStorageFile = session;
+    }
+
+
+    public static CoverageDatabase openSession(Path dataDir)
         throws IOException
     {
-        myStorageFile = dataDir.resolve("coverage.ion");
+        Path sessionsDir = dataDir.resolve("sessions");
+        createDirectories(sessionsDir);
 
-        if (Files.exists(myStorageFile))
+        Path session = createTempFile(sessionsDir, "", ".ion");
+        return new CoverageDatabase(session);
+    }
+
+
+    public static CoverageDatabase loadSessions(Path dataDir)
+        throws IOException
+    {
+        CoverageDatabase db = new CoverageDatabase(null);
+
+        Path sessionsDir = dataDir.resolve("sessions");
+        if (Files.exists(sessionsDir))
         {
-            try
+            try (DirectoryStream<Path> stream = newDirectoryStream(sessionsDir))
             {
-                read();
-            }
-            catch (IOException e)
-            {
-                throw new IOException("Error reading coverage data", e);
+                for (Path p : stream)
+                {
+                    if (isRegularFile(p))
+                    {
+                        db.loadSession(p);
+                    }
+                }
             }
         }
+        return db;
     }
 
 
@@ -349,7 +375,6 @@ public class CoverageDatabase
     synchronized void write()
         throws IOException
     {
-        Files.createDirectories(myStorageFile.getParent());
         try (OutputStream out = Files.newOutputStream(myStorageFile))
         {
             IonTextWriterBuilder builder =
@@ -557,10 +582,10 @@ public class CoverageDatabase
     }
 
 
-    private void read()
+    private void loadSession(Path session)
         throws IOException
     {
-        try (InputStream is = Files.newInputStream(myStorageFile))
+        try (InputStream is = Files.newInputStream(session))
         {
             try (IonReader ir = IonReaderBuilder.standard().build(is))
             {
@@ -574,7 +599,7 @@ public class CoverageDatabase
         }
         catch (IOException e)
         {
-            String msg = "Error reading coverage data at " + myStorageFile;
+            String msg = "Error reading coverage data at " + session;
             throw new IOException(msg, e);
         }
     }

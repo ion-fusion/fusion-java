@@ -932,8 +932,8 @@ public class FusionRuntimeBuilder
                     fromDirectory(b.myCoverageDataDirectory);
 
                 // Register the active repositories with the collector.
-                // These are persisted in the coverage.ion file, so we can later
-                // scan them and identify files that haven't been covered.
+                // These are persisted in the coverage session, so the reporter
+                // can scan them and identify files that haven't been covered.
                 if (b.getBootstrapRepository() != null)
                 {
                     c.noteRepository(b.getBootstrapRepository());

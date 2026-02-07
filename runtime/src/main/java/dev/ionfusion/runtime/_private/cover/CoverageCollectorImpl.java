@@ -336,8 +336,7 @@ public final class CoverageCollectorImpl
 
         CoverageConfiguration config =
             CoverageConfiguration.forDataDir(dataDir.toPath());
-        CoverageDatabase database =
-            new CoverageDatabase(dataDir.toPath());
+        CoverageDatabase database = CoverageDatabase.openSession(dataDir.toPath());
 
         collector = new CoverageCollectorImpl(config, database);
 
