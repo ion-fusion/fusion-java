@@ -34,13 +34,13 @@ public class CoverTest
     private File dataDir()
         throws IOException
     {
-        return newFolder(myFolder, "data");
+        return newFolder(myFolder, "CoverTest.data");
     }
 
     private File reportDir()
         throws IOException
     {
-        return newFolder(myFolder, "report");
+        return newFolder(myFolder, "CoverTest.report");
     }
 
 
