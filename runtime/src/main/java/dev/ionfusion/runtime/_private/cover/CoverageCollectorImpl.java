@@ -85,10 +85,11 @@ public final class CoverageCollectorImpl
         private File             myFile;
         private CoverageDatabase myDatabase;
 
-        CollectorRef(CoverageCollectorImpl referent)
+        CollectorRef(File file, CoverageCollectorImpl referent)
         {
             super(referent, ourReferenceQueue);
 
+            myFile = file;
             myDatabase = referent.myDatabase;
         }
 
@@ -115,7 +116,6 @@ public final class CoverageCollectorImpl
             }
             finally
             {
-                // FIXME The `myFile` is never initialized and is always null!
                 removeFromCache(myFile, this);
             }
         }
@@ -256,6 +256,7 @@ public final class CoverageCollectorImpl
             {
                 // The JVM is shutting down. Nothing to do.
             }
+            // TODO Do we need to stop the shutdown hook thread?
 
             Flusher.stop();
         }
@@ -283,7 +284,7 @@ public final class CoverageCollectorImpl
         Set<CollectorRef> files = new HashSet<>(ourCollectorCache.values());
         for (CollectorRef ref : files)
         {
-            // TODO Why would ref be null?
+            // This is purely defensive, there should be no null entries.
             if (ref != null)
             {
                 ref.clear();
@@ -340,7 +341,7 @@ public final class CoverageCollectorImpl
 
         collector = new CoverageCollectorImpl(config, database);
 
-        addToCache(dataDir, new CollectorRef(collector));
+        addToCache(dataDir, new CollectorRef(dataDir, collector));
 
         return collector;
     }
