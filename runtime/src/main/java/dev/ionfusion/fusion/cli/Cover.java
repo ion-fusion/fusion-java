@@ -3,14 +3,16 @@
 
 package dev.ionfusion.fusion.cli;
 
+import static java.nio.file.Files.exists;
+import static java.nio.file.Files.isDirectory;
 import static java.nio.file.Files.isReadable;
 import static java.nio.file.Files.isRegularFile;
 
 import dev.ionfusion.runtime._private.cover.CoverageConfiguration;
 import dev.ionfusion.runtime._private.cover.CoverageDatabase;
-import java.io.File;
 import java.io.PrintWriter;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  *
@@ -70,17 +72,17 @@ class Cover
 
         // TODO Support multiple data directories, to generate an aggregate
         //   report from a few test suites, Gradle subprojects, etc.
-        File dataDir = new File(dataPath);
-        if (! dataDir.isDirectory())
+        Path dataDir = Paths.get(dataPath);
+        if (!isDirectory(dataDir) || !isReadable(dataDir))
         {
-            throw usage("Coverage data directory is not a directory: " + dataPath);
+            throw usage("Coverage data directory is not a readable directory: " + dataPath);
         }
 
         String reportPath = args[1];
         if (reportPath.isEmpty()) return null;
 
-        File reportDir = new File(reportPath);
-        if (reportDir.exists() && ! reportDir.isDirectory())
+        Path reportDir = Paths.get(reportPath);
+        if (exists(reportDir) && !isDirectory(reportDir))
         {
             throw usage("Report directory is not a directory: " + reportPath);
         }
@@ -93,14 +95,13 @@ class Cover
         extends StdioExecutor
     {
         private final Options myLocals;
-        private final File myDataDir;
-        private final File myReportDir;
+        private final Path    myDataDir;
+        private final Path    myReportDir;
 
-        private Executor(GlobalOptions globals, Options locals, File dataDir, File reportDir)
+        private Executor(GlobalOptions globals, Options locals, Path dataDir, Path reportDir)
         {
             super(globals);
-            myLocals = locals;
-
+            myLocals    = locals;
             myDataDir   = dataDir;
             myReportDir = reportDir;
         }
@@ -116,10 +117,10 @@ class Cover
             }
             else
             {
-                config = CoverageConfiguration.forDataDir(myDataDir.toPath());
+                config = CoverageConfiguration.forDataDir(myDataDir);
             }
 
-            CoverageDatabase database = new CoverageDatabase(myDataDir.toPath());
+            CoverageDatabase database = new CoverageDatabase(myDataDir);
 
             CoverageReportWriter renderer = new CoverageReportWriter(config, database);
 

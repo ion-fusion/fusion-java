@@ -62,7 +62,7 @@ public class CoverTest
 
         run(1, "report_coverage", f.getPath(), reportDir().getPath());
 
-        assertThat(stderrText, containsString("not a directory"));
+        assertThat(stderrText, containsString("not a readable directory"));
         assertThat(stderrText, containsString(f.getPath()));
     }
 
@@ -74,7 +74,7 @@ public class CoverTest
 
         run(1, "report_coverage", f, reportDir().getPath());
 
-        assertThat(stderrText, containsString("not a directory"));
+        assertThat(stderrText, containsString("not a readable directory"));
         assertThat(stderrText, containsString(f));
     }
 

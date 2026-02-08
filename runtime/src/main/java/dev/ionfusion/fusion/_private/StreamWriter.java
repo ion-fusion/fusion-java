@@ -7,7 +7,6 @@ import static com.amazon.ion.system.IonTextWriterBuilder.UTF8;
 
 import java.io.BufferedWriter;
 import java.io.Closeable;
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -34,12 +33,6 @@ public class StreamWriter
 
         // FIXME OutputStream will not be closed if this fails:
         myWriter = new BufferedWriter(new OutputStreamWriter(myStream, UTF8));
-    }
-
-    public StreamWriter(File dir, String fileName)
-        throws IOException
-    {
-        this(dir.toPath().resolve(fileName));
     }
 
     @Override
