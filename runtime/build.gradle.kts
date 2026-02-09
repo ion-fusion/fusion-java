@@ -83,17 +83,19 @@ tasks.jacocoTestCoverageVerification {
 tasks.javadoc {
     exclude("**/_Private_*",
             "**/_private/**",
-            "dev/ionfusion/fusion/cli",
             "dev/ionfusion/fusion/util/hamt/**")
 
     title = "FusionJava API Reference"
+
+    var overviewFile = "$projectDir/src/main/java/overview.html"
+    inputs.file(overviewFile)
 
     options {
         // https://github.com/gradle/gradle/issues/7038
         this as StandardJavadocDocletOptions
 
         docEncoding = "UTF-8"
-        overview = "$projectDir/src/main/java/overview.html"
+        overview = overviewFile
 
         header = "FusionJava API Reference<br />${project.version}"
         bottom = "<center>Copyright Ion Fusion contributors. All Rights Reserved.</center>"
