@@ -120,7 +120,7 @@ class Cover
                 config = CoverageConfiguration.forDataDir(myDataDir);
             }
 
-            CoverageDatabase database = new CoverageDatabase(myDataDir);
+            CoverageDatabase database = CoverageDatabase.loadSessions(myDataDir);
 
             CoverageReportWriter renderer = new CoverageReportWriter(config, database);
 

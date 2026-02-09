@@ -335,8 +335,8 @@ public final class CoverageReportWriter
                     myModules.add(id);
 
                     SourceName prior = myNamesForModules.put(id, sourceName);
-                    assert prior == null || prior == sourceName :
-                        "SourceName instance has changed for module " + id;
+                    assert prior == null || prior.equals(sourceName) :
+                        "SourceName has changed for module " + id;
                 }
                 else
                 {
@@ -346,8 +346,8 @@ public final class CoverageReportWriter
                         mySourceFiles.add(f);
 
                         SourceName prior = myNamesForFiles.put(f, sourceName);
-                        assert prior == null || prior == sourceName :
-                            "SourceName instance has changed for file " + f +
+                        assert prior == null || prior.equals(sourceName) :
+                            "SourceName has changed for file " + f +
                                 "\nThis can happen if you `load` a module's file " +
                                 "within a registered repository.";
                     }
