@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.net.URL;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -37,17 +38,7 @@ import java.util.Set;
 
 
 /**
- * Records and persists coverage instrumentation data.
- * <p>
- * Instances are tied to a specific filesystem directory, and assumes full
- * control of its content.  In particular, no other process, and no other
- * {@code CoverageDatabase} instance, should access the directory until the
- * database is flushed via {@link #write()}.  This implies that instances need
- * to be interned or otherwise deduplicated, based on their physical directory.
- * At present, {@link CoverageCollectorImpl} implements these constraints.
- * <p>
- * TODO: The flushing protocol would be more obvious if this class implemented
- *       {@link java.io.Closeable}.
+ * Collects, reads, and writes coverage instrumentation data.
  */
 public class CoverageDatabase
 {
@@ -389,6 +380,19 @@ public class CoverageDatabase
                     writeSource(iw, name);
                 }
             }
+        }
+    }
+
+    void uncheckedWrite()
+        throws UncheckedIOException
+    {
+        try
+        {
+            write();
+        }
+        catch (IOException e)
+        {
+            throw new UncheckedIOException(e);
         }
     }
 
