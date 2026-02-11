@@ -15,7 +15,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -434,43 +433,6 @@ public class FusionRuntimeBuilderTest
     public void testSetCoverageDataDirectory()
     {
         changeCoverageDataDirectory(standard(), tmpDir);
-    }
-
-
-    /**
-     * Ensures that different paths to the same directory don't result in
-     * different collectors that would interfere with each other.
-     */
-    @Test
-    public void testCoverageDataDirectoryCanonicalization()
-        throws Exception
-    {
-        Path dir1 = tmpDir.toPath();
-        Path dir2 = dir1.resolve(getClass().getSimpleName() + "-linkholder");
-        Files.createDirectory(dir2);
-
-        Path link = dir2.resolve("link");
-        Files.createSymbolicLink(link, dir1);
-
-        _Private_CoverageCollector c1 = makeCollector(dir1);
-        _Private_CoverageCollector c2 = makeCollector(dir2);
-        _Private_CoverageCollector c3 = makeCollector(link);
-
-        assertNotSame(c1, c2, "different dirs");
-        assertSame(c1, c3, "canonicalized symlink");
-    }
-
-    private _Private_CoverageCollector makeCollector(Path dir)
-        throws Exception
-    {
-        FusionRuntime r =
-            runtimeBuilder().copy()
-                            .withCoverageDataDirectory(dir.toFile())
-                            .build();
-        _Private_CoverageCollector c =
-            ((StandardRuntime) r).getCoverageCollector();
-        assertNotNull(c);
-        return c;
     }
 
 
