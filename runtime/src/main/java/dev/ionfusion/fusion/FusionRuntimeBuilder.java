@@ -4,7 +4,7 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion._private.FusionUtils.readProperties;
-import static dev.ionfusion.runtime._private.cover.CoverageCollectorImpl.fromDirectory;
+import static dev.ionfusion.runtime._private.cover.CoverageCollectorFactory.fromDirectory;
 import static dev.ionfusion.runtime.base.ModuleIdentity.isValidAbsoluteModulePath;
 
 import com.amazon.ion.IonCatalog;
