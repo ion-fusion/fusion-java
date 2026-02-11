@@ -8,12 +8,6 @@ import dev.ionfusion.runtime.base.SourceLocation;
 import dev.ionfusion.runtime.embed.FusionRuntime;
 import java.io.File;
 import java.io.IOException;
-import java.lang.ref.ReferenceQueue;
-import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Implements code-coverage metrics collection.
@@ -26,334 +20,30 @@ import java.util.Set;
  * At present, only file-based sources are instrumented. This includes sources
  * loaded from a file-based {@code ModuleRepository} as well as scripts from
  * other locations.
- * <p>
- * Instances of this class are interned in a weak-reference cache, keyed by the
- * data directory.  This allows them to be shared by {@code FusionRuntime}
- * instances for as long as possible, and flushed to disk when they become
- * unreachable or the JVM exits.  This also ensures proper deduplication of the
- * {@link CoverageDatabase} contained within.
- * <p>
- * <em>Flushing and reloading of a database multiple times within a test run is
- * expected and common, particularly within this project.</em>
- * <p>
- * TODO: The caching/flushing mechanism is distinct from this class's main
- * responsibility of coverage filtering, and brings significant complexity to
- * something that should be simple.  The Single Responsibility Principle
- * suggests it should be refactored into a dedicated class.
- * See <a href="https://docs.racket-lang.org/reference/plumbers.html">Racket's
- * plumbers</a>.
  *
  * @see CoverageConfiguration
  */
 public final class CoverageCollectorImpl
     implements _Private_CoverageCollector
 {
-    // TODO Remove _Private_ prefix from this class; it's not used outside of
-    //      this package.
-
-    // TODO JAVA8 Replace with a Predicate<SourceLocation>
     private final CoverageConfiguration myConfig;
 
     /** Where we store our metrics. */
     private final CoverageDatabase myDatabase;
 
 
-    private CoverageCollectorImpl(CoverageConfiguration config,
-                                  CoverageDatabase      database)
-        throws IOException
+    CoverageCollectorImpl(CoverageConfiguration config,
+                          CoverageDatabase      database)
     {
         myConfig   = config;
         myDatabase = database;
     }
 
 
-    /**
-     * Polled by {@link Flusher#run()}.
-     * <p>
-     * TODO: Can we streamline this to {@code ReferenceQueue<Closeable>}?
-     */
-    private static final
-    ReferenceQueue<CoverageCollectorImpl> ourReferenceQueue =
-        new ReferenceQueue<>();
-
-
-    // TODO A soft reference might be even better, to retain the collector as
-    //      long as possible.
-    private static final class CollectorRef
-        extends WeakReference<CoverageCollectorImpl>
+    CoverageDatabase getDatabase()
     {
-        private File             myFile;
-        private CoverageDatabase myDatabase;
-
-        CollectorRef(File file, CoverageCollectorImpl referent)
-        {
-            super(referent, ourReferenceQueue);
-
-            myFile = file;
-            myDatabase = referent.myDatabase;
-        }
-
-        /**
-         * Carefully synchronized since this can be called in a race between
-         * {@link Flusher} and {@link #fromDirectory(File)}, depending on which
-         * detects collection first.
-         */
-        void flushDatabase()
-            throws IOException
-        {
-            try
-            {
-                synchronized (this)
-                {
-                    if (myDatabase != null)
-                    {
-                        // If we fail to write the database, don't try it again.
-                        CoverageDatabase db = myDatabase;
-                        myDatabase = null;
-                        db.write();
-                    }
-                }
-            }
-            finally
-            {
-                removeFromCache(myFile, this);
-            }
-        }
+        return myDatabase;
     }
-
-
-    /**
-     * Polls {@link #ourReferenceQueue} to write coverage data to disk when a
-     * collector is garbage collected.
-     * <p>
-     * TODO: It could be simpler to handle {@link java.io.Closeable}.
-     */
-    private static class Flusher
-        implements Runnable
-    {
-        @Override
-        public void run()
-        {
-            try
-            {
-                while (true)
-                {
-                    try
-                    {
-                        CollectorRef ref =
-                            (CollectorRef) ourReferenceQueue.remove();
-                        ref.flushDatabase();
-                    }
-                    catch (InterruptedException e)  // TODO Why is this needed?
-                    {
-                        break;
-                    }
-                    catch (IOException e)
-                    {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
-            }
-            finally
-            {
-                synchronized (Flusher.class)
-                {
-                    ourFlusherThread = null;
-                }
-            }
-        }
-
-
-        private static Thread ourFlusherThread = null;
-
-        static synchronized void start()
-        {
-            if (ourFlusherThread == null)
-            {
-                ourFlusherThread =
-                    new Thread(new Flusher(),
-                               "Fusion coverage metrics flusher");
-                ourFlusherThread.setDaemon(true);
-                ourFlusherThread.start();
-            }
-        }
-
-        /** Called when there are no more references to flush. */
-        static synchronized void stop()
-        {
-            if (ourFlusherThread != null)
-            {
-                ourFlusherThread.interrupt();
-                ourFlusherThread = null;
-            }
-        }
-    }
-
-
-    // TODO Consider moving the cache into its own class, to better
-    //   organize/encapsulate the complicated caching/threading logic.
-    private static Map<File,CollectorRef> ourCollectorCache;
-
-    private static Thread ourShutdownHook;
-    private static boolean ourShutdownHasStarted;
-
-
-    /**
-     * Called before each access to the {@link #ourCollectorCache}.
-     */
-    private static synchronized void initCache()
-    {
-        if (ourCollectorCache == null)
-        {
-            ourCollectorCache = new HashMap<>();
-        }
-
-        if (ourShutdownHook == null)
-        {
-            ourShutdownHook = new Thread(CoverageCollectorImpl::emptyCache);
-
-            Runtime.getRuntime().addShutdownHook(ourShutdownHook);
-        }
-        else if (ourShutdownHasStarted)
-        {
-            throw new IllegalStateException("The JVM is shutting down.");
-        }
-    }
-
-
-    private static synchronized void addToCache(File file,  CollectorRef ref)
-    {
-        ourCollectorCache.put(file, ref);
-
-        Flusher.start();
-    }
-
-
-    /**
-     * Remove an entry from the cache AFTER it has been flushed.
-     */
-    private static synchronized void removeFromCache(File file,
-                                                     CollectorRef ref)
-    {
-        assert ref.get() == null;
-
-        CollectorRef current = ourCollectorCache.get(file);
-        if (current == ref)
-        {
-            ourCollectorCache.remove(file);
-        }
-
-        if (ourCollectorCache.isEmpty())
-        {
-            // TODO How do we know this?
-            assert ourShutdownHook != null;
-            try
-            {
-                Runtime.getRuntime().removeShutdownHook(ourShutdownHook);
-            }
-            catch (IllegalStateException e)
-            {
-                // The JVM is shutting down. Nothing to do.
-            }
-            // TODO Do we need to stop the shutdown hook thread?
-
-            Flusher.stop();
-        }
-    }
-
-    /**
-     * Called by the JVM shutdown hook, to ensure everything gets flushed.
-     * <p>
-     * Per {@link Runtime#addShutdownHook}, "daemon threads will continue to
-     * run during the shutdown sequence, as will non-daemon threads if shutdown
-     * was initiated by invoking the exit method."
-     * <p>
-     * TODO This is a risky: the database could be large and flushing may thus
-     *      take too long for a shutdown hook.  We should instead have an active
-     *      {@code close()} protocol, perhaps on {@link FusionRuntime}, so that
-     *      the application flushes coverage data in a controlled manner.
-     */
-    private static synchronized void emptyCache()
-    {
-        ourShutdownHasStarted = true;
-
-        // Snapshot the values in the cache, to avoid concurrent
-        // modification problems. If the cache isn't empty, Flusher thread is
-        // still running.
-        Set<CollectorRef> files = new HashSet<>(ourCollectorCache.values());
-        for (CollectorRef ref : files)
-        {
-            // This is purely defensive, there should be no null entries.
-            if (ref != null)
-            {
-                ref.clear();
-                try
-                {
-                    ref.flushDatabase();
-                }
-                catch (IOException e)
-                {
-                    String message = "Error writing coverage data";
-                    throw new RuntimeException(message, e);
-                }
-            }
-        }
-    }
-
-    public static synchronized CoverageCollectorImpl fromDirectory(File dataDir)
-        throws IOException
-    {
-        initCache();
-
-        // Canonicalize the dataDir, so different paths to the same directory
-        // don't lead to collectors overwriting each other's database.
-        dataDir = dataDir.getCanonicalFile();
-
-        CoverageCollectorImpl collector;
-
-        CollectorRef ref = ourCollectorCache.get(dataDir);
-        if (ref != null)
-        {
-            collector = ref.get();
-            if (collector != null) return collector;
-
-            // The prior collector has been GCed, so write any remaining state.
-            // We want this to happen BEFORE creating a new collector using
-            // the same directory.
-            try
-            {
-                // TODO Could we instead extract the database and reuse it with
-                //   a new collector?  That would avoid the write/read cycle.
-                ref.flushDatabase();
-            }
-            catch (IOException e)
-            {
-                throw new IOException("Error writing coverage data", e);
-            }
-            // ref is now useless. Fall through and create a new one.
-        }
-
-        CoverageConfiguration config =
-            CoverageConfiguration.forDataDir(dataDir.toPath());
-        CoverageDatabase database = CoverageDatabase.openSession(dataDir.toPath());
-
-        collector = new CoverageCollectorImpl(config, database);
-
-        addToCache(dataDir, new CollectorRef(dataDir, collector));
-
-        return collector;
-    }
-
-    public static CoverageCollectorImpl fromDirectory(String dataDir)
-        throws IOException
-    {
-        return fromDirectory(new File(dataDir));
-    }
-
-
-    //=========================================================================
-    // Managing the coverage data
 
 
     public void noteRepository(File repoDir)
