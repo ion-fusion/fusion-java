@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -253,6 +254,12 @@ public final class CoverageCollectorFactory
                 }
             }
         }
+    }
+
+    public static synchronized CoverageCollectorImpl fromDirectory(Path dataDir)
+        throws IOException
+    {
+        return fromDirectory(dataDir.toFile());
     }
 
     public static synchronized CoverageCollectorImpl fromDirectory(File dataDir)
