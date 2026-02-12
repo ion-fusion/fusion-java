@@ -4,10 +4,13 @@
 package dev.ionfusion.runtime._private.cover;
 
 import dev.ionfusion.fusion._Private_CoverageCollector;
+import dev.ionfusion.fusion._private.InternMap;
 import dev.ionfusion.runtime.base.SourceLocation;
 import dev.ionfusion.runtime.embed.FusionRuntime;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Objects;
 
 /**
  * Implements code-coverage metrics collection.
@@ -26,15 +29,22 @@ import java.io.IOException;
 public final class CoverageCollectorImpl
     implements _Private_CoverageCollector
 {
+    /**
+     * TODO remove when {@link InternMap} supports direct key comparison.
+     * @see CoverageCollectorFactory#createSession(Path)
+     */
+    private final Path                  myDataDir;
     private final CoverageConfiguration myConfig;
 
     /** Where we store our metrics. */
     private final CoverageDatabase myDatabase;
 
 
-    CoverageCollectorImpl(CoverageConfiguration config,
+    CoverageCollectorImpl(Path                  dataDir,
+                          CoverageConfiguration config,
                           CoverageDatabase      database)
     {
+        myDataDir  = dataDir;
         myConfig   = config;
         myDatabase = database;
     }
@@ -86,5 +96,19 @@ public final class CoverageCollectorImpl
         {
             throw new IOException("Error writing Fusion coverage data", e);
         }
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (o == null || getClass() != o.getClass()) { return false; }
+        CoverageCollectorImpl that = (CoverageCollectorImpl) o;
+        return Objects.equals(this.myDataDir, that.myDataDir);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hashCode(myDataDir);
     }
 }

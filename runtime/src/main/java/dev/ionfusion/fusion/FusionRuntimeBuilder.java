@@ -929,7 +929,7 @@ public class FusionRuntimeBuilder
             if (b.myCoverageDataDirectory != null)
             {
                 CoverageCollectorImpl c =
-                    fromDirectory(b.myCoverageDataDirectory);
+                    fromDirectory(b.myCoverageDataDirectory.toPath());
 
                 // Register the active repositories with the collector.
                 // These are persisted in the coverage session, so the reporter
