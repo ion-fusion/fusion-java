@@ -334,14 +334,14 @@ public class CoverageDatabase
     private void writeLocations(IonWriter iw, SourceName name)
         throws IOException
     {
-        SourceLocation[] locations = sortedLocations(name);
-        assert locations.length != 0;
-
         iw.stepIn(LIST);
         {
-            for (SourceLocation loc : locations)
+            for (SourceLocation loc : myLocations.keySet())
             {
-                writeLocation(iw, loc);
+                if (name.equals(loc.getSourceName()))
+                {
+                    writeLocation(iw, loc);
+                }
             }
         }
         iw.stepOut();
