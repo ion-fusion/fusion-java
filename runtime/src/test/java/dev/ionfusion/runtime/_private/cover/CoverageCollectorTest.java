@@ -21,13 +21,16 @@ public class CoverageCollectorTest
     public Path tmpDir;
 
 
+    /**
+     * Coverage collectors are unique, even when sharing the same directory.
+     */
     @Test
-    public void testRepeatInstantiation()
+    public void testUniqueInstances()
         throws Exception
     {
         CoverageCollectorImpl c1 = fromDirectory(tmpDir);
         CoverageCollectorImpl c2 = fromDirectory(tmpDir);
-        assertSame(c1, c2);
+        assertNotSame(c1, c2);
     }
 
 
@@ -50,7 +53,8 @@ public class CoverageCollectorTest
         CoverageCollectorImpl c2 = fromDirectory(dir2);
         CoverageCollectorImpl c3 = fromDirectory(linkToDir1);
 
-        assertNotSame(c1, c2, "different dirs");
-        assertSame(c1, c3, "canonicalized symlink");
+
+        assertNotSame(c1.getSession(), c2.getSession(), "different dirs");
+        assertSame(c1.getSession(), c3.getSession(), "canonicalized symlink");
     }
 }

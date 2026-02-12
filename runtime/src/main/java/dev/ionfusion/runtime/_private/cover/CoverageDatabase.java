@@ -6,8 +6,6 @@ package dev.ionfusion.runtime._private.cover;
 import static com.amazon.ion.IonType.LIST;
 import static com.amazon.ion.IonType.STRING;
 import static com.amazon.ion.IonType.STRUCT;
-import static java.nio.file.Files.createDirectories;
-import static java.nio.file.Files.createTempFile;
 import static java.nio.file.Files.isRegularFile;
 import static java.nio.file.Files.newDirectoryStream;
 
@@ -81,35 +79,20 @@ public class CoverageDatabase
 
     //=========================================================================
 
-
-    private final Path myStorageFile;
-
     private final Set<File> myRepositories = new HashSet<>();
 
     private final Map<SourceLocation,Boolean> myLocations = new HashMap<>();
 
 
-    private CoverageDatabase(Path session)
+    CoverageDatabase()
     {
-        myStorageFile = session;
-    }
-
-
-    public static CoverageDatabase openSession(Path dataDir)
-        throws IOException
-    {
-        Path sessionsDir = dataDir.resolve("sessions");
-        createDirectories(sessionsDir);
-
-        Path session = createTempFile(sessionsDir, "", ".ion");
-        return new CoverageDatabase(session);
     }
 
 
     public static CoverageDatabase loadSessions(Path dataDir)
         throws IOException
     {
-        CoverageDatabase db = new CoverageDatabase(null);
+        CoverageDatabase db = new CoverageDatabase();
 
         Path sessionsDir = dataDir.resolve("sessions");
         if (Files.exists(sessionsDir))
@@ -363,7 +346,7 @@ public class CoverageDatabase
     }
 
 
-    synchronized void write()
+    synchronized void write(Path myStorageFile)
         throws IOException
     {
         try (OutputStream out = Files.newOutputStream(myStorageFile))
@@ -383,12 +366,12 @@ public class CoverageDatabase
         }
     }
 
-    void uncheckedWrite()
+    void uncheckedWrite(Path storageFile)
         throws UncheckedIOException
     {
         try
         {
-            write();
+            write(storageFile);
         }
         catch (IOException e)
         {
