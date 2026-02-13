@@ -4,7 +4,6 @@
 package dev.ionfusion.runtime._private.cover;
 
 import dev.ionfusion.fusion._private.InternMap;
-import dev.ionfusion.runtime._private.util.Flusher;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
@@ -17,9 +16,7 @@ import java.nio.file.Path;
  */
 public final class CoverageCollectorFactory
 {
-    private static final Flusher ourFlusher = new Flusher("Fusion coverage flusher");
-
-    private static final InternMap<Path, CoverageCollectorImpl> ourSessions =
+    private static final InternMap<Path, CoverageSession> ourSessions =
         new InternMap<>(CoverageCollectorFactory::createSession);
 
 
@@ -27,11 +24,13 @@ public final class CoverageCollectorFactory
         throws IOException
     {
         // Canonicalize the path for more reliable session sharing.
-        dataDir = dataDir.toRealPath();
+        Path sessionsDir = dataDir.toRealPath().resolve("sessions");
 
         try
         {
-            return ourSessions.intern(dataDir);
+            CoverageConfiguration config  = CoverageConfiguration.forDataDir(dataDir);
+            CoverageSession       session = ourSessions.intern(sessionsDir);
+            return new CoverageCollectorImpl(config, session);
         }
         catch (UncheckedIOException e) // from createSession()
         {
@@ -53,21 +52,12 @@ public final class CoverageCollectorFactory
      *
      * @throws UncheckedIOException so this method can be used as a {@link Runnable}.
      */
-    static CoverageCollectorImpl createSession(Path dataDir)
+    static CoverageSession createSession(Path sessionsDir)
         throws UncheckedIOException
     {
         try
         {
-            CoverageConfiguration config =
-                CoverageConfiguration.forDataDir(dataDir);
-            CoverageDatabase database =
-                CoverageDatabase.openSession(dataDir);
-            CoverageCollectorImpl collector =
-                new CoverageCollectorImpl(dataDir, config, database);
-
-            ourFlusher.register(collector, database::uncheckedWrite);
-
-            return collector;
+            return CoverageSession.createSession(sessionsDir);
         }
         catch (IOException e)
         {
