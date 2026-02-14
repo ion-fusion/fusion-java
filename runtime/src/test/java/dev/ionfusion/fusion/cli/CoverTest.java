@@ -54,13 +54,31 @@ public class CoverTest
 
 
     @Test
+    public void testNoDataDirArg()
+        throws Exception
+    {
+        run(1, "report_coverage", "--htmlDir", reportDir().getPath());
+        assertThat(stderrText, containsString("Usage:"));
+    }
+
+
+    @Test
+    public void testDataDirArgIsEmpty()
+        throws Exception
+    {
+        run(1, "report_coverage", "--htmlDir", reportDir().getPath(), "");
+        assertThat(stderrText, containsString("Usage:"));
+    }
+
+
+    @Test
     public void testDataDirIsMissing()
         throws Exception
     {
         File f = new File(myFolder, "no file");
         assertFalse(f.exists());
 
-        run(1, "report_coverage", f.getPath(), reportDir().getPath());
+        run(1, "report_coverage", "--htmlDir", reportDir().getPath(), f.getPath());
 
         assertThat(stderrText, containsString("not a readable directory"));
         assertThat(stderrText, containsString(f.getPath()));
@@ -72,7 +90,7 @@ public class CoverTest
     {
         String f = plainFile().getPath();
 
-        run(1, "report_coverage", f, reportDir().getPath());
+        run(1, "report_coverage", "--htmlDir", reportDir().getPath(), f);
 
         assertThat(stderrText, containsString("not a readable directory"));
         assertThat(stderrText, containsString(f));
@@ -84,7 +102,7 @@ public class CoverTest
     {
         String f = plainFile().getPath();
 
-        run(1, "report_coverage", dataDir().getPath(), f);
+        run(1, "report_coverage", "--htmlDir", f, dataDir().getPath());
 
         assertThat(stderrText, containsString("not a directory"));
         assertThat(stderrText, containsString(f));
@@ -99,7 +117,7 @@ public class CoverTest
         String reportDir = reportDir().getPath();
 
         // I'm surprised this works without any coverage data!
-        run(0, "report_coverage", dataDir, reportDir);
+        run(0, "report_coverage", "--htmlDir", reportDir, dataDir);
         assertThat(stdoutText,
                    allOf(containsString("Wrote Fusion coverage report to "),
                          containsString(reportDir)));
@@ -107,6 +125,33 @@ public class CoverTest
 
         assertTrue(new File(reportDir, "index.html").isFile());
     }
+
+    @Test
+    public void testMultipleDataDirs()
+        throws Exception
+    {
+        File dataDir1 = dataDir();
+        File dataDir2 = newFolder(myFolder, "dataDir2");
+        run(0, "report_coverage",
+            "--htmlDir", reportDir().getPath(),
+            "--configFile", plainFile().getPath(),
+            dataDir1.getPath(),
+            dataDir2.getPath());
+    }
+
+    @Test
+    public void testMultipleDataDirsNoConfig()
+        throws Exception
+    {
+        File dataDir1 = dataDir();
+        File dataDir2 = newFolder(myFolder, "dataDir2");
+        run(1, "report_coverage",
+            "--htmlDir", reportDir().getPath(),
+            dataDir1.getPath(),
+            dataDir2.getPath());
+        assertThat(stderrText, containsString("Must provide --configFile"));
+    }
+
 
     private static File newFolder(File root, String... subDirs) throws IOException {
         String subFolder = String.join("/", subDirs);

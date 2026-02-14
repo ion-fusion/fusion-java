@@ -142,8 +142,8 @@ val fcovTestReport = tasks.register<JavaExec>("fcovTestReport") {
     mainClass = "dev.ionfusion.fusion.cli.Cli"
     args = listOf("report_coverage",
                   "--configFile", fcovConfig.asFile.path,
-                  fcovDataDir.get().asFile.path,
-                  fcovReportDir.get().asFile.path)
+                  "--htmlDir", fcovReportDir.get().asFile.path,
+                  fcovDataDir.get().asFile.path)
 
     enableAssertions = true
 }
