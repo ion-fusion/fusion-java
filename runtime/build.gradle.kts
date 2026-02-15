@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 plugins {
+    id("buildlogic.fusion-common-conventions")
     id("buildlogic.java-library-conventions")
     jacoco
 }
@@ -31,11 +32,6 @@ java {
 val mainFusionRepo = layout.projectDirectory.dir("src/main/fusion")
 val testFusionRepo = layout.projectDirectory.dir("src/test/fusion")
 
-// New output paths for Fusion code coverage.
-val fcovConfig = layout.projectDirectory.file("fcov.properties")
-val fcovDataDir = layout.buildDirectory.dir("fcov")
-val fcovReportDir = reporting.baseDirectory.dir("fcov")
-
 
 // Various resources refer to the current version label.
 tasks.processResources {
@@ -63,19 +59,7 @@ tasks.test {
     // dev.ionfusion.fusion.ClassLoaderModuleRepositoryTest uses ftst-repo.jar.
     dependsOn(ftstRepo)
 
-    inputs.file(fcovConfig)
     inputs.dir(testFusionRepo)
-
-    jvmArgumentProviders.add {
-        if (fcovRunning) {
-            logger.lifecycle("Enabling Fusion code coverage instrumentation")
-            listOf("-Ddev.ionfusion.fusion.coverage.DataDir=" + fcovDataDir.get().asFile.path,
-                   "-Ddev.ionfusion.fusion.coverage.Config=" + fcovConfig.asFile.path)
-        }
-        else {
-            listOf()
-        }
-    }
 }
 
 val ftstRepo = tasks.register<Jar>("ftstRepo") {
@@ -90,7 +74,7 @@ val ftstRepo = tasks.register<Jar>("ftstRepo") {
 
 
 //=============================================================================
-// Code Coverage
+// Java Code Coverage
 
 // https://docs.gradle.org/current/userguide/jacoco_plugin.html
 
@@ -127,35 +111,6 @@ tasks.check {
 }
 
 
-// Name is ick but mirrors jacocoTestReport
-val fcovTestReport = tasks.register<JavaExec>("fcovTestReport") {
-    dependsOn(tasks.test)
-
-    group = "verification"
-    description = "Generates Fusion code coverage report"
-
-    javaLauncher = javaToolchains.launcherFor {
-        languageVersion = java.toolchain.languageVersion
-    }
-
-    classpath = sourceSets["main"].runtimeClasspath
-    mainClass = "dev.ionfusion.fusion.cli.Cli"
-    args = listOf("report_coverage",
-                  "--configFile", fcovConfig.asFile.path,
-                  "--htmlDir", fcovReportDir.get().asFile.path,
-                  fcovDataDir.get().asFile.path)
-
-    enableAssertions = true
-}
-
-
-// Signal the test task to collect Fusion coverage data.
-var fcovRunning = false
-gradle.taskGraph.whenReady {
-    fcovRunning = hasTask(fcovTestReport.get())
-}
-
-
 //=============================================================================
 // Documentation
 
@@ -185,6 +140,5 @@ tasks.javadoc {
 // Distribution
 
 tasks.build {
-    // To speed up the dev workflow, only enable FCOV when doing a full build.
-    dependsOn(tasks.jacocoTestReport, fcovTestReport)
+    dependsOn(tasks.jacocoTestReport)
 }
