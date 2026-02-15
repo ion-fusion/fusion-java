@@ -84,16 +84,14 @@ public class CoverageDatabase
     private final Map<SourceLocation,Boolean> myLocations = new HashMap<>();
 
 
-    CoverageDatabase()
+    public CoverageDatabase()
     {
     }
 
 
-    public static CoverageDatabase loadSessions(Path dataDir)
+    public void loadSessions(Path dataDir)
         throws IOException
     {
-        CoverageDatabase db = new CoverageDatabase();
-
         Path sessionsDir = dataDir.resolve("sessions");
         if (Files.exists(sessionsDir))
         {
@@ -103,12 +101,11 @@ public class CoverageDatabase
                 {
                     if (isRegularFile(p))
                     {
-                        db.loadSession(p);
+                        loadSession(p);
                     }
                 }
             }
         }
-        return db;
     }
 
 

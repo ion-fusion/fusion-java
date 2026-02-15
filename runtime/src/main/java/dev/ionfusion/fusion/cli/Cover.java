@@ -13,6 +13,8 @@ import dev.ionfusion.runtime._private.cover.CoverageDatabase;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -24,10 +26,12 @@ class Cover
     private static final String HELP_ONE_LINER =
         "Generate a code coverage report.";
     private static final String HELP_USAGE =
-        "report_coverage [--configFile FILE] COVERAGE_DATA_DIR REPORT_DIR";
+        "report_coverage [--configFile FILE] --htmlDir REPORT_DIR DATA_DIR ...";
     private static final String HELP_BODY =
-        "Reads Fusion code-coverage data from the COVERAGE_DATA_DIR, then writes an\n" +
-        "HTML report to the REPORT_DIR.";
+        "Reads Fusion code-coverage data from the DATA_DIRs, then writes an\n" +
+        "HTML report to the REPORT_DIR.\n" +
+        "\n" +
+        "Multiple data directories can be given, generating an aggregate report.";
 
 
     Cover()
@@ -45,6 +49,7 @@ class Cover
     private class Options
     {
         private Path myConfigFile;
+        private Path myHtmlDir;
 
         public void setConfigFile(Path configFile)
             throws UsageException
@@ -54,6 +59,16 @@ class Cover
                 throw usage("--configFile is not a readable file: " + configFile);
             }
             myConfigFile = configFile;
+        }
+
+        public void setHtmlDir(Path dir)
+            throws UsageException
+        {
+            if (exists(dir) && !isDirectory(dir))
+            {
+                throw usage("--htmlDir is not a directory: " + dir);
+            }
+            myHtmlDir = dir;
         }
     }
 
@@ -65,45 +80,51 @@ class Cover
     Executor makeExecutor(GlobalOptions globals, Object locals, String[] args)
         throws UsageException
     {
-        if (args.length != 2) return null;
+        if (args.length == 0) return null;
 
-        String dataPath = args[0];
-        if (dataPath.isEmpty()) return null;
-
-        // TODO Support multiple data directories, to generate an aggregate
-        //   report from a few test suites, Gradle subprojects, etc.
-        Path dataDir = Paths.get(dataPath);
-        if (!isDirectory(dataDir) || !isReadable(dataDir))
+        List<Path> dataDirs = new ArrayList<>();
+        for (String dataPath : args)
         {
-            throw usage("Coverage data directory is not a readable directory: " + dataPath);
+            // Avoid resolving to the current directory.
+            if (dataPath.isEmpty()) return null;
+
+            Path dataDir = Paths.get(dataPath);
+            if (!isDirectory(dataDir) || !isReadable(dataDir))
+            {
+                throw usage("Coverage data directory is not a readable directory: " + dataDir);
+            }
+            dataDirs.add(dataDir);
         }
 
-        String reportPath = args[1];
-        if (reportPath.isEmpty()) return null;
+        Options options = (Options) locals;
 
-        Path reportDir = Paths.get(reportPath);
-        if (exists(reportDir) && !isDirectory(reportDir))
+        if (options.myHtmlDir == null)
         {
-            throw usage("Report directory is not a directory: " + reportPath);
+            throw usage("No HTML output directory given; provide with --htmlDir");
         }
 
-        return new Executor(globals, (Options) locals, dataDir, reportDir);
+        if (options.myConfigFile == null && dataDirs.size() > 1)
+        {
+            throw usage("Must provide --configFile when generating an aggregate report");
+        }
+
+        return new Executor(globals, options, dataDirs);
     }
 
 
     static class Executor
         extends StdioExecutor
     {
-        private final Options myLocals;
-        private final Path    myDataDir;
-        private final Path    myReportDir;
+        private final Options    myLocals;
+        private final List<Path> myDataDirs;
+        private final Path       myReportDir;
 
-        private Executor(GlobalOptions globals, Options locals, Path dataDir, Path reportDir)
+        private Executor(GlobalOptions globals, Options locals, List<Path> dataDirs)
         {
             super(globals);
-            myLocals    = locals;
-            myDataDir   = dataDir;
-            myReportDir = reportDir;
+            myLocals = locals;
+            myDataDirs = dataDirs;
+            myReportDir = locals.myHtmlDir;
         }
 
         @Override
@@ -117,10 +138,15 @@ class Cover
             }
             else
             {
-                config = CoverageConfiguration.forDataDir(myDataDir);
+                assert myDataDirs.size() == 1; // Checked in makeExecutor()
+                config = CoverageConfiguration.forDataDir(myDataDirs.get(0));
             }
 
-            CoverageDatabase database = CoverageDatabase.loadSessions(myDataDir);
+            CoverageDatabase database = new CoverageDatabase();
+            for (Path dataDir : myDataDirs)
+            {
+                database.loadSessions(dataDir);
+            }
 
             CoverageReportWriter renderer = new CoverageReportWriter(config, database);
 
