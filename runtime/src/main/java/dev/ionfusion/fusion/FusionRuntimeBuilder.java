@@ -5,11 +5,15 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion._private.FusionUtils.readProperties;
 import static dev.ionfusion.runtime._private.cover.CoverageCollectorFactory.fromDirectory;
+import static dev.ionfusion.runtime._private.cover.CoverageConfiguration.forConfigFile;
 import static dev.ionfusion.runtime.base.ModuleIdentity.isValidAbsoluteModulePath;
+import static java.nio.file.Files.isReadable;
+import static java.nio.file.Files.isRegularFile;
 
 import com.amazon.ion.IonCatalog;
 import com.amazon.ion.system.SimpleCatalog;
 import dev.ionfusion.runtime._private.cover.CoverageCollectorImpl;
+import dev.ionfusion.runtime._private.cover.CoverageConfiguration;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.embed.FusionRuntime;
 import dev.ionfusion.runtime.embed.TopLevel;
@@ -17,6 +21,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
@@ -104,6 +110,10 @@ import java.util.Properties;
  * system properties} using the key {@value #PROPERTY_COVERAGE_DATA_DIR}.
  * If no such system property is configured, then no coverage metrics will be
  * collected.
+ * <p>
+ * The extent of coverage instrumentation is controlled by a configuration file
+ * that can be independent of the coverage database.
+ *
  */
 public class FusionRuntimeBuilder
 {
@@ -123,6 +133,13 @@ public class FusionRuntimeBuilder
      */
     public static final String PROPERTY_COVERAGE_DATA_DIR =
         "dev.ionfusion.fusion.coverage.DataDir";
+
+    /**
+     * The property used to configure the extent of <a href="#coverage">code
+     * coverage instrumentation</a>: {@value}.
+     */
+    public static final String PROPERTY_COVERAGE_CONFIG =
+        "dev.ionfusion.fusion.coverage.Config";
 
     private static final String STANDARD_DEFAULT_LANGUAGE = "/fusion";
 
@@ -150,6 +167,7 @@ public class FusionRuntimeBuilder
     private IonCatalog   myDefaultIonCatalog;
 
     private File                       myCoverageDataDirectory;
+    private Path                       myCoverageConfigFile;
     private _Private_CoverageCollector myCollector;
 
     private boolean myDocumenting;
@@ -166,6 +184,7 @@ public class FusionRuntimeBuilder
         this.myDefaultLanguage       = that.myDefaultLanguage;
         this.myDefaultIonCatalog     = that.myDefaultIonCatalog;
         this.myCoverageDataDirectory = that.myCoverageDataDirectory;
+        this.myCoverageConfigFile    = that.myCoverageConfigFile;
         this.myCollector             = that.myCollector;
         this.myDocumenting           = that.myDocumenting;
     }
@@ -248,6 +267,12 @@ public class FusionRuntimeBuilder
         {
             File f = new File(path);
             b = b.withCoverageDataDirectory(f);
+        }
+
+        path = props.getProperty(PROPERTY_COVERAGE_CONFIG);
+        if (path != null)
+        {
+            b = b.withCoverageConfig(Paths.get(path));
         }
 
         return b;
@@ -817,6 +842,41 @@ public class FusionRuntimeBuilder
     }
 
 
+    public Path getCoverageConfig()
+    {
+        return myCoverageConfigFile;
+    }
+
+    public void setCoverageConfig(Path configFile)
+    {
+        mutationCheck();
+
+        if (configFile != null)
+        {
+            Path original = configFile;
+
+            if (! configFile.isAbsolute())
+            {
+                configFile = configFile.toAbsolutePath();
+            }
+
+            if (! isRegularFile(configFile) || ! isReadable(configFile))
+            {
+                String message = "Not a readable file: " + original;
+                throw new IllegalArgumentException(message);
+            }
+        }
+
+        myCoverageConfigFile = configFile;
+    }
+
+    public final FusionRuntimeBuilder withCoverageConfig(Path configFile)
+    {
+        FusionRuntimeBuilder b = mutable();
+        b.setCoverageConfig(configFile);
+        return b;
+    }
+
     //=========================================================================
 
 
@@ -904,6 +964,24 @@ public class FusionRuntimeBuilder
 
         if (b.getCoverageCollector() == null)
         {
+            if (b.getCoverageConfig() == null)
+            {
+                String property = PROPERTY_COVERAGE_CONFIG;
+                String path = System.getProperty(property);
+                if (path != null)
+                {
+                    Path file = Paths.get(path);
+                    if (! isRegularFile(file) || ! isReadable(file))                    {
+                        String message =
+                            "Value of system property " + property +
+                            " is not a readable file: " + path;
+                        throw new IllegalStateException(message);
+                    }
+
+                    b.setCoverageConfig(file);
+                }
+            }
+
             if (b.myCoverageDataDirectory == null)
             {
                 String property = PROPERTY_COVERAGE_DATA_DIR;
@@ -928,8 +1006,17 @@ public class FusionRuntimeBuilder
             //   Note that the property exists so tests can inject a mock.
             if (b.myCoverageDataDirectory != null)
             {
-                CoverageCollectorImpl c =
-                    fromDirectory(b.myCoverageDataDirectory.toPath());
+                CoverageCollectorImpl c;
+
+                if (b.myCoverageConfigFile != null)
+                {
+                    CoverageConfiguration config = forConfigFile(b.myCoverageConfigFile);
+                    c = fromDirectory(config, b.myCoverageDataDirectory.toPath());
+                }
+                else
+                {
+                    c = fromDirectory(b.myCoverageDataDirectory.toPath());
+                }
 
                 // Register the active repositories with the collector.
                 // These are persisted in the coverage session, so the reporter
