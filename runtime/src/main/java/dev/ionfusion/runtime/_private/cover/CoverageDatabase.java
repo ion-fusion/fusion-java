@@ -9,6 +9,7 @@ import static com.amazon.ion.IonType.STRUCT;
 import static java.nio.file.Files.isRegularFile;
 import static java.nio.file.Files.newDirectoryStream;
 
+import com.amazon.ion.IonException;
 import com.amazon.ion.IonReader;
 import com.amazon.ion.IonType;
 import com.amazon.ion.IonWriter;
@@ -584,7 +585,7 @@ public class CoverageDatabase
                 }
             }
         }
-        catch (IOException e)
+        catch (IOException | IonException e)
         {
             String msg = "Error reading coverage data at " + session;
             throw new IOException(msg, e);

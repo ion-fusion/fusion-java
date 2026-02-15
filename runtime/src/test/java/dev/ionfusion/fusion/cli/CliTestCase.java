@@ -28,10 +28,16 @@ public class CliTestCase
     {
         int errorCode = execute(commandLine);
 
-        assertEquals(expectedErrorCode, errorCode, "error code");
-
         stdoutText = stdoutToString();
         stderrText = stderrToString();
+
+        if (expectedErrorCode != errorCode)
+        {
+            dumpStdout();
+            dumpStderr();
+        }
+
+        assertEquals(expectedErrorCode, errorCode, "error code");
     }
 
     private int execute(String... commandLine)

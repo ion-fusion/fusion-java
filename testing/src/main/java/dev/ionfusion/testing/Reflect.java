@@ -4,6 +4,7 @@
 package dev.ionfusion.testing;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -91,6 +92,10 @@ public class Reflect
             if (prop.getName().equals("class")) continue;
 
             Method readMethod = prop.getReadMethod();
+            assertNotNull(readMethod,
+                          "No public getter for property " + prop.getName() +
+                          " on " + expected.getClass().getName());
+
             Object expectedPropertyValue = invoke(expected, readMethod);
             Object actualPropertyValue   = invoke(actual,   readMethod);
 

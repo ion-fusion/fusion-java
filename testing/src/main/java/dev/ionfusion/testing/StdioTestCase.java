@@ -79,6 +79,21 @@ public class StdioTestCase
     }
 
 
+    protected void dumpStdout()
+    {
+        System.out.println("🔻stdout");
+        System.out.print(stdoutToString());
+        System.out.println("🔺stdout");
+    }
+
+    protected void dumpStderr()
+    {
+        System.out.println("🔻stderr");
+        System.out.print(stderrToString());
+        System.out.println("🔺stderr");
+    }
+
+
     private String toString(ByteArrayOutputStream bytes)
     {
         try
