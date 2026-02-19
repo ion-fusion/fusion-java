@@ -8,6 +8,7 @@ import static java.nio.file.Files.isDirectory;
 import static java.nio.file.Files.isReadable;
 import static java.nio.file.Files.isRegularFile;
 
+import dev.ionfusion.fusion.cli.cover.CoverageReportWriter;
 import dev.ionfusion.runtime._private.cover.CoverageConfiguration;
 import dev.ionfusion.runtime._private.cover.CoverageDatabase;
 import java.io.PrintWriter;

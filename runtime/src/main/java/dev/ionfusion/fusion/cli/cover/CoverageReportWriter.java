@@ -1,12 +1,11 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion.cli;
+package dev.ionfusion.fusion.cli.cover;
 
 import static dev.ionfusion.fusion._Private_Trampoline.discoverModulesInRepository;
 import static dev.ionfusion.runtime._private.cover.CoverageDatabase.SRCLOC_COMPARE;
 import static dev.ionfusion.runtime.base.SourceName.FUSION_SOURCE_EXTENSION;
-import static java.math.RoundingMode.HALF_EVEN;
 import static java.nio.file.Files.walkFileTree;
 
 import com.amazon.ion.IonReader;
@@ -27,7 +26,6 @@ import dev.ionfusion.runtime.base.SourceName;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
@@ -65,95 +63,6 @@ public final class CoverageReportWriter
         "table tr td, table tr th {font-size: 68%;}" +
         "td.value table tr td {font-size: 11px;}" +
         "div.separator {height: 10px;}";
-
-
-    private static class CoverageInfoPair
-    {
-        public long coveredExpressions;
-        public long uncoveredExpressions;
-
-        public CoverageInfoPair()
-        {
-            coveredExpressions   = 0;
-            uncoveredExpressions = 0;
-        }
-
-        void foundExpression(boolean covered)
-        {
-            if (covered)
-            {
-                coveredExpressions++;
-            }
-            else
-            {
-                uncoveredExpressions++;
-            }
-        }
-
-        public long total()
-        {
-            return coveredExpressions + uncoveredExpressions;
-        }
-
-        BigDecimal percentCovered()
-        {
-            final long total = total();
-
-            if (total == 0) return BigDecimal.ZERO;
-
-            BigDecimal numerator = new BigDecimal(coveredExpressions * 100);
-
-            return numerator.divide(new BigDecimal(total), 2, HALF_EVEN);
-        }
-
-        void renderCoveragePercentage(HtmlWriter htmlWriter)
-            throws IOException
-        {
-            htmlWriter.append(percentCovered().toString());
-            htmlWriter.append("% expression coverage of ");
-            htmlWriter.append(Long.toString(total()));
-            htmlWriter.append(" expressions observed");
-        }
-
-        void renderTotal(HtmlWriter html)
-            throws IOException
-        {
-            html.append(Long.toString(total()));
-        }
-
-        void renderPercentageGraph(HtmlWriter html)
-            throws IOException
-        {
-            final BigDecimal percent = percentCovered();
-            final int percentIntVal = percent.intValue();
-
-            html.append("<table class='percentgraph'>"
-                          + "<tr class='percentgraph'>"
-                          + "<td class='percentgraphright'>");
-            html.append(Integer.toString(percentIntVal));
-            html.append("%</td>");
-            html.append("<td class='percentgraph'>"
-                          + "<div class='percentgraph'>"
-                          + "<div class='greenbar' style='width:");
-            html.append(Integer.toString(percentIntVal));
-            html.append("px'><span class='text'>");
-            html.append(Long.toString(coveredExpressions));
-            html.append("/");
-            renderTotal(html);
-            html.append("</span></div></div></td></tr></table>");
-        }
-    }
-
-    private static class EstimatedCoverageInfoPair
-        extends CoverageInfoPair
-    {
-        @Override
-        void renderTotal(HtmlWriter html)
-            throws IOException
-        {
-            html.append("???");
-        }
-    }
 
 
     private final CoverageDatabase                  myDatabase;
