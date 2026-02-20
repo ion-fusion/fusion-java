@@ -6,6 +6,8 @@ package dev.ionfusion.runtime.base;
 import static java.util.Objects.requireNonNull;
 
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 
@@ -75,6 +77,12 @@ public class SourceName
     {
         return null;
     }
+
+    public URI getUri()
+    {
+        return null;
+    }
+
 
     /**
      * It is not guaranteed that the module declaration is the only content of
@@ -157,6 +165,9 @@ public class SourceName
 
         @Override
         public Path getPath() { return myFile.toPath(); }
+
+        @Override
+        public URI getUri() { return myFile.toURI(); }
     }
 
 
@@ -183,6 +194,7 @@ public class SourceName
         @Override
         public Path getPath() { return myFile.toPath(); }
 
+        public URI getUri() { return myFile.toURI(); }
 
         @Override
         public ModuleIdentity getModuleIdentity() { return myId; }
@@ -212,6 +224,19 @@ public class SourceName
 
         @Override
         public URL getUrl() { return myUrl; }
+
+        @Override
+        public URI getUri()
+        {
+            try
+            {
+                return myUrl.toURI();
+            }
+            catch (URISyntaxException e)
+            {
+                throw new AssertionError(e); // should not happen
+            }
+        }
 
         @Override
         public ModuleIdentity getModuleIdentity() { return myId; }

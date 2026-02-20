@@ -27,12 +27,11 @@ import java.net.URL;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiConsumer;
 
 
 /**
@@ -150,54 +149,18 @@ public class CoverageDatabase
         for (SourceLocation loc : myLocations.keySet())
         {
             SourceName name = loc.getSourceName();
-            if (name != null)
-            {
-                names.add(name);
-            }
+            assert name != null;  // per locationIsRecordable()
+            names.add(name);
         }
 
         return names;
     }
 
 
-    SourceName[] sortedNames()
+    public synchronized
+    void forEachLocationCoverage(BiConsumer<SourceLocation, Boolean> visitor)
     {
-        Set<SourceName> sourceSet = sourceNames();
-
-        SourceName[] sourceArray = sourceSet.toArray(new SourceName[0]);
-
-        Arrays.sort(sourceArray, SourceName::compareByDisplay);
-
-        return sourceArray;
-    }
-
-
-    /**
-     * @return not null.
-     */
-    public synchronized Set<SourceLocation> locations()
-    {
-        return myLocations.keySet();
-    }
-
-
-    public synchronized SourceLocation[] sortedLocations(SourceName name)
-    {
-        ArrayList<SourceLocation> locsList = new ArrayList<>();
-
-        for (SourceLocation loc : myLocations.keySet())
-        {
-            if (name.equals(loc.getSourceName()))
-            {
-                locsList.add(loc);
-            }
-        }
-
-        SourceLocation[] locsArray = locsList.toArray(new SourceLocation[0]);
-
-        Arrays.sort(locsArray, SourceLocation::compareByLineColumn);
-
-        return locsArray;
+        myLocations.forEach(visitor);
     }
 
 

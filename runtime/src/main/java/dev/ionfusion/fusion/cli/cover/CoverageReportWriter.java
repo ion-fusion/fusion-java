@@ -3,10 +3,9 @@
 
 package dev.ionfusion.fusion.cli.cover;
 
-import static dev.ionfusion.fusion._Private_Trampoline.discoverModulesInRepository;
 import static dev.ionfusion.runtime.base.SourceLocation.compareByLineColumn;
-import static dev.ionfusion.runtime.base.SourceName.FUSION_SOURCE_EXTENSION;
-import static java.nio.file.Files.walkFileTree;
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toList;
 
 import com.amazon.ion.IonReader;
 import com.amazon.ion.IonType;
@@ -17,27 +16,16 @@ import com.amazon.ion.Timestamp;
 import com.amazon.ion.system.IonReaderBuilder;
 import dev.ionfusion.fusion._private.HtmlWriter;
 import dev.ionfusion.fusion._private.StreamWriter;
-import dev.ionfusion.runtime._private.cover.CoverageConfiguration;
-import dev.ionfusion.runtime._private.cover.CoverageDatabase;
-import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import dev.ionfusion.runtime.base.SourceLocation;
-import dev.ionfusion.runtime.base.SourceName;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.nio.file.FileVisitResult;
-import java.nio.file.FileVisitor;
-import java.nio.file.Files;
+import java.net.URI;
 import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  *
@@ -65,17 +53,18 @@ public final class CoverageReportWriter
         "div.separator {height: 10px;}";
 
 
-    private final CoverageDatabase                  myDatabase;
-    private final CoverageConfiguration             myConfig;
-    private final Set<ModuleIdentity>               myModules;
-    private final Set<Path>                         mySourceFiles;
-    private final Map<ModuleIdentity, SourceName>   myNamesForModules;
-    private final Map<Path, SourceName>             myNamesForFiles;
-    private final Map<SourceName, CoverageInfoPair> myFileCoverages;
-    private final Map<SourceName, String>           myRelativeNamesForSources;
+    private final CoverageReport myReport;
 
-    private final CoverageInfoPair myGlobalCoverage = new CoverageInfoPair();
-    private       long             myUnloadedEntries;
+    /**
+     * Maps each reported source file to its HTML file in the generated site.
+     */
+    private final Map<Path, String> myRelativeNamesForSources;
+
+    /**
+     * Counts the number of modules and/or scripts that have no coverage data.
+     * Used to estimate coverage stats for them.
+     */
+    private long myUnloadedEntries;
 
     // For rendering highlighted source files
     private static final int BUFFER_SIZE = 2048;
@@ -84,52 +73,15 @@ public final class CoverageReportWriter
     private boolean coverageState;
 
 
-    public CoverageReportWriter(CoverageConfiguration config,
-                                CoverageDatabase      database)
+    public CoverageReportWriter(CoverageReport report)
     {
-        myConfig   = config;
-        myDatabase = database;
-
-        myModules                 = new HashSet<>();
-        mySourceFiles             = new HashSet<>();
-        myNamesForModules         = new HashMap<>();
-        myNamesForFiles           = new HashMap<>();
-        myFileCoverages           = new HashMap<>();
+        myReport = report;
         myRelativeNamesForSources = new HashMap<>();
     }
 
 
     //=========================================================================
     // Metrics Analysis
-
-    /**
-     * Populate {@link #mySourceFiles} set with all the {@code .fusion} files
-     * within the configured source directories.
-     */
-    private void collectSourceFiles()
-        throws IOException
-    {
-        FileVisitor<Path> visitor = new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(Path entry, BasicFileAttributes attrs)
-            {
-                if (entry.getFileName().toString().endsWith(FUSION_SOURCE_EXTENSION))
-                {
-                    if (myConfig.fileIsSelected(entry))
-                    {
-                        mySourceFiles.add(entry);
-                    }
-                }
-                return FileVisitResult.CONTINUE;
-            }
-        };
-
-        for (Path dir : myConfig.getIncludedSourceDirs())
-        {
-            walkFileTree(dir, visitor);
-        }
-    }
-
 
     private Path commonPrefix(Path a, Path b)
     {
@@ -150,20 +102,18 @@ public final class CoverageReportWriter
 
     /**
      * Determine the number of leading {@link Path} name elements common to all
-     * files of the given {@link SourceName}s.  We omit this prefix from the
+     * files in our {@link CoverageReport}.  We omit this prefix from the
      * directory tree of generated HTML files.
      * <p>
      * TODO It would be better to use paths relative to repository roots, to
      *   avoid exposing details of the build-time environment.  This suggests
      *   that {@code SourceName} should track the repository holding the source.
-     *
-     * @param sourceNames must not be null.
      */
-    private int commonPrefixLen(Set<SourceName> sourceNames)
+    private int commonPrefixLen()
         throws IOException
     {
         Path prefix = null;
-        for (SourceName sourceName : sourceNames)
+        for (CoveredFile sourceName : myReport.sourceFiles())
         {
             // Skip URL-based sources.
             Path file = sourceName.getPath();
@@ -186,10 +136,9 @@ public final class CoverageReportWriter
     private void prepareRelativeNames()
         throws IOException
     {
-        Set<SourceName> sourceNames = myDatabase.sourceNames();
-        int prefixLen = commonPrefixLen(sourceNames);
+        int prefixLen = commonPrefixLen();
 
-        for (SourceName sourceName : sourceNames)
+        for (CoveredFile sourceName : myReport.sourceFiles())
         {
             // TODO Determine this on demand, it's only needed twice per source.
             //      so this code is more complicated than its worth.
@@ -198,86 +147,35 @@ public final class CoverageReportWriter
             {
                 Path path        = file.toRealPath();
                 Path shorterPath = path.subpath(prefixLen, path.getNameCount());
-                myRelativeNamesForSources.put(sourceName, shorterPath.toString());
+                myRelativeNamesForSources.put(path, shorterPath.toString());
             }
         }
     }
 
 
-    /**
-     * Collects relevant modules into {@link #myModules}, source files
-     * into {@link #mySourceFiles}, and map covered modules and files to
-     * {@link SourceName}s via {@link #myNamesForModules} and
-     * {@link #myNamesForFiles}.
-     * <p>
-     * TODO Rename to be more informative; maybe collectModulesAndSources()?
-     *
-     * @throws FusionException if an error occurs.
-     */
-    private void analyze()
-        throws FusionException, IOException
+    private List<CoveredModule> sortedModules()
     {
-        // Collect all the modules the repositories can discover, so we can find
-        // modules that are not used and don't appear in the database.
-        for (File f : myDatabase.getRepositories())
-        {
-            discoverModulesInRepository(f.toPath(),
-                                        myConfig::moduleIsSelected,
-                                        myModules::add);
-        }
-
-        // Now do the same thing for non-repository source trees.
-        // TODO Why aren't these dirs recorded in the database like modules?
-        collectSourceFiles();
-
-        for (SourceLocation loc : myDatabase.locations())
-        {
-            // TODO Assert that a name exists. There's no use in persisting
-            //      nameless locations that we can't report.
-            SourceName sourceName = loc.getSourceName();
-            if (sourceName != null)
-            {
-                ModuleIdentity id = sourceName.getModuleIdentity();
-                // TODO Why would this selector differ from the collection-time?
-                if (myConfig.moduleIsSelected(id))
-                {
-                    myModules.add(id);
-
-                    SourceName prior = myNamesForModules.put(id, sourceName);
-                    assert prior == null || prior.equals(sourceName) :
-                        "SourceName has changed for module " + id;
-                }
-                else
-                {
-                    Path f = sourceName.getPath();
-                    if (f != null)
-                    {
-                        mySourceFiles.add(f);
-
-                        SourceName prior = myNamesForFiles.put(f, sourceName);
-                        assert prior == null || prior.equals(sourceName) :
-                            "SourceName has changed for file " + f +
-                                "\nThis can happen if you `load` a module's file " +
-                                "within a registered repository.";
-                    }
-                }
-            }
-        }
+        return myReport.modules()
+                       .stream()
+                       .sorted(comparing(CoveredModule::getId))
+                       .collect(toList());
     }
 
-
-    private ModuleIdentity[] sortedModules()
+    private List<CoveredFile> sortedScripts()
     {
-        ModuleIdentity[] modules = myModules.toArray(new ModuleIdentity[0]);
-        Arrays.sort(modules);
-        return modules;
+        return myReport.scripts()
+                       .stream()
+                       .sorted(comparing(CoveredFile::getPath))
+                       .collect(toList());
     }
 
-    private Path[] sortedFiles()
+    private SourceLocation[] sortedLocations(CoveredFile name)
     {
-        Path[] result = mySourceFiles.toArray(new Path[0]);
-        Arrays.sort(result);
-        return result;
+        SourceLocation[] locations = name.locations().toArray(new SourceLocation[0]);
+        assert locations.length == name.getSummary().total()
+            : "Number of locations doesn't match coverage summary";
+        Arrays.sort(locations, SourceLocation::compareByLineColumn);
+        return locations;
     }
 
 
@@ -341,17 +239,9 @@ public final class CoverageReportWriter
         coverageState = covered;
     }
 
-    private InputStream readSource(SourceName source)
-        throws IOException
-    {
-        URL url = source.getUrl();
-        if (url != null) return url.openStream();
-
-        return Files.newInputStream(source.getFile().toPath());
-    }
 
     private void renderSource(HtmlWriter sourceHtml,
-                              SourceName name)
+                              CoveredFile name)
         throws IOException
     {
         sourceHtml.renderHeadWithInlineCss("Fusion Code Coverage", CSS);
@@ -375,34 +265,34 @@ public final class CoverageReportWriter
                 else
                 {
                     // TODO improve this rendering
-                    path = name.getUrl().toExternalForm();
+                    path = name.getUri().toString();
                 }
                 sourceHtml.append(sourceHtml.escapeString(path));
             }
             else
             {
                 sourceHtml.append("File ");
-                sourceHtml.append(name.display());
+                sourceHtml.append(name.getPath().toString());
                 sourceHtml.append("</h1>\n");
             }
         }
 
-        SourceLocation[] locations = myDatabase.sortedLocations(name);
+        SourceLocation[] locations = sortedLocations(name);
         assert locations.length != 0;
 
         int locationIndex = 0;
-        final CoverageInfoPair coverageInfoPair = new CoverageInfoPair();
 
         sourceHtml.append("\n<hr/>\n");
         sourceHtml.append("<pre>");
 
         // Copy the document in chunks separated by coverage state changes.
         // At each change, we insert appropriate HTML <span> markup.
-        try (InputStream ionBytes = readSource(name))
+        try (InputStream ionBytes = name.readSource())
         {
             myIonBytesRead = 0;
 
-            try (IonReader ionReader = IonReaderBuilder.standard().build(readSource(name)))
+            try (IonReader ionReader =
+                     IonReaderBuilder.standard().build(name.readSource()))
             {
                 SpanProvider spanProvider =
                     ionReader.asFacet(SpanProvider.class);
@@ -425,15 +315,10 @@ public final class CoverageReportWriter
 
                     if (compareByLineColumn(currentLoc, coverageLoc) == 0)
                     {
-                        boolean covered =
-                            myDatabase.locationCovered(coverageLoc);
+                        boolean covered = name.isLocationCovered(coverageLoc);
                         setCoverageState(sourceHtml, ionBytes, spanProvider,
                                          covered);
                         locationIndex++;
-
-                        coverageInfoPair.foundExpression(covered);
-                        myGlobalCoverage.foundExpression(covered);
-
                         if (locationIndex == locations.length) break;
                     }
 
@@ -451,8 +336,6 @@ public final class CoverageReportWriter
 
                 assert locationIndex == locations.length
                     : "Not all locations were found in the source";
-                assert locationIndex == coverageInfoPair.total()
-                    : "Not all locations were counted";
 
                 // Copy the rest of the Ion source.
                 copySourceThroughOffset(sourceHtml, ionBytes, Long.MAX_VALUE);
@@ -463,24 +346,24 @@ public final class CoverageReportWriter
 
         sourceHtml.append("</pre>\n");
         sourceHtml.append("<hr/>");
-        coverageInfoPair.renderCoveragePercentage(sourceHtml);
-
-        myFileCoverages.put(name, coverageInfoPair);
+        name.getSummary().renderCoveragePercentage(sourceHtml);
     }
 
 
-    private String relativeName(SourceName name)
+    private String relativeName(CoveredEntity name)
     {
         String resource;
-        if (name.getFile() != null)
+        Path file = name.getPath();
+        if (file != null)
         {
-            resource = myRelativeNamesForSources.get(name);
+            resource = myRelativeNamesForSources.get(file);
         }
         else
         {
-            URL url = name.getUrl();
-            assert (url.getProtocol().equalsIgnoreCase("jar"));
-            String path = url.getPath();
+            URI uri = name.getUri();
+            assert (uri.getScheme().equalsIgnoreCase("jar"));
+            String path = uri.getSchemeSpecificPart();
+            assert path != null : "null path in " + uri;
             int    bang = path.indexOf("!/");
             assert bang > 1;
             resource = path.substring(bang + 2);
@@ -494,7 +377,7 @@ public final class CoverageReportWriter
     private void renderSourceFiles(Path outputDir)
         throws IOException
     {
-        for (SourceName name : myDatabase.sourceNames())
+        for (CoveredFile name : myReport.sourceFiles())
         {
             Path outFile = outputDir.resolve(relativeName(name));
             try (StreamWriter sourceHtml = new StreamWriter(outFile))
@@ -505,17 +388,16 @@ public final class CoverageReportWriter
     }
 
 
-    private <T> void renderRows(HtmlWriter         indexHtml,
-                                String             category,
-                                T[]                keys,
-                                Map<T, SourceName> keyToNames)
+    private <T extends CoveredEntity> void renderRows(HtmlWriter indexHtml,
+                                                      String     category,
+                                                      List<T>    rows)
         throws IOException
     {
         long totalExpressions = 0;
         long unloadedCount = 0;
 
         boolean first = true;
-        for (T key : keys)
+        for (CoveredEntity row : rows)
         {
             if (first)
             {
@@ -528,15 +410,12 @@ public final class CoverageReportWriter
                 first = false;
             }
 
-            CoverageInfoPair pair;
-            SourceName name = keyToNames.get(key);
-            if (name != null)
+            CoverageInfoPair pair = row.getSummary();
+            if (pair.total() != 0)
             {
-                pair = myFileCoverages.get(name);
-
                 totalExpressions += pair.total();
             }
-            else // The module was never loaded!
+            else // The source was never loaded
             {
                 pair = new EstimatedCoverageInfoPair();
 
@@ -547,16 +426,18 @@ public final class CoverageReportWriter
             pair.renderPercentageGraph(indexHtml);
             indexHtml.append("</td><td>");
 
-            if (name != null)
+            String descr = row.describe();
+            URI    uri   = row.getUri();
+            if (uri != null)
             {
                 // TODO Exclude the common prefix when key is a script File.
-                indexHtml.append("<a href=\"" + relativeName(name) + "\">");
-                indexHtml.append(key.toString());
+                indexHtml.append("<a href=\"" + relativeName(row) + "\">");
+                indexHtml.append(descr);
                 indexHtml.append("</a>");
             }
             else
             {
-                indexHtml.append(key.toString());
+                indexHtml.append(descr);
             }
 
             indexHtml.append("</td></tr>\n");
@@ -564,12 +445,12 @@ public final class CoverageReportWriter
 
         if (unloadedCount != 0)
         {
-            long loadedCount = keys.length - unloadedCount;
+            long loadedCount = rows.size() - unloadedCount;
             long average = (loadedCount == 0
                                ? 500                        // TODO Totally made up
                                : totalExpressions / loadedCount);
 
-            myGlobalCoverage.uncoveredExpressions += (unloadedCount * average);
+            myReport.globalSummary().uncoveredExpressions += (unloadedCount * average);
 
             myUnloadedEntries += unloadedCount;
         }
@@ -590,14 +471,14 @@ public final class CoverageReportWriter
 
             indexHtml.append("<table class='report'>\n");
 
-            renderRows(indexHtml, "Module", sortedModules(), myNamesForModules);
-            renderRows(indexHtml, "File",   sortedFiles(),   myNamesForFiles);
+            renderRows(indexHtml, "Module", sortedModules());
+            renderRows(indexHtml, "File",   sortedScripts());
 
             indexHtml.append("</table>\n<br/>\n");
 
             // We can't render this earlier since the result is affected by
             // unloaded rows.
-            myGlobalCoverage.renderCoveragePercentage(indexHtml);
+            myReport.globalSummary().renderCoveragePercentage(indexHtml);
             if (myUnloadedEntries != 0)
             {
                 indexHtml.append(" (estimate since ");
@@ -612,10 +493,8 @@ public final class CoverageReportWriter
      * @return the path of the index file.
      */
     public Path renderFullReport(Path outputDir)
-        throws FusionException, IOException
+        throws IOException
     {
-        analyze();
-
         prepareRelativeNames();
 
         renderSourceFiles(outputDir);

@@ -8,6 +8,7 @@ import static java.nio.file.Files.isDirectory;
 import static java.nio.file.Files.isReadable;
 import static java.nio.file.Files.isRegularFile;
 
+import dev.ionfusion.fusion.cli.cover.CoverageReport;
 import dev.ionfusion.fusion.cli.cover.CoverageReportWriter;
 import dev.ionfusion.runtime._private.cover.CoverageConfiguration;
 import dev.ionfusion.runtime._private.cover.CoverageDatabase;
@@ -149,7 +150,9 @@ class Cover
                 database.loadSessions(dataDir);
             }
 
-            CoverageReportWriter renderer = new CoverageReportWriter(config, database);
+            CoverageReport report = new CoverageReport(config, database);
+
+            CoverageReportWriter renderer = new CoverageReportWriter(report);
 
             Path index = renderer.renderFullReport(myReportDir);
 
