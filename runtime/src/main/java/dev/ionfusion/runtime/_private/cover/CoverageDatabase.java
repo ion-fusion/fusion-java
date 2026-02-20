@@ -29,7 +29,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -41,45 +40,6 @@ import java.util.Set;
  */
 public class CoverageDatabase
 {
-    private static final class SourceNameComparator
-        implements Comparator<SourceName>
-    {
-        @Override
-        public int compare(SourceName a, SourceName b)
-        {
-            return a.display().compareTo(b.display());
-        }
-    }
-
-    static final Comparator<SourceName> SRCNAME_COMPARE =
-        new SourceNameComparator();
-
-
-    /**
-     * Compares locations by line/column, ignoring the offset.
-     */
-    private static final class SourceLocationComparator
-        implements Comparator<SourceLocation>
-    {
-        @Override
-        public int compare(SourceLocation a, SourceLocation b)
-        {
-            if (a.getLine() < b.getLine()) return -1;
-            if (a.getLine() > b.getLine()) return  1;
-
-            if (a.getColumn() < b.getColumn()) return -1;
-            if (a.getColumn() > b.getColumn()) return  1;
-
-            return 0;
-        }
-    }
-
-    public static final Comparator<SourceLocation> SRCLOC_COMPARE =
-        new SourceLocationComparator();
-
-
-    //=========================================================================
-
     private final Set<File> myRepositories = new HashSet<>();
 
     private final Map<SourceLocation,Boolean> myLocations = new HashMap<>();
@@ -206,7 +166,7 @@ public class CoverageDatabase
 
         SourceName[] sourceArray = sourceSet.toArray(new SourceName[0]);
 
-        Arrays.sort(sourceArray, SRCNAME_COMPARE);
+        Arrays.sort(sourceArray, SourceName::compareByDisplay);
 
         return sourceArray;
     }
@@ -235,7 +195,7 @@ public class CoverageDatabase
 
         SourceLocation[] locsArray = locsList.toArray(new SourceLocation[0]);
 
-        Arrays.sort(locsArray, SRCLOC_COMPARE);
+        Arrays.sort(locsArray, SourceLocation::compareByLineColumn);
 
         return locsArray;
     }

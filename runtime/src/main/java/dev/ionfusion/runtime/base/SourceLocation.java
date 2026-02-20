@@ -80,6 +80,9 @@ public class SourceLocation
     }
 
 
+    //==================================================================================
+    // Concrete implementations
+
     private static final class Shorts
         extends SourceLocation
     {
@@ -184,6 +187,9 @@ public class SourceLocation
             return myStartOffset;
         }
     }
+
+
+    //==================================================================================
 
 
     /**
@@ -440,6 +446,26 @@ public class SourceLocation
         result ^= (result << 29) ^ (result >> 3);
         result = prime * result + (int) getStartOffset();
         result ^= (result << 29) ^ (result >> 3);
+        return result;
+    }
+
+
+    /**
+     * Compares locations by line then column, ignoring the source-name and offset.
+     *
+     * @param o1 the first object to be compared.
+     * @param o2 the second object to be compared.
+     *
+     * @return a negative integer, zero, or a positive integer as the first argument is
+     * less than, equal to, or greater than the second.
+     */
+    public static int compareByLineColumn(SourceLocation o1, SourceLocation o2)
+    {
+        int result = Long.compare(o1.getLine(), o2.getLine());
+        if (result == 0)
+        {
+            result = Long.compare(o1.getColumn(), o2.getColumn());
+        }
         return result;
     }
 }

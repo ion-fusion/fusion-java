@@ -4,7 +4,7 @@
 package dev.ionfusion.fusion.cli.cover;
 
 import static dev.ionfusion.fusion._Private_Trampoline.discoverModulesInRepository;
-import static dev.ionfusion.runtime._private.cover.CoverageDatabase.SRCLOC_COMPARE;
+import static dev.ionfusion.runtime.base.SourceLocation.compareByLineColumn;
 import static dev.ionfusion.runtime.base.SourceName.FUSION_SOURCE_EXTENSION;
 import static java.nio.file.Files.walkFileTree;
 
@@ -421,9 +421,9 @@ public final class CoverageReportWriter
                     SourceLocation coverageLoc = locations[locationIndex];
 
                     // We shouldn't skip past a known location.
-                    assert SRCLOC_COMPARE.compare(currentLoc, coverageLoc) <= 0;
+                    assert compareByLineColumn(currentLoc, coverageLoc) <= 0;
 
-                    if (SRCLOC_COMPARE.compare(currentLoc, coverageLoc) == 0)
+                    if (compareByLineColumn(currentLoc, coverageLoc) == 0)
                     {
                         boolean covered =
                             myDatabase.locationCovered(coverageLoc);
