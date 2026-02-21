@@ -3,6 +3,8 @@
 
 package dev.ionfusion.runtime.base;
 
+import static java.util.Objects.requireNonNull;
+
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
@@ -21,53 +23,6 @@ public class SourceName
     public static final String FUSION_SOURCE_EXTENSION = ".fusion";
 
     private final String myDisplay;
-
-    /**
-     * Creates a {@link SourceName} representing a file at the given path.
-     *
-     * @param path must not be null or empty.
-     *
-     * @return a new {@link SourceName} instance
-     *
-     * @see #forFile(File)
-     */
-    public static SourceName forFile(String path)
-    {
-        if (path.isEmpty()) {
-            throw new IllegalArgumentException("path must not be empty");
-        }
-        return new FileSourceName(new File(path));
-    }
-
-    /**
-     * Creates a {@link SourceName} representing a file.
-     * The {@link File}'s absolute path will be displayed.
-     *
-     * @param path must not be null or empty.
-     *
-     * @see #forFile(String)
-     *
-     * @return a new {@link SourceName} instance
-     */
-    public static SourceName forFile(File path)
-    {
-        return new FileSourceName(path);
-    }
-
-    /**
-     * Creates a {@link SourceName} that will simply display the given text.
-     *
-     * @param display must not be null.
-     *
-     * @return a new {@link SourceName} instance
-     */
-    public static SourceName forDisplay(String display)
-    {
-        if (display.isEmpty()) {
-            throw new IllegalArgumentException("display must not be empty");
-        }
-        return new SourceName(display);
-    }
 
 
     private SourceName(String display)
@@ -88,21 +43,25 @@ public class SourceName
 
 
     /**
-     * Returns the associated source file, if one is known.
+     * Returns the absolute path of the source file if one is known.
      * This is the case for instances created by {@link #forFile(File)} or
      * {@link #forFile(String)}.
      *
-     * @return the source file, or null.
+     * @return null if this source is not an actual file.
      */
     public File getFile()
     {
         return null;
     }
 
+    /**
+     * Returns the absolute path of the source file if one is known.
+     *
+     * @return null if this source is not an actual file.
+     */
     public Path getPath()
     {
-        File f = getFile();
-        return f == null ? null : f.toPath();
+        return null;
     }
 
     /**
@@ -195,6 +154,9 @@ public class SourceName
 
         @Override
         public File getFile() { return myFile; }
+
+        @Override
+        public Path getPath() { return myFile.toPath(); }
     }
 
 
@@ -210,6 +172,7 @@ public class SourceName
         ModuleSourceName(ModuleIdentity id, File file)
         {
             super(id + " (at file:" + file + ")");
+            assert file.isAbsolute();
             myId   = id;
             myFile = file;
         }
@@ -218,14 +181,11 @@ public class SourceName
         public File getFile() { return myFile; }
 
         @Override
+        public Path getPath() { return myFile.toPath(); }
+
+
+        @Override
         public ModuleIdentity getModuleIdentity() { return myId; }
-    }
-
-
-    public static SourceName forModule(ModuleIdentity id, File sourceFile)
-    {
-        assert sourceFile != null;
-        return new ModuleSourceName(id, sourceFile);
     }
 
 
@@ -244,6 +204,8 @@ public class SourceName
         private UrlSourceName(ModuleIdentity id, URL url)
         {
             super(id + " (at " + url.toExternalForm() + ")");
+            assert !url.getProtocol().equalsIgnoreCase("file")
+                : "Use FileSourceName for local files";
             myId  = id;
             myUrl = url;
         }
@@ -256,8 +218,68 @@ public class SourceName
     }
 
 
+    //=========================================================================
+    // Factory methods
+
+    /**
+     * Creates a {@link SourceName} that will simply display the given text.
+     *
+     * @param display must not be null.
+     *
+     * @return a new {@link SourceName} instance
+     */
+    public static SourceName forDisplay(String display)
+    {
+        if (display.isEmpty()) {
+            throw new IllegalArgumentException("display must not be empty");
+        }
+        return new SourceName(display);
+    }
+
+
+    /**
+     * Creates a {@link SourceName} representing a file at the given path.
+     *
+     * @param path must not be null or empty, and is converted to an absolute path.
+     *
+     * @return a new {@link SourceName} instance
+     *
+     * @see #forFile(File)
+     */
+    public static SourceName forFile(String path)
+    {
+        if (path.isEmpty()) {
+            throw new IllegalArgumentException("path must not be empty");
+        }
+        return new FileSourceName(new File(path).getAbsoluteFile());
+    }
+
+    /**
+     * Creates a {@link SourceName} representing a file. The {@link File}'s absolute
+     * path will be displayed.
+     *
+     * @param path is converted to an absolute path.
+     *
+     * @return a new {@link SourceName} instance
+     *
+     * @see #forFile(String)
+     */
+    public static SourceName forFile(File path)
+    {
+        return new FileSourceName(path.getAbsoluteFile());
+    }
+
+
+    public static SourceName forModule(ModuleIdentity id, File sourceFile)
+    {
+        requireNonNull(id, "id must not be null");
+        return new ModuleSourceName(id, sourceFile);
+    }
+
+
     public static SourceName forUrl(ModuleIdentity id, URL url)
     {
+        requireNonNull(id, "id must not be null");
         return new UrlSourceName(id, url);
     }
 }

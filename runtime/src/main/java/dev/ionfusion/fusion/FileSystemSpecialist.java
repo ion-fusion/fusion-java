@@ -30,21 +30,23 @@ final class FileSystemSpecialist
 
 
     /**
-     * Resolve a relative path against the {@code current_directory} parameter.
-     * If file is absolute it is returned as-is.
+     * Resolve a relative path against the {@code current_directory} parameter. If
+     * {@code file} is absolute it is returned as-is.
      *
      * @param who identifies the invoking procedure for error messaging.
+     *
+     * @return an absolute path.
      */
     File resolvePath(Evaluator eval, String who, File file)
         throws FusionException
     {
         SecurityGuard guard = myCurrentSecurityGuard.currentValue(eval);
-        if (! guard.isFileSystemEnabled())
+        if (!guard.isFileSystemEnabled())
         {
             throw new FusionErrorException(who + ": Access denied to " + file);
         }
 
-        if (file.isAbsolute()) return file;
+        if (file.isAbsolute()) { return file; }
 
         String cdPath = myCurrentDirectory.asString(eval);
         File   cdFile = new File(cdPath);
@@ -54,9 +56,11 @@ final class FileSystemSpecialist
 
     /**
      * Resolve a relative path against the {@code current_directory} param.
-     * If the path is absolute it is returned as-is.
+     * If the path is absolute, it is returned as-is.
      *
      * @param who identifies the invoking procedure for error messaging.
+     *
+     * @return an absolute path.
      */
     File resolvePath(Evaluator eval, String who, String path)
         throws FusionException
