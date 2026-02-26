@@ -3,7 +3,7 @@
 
 package dev.ionfusion.fusion.cli;
 
-import static dev.ionfusion.fusion.TestSetup.fusionBootstrapDirectory;
+import static dev.ionfusion.testing.ProjectLayout.fusionBootstrapDirectory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import dev.ionfusion.testing.StdioTestCase;
@@ -53,6 +53,9 @@ public class CliTestCase
     {
         ArrayList<String> join = new ArrayList<>();
 
+        // This enables running tests in IDEA, which doesn't consume the assembled jar
+        // containing embedded modules.  The argument has no effect when running via
+        // Gradle, since the embedded modules take precedence.
         join.add("--repositories");
         join.add(fusionBootstrapDirectory().toString());
 

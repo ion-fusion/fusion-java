@@ -3,7 +3,7 @@
 
 package dev.ionfusion.fusion.cli;
 
-import static dev.ionfusion.fusion.TestSetup.testDataFile;
+import static dev.ionfusion.testing.ProjectLayout.testDataFile;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.isEmptyString;

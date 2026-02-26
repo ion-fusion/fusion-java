@@ -5,8 +5,8 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionIo.read;
 import static dev.ionfusion.fusion.FusionSexp.isPair;
-import static dev.ionfusion.fusion.TestSetup.PROJECT_DIRECTORY;
-import static dev.ionfusion.fusion.TestSetup.testRepositoryDirectory;
+import static dev.ionfusion.testing.ProjectLayout.PROJECT_DIRECTORY;
+import static dev.ionfusion.testing.ProjectLayout.testRepositoryDirectory;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;

@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import static dev.ionfusion.fusion.TestSetup.makeRuntimeBuilder;
-import static dev.ionfusion.fusion.TestSetup.testRepositoryDirectory;
-import static dev.ionfusion.fusion.TestSetup.testScriptDirectory;
+import static dev.ionfusion.testing.ProjectLayout.testRepositoryDirectory;
+import static dev.ionfusion.testing.ProjectLayout.testScriptDirectory;
 
 import dev.ionfusion.runtime.embed.FusionRuntime;
 import dev.ionfusion.testing.TreeWalker;

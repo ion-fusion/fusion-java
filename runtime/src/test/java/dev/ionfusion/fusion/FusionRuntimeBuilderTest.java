@@ -5,7 +5,7 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionRuntimeBuilder.standard;
 import static dev.ionfusion.fusion.FusionString.unsafeStringToJavaString;
-import static dev.ionfusion.fusion.TestSetup.fusionBootstrapDirectory;
+import static dev.ionfusion.testing.ProjectLayout.fusionBootstrapDirectory;
 import static dev.ionfusion.testing.Reflect.assertEqualProperties;
 import static dev.ionfusion.testing.Reflect.getterFor;
 import static dev.ionfusion.testing.Reflect.invoke;

@@ -13,7 +13,7 @@ import static dev.ionfusion.fusion.FusionString.isString;
 import static dev.ionfusion.fusion.FusionString.unsafeStringToJavaString;
 import static dev.ionfusion.fusion.FusionValue.isAnyNull;
 import static dev.ionfusion.fusion.FusionVoid.isVoid;
-import static dev.ionfusion.fusion.TestSetup.testRepositoryDirectory;
+import static dev.ionfusion.testing.ProjectLayout.testRepositoryDirectory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;

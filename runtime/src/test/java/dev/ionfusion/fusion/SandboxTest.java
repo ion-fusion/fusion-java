@@ -4,7 +4,7 @@
 package dev.ionfusion.fusion;
 
 import static com.amazon.ion.util.IonTextUtils.printString;
-import static dev.ionfusion.fusion.TestSetup.testDataFile;
+import static dev.ionfusion.testing.ProjectLayout.testDataFile;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;

@@ -3,7 +3,7 @@
 
 package dev.ionfusion.fusion;
 
-import static dev.ionfusion.fusion.TestSetup.testDataFile;
+import static dev.ionfusion.testing.ProjectLayout.testDataFile;
 import static java.nio.file.Files.newInputStream;
 
 import com.amazon.ion.IonValue;

@@ -8,7 +8,7 @@ import static dev.ionfusion.fusion.FusionIo.isEof;
 import static dev.ionfusion.fusion.FusionIo.read;
 import static dev.ionfusion.fusion.FusionStruct.isImmutableStruct;
 import static dev.ionfusion.fusion.FusionStruct.unsafeStructSize;
-import static dev.ionfusion.fusion.TestSetup.testDataDirectory;
+import static dev.ionfusion.testing.ProjectLayout.testDataDirectory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
