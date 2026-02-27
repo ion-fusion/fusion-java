@@ -7,6 +7,9 @@ plugins {
     distribution
 }
 
+// Enabling JaCoCo doesn't add value, since our tests only run production code
+// by executing the CLI.
+
 dependencies {
     implementation(project(":runtime"))
 

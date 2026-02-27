@@ -4,7 +4,7 @@
 plugins {
     id("buildlogic.fusion-common-conventions")
     id("buildlogic.java-library-conventions")
-    jacoco
+    id("buildlogic.jacoco-conventions")
 }
 
 dependencies {
@@ -76,38 +76,14 @@ val ftstRepo = tasks.register<Jar>("ftstRepo") {
 //=============================================================================
 // Java Code Coverage
 
-// https://docs.gradle.org/current/userguide/jacoco_plugin.html
-
-jacoco {
-    // Do this to keep JaCoCo version stable when updating Gradle.
-    // As of Gradle 8.10, the default is:
-//    toolVersion = "0.8.12"
-}
-
-tasks.test {
-    configure<JacocoTaskExtension> {
-        // When running in IDEA, JaCoCo instruments HTMLUnit (and fails).
-        // I don't know why it's instrumenting libraries, but this avoids it.
-        includes = listOf("dev.ionfusion.*")
-    }
-}
-
-tasks.jacocoTestReport {
-    dependsOn(tasks.test)
-}
-
 tasks.jacocoTestCoverageVerification {
     violationRules {
         rule {
             limit {
-                minimum = "0.75".toBigDecimal()
+                minimum = "0.80".toBigDecimal()
             }
         }
     }
-}
-
-tasks.check {
-    dependsOn(tasks.jacocoTestCoverageVerification)
 }
 
 
@@ -138,7 +114,3 @@ tasks.javadoc {
 
 //=============================================================================
 // Distribution
-
-tasks.build {
-    dependsOn(tasks.jacocoTestReport)
-}
