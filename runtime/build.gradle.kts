@@ -19,10 +19,6 @@ dependencies {
     testImplementation(project(":testing"))
 }
 
-base {
-    archivesName = "ion-fusion-runtime"
-}
-
 java {
     withJavadocJar()
     withSourcesJar()

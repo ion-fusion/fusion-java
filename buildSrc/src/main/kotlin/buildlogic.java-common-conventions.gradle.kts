@@ -13,6 +13,10 @@ repositories {
     mavenCentral()
 }
 
+base {
+    archivesName = "ion-fusion-${project.name}"
+}
+
 dependencies {
     // https://junit.org/junit5/docs/current/user-guide/#running-tests-build-gradle-bom
     testImplementation(platform("org.junit:junit-bom:5.14.1"))
