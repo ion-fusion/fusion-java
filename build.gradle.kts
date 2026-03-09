@@ -12,8 +12,10 @@ plugins {
 // https://docs.gradle.org/current/userguide/test_report_aggregation_plugin.html
 
 dependencies {
+    // These include transitive project dependencies
     jacocoAggregation(project(":sdk"))
     jacocoAggregation(project(":testing"))
+
     testReportAggregation(project(":sdk"))
     testReportAggregation(project(":testing"))
 }
@@ -37,12 +39,16 @@ tasks.named<TestReport>("testAggregateTestReport") {
 }
 
 
+// TODO Apply aggregate JaCoCo coverage rules?
+
+
 //======================================================================================
 // Fusion coverage aggregate report
 
 // Declare the dataDirs for aggregate reporting.
 dependencies {
     "fcovReportData"(project(path = ":runtime", configuration = "fcovData"))
+    "fcovReportData"(project(path = ":fusioncli", configuration = "fcovData"))
 }
 
 
@@ -63,8 +69,8 @@ val fcovAggregateReport = tasks.register<JavaExec>("fcovAggregateReport") {
         languageVersion = java.toolchain.languageVersion
     }
 
-    classpath = project(":sdk").sourceSets["main"].runtimeClasspath
-    mainClass = "dev.ionfusion.fusion.cli.Cli"
+    classpath = project(":fusioncli").sourceSets["main"].runtimeClasspath
+    mainClass = "dev.ionfusion.fusioncli.Cli"
     args = listOf("report_coverage",
                   "--configFile", "fcov.properties",
                   "--htmlDir", fcovReportDir.get().asFile.path) +

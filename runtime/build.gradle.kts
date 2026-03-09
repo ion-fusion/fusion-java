@@ -10,12 +10,6 @@ plugins {
 dependencies {
     api("com.amazon.ion:ion-java:1.11.11")
 
-    // TODO These shouldn't be needed when consumers embed Fusion.
-    //  It's a build-time dependency, but here b/c consumers use the CLI to
-    //  generate their docs.  That should be handled by a plugin instead.
-    implementation("org.markdownj:markdownj:0.3.0-1.0.2b4")
-    implementation("com.github.spullara.mustache.java:compiler:0.9.14")
-
     testImplementation(project(":testing"))
 }
 
