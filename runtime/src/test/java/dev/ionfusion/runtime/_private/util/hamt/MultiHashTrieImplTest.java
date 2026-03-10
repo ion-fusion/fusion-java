@@ -1,18 +1,19 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion.util.hamt;
+package dev.ionfusion.runtime._private.util.hamt;
 
-import static dev.ionfusion.fusion.util.hamt.MultiHashTrie.empty;
-import static dev.ionfusion.fusion.util.hamt.MultiHashTrie.fromArrays;
-import static dev.ionfusion.fusion.util.hamt.MultiHashTrie.fromEntries;
-import static dev.ionfusion.fusion.util.hamt.MultiHashTrie.fromSelectedKeys;
+import static dev.ionfusion.runtime._private.util.hamt.MultiHashTrie.empty;
+import static dev.ionfusion.runtime._private.util.hamt.MultiHashTrie.fromArrays;
+import static dev.ionfusion.runtime._private.util.hamt.MultiHashTrie.fromEntries;
+import static dev.ionfusion.runtime._private.util.hamt.MultiHashTrie.fromSelectedKeys;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import dev.ionfusion.fusion.util.hamt.TransformTestCase.Remove3sIncrement2sXform;
+
+import dev.ionfusion.runtime._private.util.hamt.TransformTestCase.Remove3sIncrement2sXform;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;

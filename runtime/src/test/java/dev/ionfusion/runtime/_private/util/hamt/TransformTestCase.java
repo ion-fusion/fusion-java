@@ -1,10 +1,10 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion.util.hamt;
+package dev.ionfusion.runtime._private.util.hamt;
 
-import static dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.NOTHING;
-import static dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.empty;
+import static dev.ionfusion.runtime._private.util.hamt.HashArrayMappedTrie.NOTHING;
+import static dev.ionfusion.runtime._private.util.hamt.HashArrayMappedTrie.empty;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
@@ -14,8 +14,8 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.Changes;
-import dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.TrieNode;
+import dev.ionfusion.runtime._private.util.hamt.HashArrayMappedTrie.Changes;
+import dev.ionfusion.runtime._private.util.hamt.HashArrayMappedTrie.TrieNode;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;

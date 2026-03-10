@@ -1,13 +1,13 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion.util.hamt;
+package dev.ionfusion.runtime._private.util.hamt;
 
-import static dev.ionfusion.fusion.util.hamt.FunctionalHashTrie.empty;
-import static dev.ionfusion.fusion.util.hamt.FunctionalHashTrie.fromArrays;
-import static dev.ionfusion.fusion.util.hamt.FunctionalHashTrie.fromEntries;
-import static dev.ionfusion.fusion.util.hamt.FunctionalHashTrie.fromMap;
-import static dev.ionfusion.fusion.util.hamt.FunctionalHashTrie.fromSelectedKeys;
+import static dev.ionfusion.runtime._private.util.hamt.FunctionalHashTrie.empty;
+import static dev.ionfusion.runtime._private.util.hamt.FunctionalHashTrie.fromArrays;
+import static dev.ionfusion.runtime._private.util.hamt.FunctionalHashTrie.fromEntries;
+import static dev.ionfusion.runtime._private.util.hamt.FunctionalHashTrie.fromMap;
+import static dev.ionfusion.runtime._private.util.hamt.FunctionalHashTrie.fromSelectedKeys;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;

@@ -81,9 +81,7 @@ tasks.jacocoTestCoverageVerification {
 // Documentation
 
 tasks.javadoc {
-    exclude("**/_Private_*",
-            "**/_private/**",
-            "dev/ionfusion/fusion/util/hamt/**")
+    exclude("**/_Private_*", "**/_private/**")
 
     title = "FusionJava API Reference"
 

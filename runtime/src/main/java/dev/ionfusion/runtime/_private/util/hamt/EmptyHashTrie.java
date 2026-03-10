@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion.util.hamt;
+package dev.ionfusion.runtime._private.util.hamt;
 
 import java.util.Collections;
 import java.util.Set;

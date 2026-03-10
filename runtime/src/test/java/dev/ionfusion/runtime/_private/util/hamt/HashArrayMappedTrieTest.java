@@ -1,12 +1,12 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion.util.hamt;
+package dev.ionfusion.runtime._private.util.hamt;
 
-import static dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.empty;
-import static dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.fromArrays;
-import static dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.fromSelectedKeys;
-import static dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.hashCodeFor;
+import static dev.ionfusion.runtime._private.util.hamt.HashArrayMappedTrie.empty;
+import static dev.ionfusion.runtime._private.util.hamt.HashArrayMappedTrie.fromArrays;
+import static dev.ionfusion.runtime._private.util.hamt.HashArrayMappedTrie.fromSelectedKeys;
+import static dev.ionfusion.runtime._private.util.hamt.HashArrayMappedTrie.hashCodeFor;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -16,12 +16,13 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.BitMappedNode;
-import dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.Changes;
-import dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.CollisionNode;
-import dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.FlatNode;
-import dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.HashArrayMappedNode;
-import dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.TrieNode;
+
+import dev.ionfusion.runtime._private.util.hamt.HashArrayMappedTrie.BitMappedNode;
+import dev.ionfusion.runtime._private.util.hamt.HashArrayMappedTrie.Changes;
+import dev.ionfusion.runtime._private.util.hamt.HashArrayMappedTrie.CollisionNode;
+import dev.ionfusion.runtime._private.util.hamt.HashArrayMappedTrie.FlatNode;
+import dev.ionfusion.runtime._private.util.hamt.HashArrayMappedTrie.HashArrayMappedNode;
+import dev.ionfusion.runtime._private.util.hamt.HashArrayMappedTrie.TrieNode;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;

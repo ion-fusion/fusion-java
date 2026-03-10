@@ -1,14 +1,15 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion.util.hamt;
+package dev.ionfusion.runtime._private.util.hamt;
 
-import static dev.ionfusion.fusion.util.hamt.MultiHashTrie.empty;
+import static dev.ionfusion.runtime._private.util.hamt.MultiHashTrie.empty;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import dev.ionfusion.fusion.util.hamt.TransformTestCase.IncrementXform;
+
+import dev.ionfusion.runtime._private.util.hamt.TransformTestCase.IncrementXform;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -58,7 +59,7 @@ public class EmptyHashTrieTest
     @Test
     public void merge1GivenSingleValuesReturnsIt()
     {
-        FunctionalHashTrie h = hash1(10,1, 11,1, 12,1);
+        FunctionalHashTrie h = hash1(10, 1, 11, 1, 12, 1);
         assertThat(empty().merge1(h), sameInstance(h));
     }
 

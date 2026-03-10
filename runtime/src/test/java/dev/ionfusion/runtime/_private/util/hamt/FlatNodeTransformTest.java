@@ -1,13 +1,13 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion.util.hamt;
+package dev.ionfusion.runtime._private.util.hamt;
 
 import static dev.ionfusion.testing.Permute.generateSubsetPermutations;
 import static java.util.Collections.unmodifiableList;
 
-import dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.CollisionNode;
-import dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.FlatNode;
+import dev.ionfusion.runtime._private.util.hamt.HashArrayMappedTrie.CollisionNode;
+import dev.ionfusion.runtime._private.util.hamt.HashArrayMappedTrie.FlatNode;
 import java.util.List;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;

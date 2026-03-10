@@ -33,7 +33,7 @@ import dev.ionfusion.fusion.FusionCollection.BaseCollection;
 import dev.ionfusion.fusion.FusionCompare.EqualityTier;
 import dev.ionfusion.fusion.FusionIterator.AbstractIterator;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
-import dev.ionfusion.fusion.util.hamt.MultiHashTrie;
+import dev.ionfusion.runtime._private.util.hamt.MultiHashTrie;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.SourceLocation;
 import java.io.IOException;

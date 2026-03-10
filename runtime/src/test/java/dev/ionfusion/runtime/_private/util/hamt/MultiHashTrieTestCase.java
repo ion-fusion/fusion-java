@@ -1,10 +1,10 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion.util.hamt;
+package dev.ionfusion.runtime._private.util.hamt;
 
-import static dev.ionfusion.fusion.util.hamt.FunctionalHashTrie.fromEntries;
-import static dev.ionfusion.fusion.util.hamt.MultiHashTrie.empty;
+import static dev.ionfusion.runtime._private.util.hamt.FunctionalHashTrie.fromEntries;
+import static dev.ionfusion.runtime._private.util.hamt.MultiHashTrie.empty;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;

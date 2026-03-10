@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion.util.hamt;
+package dev.ionfusion.runtime._private.util.hamt;
 
 import static dev.ionfusion.testing.Permute.generateSubsets;
 import static java.util.Collections.unmodifiableList;
@@ -10,10 +10,10 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-import dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.BitMappedNode;
-import dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.Changes;
-import dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.HashArrayMappedNode;
-import dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.TrieNode;
+import dev.ionfusion.runtime._private.util.hamt.HashArrayMappedTrie.BitMappedNode;
+import dev.ionfusion.runtime._private.util.hamt.HashArrayMappedTrie.Changes;
+import dev.ionfusion.runtime._private.util.hamt.HashArrayMappedTrie.HashArrayMappedNode;
+import dev.ionfusion.runtime._private.util.hamt.HashArrayMappedTrie.TrieNode;
 import java.util.List;
 import java.util.function.BiFunction;
 import org.junit.jupiter.api.AfterAll;

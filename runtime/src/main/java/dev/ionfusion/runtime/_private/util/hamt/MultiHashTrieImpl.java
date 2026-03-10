@@ -1,11 +1,11 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion.util.hamt;
+package dev.ionfusion.runtime._private.util.hamt;
 
-import static dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.NOTHING;
+import static dev.ionfusion.runtime._private.util.hamt.HashArrayMappedTrie.NOTHING;
 
-import dev.ionfusion.fusion.util.hamt.HashArrayMappedTrie.TrieNode;
+import dev.ionfusion.runtime._private.util.hamt.HashArrayMappedTrie.TrieNode;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Arrays;
 import java.util.Collection;
