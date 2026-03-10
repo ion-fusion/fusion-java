@@ -22,7 +22,7 @@ import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.LetValuesForm.compilePlainLet;
 import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 import static dev.ionfusion.fusion.UnboundIdentifierException.makeUnboundError;
-import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_OBJECT_ARRAY;
+import static dev.ionfusion.runtime._private.util.Empties.EMPTY_OBJECT_ARRAY;
 
 import dev.ionfusion.fusion.FusionSexp.BaseSexp;
 import dev.ionfusion.fusion.FusionStruct.StructFieldVisitor;

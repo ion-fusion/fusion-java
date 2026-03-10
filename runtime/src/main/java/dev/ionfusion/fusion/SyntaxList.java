@@ -7,7 +7,7 @@ import static dev.ionfusion.fusion.FusionList.immutableList;
 import static dev.ionfusion.fusion.FusionList.isImmutableList;
 import static dev.ionfusion.fusion.FusionList.nullList;
 import static dev.ionfusion.fusion.FusionList.unsafeListElement;
-import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_STRING_ARRAY;
+import static dev.ionfusion.runtime._private.util.Empties.EMPTY_STRING_ARRAY;
 import static java.lang.System.arraycopy;
 
 import com.amazon.ion.IonWriter;

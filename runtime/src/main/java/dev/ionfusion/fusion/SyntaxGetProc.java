@@ -7,7 +7,7 @@ import static dev.ionfusion.fusion.FusionIo.safeWrite;
 import static dev.ionfusion.fusion.FusionNumber.checkIntArgToJavaInt;
 import static dev.ionfusion.fusion.FusionText.checkRequiredTextArg;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
-import static dev.ionfusion.fusion._private.FusionUtils.writeFriendlyIndex;
+import static dev.ionfusion.runtime._private.util.Ordinals.writeFriendlyIndex;
 
 import dev.ionfusion.runtime.base.FusionException;
 

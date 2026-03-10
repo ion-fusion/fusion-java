@@ -5,7 +5,7 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.BindingSite.makeLocalBindingSite;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
-import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_STRING_ARRAY;
+import static dev.ionfusion.runtime._private.util.Empties.EMPTY_STRING_ARRAY;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;

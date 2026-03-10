@@ -7,7 +7,7 @@ import static com.amazon.ion.util.IonTextUtils.printQuotedSymbol;
 import static dev.ionfusion.fusion.FusionIo.safeWriteToString;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.StandardReader.readSyntax;
-import static dev.ionfusion.fusion._private.FusionUtils.friendlyIndex;
+import static dev.ionfusion.runtime._private.util.Ordinals.friendlyIndex;
 import static dev.ionfusion.runtime.base.ModuleIdentity.isValidAbsoluteModulePath;
 
 import com.amazon.ion.IonReader;

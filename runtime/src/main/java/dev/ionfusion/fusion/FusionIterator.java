@@ -11,7 +11,7 @@ import static dev.ionfusion.fusion.FusionList.unsafeListIterator;
 import static dev.ionfusion.fusion.FusionSexp.isSexp;
 import static dev.ionfusion.fusion.FusionSexp.unsafeSexpIterator;
 import static dev.ionfusion.fusion.ResultFailure.makeResultError;
-import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_OBJECT_ARRAY;
+import static dev.ionfusion.runtime._private.util.Empties.EMPTY_OBJECT_ARRAY;
 
 import com.amazon.ion.IonValue;
 import dev.ionfusion.runtime.base.FusionException;

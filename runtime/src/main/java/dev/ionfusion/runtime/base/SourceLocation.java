@@ -3,7 +3,7 @@
 
 package dev.ionfusion.runtime.base;
 
-import static dev.ionfusion.fusion._private.FusionUtils.writeFriendlyOrdinal;
+import static dev.ionfusion.runtime._private.util.Ordinals.writeFriendlyOrdinal;
 
 import com.amazon.ion.IonReader;
 import com.amazon.ion.OffsetSpan;

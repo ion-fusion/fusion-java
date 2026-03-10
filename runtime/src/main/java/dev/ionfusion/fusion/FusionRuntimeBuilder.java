@@ -3,9 +3,9 @@
 
 package dev.ionfusion.fusion;
 
-import static dev.ionfusion.fusion._private.FusionUtils.readProperties;
 import static dev.ionfusion.runtime._private.cover.CoverageCollectorFactory.fromDirectory;
 import static dev.ionfusion.runtime._private.cover.CoverageConfiguration.forConfigFile;
+import static dev.ionfusion.runtime._private.util.PropertiesFiles.readProperties;
 import static dev.ionfusion.runtime.base.ModuleIdentity.isValidAbsoluteModulePath;
 import static java.nio.file.Files.isReadable;
 import static java.nio.file.Files.isRegularFile;

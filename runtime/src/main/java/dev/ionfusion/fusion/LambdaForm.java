@@ -6,7 +6,7 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionSexp.immutableSexp;
 import static dev.ionfusion.fusion.FusionString.isString;
 import static dev.ionfusion.fusion.SyntaxSymbol.ensureUniqueIdentifiers;
-import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_STRING_ARRAY;
+import static dev.ionfusion.runtime._private.util.Empties.EMPTY_STRING_ARRAY;
 
 import dev.ionfusion.runtime.base.FusionException;
 

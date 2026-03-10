@@ -9,8 +9,8 @@ import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionSyntax.checkIdentifierArg;
 import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 import static dev.ionfusion.fusion.UnboundIdentifierException.makeUnboundError;
-import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_OBJECT_ARRAY;
-import static dev.ionfusion.fusion._private.FusionUtils.EMPTY_STRING_ARRAY;
+import static dev.ionfusion.runtime._private.util.Empties.EMPTY_OBJECT_ARRAY;
+import static dev.ionfusion.runtime._private.util.Empties.EMPTY_STRING_ARRAY;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
