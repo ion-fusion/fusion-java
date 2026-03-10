@@ -8,7 +8,7 @@ import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
 import dev.ionfusion.fusion.FusionSexp.BaseSexp;
 import dev.ionfusion.fusion.ModuleNamespace.CompiledImportedVariableReference;
 import dev.ionfusion.fusion.TopLevelNamespace.CompiledTopLevelVariableReference;
-import dev.ionfusion.fusion._private.doc.model.BindingDoc;
+import dev.ionfusion.runtime._private.doc.BindingDoc;
 import dev.ionfusion.runtime.base.FusionException;
 import java.io.IOException;
 import java.util.ArrayList;

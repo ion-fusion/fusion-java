@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion._private.doc.model;
+package dev.ionfusion.runtime._private.doc;
 
 import static java.util.Collections.emptyMap;
 

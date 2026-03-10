@@ -20,7 +20,7 @@ import static dev.ionfusion.runtime.base.ModuleIdentity.isValidModulePath;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.ModuleNamespace.ProvidedBinding;
-import dev.ionfusion.fusion._private.doc.model.BindingDoc;
+import dev.ionfusion.runtime._private.doc.BindingDoc;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.util.ArrayList;

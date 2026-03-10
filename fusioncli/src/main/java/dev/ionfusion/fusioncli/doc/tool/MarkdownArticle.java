@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion._private.doc.model;
+package dev.ionfusion.fusioncli.doc.tool;
 
 import static com.amazon.ion.system.IonTextWriterBuilder.UTF8;
 import static java.util.regex.Pattern.MULTILINE;

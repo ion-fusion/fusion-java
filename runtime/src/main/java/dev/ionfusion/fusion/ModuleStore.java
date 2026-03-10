@@ -4,7 +4,7 @@
 package dev.ionfusion.fusion;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
-import dev.ionfusion.fusion._private.doc.model.BindingDoc;
+import dev.ionfusion.runtime._private.doc.BindingDoc;
 
 /**
  * Eval-time storage for modules.

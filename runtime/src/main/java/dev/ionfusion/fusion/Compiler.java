@@ -48,8 +48,8 @@ import dev.ionfusion.fusion.TopLevelNamespace.CompiledTopDefine;
 import dev.ionfusion.fusion.TopLevelNamespace.CompiledTopDefineValues;
 import dev.ionfusion.fusion.TopLevelNamespace.CompiledTopLevelVariableReference;
 import dev.ionfusion.fusion.TopLevelNamespace.TopLevelDefinedBinding;
-import dev.ionfusion.fusion._private.doc.model.BindingDoc;
-import dev.ionfusion.fusion._private.doc.model.BindingDoc.Kind;
+import dev.ionfusion.runtime._private.doc.BindingDoc;
+import dev.ionfusion.runtime._private.doc.BindingDoc.Kind;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.SourceLocation;
 

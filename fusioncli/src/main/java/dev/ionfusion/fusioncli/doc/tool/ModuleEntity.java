@@ -5,8 +5,8 @@ package dev.ionfusion.fusioncli.doc.tool;
 
 import static java.util.Comparator.comparing;
 
-import dev.ionfusion.fusion._private.doc.model.BindingDoc;
-import dev.ionfusion.fusion._private.doc.model.ModuleDocs;
+import dev.ionfusion.runtime._private.doc.BindingDoc;
+import dev.ionfusion.runtime._private.doc.ModuleDocs;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.util.Collection;
 import java.util.SortedSet;

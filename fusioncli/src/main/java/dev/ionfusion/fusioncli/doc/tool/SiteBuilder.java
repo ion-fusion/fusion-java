@@ -6,7 +6,6 @@ package dev.ionfusion.fusioncli.doc.tool;
 import static java.nio.file.Files.isDirectory;
 
 import dev.ionfusion.fusion._private.StreamWriter;
-import dev.ionfusion.fusion._private.doc.model.MarkdownArticle;
 import dev.ionfusion.fusioncli.doc.site.FileCopyTemplate;
 import dev.ionfusion.fusioncli.doc.site.Site;
 import dev.ionfusion.fusioncli.doc.site.Template;
