@@ -3,7 +3,6 @@
 
 package dev.ionfusion.fusioncli.cover;
 
-import dev.ionfusion.fusion._private.HtmlWriter;
 import java.io.IOException;
 
 class EstimatedCoverageInfoPair

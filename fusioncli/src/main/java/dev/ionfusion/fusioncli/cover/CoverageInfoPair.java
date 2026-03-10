@@ -5,7 +5,6 @@ package dev.ionfusion.fusioncli.cover;
 
 import static java.math.RoundingMode.HALF_EVEN;
 
-import dev.ionfusion.fusion._private.HtmlWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
 

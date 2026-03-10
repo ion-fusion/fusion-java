@@ -5,12 +5,12 @@ package dev.ionfusion.fusioncli.doc.tool;
 
 import static java.nio.file.Files.isDirectory;
 
-import dev.ionfusion.fusion._private.StreamWriter;
 import dev.ionfusion.fusioncli.doc.site.FileCopyTemplate;
 import dev.ionfusion.fusioncli.doc.site.Site;
 import dev.ionfusion.fusioncli.doc.site.Template;
 import dev.ionfusion.fusioncli.doc.tool.layout.StreamingTemplate;
 import dev.ionfusion.fusioncli.doc.tool.mustache.MustacheTemplate;
+import dev.ionfusion.runtime._private.io.StreamWriter;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import dev.ionfusion.runtime.embed.TopLevel;

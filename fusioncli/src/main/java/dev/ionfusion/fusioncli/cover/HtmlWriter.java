@@ -1,8 +1,9 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion._private;
+package dev.ionfusion.fusioncli.cover;
 
+import dev.ionfusion.runtime._private.io.StreamWriter;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.io.IOException;
 

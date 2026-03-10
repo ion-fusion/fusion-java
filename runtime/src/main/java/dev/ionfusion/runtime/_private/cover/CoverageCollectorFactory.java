@@ -6,7 +6,7 @@ package dev.ionfusion.runtime._private.cover;
 import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.isDirectory;
 
-import dev.ionfusion.fusion._private.InternMap;
+import dev.ionfusion.runtime._private.util.InternMap;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;

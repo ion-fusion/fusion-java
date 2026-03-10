@@ -3,10 +3,10 @@
 
 package dev.ionfusion.fusioncli.doc.tool.layout;
 
-import dev.ionfusion.fusion._private.StreamWriter;
 import dev.ionfusion.fusioncli.doc.site.Artifact;
 import dev.ionfusion.fusioncli.doc.site.Generator;
 import dev.ionfusion.fusioncli.doc.site.Template;
+import dev.ionfusion.runtime._private.io.StreamWriter;
 import java.nio.file.Path;
 
 /**

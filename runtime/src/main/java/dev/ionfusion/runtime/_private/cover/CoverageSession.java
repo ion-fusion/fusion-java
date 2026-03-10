@@ -7,8 +7,8 @@ import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.createTempFile;
 
 import dev.ionfusion.fusion._Private_CoverageCollector;
-import dev.ionfusion.fusion._private.InternMap;
 import dev.ionfusion.runtime._private.util.Flusher;
+import dev.ionfusion.runtime._private.util.InternMap;
 import dev.ionfusion.runtime.base.SourceLocation;
 import java.io.File;
 import java.io.IOException;
