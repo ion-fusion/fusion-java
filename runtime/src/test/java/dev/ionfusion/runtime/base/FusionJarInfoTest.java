@@ -1,12 +1,11 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion.util;
+package dev.ionfusion.runtime.base;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.startsWith;
 
-import dev.ionfusion.runtime.base.FusionException;
 import org.junit.jupiter.api.Test;
 
 /**

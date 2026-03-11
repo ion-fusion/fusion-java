@@ -5,7 +5,7 @@ package dev.ionfusion.fusioncli;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import dev.ionfusion.fusion.util.FusionJarInfo;
+
 import com.amazon.ion.IonString;
 import com.amazon.ion.IonStruct;
 import com.amazon.ion.IonSystem;
@@ -14,6 +14,7 @@ import com.amazon.ion.IonValue;
 import com.amazon.ion.Timestamp;
 import com.amazon.ion.system.IonSystemBuilder;
 import com.amazon.ion.util.JarInfo;
+import dev.ionfusion.runtime.base.FusionJarInfo;
 import org.junit.jupiter.api.Test;
 
 public class VersionTest

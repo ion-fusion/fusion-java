@@ -1,10 +1,9 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion.util;
+package dev.ionfusion.runtime.base;
 
 import dev.ionfusion.fusion._Private_Trampoline;
-import dev.ionfusion.runtime.base.FusionException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
