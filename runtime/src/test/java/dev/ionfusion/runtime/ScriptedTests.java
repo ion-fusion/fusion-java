@@ -1,6 +1,8 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
+package dev.ionfusion.runtime;
+
 import static dev.ionfusion.fusion.TestSetup.makeRuntimeBuilder;
 import static dev.ionfusion.testing.ProjectLayout.testRepositoryDirectory;
 import static dev.ionfusion.testing.ProjectLayout.testScriptDirectory;
