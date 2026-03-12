@@ -448,6 +448,7 @@ class Evaluator
             {
                 if (Thread.currentThread().isInterrupted())
                 {
+                    // XXX Doesn't clear the interrupt status, feels wrong (though documented as such)
                     throw new FusionInterrupt();
                 }
 
