@@ -4,7 +4,6 @@
 package dev.ionfusion.runtime.embed;
 
 import com.amazon.ion.IonReader;
-import dev.ionfusion.fusion.ExitException;
 import dev.ionfusion.fusion.FusionInterruptedException;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.SourceName;

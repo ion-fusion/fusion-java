@@ -1,16 +1,16 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion;
+package dev.ionfusion.runtime.embed;
 
 import dev.ionfusion.runtime.base.FusionException;
 
 /**
- * Thown to force the exit of an evaluation.
+ * Signals that the evaluation thread invoked the {@code exit} procedure.
  */
 @SuppressWarnings("serial")
 public final class ExitException
     extends FusionException
 {
-    ExitException() { super("Exit requested"); }
+    public ExitException() { super("Exit requested"); }
 }

@@ -6,8 +6,8 @@ package dev.ionfusion.fusioncli;
 import static dev.ionfusion.fusion.FusionIo.write;
 import static dev.ionfusion.fusion.FusionVoid.isVoid;
 
-import dev.ionfusion.fusion.ExitException;
 import dev.ionfusion.runtime.base.FusionException;
+import dev.ionfusion.runtime.embed.ExitException;
 import dev.ionfusion.runtime.embed.FusionRuntime;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.IOException;
