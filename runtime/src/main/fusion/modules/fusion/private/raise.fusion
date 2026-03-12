@@ -7,6 +7,7 @@
 
   (provide
     assert
+    exit
     raise
     raise_argument_error
     raise_arity_error
@@ -88,4 +89,13 @@ Note that a `result_error` IS-A `contract_error`.
     '''
     (java_new "dev.ionfusion.fusion.RaiseResultErrorProc"))
 
+
+  (define_values (exit)
+    '''
+    (exit)
+
+Terminates the current Fusion thread.
+    '''
+    (lambda ()
+      (raise (java_new "dev.ionfusion.fusion.ExitException"))))
 )

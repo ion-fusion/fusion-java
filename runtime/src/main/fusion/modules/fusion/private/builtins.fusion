@@ -16,7 +16,6 @@
   (provide
     '#%top'
     apply
-    exit
     if
     is_blob
     is_bool
