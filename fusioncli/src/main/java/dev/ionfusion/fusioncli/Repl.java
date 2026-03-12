@@ -6,7 +6,6 @@ package dev.ionfusion.fusioncli;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.amazon.ion.IonException;
-import dev.ionfusion.fusion.ExitException;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.BufferedReader;
@@ -131,7 +130,7 @@ class Repl
         {
             red("\nWelcome to Fusion!\n\n");
             myOut.println("Type...");
-            myOut.println("  (exit)            to exit");
+            myOut.println("  ^D                to exit");
             myOut.println("  (help SOMETHING)  to see documentation; try '(help help)'!\n");
         }
 
@@ -142,10 +141,10 @@ class Repl
             blue("$");
             String line = read();
 
-            if (line == null)
+            if (line == null) // EOF
             {
                 // Print a newline otherwise the user's shell prompt will be on
-                // the same line, and that's ugly.
+                // the same line as our prompt, and that's ugly.
                 myOut.println();
                 return false;
             }
@@ -154,12 +153,6 @@ class Repl
             {
                 Object result = myTopLevel.eval(line);
                 writeResults(myTopLevel, result, myOut);
-            }
-            catch (ExitException e)
-            {
-                blue("Goodbye!\n");
-                myOut.flush();
-                return false;
             }
             catch (FusionException | IonException e)
             {

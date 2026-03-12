@@ -26,7 +26,6 @@ To use this dialect for your module, declare it as follows:
     apply
     begin
     define
-    exit
     if
     is_bool
     is_blob

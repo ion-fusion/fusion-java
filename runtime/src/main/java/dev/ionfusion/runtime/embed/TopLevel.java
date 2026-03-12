@@ -4,7 +4,6 @@
 package dev.ionfusion.runtime.embed;
 
 import com.amazon.ion.IonReader;
-import dev.ionfusion.fusion.ExitException;
 import dev.ionfusion.fusion.FusionInterruptedException;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.SourceName;
@@ -32,15 +31,10 @@ import java.io.File;
  *
  * <h2>Exceptions</h2>
  *
- * Most of the methods on this class are capable of throwing two subclasses of
- * {@link FusionException} that are noteworthy in that applications may
- * require special handling for them:
+ * Most of the methods on this class can throw subclasses of {@link FusionException}
+ * that deserve special consideration:
  *
  * <ul>
- *   <li>
- *     {@link ExitException} is thrown if Fusion's {@code exit} procedure
- *     is invoked.
- *   </li>
  *   <li>
  *     {@link FusionInterruptedException} is thrown if the evaluation is
  *     canceled by calling {@link Thread#interrupt()} on the current thread.

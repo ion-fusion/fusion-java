@@ -6,7 +6,6 @@ package dev.ionfusion.fusioncli;
 import static dev.ionfusion.fusion.FusionIo.write;
 import static dev.ionfusion.fusion.FusionVoid.isVoid;
 
-import dev.ionfusion.fusion.ExitException;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.embed.FusionRuntime;
 import dev.ionfusion.runtime.embed.TopLevel;
@@ -63,10 +62,7 @@ abstract class FusionExecutor
 
             writeResults(top, result, out);
         }
-        catch (ExitException e)
-        {
-            // Do nothing, just return successfully.
-        }
+        // TODO #479 Handle breaks distinctly?
         catch (FusionException e)
         {
             // TODO optionally display the stack trace
