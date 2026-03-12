@@ -18,15 +18,18 @@ dependencies {
 
     testReportAggregation(project(":sdk"))
     testReportAggregation(project(":testing"))
+
+    fcovReportData(project(":runtime", "fcovData"))
+    fcovReportData(project(":fusioncli", "fcovData"))
 }
 
 tasks.check {
-    dependsOn(tasks.named<JacocoReport>("testCodeCoverageReport"))
-    dependsOn(tasks.named<TestReport>("testAggregateTestReport"))
+    dependsOn(tasks.testCodeCoverageReport)
+    dependsOn(tasks.testAggregateTestReport)
     dependsOn(fcovAggregateReport)
 }
 
-tasks.named<JacocoReport>("testCodeCoverageReport") {
+tasks.testCodeCoverageReport {
     reports {
         // Simplify the output
         html.outputLocation = reporting.baseDirectory.dir("jacoco")
@@ -34,7 +37,7 @@ tasks.named<JacocoReport>("testCodeCoverageReport") {
     }
 }
 
-tasks.named<TestReport>("testAggregateTestReport") {
+tasks.testAggregateTestReport {
     destinationDirectory = reporting.baseDirectory.dir("tests")
 }
 
@@ -45,20 +48,13 @@ tasks.named<TestReport>("testAggregateTestReport") {
 //======================================================================================
 // Fusion coverage aggregate report
 
-// Declare the dataDirs for aggregate reporting.
-dependencies {
-    "fcovReportData"(project(path = ":runtime", configuration = "fcovData"))
-    "fcovReportData"(project(path = ":fusioncli", configuration = "fcovData"))
-}
-
-
 // The task is here instead of the conventions file because it is tied to the CLI's
 // classpath, which can't be used from every subproject (notably `runtime`).
 
 val fcovReportData by configurations.getting
 val fcovReportDir = reporting.baseDirectory.dir("fcov")
 
-val fcovAggregateReport = tasks.register<JavaExec>("fcovAggregateReport") {
+val fcovAggregateReport by tasks.registering(JavaExec::class) {
     group = "verification"
     description = "Generates Fusion code coverage report"
 

@@ -52,7 +52,7 @@ tasks.test {
     inputs.dir(testFusionRepo)
 }
 
-val ftstRepo = tasks.register<Jar>("ftstRepo") {
+val ftstRepo by tasks.registering(Jar::class) {
     destinationDirectory = base.libsDirectory
     archiveFileName = "ftst-repo.jar"
 
@@ -100,7 +100,3 @@ tasks.javadoc {
         noTimestamp(true)
     }
 }
-
-
-//=============================================================================
-// Distribution

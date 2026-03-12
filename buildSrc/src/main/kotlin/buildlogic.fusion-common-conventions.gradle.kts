@@ -18,7 +18,7 @@ val fcovReportDir = reporting.baseDirectory.dir("fcov")
 //=============================================================================
 // Code Coverage Data Collection
 
-tasks.named<Test>("test") {
+tasks.test {
     // Rerun tests if the coverage config changes; we might record different things.
     inputs.file(fcovConfig)
     outputs.dir(fcovDataDir)
@@ -41,8 +41,8 @@ private fun instrumentationArguments(): List<String> {
 
 
 // Signal the test task to collect Fusion coverage data.
-val fcovTestCollect = tasks.register("fcovTestCollect") {
-    dependsOn(tasks.named<Test>("test"))
+val fcovTestCollect by tasks.registering {
+    dependsOn(tasks.test)
     outputs.dir(fcovDataDir)
     doLast {
         logger.lifecycle("Collected Fusion coverage data into ${fcovDataDir.get().asFile.path}")

@@ -32,7 +32,7 @@ tasks.jacocoTestCoverageVerification {
 //=============================================================================
 // Application
 
-// It took a loooong time to figure out how to access APP_HOME.
+// It took a long time to figure out how to access APP_HOME.
 // https://discuss.gradle.org/t/42870/4
 // https://stackoverflow.com/questions/22153041?rq=3
 // It's still not entirely working: `gradle run` doesn't see the replaced script.
@@ -46,6 +46,6 @@ tasks.startScripts {
 application {
     applicationName = "fusion"
     mainClass.set("dev.ionfusion.fusioncli.Cli")
-    // This is unused today, but is likely to be useful and it was hard to do.
+    // This is unused today, but is likely to be useful, and it was hard to do.
     applicationDefaultJvmArgs = listOf("-Ddev.ionfusion.fusion.Home={{APP_HOME}}/fusion")
 }

@@ -3,7 +3,7 @@
 
 // Conventions for Java libraries and applications.
 
-version = project.properties.get("projectVersion")!!
+version = project.properties["projectVersion"]!!
 
 plugins {
     java
@@ -35,19 +35,19 @@ java {
 }
 
 // Enable some linting.  TODO Work toward -Xlint:all
-tasks.withType<JavaCompile>() {
+tasks.withType<JavaCompile> {
     options.compilerArgumentProviders.add {
         listOf("-Xlint:serial")
     }
 }
 
-tasks.named<Test>("test") {
+tasks.test {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }
 
 // Temporary alias until we migrate tooling
 // TODO https://github.com/ion-fusion/fusion-java/issues/429
-tasks.register("release") {
+val release by tasks.registering {
     dependsOn(tasks.build)  // build depends on assemble & check
 }

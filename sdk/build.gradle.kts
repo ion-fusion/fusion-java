@@ -19,10 +19,6 @@ dependencies {
 }
 
 
-// Locate the repository from which we'll generate Fusion docs.
-// TODO Define appropriate consumable and resolvable configurations for Fusion repos.
-val mainFusionRepo = layout.projectDirectory.dir("../runtime/src/main/fusion")
-
 // This subproject currently doesn't have any Java code
 tasks.jar {
     enabled = false
@@ -46,15 +42,24 @@ tasks.test {
 //=============================================================================
 // Documentation
 
-val fusiondoc = tasks.register<JavaExec>("fusiondoc") {
+val fusiondoc by tasks.registering(JavaExec::class) {
     group = "Documentation"
     description = "Generates Fusion language and library documentation."
 
-    val fusiondocDir = java.docsDir.dir("fusiondoc")
+    // Locate the repository from which we'll generate Fusion docs.
+    // TODO Define consumable and resolvable configurations for Fusion repos.
+    val runtimeRepo = project(":runtime").file("src/main/fusion")
+    inputs.dir(runtimeRepo)
 
     var docSrcDir   = layout.projectDirectory.dir("src/doc")
+    inputs.dir(docSrcDir)
+
     var articlesDir = docSrcDir.dir("articles")
     var assetsDir   = docSrcDir.dir("assets")
+
+    val outputDir = java.docsDir.dir("fusiondoc")
+    outputs.dir(outputDir)
+
 
     javaLauncher = javaToolchains.launcherFor {
         languageVersion = java.toolchain.languageVersion
@@ -63,19 +68,12 @@ val fusiondoc = tasks.register<JavaExec>("fusiondoc") {
     classpath = project(":fusioncli").sourceSets["main"].runtimeClasspath
     mainClass = "dev.ionfusion.fusioncli.Cli"
     args = listOf("document",
-                  "--modules",  mainFusionRepo.toString(),
+                  "--modules",  runtimeRepo.toString(),
                   "--articles", articlesDir.toString(),
                   "--assets",   assetsDir.toString(),
-                  fusiondocDir.get().asFile.path)
+                  outputDir.get().asFile.path)
 
     enableAssertions = true
-
-    // Docgen has Java code! Not sure if this is the best solution...
-    dependsOn(tasks.compileJava)
-
-    inputs.dir(mainFusionRepo)
-    inputs.dir(docSrcDir)
-    outputs.dir(fusiondocDir)
 }
 
 
@@ -89,10 +87,8 @@ distributions {
         distributionBaseName = "ion-fusion-sdk"
 
         contents {
-            val javadoc = project(":runtime").tasks.javadoc
-
             into("bin") {
-                from(project(":fusioncli").tasks.named("startScripts"))
+                from(project(":fusioncli").tasks.startScripts)
             }
 
             // TODO JavaDocs should be beside, not inside, the Fusion docs.
@@ -101,7 +97,7 @@ distributions {
                 from(fusiondoc)
             }
             into("docs/javadoc") {
-                from(javadoc)
+                from(project(":runtime").tasks.javadoc)
             }
 
             from(rootDir.resolve("LICENSE"))
