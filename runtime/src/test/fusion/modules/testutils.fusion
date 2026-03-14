@@ -14,6 +14,8 @@
     remove_first
     test_data_file
     test_equivalence
+    truthy_values
+    untruthy_values
   )
 
   (define (test_data_file filename)
@@ -46,6 +48,35 @@
             null.list
             null.sexp
             null.struct)))
+
+
+  (define truthy_values
+    [true,
+     0,
+     1,
+     0.,
+     nan,
+     +inf,
+     -inf,
+     0e0,
+     2012-10-19T12:54-08:00,
+     "",
+     "string",
+     (quote ''),
+     (quote symbol),
+     {{ }},
+     {{""}},
+     [],
+     (quote ()),
+     {},
+     (quote ann::true)])
+
+  (define untruthy_values
+    (append all_nulls
+            [(void),
+             false,
+             (quote ann::false),    // Annotations don't affect truthiness
+             (quote ann::null)]))
 
 
   (defpub representative_ion_data

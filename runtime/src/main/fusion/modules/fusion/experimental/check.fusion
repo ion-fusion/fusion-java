@@ -514,15 +514,16 @@ order:
   // TODO This should just use `display`. : {{{arity_exn}}}
   (define (describe_raised v)
     (cond
-      ((is_argument_error v) "argument_error")
-      ((is_arity_error    v) "arity_error")
-      ((is_result_error   v) "result_error")
-      ((is_contract_error v) "contract_error")
-      ((is_check_error    v) "check_error")
-      ((is_unbound_error  v) "unbound_error")
-      ((is_syntax_error   v) "syntax_error")
-      ((is_error_exn      v) "error_exn")
-      ((is_exn            v) "exn")
+      ((is_argument_error  v) "argument_error")
+      ((is_arity_error     v) "arity_error")
+      ((is_assertion_error v) "assertion_error")
+      ((is_result_error    v) "result_error")
+      ((is_contract_error  v) "contract_error")
+      ((is_check_error     v) "check_error")
+      ((is_unbound_error   v) "unbound_error")
+      ((is_syntax_error    v) "syntax_error")
+      ((is_error_exn       v) "error_exn")
+      ((is_exn             v) "exn")
       (true v)))
 
   (define (_expect_raise pred expected thunk)
@@ -611,6 +612,7 @@ another kind of exception is thrown, then the check fails.''')))]
     expect_any_raise
     expect_argument_error
     expect_arity_error
+    expect_assertion_error
     expect_check_error
     expect_contract_error
     expect_error_exn
@@ -618,14 +620,15 @@ another kind of exception is thrown, then the check fails.''')))]
     expect_result_error
   )
 
-  (define_exn_check expect_any_raise      (always true)     "any value")
-  (define_exn_check expect_exn            is_exn            "exn")
-  (define_exn_check expect_error_exn      is_error_exn      "error_exn")
-  (define_exn_check expect_argument_error is_argument_error "argument_error")
-  (define_exn_check expect_arity_error    is_arity_error    "arity_error")
-  (define_exn_check expect_check_error    is_check_error    "check_error")
-  (define_exn_check expect_contract_error is_contract_error "contract_error")
-  (define_exn_check expect_result_error   is_result_error   "result_error")
+  (define_exn_check expect_any_raise       (always true)      "any value")
+  (define_exn_check expect_exn             is_exn             "exn")
+  (define_exn_check expect_error_exn       is_error_exn       "error_exn")
+  (define_exn_check expect_argument_error  is_argument_error  "argument_error")
+  (define_exn_check expect_arity_error     is_arity_error     "arity_error")
+  (define_exn_check expect_assertion_error is_assertion_error "assertion_error")
+  (define_exn_check expect_check_error     is_check_error     "check_error")
+  (define_exn_check expect_contract_error  is_contract_error  "contract_error")
+  (define_exn_check expect_result_error    is_result_error    "result_error")
 
   // NOT PUBLIC! Only used by the public version below.
   (define_exn_check _expect_syntax_error  is_syntax_error   false /*skip frame*/)

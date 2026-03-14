@@ -24,6 +24,7 @@ Exceptions can be understood to have an inheritance hierarchy along these lines:
               * `argument_error`: a procedure was called with an invalid
                 argument
               * `result_error`: a procedure returned an invalid result
+          * `assertion_error`: an [`assert`](#assert) failed
           * `syntax_error`: a syntax form was used incorrectly
               * `unbound_error`: an identifier has no binding
       * `break_exn`: the thread was interrupted (not implemented yet)
@@ -197,12 +198,13 @@ Returns `true` or `false`.
           (quote_syntax here)
           stx))))
 
-  (generate_predicate is_error_exn      error_exn      "dev.ionfusion.fusion.FusionErrorException")
-  (generate_predicate is_argument_error argument_error "dev.ionfusion.fusion.ArgumentException")
-  (generate_predicate is_arity_error    arity_error    "dev.ionfusion.fusion.ArityFailure")
-  (generate_predicate is_contract_error contract_error "dev.ionfusion.fusion.ContractException")
-  (generate_predicate is_result_error   result_error   "dev.ionfusion.fusion.ResultFailure")
-  (generate_predicate is_syntax_error   syntax_error   "dev.ionfusion.fusion.SyntaxException")
-  (generate_predicate is_unbound_error  unbound_error  "dev.ionfusion.fusion.UnboundIdentifierException")
+  (generate_predicate is_error_exn       error_exn       "dev.ionfusion.fusion.FusionErrorException")
+  (generate_predicate is_argument_error  argument_error  "dev.ionfusion.fusion.ArgumentException")
+  (generate_predicate is_arity_error     arity_error     "dev.ionfusion.fusion.ArityFailure")
+  (generate_predicate is_assertion_error assertion_error "dev.ionfusion.fusion.FusionAssertionException")
+  (generate_predicate is_contract_error  contract_error  "dev.ionfusion.fusion.ContractException")
+  (generate_predicate is_result_error    result_error    "dev.ionfusion.fusion.ResultFailure")
+  (generate_predicate is_syntax_error    syntax_error    "dev.ionfusion.fusion.SyntaxException")
+  (generate_predicate is_unbound_error   unbound_error   "dev.ionfusion.fusion.UnboundIdentifierException")
 
 )

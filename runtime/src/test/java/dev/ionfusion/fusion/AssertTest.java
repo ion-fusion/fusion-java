@@ -4,20 +4,15 @@
 package dev.ionfusion.fusion;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/**
+ * These checks can't be ported to Fusion yet because there's no way to inspect an
+ * exception's message.
+ */
 public class AssertTest
     extends CoreTestCase
 {
-    @BeforeEach
-    public void requires()
-        throws Exception
-    {
-        topLevel().requireModule("/fusion/exception");
-    }
-
-
     private void expectAssertFailure(String expr)
         throws Exception
     {
@@ -60,41 +55,5 @@ public class AssertTest
         {
             expectAssertFailure(form);
         }
-    }
-
-    private void expectAssertSuccess(String expr)
-        throws Exception
-    {
-        assertEval(1, "(begin (assert " + expr + " \"barney\") 1)");
-    }
-
-    @Test
-    public void testAssertSuccess()
-        throws Exception
-    {
-        for (String form : BooleanTest.TRUTHY_EXPRESSIONS)
-        {
-            expectAssertSuccess(form);
-        }
-    }
-
-    @Test
-    public void testAssertFailureWithExitingMessage()
-    {
-        assertEvalThrows(ExitException.class, "(assert false (exit))");
-    }
-
-    @Test
-    public void testAssertSuccessWithExitingMessage()
-        throws Exception
-    {
-        eval("(assert true (exit))");
-    }
-
-    @Test
-    public void testAssertArity()
-        throws Exception
-    {
-        expectSyntaxExn("(assert)");
     }
 }

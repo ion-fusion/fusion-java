@@ -1,0 +1,24 @@
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(require
+  "/fusion/experimental/check"
+  "/testutils"
+)
+
+
+(define (expect_assertion_success v)
+  (check_void (assert v (fail "assertion message should be unreachable"))))
+
+(define (expect_assertion_failure v)
+  // TODO check the message; see dev.ionfusion.fusion.AssertTest
+  (expect_assertion_error (assert v))
+  (expect_assertion_error (assert v "it failed"))
+  (expect_assertion_error (assert v "it" "failed")))
+
+
+(do expect_assertion_success truthy_values)
+(do expect_assertion_failure untruthy_values)
+
+
+(expect_syntax_error (assert))
