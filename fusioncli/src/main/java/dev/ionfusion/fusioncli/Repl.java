@@ -109,7 +109,7 @@ class Repl
                 // Bootstrap the runtime before printing the welcome banner, so
                 // that we don't do that when there's usage problems.
                 myTopLevel = runtime().getDefaultTopLevel();
-                myTopLevel.requireModule("/fusion/private/repl");
+                myTopLevel.requireModule("/fusion/private/cli/repl");
 
                 welcome();
 

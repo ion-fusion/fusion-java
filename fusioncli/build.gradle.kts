@@ -18,6 +18,17 @@ dependencies {
 }
 
 
+val mainFusionRepo = layout.projectDirectory.dir("src/main/fusion")
+
+// Bundle the Fusion repository in our jar.
+// TODO DRY this WRT runtime
+tasks.jar {
+    into("FUSION-REPO") {
+        from(mainFusionRepo)
+        includeEmptyDirs = true
+    }
+}
+
 tasks.jacocoTestCoverageVerification {
     violationRules {
         rule {

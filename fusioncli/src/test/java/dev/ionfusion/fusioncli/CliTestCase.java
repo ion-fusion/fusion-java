@@ -4,6 +4,7 @@
 package dev.ionfusion.fusioncli;
 
 import static dev.ionfusion.testing.ProjectLayout.fusionBootstrapDirectory;
+import static dev.ionfusion.testing.ProjectLayout.mainRepositoryDirectory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import dev.ionfusion.testing.StdioTestCase;
@@ -58,6 +59,9 @@ public class CliTestCase
         // Gradle, since the embedded modules take precedence.
         join.add("--repositories");
         join.add(fusionBootstrapDirectory().toString());
+
+        join.add("--repositories");
+        join.add(mainRepositoryDirectory().toString());
 
         join.addAll(Arrays.asList(commandLine));
         return join.toArray(new String[0]);

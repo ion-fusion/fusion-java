@@ -39,6 +39,11 @@ public class ProjectLayout
         return PROJECT_DIRECTORY.resolve("../runtime/src/main/fusion");
     }
 
+    public static Path mainRepositoryDirectory()
+    {
+        return PROJECT_DIRECTORY.resolve("src/main/fusion");
+    }
+
     public static Path testRepositoryDirectory()
     {
         return PROJECT_DIRECTORY.resolve("src/test/fusion");
