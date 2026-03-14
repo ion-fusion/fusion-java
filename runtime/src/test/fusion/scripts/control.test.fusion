@@ -7,6 +7,10 @@
 )
 
 
+(define (assert_unreachable)
+  (fail "should be unreachable"))
+
+
 (check_void (begin))
 (check === 1  (begin 1))
 (check === 2  (begin 1 2))
@@ -24,8 +28,8 @@
 
 // Using exit ensure we don't evaluate the other branch
 
-(check === 1 (if true  1 (exit)))
-(check === 2 (if false (exit) 2))
+(check === 1 (if true 1 (assert_unreachable)))
+(check === 2 (if false (assert_unreachable) 2))
 (check === 4 (if (if false false true) 4 2))
 
 // Truthiness of other types
@@ -50,8 +54,8 @@
 
 (check_false (and false))
 (check_false (and true false))
-(check_false (and false (exit)))
-(check_false (and true false true (exit)))
+(check_false (and false (assert_unreachable)))
+(check_false (and true false true (assert_unreachable)))
 
 
 (check === 0  (and 1  0))
@@ -67,8 +71,8 @@
 // or
 
 (check_true (or true))
-(check_true (or true (exit)))
-(check_true (or false (= 1 1) (exit)))
+(check_true (or true (assert_unreachable)))
+(check_true (or false (= 1 1) (assert_unreachable)))
 
 (check_false (or))
 (check_false (or false))
