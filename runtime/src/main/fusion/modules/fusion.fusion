@@ -172,7 +172,7 @@ contact us for clarification.
   //=========================================================================
   // Control Forms
 
-  (provide and cond exit if or unless when)
+  (provide and cond if or unless when)
 
   (require "/fusion/iterator")
   (provide empty_iterator is_iterator iterator_append iterator_choose

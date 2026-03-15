@@ -10,8 +10,20 @@ Helper forms for the REPL.
   (require "/fusion/ffi/java")
 
   (provide
+    exit
     help
   )
+
+
+  (define_values (exit)
+    '''
+    (exit)
+
+Terminates the REPL.
+    '''
+    (lambda ()
+      (raise (java_new "dev.ionfusion.fusioncli.repl.ExitException"))))
+
 
   (define help
     '''

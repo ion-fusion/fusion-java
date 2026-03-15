@@ -24,6 +24,18 @@ public class ReplTest
         assertThat(stderrText, is(emptyString()));
     }
 
+
+    @Test
+    public void testExit()
+        throws Exception
+    {
+        supplyInput("(exit)\n");
+        run("repl");
+
+        assertThat(stdoutText, containsString("Goodbye!\n"));
+    }
+
+
     @Test
     public void testHelpHelp()
         throws Exception

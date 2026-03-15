@@ -7,7 +7,6 @@ import static dev.ionfusion.fusion.FusionIo.write;
 import static dev.ionfusion.fusion.FusionVoid.isVoid;
 
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.embed.ExitException;
 import dev.ionfusion.runtime.embed.FusionRuntime;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.IOException;
@@ -63,10 +62,7 @@ abstract class FusionExecutor
 
             writeResults(top, result, out);
         }
-        catch (ExitException e)
-        {
-            // Do nothing, just return successfully.
-        }
+        // TODO #474 Handle abrupt `exit` (and other breaks)
         catch (FusionException e)
         {
             // TODO optionally display the stack trace

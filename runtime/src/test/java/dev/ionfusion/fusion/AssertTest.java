@@ -3,7 +3,6 @@
 
 package dev.ionfusion.fusion;
 
-import dev.ionfusion.runtime.embed.ExitException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
