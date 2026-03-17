@@ -34,7 +34,7 @@ public class CoveredFile
     {
         assert uri != null;
         myUri = uri;
-        myPath = path;
+        myPath = path.normalize();
     }
 
 

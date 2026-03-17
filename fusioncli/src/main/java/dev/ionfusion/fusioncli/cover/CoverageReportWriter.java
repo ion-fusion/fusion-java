@@ -310,9 +310,8 @@ public final class CoverageReportWriter
                     SourceLocation coverageLoc = locations[locationIndex];
 
                     // We shouldn't skip past a known location.
-                    assert compareByLineColumn(currentLoc, coverageLoc) <= 0;
-
-                    if (compareByLineColumn(currentLoc, coverageLoc) == 0)
+                    int cmp = compareByLineColumn(currentLoc, coverageLoc);
+                    if (cmp == 0)
                     {
                         boolean covered = name.isLocationCovered(coverageLoc);
                         setCoverageState(sourceHtml, ionBytes, spanProvider,
@@ -320,6 +319,14 @@ public final class CoverageReportWriter
                         locationIndex++;
                         if (locationIndex == locations.length) break;
                     }
+                    else if (cmp > 0) {
+                        // The current location is past the next one in the database.
+                        String msg =
+                            "Inconsistent coverage data for " + name.getPath() +
+                            "\n  This happens when a file changes between coverage sessions." +
+                            "\n  Clean the project and rebuild to fix.";
+                        throw new AssertionError(msg);
+                    };
 
                     if (IonType.isContainer(t))
                     {
