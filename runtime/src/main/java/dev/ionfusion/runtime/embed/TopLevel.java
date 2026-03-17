@@ -31,8 +31,8 @@ import java.io.File;
  *
  * <h2>Exceptions</h2>
  *
- * Most of the methods on this class are capable of throwing subclasses of
- * {@link FusionException} that applications should consider handling explicitly:
+ * Most of the methods on this class can throw subclasses of {@link FusionException}
+ * that deserve special consideration:
  *
  * <ul>
  *   <li>

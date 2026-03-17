@@ -6,6 +6,7 @@ package dev.ionfusion.fusioncli;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.emptyString;
+import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.is;
 
 import org.junit.jupiter.api.Test;
@@ -26,13 +27,14 @@ public class ReplTest
 
 
     @Test
-    public void testExit()
+    public void testEmptyInput()
         throws Exception
     {
-        supplyInput("(exit)\n");
+        // No input; REPL should exit on EOF
         run("repl");
 
-        assertThat(stdoutText, containsString("Goodbye!\n"));
+        // We want output to end with a newline.
+        assertThat(stdoutText, endsWith("\n"));
     }
 
 

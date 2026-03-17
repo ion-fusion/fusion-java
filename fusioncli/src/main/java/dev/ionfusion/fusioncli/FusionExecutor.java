@@ -62,7 +62,7 @@ abstract class FusionExecutor
 
             writeResults(top, result, out);
         }
-        // TODO #474 Handle abrupt `exit` (and other breaks)
+        // TODO #474 Handle abrupt breaks explicitly?
         catch (FusionException e)
         {
             // TODO optionally display the stack trace
