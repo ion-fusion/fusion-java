@@ -3,7 +3,6 @@
 
 package dev.ionfusion.runtime.embed;
 
-import dev.ionfusion.fusion.FusionRuntimeBuilder;
 import dev.ionfusion.runtime.base.FusionException;
 
 /**

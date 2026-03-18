@@ -3,8 +3,8 @@
 
 package dev.ionfusion.fusion;
 
-import static dev.ionfusion.fusion.FusionRuntimeBuilder.standard;
 import static dev.ionfusion.fusion.FusionString.unsafeStringToJavaString;
+import static dev.ionfusion.runtime.embed.FusionRuntimeBuilder.standard;
 import static dev.ionfusion.testing.ProjectLayout.fusionBootstrapDirectory;
 import static dev.ionfusion.testing.Reflect.assertEqualProperties;
 import static dev.ionfusion.testing.Reflect.getterFor;
@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.amazon.ion.IonCatalog;
 import com.amazon.ion.system.SimpleCatalog;
 import dev.ionfusion.runtime.embed.FusionRuntime;
+import dev.ionfusion.runtime.embed.FusionRuntimeBuilder;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -147,7 +148,7 @@ public class FusionRuntimeBuilderTest
     @Test
     public void testDefaultBuilder()
     {
-        FusionRuntimeBuilder b = standard();
+        StandardFusionRuntimeBuilder b = (StandardFusionRuntimeBuilder) standard();
         assertSame(b, b.mutable());
 
         assertEquals("/fusion", b.getDefaultLanguage());
@@ -427,7 +428,7 @@ public class FusionRuntimeBuilderTest
     {
         FusionRuntimeBuilder std = standard();
 
-        FusionRuntimeBuilder b = std.copy();
+        StandardFusionRuntimeBuilder b = (StandardFusionRuntimeBuilder) std.copy();
         b.setDocumenting(true);
         assertTrue(b.isDocumenting());
         assertCopiesAreEqual(b);
@@ -436,7 +437,9 @@ public class FusionRuntimeBuilderTest
     @Test
     public void testDocumentingImmutability()
     {
+        StandardFusionRuntimeBuilder immutable =
+            (StandardFusionRuntimeBuilder) standard().immutable();
         assertThrows(UnsupportedOperationException.class,
-                     () -> standard().immutable().setDocumenting(true));
+                     () -> immutable.setDocumenting(true));
     }
 }

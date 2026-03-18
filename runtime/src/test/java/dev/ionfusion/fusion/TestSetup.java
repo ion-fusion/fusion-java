@@ -6,6 +6,7 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.testing.ProjectLayout.fusionBootstrapDirectory;
 
 import dev.ionfusion.runtime.base.FusionException;
+import dev.ionfusion.runtime.embed.FusionRuntimeBuilder;
 import java.io.IOException;
 
 public class TestSetup

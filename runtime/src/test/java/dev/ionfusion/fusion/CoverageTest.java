@@ -133,10 +133,11 @@ public class CoverageTest
 
 
     @Override
-    protected FusionRuntimeBuilder runtimeBuilder()
+    protected StandardFusionRuntimeBuilder runtimeBuilder()
         throws FusionException
     {
-        FusionRuntimeBuilder b = super.runtimeBuilder();
+        StandardFusionRuntimeBuilder b =
+            (StandardFusionRuntimeBuilder) super.runtimeBuilder();
 
         b.setCoverageCollector(collector);
 

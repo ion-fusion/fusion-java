@@ -8,7 +8,7 @@
  * {@link dev.ionfusion.runtime.embed.FusionRuntime}. The runtime is a heavyweight
  * object, and most applications should create exactly one runtime at launch or on
  * demand. To acquire a runtime, you'll use a
- * {@link dev.ionfusion.fusion.FusionRuntimeBuilder}.
+ * {@link dev.ionfusion.runtime.embed.FusionRuntimeBuilder}.
  * <p>
  * From the runtime, you can then acquire one or more
  * {@link dev.ionfusion.runtime.embed.TopLevel}s. Each {@code TopLevel} instance

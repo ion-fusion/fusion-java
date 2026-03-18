@@ -32,7 +32,7 @@ final class StandardRuntime
     private final StandardTopLevel myTopLevel;
 
 
-    StandardRuntime(FusionRuntimeBuilder builder)
+    StandardRuntime(StandardFusionRuntimeBuilder builder)
         throws FusionInterrupt
     {
         IonSystem ionSystem =

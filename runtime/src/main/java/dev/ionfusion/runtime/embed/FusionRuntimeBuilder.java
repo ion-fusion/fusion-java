@@ -1,30 +1,17 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion;
-
-import static dev.ionfusion.runtime._private.cover.CoverageCollectorFactory.fromDirectory;
-import static dev.ionfusion.runtime._private.cover.CoverageConfiguration.forConfigFile;
-import static dev.ionfusion.runtime._private.util.PropertiesFiles.readProperties;
-import static dev.ionfusion.runtime.base.ModuleIdentity.isValidAbsoluteModulePath;
-import static java.nio.file.Files.isReadable;
-import static java.nio.file.Files.isRegularFile;
+package dev.ionfusion.runtime.embed;
 
 import com.amazon.ion.IonCatalog;
 import com.amazon.ion.system.SimpleCatalog;
-import dev.ionfusion.runtime._private.cover.CoverageCollector;
-import dev.ionfusion.runtime._private.cover.CoverageCollectorImpl;
-import dev.ionfusion.runtime._private.cover.CoverageConfiguration;
+import dev.ionfusion.fusion._Private_Trampoline;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.embed.FusionRuntime;
-import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Properties;
 
 /**
@@ -105,24 +92,19 @@ import java.util.Properties;
  * that can be independent of the coverage database.
  *
  */
-public class FusionRuntimeBuilder
+public interface FusionRuntimeBuilder
 {
     /**
      * The property used to configure the <a href="#coverage">code coverage
      * data directory</a>: {@value}.
      */
-    public static final String PROPERTY_COVERAGE_DATA_DIR =
-        "dev.ionfusion.fusion.coverage.DataDir";
+    String PROPERTY_COVERAGE_DATA_DIR = "dev.ionfusion.fusion.coverage.DataDir";
 
     /**
      * The property used to configure the extent of <a href="#coverage">code
      * coverage instrumentation</a>: {@value}.
      */
-    public static final String PROPERTY_COVERAGE_CONFIG =
-        "dev.ionfusion.fusion.coverage.Config";
-
-    private static final String STANDARD_DEFAULT_LANGUAGE = "/fusion";
-
+    String PROPERTY_COVERAGE_CONFIG   = "dev.ionfusion.fusion.coverage.Config";
 
     /**
      * The standard builder of {@link FusionRuntime}s, with all configuration
@@ -132,53 +114,19 @@ public class FusionRuntimeBuilder
      */
     public static FusionRuntimeBuilder standard()
     {
-        return new FusionRuntimeBuilder.Mutable();
+        return _Private_Trampoline.makeStandardRuntimeBuilder();
     }
 
 
     //=========================================================================
 
-
-    private OutputStream myCurrentOutputPort;
-    private File         myCurrentDirectory;
-    private File[]       myRepositoryDirectories;
-    private String       myDefaultLanguage = STANDARD_DEFAULT_LANGUAGE;
-    private IonCatalog   myDefaultIonCatalog;
-
-    private File                       myCoverageDataDirectory;
-    private Path                       myCoverageConfigFile;
-    private CoverageCollector          myCollector;
-
-    private boolean myDocumenting;
-
-
-    private FusionRuntimeBuilder() { }
-
-    private FusionRuntimeBuilder(FusionRuntimeBuilder that)
-    {
-        this.myCurrentOutputPort     = that.myCurrentOutputPort;
-        this.myCurrentDirectory      = that.myCurrentDirectory;
-        this.myRepositoryDirectories = that.myRepositoryDirectories;
-        this.myDefaultLanguage       = that.myDefaultLanguage;
-        this.myDefaultIonCatalog     = that.myDefaultIonCatalog;
-        this.myCoverageDataDirectory = that.myCoverageDataDirectory;
-        this.myCoverageConfigFile    = that.myCoverageConfigFile;
-        this.myCollector             = that.myCollector;
-        this.myDocumenting           = that.myDocumenting;
-    }
-
-
-    //=========================================================================
 
     /**
      * Creates a mutable copy of this builder.
      *
      * @return a new builder with the same configuration as {@code this}.
      */
-    public final FusionRuntimeBuilder copy()
-    {
-        return new FusionRuntimeBuilder.Mutable(this);
-    }
+    FusionRuntimeBuilder copy();
 
     /**
      * Returns an immutable builder configured exactly like this one.
@@ -186,10 +134,7 @@ public class FusionRuntimeBuilder
      * @return this instance, if immutable;
      * otherwise an immutable copy of this instance.
      */
-    public FusionRuntimeBuilder immutable()
-    {
-        return this;
-    }
+    FusionRuntimeBuilder immutable();
 
     /**
      * Returns a mutable builder configured exactly like this one.
@@ -197,15 +142,7 @@ public class FusionRuntimeBuilder
      * @return this instance, if mutable;
      * otherwise a mutable copy of this instance.
      */
-    public FusionRuntimeBuilder mutable()
-    {
-        return copy();
-    }
-
-    void mutationCheck()
-    {
-        throw new UnsupportedOperationException("This builder is immutable");
-    }
+    FusionRuntimeBuilder mutable();
 
 
     //=========================================================================
@@ -227,25 +164,7 @@ public class FusionRuntimeBuilder
      *
      * @throws IllegalArgumentException if there's a problem applying the properties.
      */
-    public FusionRuntimeBuilder withConfigProperties(Properties props)
-    {
-        FusionRuntimeBuilder b = this;
-
-        String path = props.getProperty(PROPERTY_COVERAGE_DATA_DIR);
-        if (path != null)
-        {
-            File f = new File(path);
-            b = b.withCoverageDataDirectory(f);
-        }
-
-        path = props.getProperty(PROPERTY_COVERAGE_CONFIG);
-        if (path != null)
-        {
-            b = b.withCoverageConfig(Paths.get(path));
-        }
-
-        return b;
-    }
+    FusionRuntimeBuilder withConfigProperties(Properties props);
 
 
     /**
@@ -266,14 +185,8 @@ public class FusionRuntimeBuilder
      * @throws IOException if there's a problem reading the resource.
      * @throws IllegalArgumentException if there's a problem applying the properties.
      */
-    public FusionRuntimeBuilder withConfigProperties(URL resource)
-        throws IOException
-    {
-        if (resource == null) return this;
-
-        Properties props = readProperties(resource);
-        return withConfigProperties(props);
-    }
+    FusionRuntimeBuilder withConfigProperties(URL resource)
+        throws IOException;
 
 
     /**
@@ -301,13 +214,9 @@ public class FusionRuntimeBuilder
      *
      * @see Class#getResource(String)
      */
-    public FusionRuntimeBuilder withConfigProperties(Class<?> classForLoading,
-                                                     String resourceName)
-        throws IOException
-    {
-        URL url = classForLoading.getResource(resourceName);
-        return withConfigProperties(url);
-    }
+    FusionRuntimeBuilder withConfigProperties(Class<?> classForLoading,
+                                              String resourceName)
+        throws IOException;
 
 
     //=========================================================================
@@ -323,10 +232,7 @@ public class FusionRuntimeBuilder
      * @see #setDefaultLanguage(String)
      * @see #withDefaultLanguage(String)
      */
-    public String getDefaultLanguage()
-    {
-        return myDefaultLanguage;
-    }
+    String getDefaultLanguage();
 
 
     /**
@@ -338,19 +244,7 @@ public class FusionRuntimeBuilder
      * @see #getDefaultLanguage()
      * @see #withDefaultLanguage(String)
      */
-    public void setDefaultLanguage(String absoluteModulePath)
-    {
-        mutationCheck();
-
-        if (! isValidAbsoluteModulePath(absoluteModulePath))
-        {
-            String message =
-                "Not a valid absolute module path: " + absoluteModulePath;
-            throw new IllegalArgumentException(message);
-        }
-
-        myDefaultLanguage = absoluteModulePath;
-    }
+    void setDefaultLanguage(String absoluteModulePath);
 
 
     /**
@@ -364,12 +258,7 @@ public class FusionRuntimeBuilder
      * @see #getDefaultLanguage()
      * @see #setDefaultLanguage(String)
      */
-    public FusionRuntimeBuilder withDefaultLanguage(String absoluteModulePath)
-    {
-        FusionRuntimeBuilder b = mutable();
-        b.setDefaultLanguage(absoluteModulePath);
-        return b;
-    }
+    FusionRuntimeBuilder withDefaultLanguage(String absoluteModulePath);
 
 
     //=========================================================================
@@ -385,10 +274,7 @@ public class FusionRuntimeBuilder
      * @see #setDefaultIonCatalog(IonCatalog)
      * @see #withDefaultIonCatalog(IonCatalog)
      */
-    public IonCatalog getDefaultIonCatalog()
-    {
-        return myDefaultIonCatalog;
-    }
+    IonCatalog getDefaultIonCatalog();
 
 
     /**
@@ -400,12 +286,7 @@ public class FusionRuntimeBuilder
      * @see #getDefaultIonCatalog()
      * @see #withDefaultIonCatalog(IonCatalog)
      */
-    public void setDefaultIonCatalog(IonCatalog catalog)
-    {
-        mutationCheck();
-
-        myDefaultIonCatalog = catalog;
-    }
+    void setDefaultIonCatalog(IonCatalog catalog);
 
 
     /**
@@ -420,12 +301,7 @@ public class FusionRuntimeBuilder
      * @see #getDefaultIonCatalog()
      * @see #setDefaultIonCatalog(IonCatalog)
      */
-    public FusionRuntimeBuilder withDefaultIonCatalog(IonCatalog catalog)
-    {
-        FusionRuntimeBuilder b = mutable();
-        b.setDefaultIonCatalog(catalog);
-        return b;
-    }
+    FusionRuntimeBuilder withDefaultIonCatalog(IonCatalog catalog);
 
 
     //=========================================================================
@@ -441,26 +317,18 @@ public class FusionRuntimeBuilder
      * @see #setInitialCurrentOutputPort(OutputStream)
      * @see #withInitialCurrentOutputPort(OutputStream)
      */
-    public OutputStream getInitialCurrentOutputPort()
-    {
-        return myCurrentOutputPort;
-    }
+    OutputStream getInitialCurrentOutputPort();
 
 
     /**
      * Sets the default output stream used by various output procedures.
      *
-     * @param out may be null, which causes the builder to use
-     * {@link System#out}.
+     * @param out may be null, which causes the builder to use {@link System#out}.
      *
      * @see #getInitialCurrentOutputPort()
      * @see #withInitialCurrentOutputPort(OutputStream)
      */
-    public void setInitialCurrentOutputPort(OutputStream out)
-    {
-        mutationCheck();
-        myCurrentOutputPort = out;
-    }
+    void setInitialCurrentOutputPort(OutputStream out);
 
 
     /**
@@ -475,12 +343,7 @@ public class FusionRuntimeBuilder
      * @see #getInitialCurrentOutputPort()
      * @see #setInitialCurrentOutputPort(OutputStream)
      */
-    public final FusionRuntimeBuilder withInitialCurrentOutputPort(OutputStream out)
-    {
-        FusionRuntimeBuilder b = mutable();
-        b.setInitialCurrentOutputPort(out);
-        return b;
-    }
+    FusionRuntimeBuilder withInitialCurrentOutputPort(OutputStream out);
 
 
     //=========================================================================
@@ -497,10 +360,7 @@ public class FusionRuntimeBuilder
      * @see #setInitialCurrentDirectory(File)
      * @see #withInitialCurrentDirectory(File)
      */
-    public File getInitialCurrentDirectory()
-    {
-        return myCurrentDirectory;
-    }
+    File getInitialCurrentDirectory();
 
 
     /**
@@ -515,26 +375,7 @@ public class FusionRuntimeBuilder
      * @see #getInitialCurrentDirectory()
      * @see #withInitialCurrentDirectory(File)
      */
-    public void setInitialCurrentDirectory(File directory)
-    {
-        mutationCheck();
-
-        if (directory != null)
-        {
-            if (! directory.isAbsolute())
-            {
-                directory = directory.getAbsoluteFile();
-            }
-
-            if (! directory.isDirectory())
-            {
-                String message = "Argument is not a directory: " + directory;
-                throw new IllegalArgumentException(message);
-            }
-        }
-
-        myCurrentDirectory = directory;
-    }
+    void setInitialCurrentDirectory(File directory);
 
 
     /**
@@ -551,16 +392,11 @@ public class FusionRuntimeBuilder
      * @see #getInitialCurrentDirectory()
      * @see #setInitialCurrentDirectory(File)
      */
-    public final FusionRuntimeBuilder
-    withInitialCurrentDirectory(File directory)
-    {
-        FusionRuntimeBuilder b = mutable();
-        b.setInitialCurrentDirectory(directory);
-        return b;
-    }
+    FusionRuntimeBuilder withInitialCurrentDirectory(File directory);
 
 
     //=========================================================================
+
 
     /**
      * Gets the directories from which Fusion modules can be loaded.
@@ -570,10 +406,7 @@ public class FusionRuntimeBuilder
      * @see #addRepositoryDirectory(File)
      * @see #withRepositoryDirectory(File)
      */
-    public final File[] getRepositoryDirectories()
-    {
-        return myRepositoryDirectories == null ? null : myRepositoryDirectories.clone();
-    }
+    File[] getRepositoryDirectories();
 
 
     /**
@@ -588,35 +421,7 @@ public class FusionRuntimeBuilder
      *
      * @see #withRepositoryDirectory(File)
      */
-    public final void addRepositoryDirectory(File directory)
-    {
-        mutationCheck();
-
-        File original = directory;
-
-        if (! directory.isAbsolute())
-        {
-            directory = directory.getAbsoluteFile();
-        }
-
-        if (! directory.isDirectory())
-        {
-           String message = "Repository is not a directory: " + original;
-           throw new IllegalArgumentException(message);
-        }
-
-        if (myRepositoryDirectories == null)
-        {
-            myRepositoryDirectories = new File[] { directory };
-        }
-        else
-        {
-            int len = myRepositoryDirectories.length;
-            myRepositoryDirectories =
-                Arrays.copyOf(myRepositoryDirectories, len + 1);
-            myRepositoryDirectories[len] = directory;
-        }
-    }
+    void addRepositoryDirectory(File directory);
 
 
     /**
@@ -632,12 +437,7 @@ public class FusionRuntimeBuilder
      *
      * @see #addRepositoryDirectory(File)
      */
-    public final FusionRuntimeBuilder withRepositoryDirectory(File directory)
-    {
-        FusionRuntimeBuilder b = mutable();
-        b.addRepositoryDirectory(directory);
-        return b;
-    }
+    FusionRuntimeBuilder withRepositoryDirectory(File directory);
 
 
     //=========================================================================
@@ -654,10 +454,7 @@ public class FusionRuntimeBuilder
      * @see #setCoverageDataDirectory(File)
      * @see #withCoverageDataDirectory(File)
      */
-    public File getCoverageDataDirectory()
-    {
-        return myCoverageDataDirectory;
-    }
+    File getCoverageDataDirectory();
 
 
     /**
@@ -675,28 +472,7 @@ public class FusionRuntimeBuilder
      * @see #getCoverageDataDirectory()
      * @see #withCoverageDataDirectory(File)
      */
-    public void setCoverageDataDirectory(File directory)
-    {
-        mutationCheck();
-
-        if (directory != null)
-        {
-            File original = directory;
-
-            if (! directory.isAbsolute())
-            {
-                directory = directory.getAbsoluteFile();
-            }
-
-            if (directory.exists() && ! directory.isDirectory())
-            {
-                String message = "Not a directory: " + original;
-                throw new IllegalArgumentException(message);
-            }
-        }
-
-        myCoverageDataDirectory = directory;
-    }
+    void setCoverageDataDirectory(File directory);
 
 
     /**
@@ -716,186 +492,17 @@ public class FusionRuntimeBuilder
      * @see #getCoverageDataDirectory()
      * @see #setCoverageDataDirectory(File)
      */
-    public final FusionRuntimeBuilder withCoverageDataDirectory(File directory)
-    {
-        FusionRuntimeBuilder b = mutable();
-        b.setCoverageDataDirectory(directory);
-        return b;
-    }
+    FusionRuntimeBuilder withCoverageDataDirectory(File directory);
 
 
-    public Path getCoverageConfig()
-    {
-        return myCoverageConfigFile;
-    }
+    Path getCoverageConfig();
 
-    public void setCoverageConfig(Path configFile)
-    {
-        mutationCheck();
+    void setCoverageConfig(Path configFile);
 
-        if (configFile != null)
-        {
-            Path original = configFile;
-
-            if (! configFile.isAbsolute())
-            {
-                configFile = configFile.toAbsolutePath();
-            }
-
-            if (! isRegularFile(configFile) || ! isReadable(configFile))
-            {
-                String message = "Not a readable file: " + original;
-                throw new IllegalArgumentException(message);
-            }
-        }
-
-        myCoverageConfigFile = configFile;
-    }
-
-    public final FusionRuntimeBuilder withCoverageConfig(Path configFile)
-    {
-        FusionRuntimeBuilder b = mutable();
-        b.setCoverageConfig(configFile);
-        return b;
-    }
-
-    //=========================================================================
-
-
-    /** NOT FOR APPLICATION USE */
-    boolean isDocumenting()
-    {
-        return myDocumenting;
-    }
-
-    /** NOT FOR APPLICATION USE */
-    void setDocumenting(boolean documenting)
-    {
-        mutationCheck();
-        myDocumenting = documenting;
-    }
-
-
-
-    /** NOT FOR APPLICATION USE */
-    CoverageCollector getCoverageCollector()
-    {
-        return myCollector;
-    }
-
-    /**
-     * NOT FOR APPLICATION USE!
-     * Used by unit tests to inject a mock collector.
-     */
-    void setCoverageCollector(CoverageCollector collector)
-    {
-        mutationCheck();
-        myCollector = collector;
-    }
+    FusionRuntimeBuilder withCoverageConfig(Path configFile);
 
 
     //=========================================================================
-
-
-    private FusionRuntimeBuilder fillDefaults()
-        throws IOException
-    {
-        // Ensure that we don't modify the user's builder.
-        FusionRuntimeBuilder b = copy();
-
-        if (b.getInitialCurrentOutputPort() == null)
-        {
-            b.setInitialCurrentOutputPort(System.out);
-        }
-
-        if (b.getInitialCurrentDirectory() == null)
-        {
-            String userDir = System.getProperty("user.dir", "");
-            if (userDir.isEmpty())
-            {
-                String message =
-                    "Unable to determine working directory: " +
-                    "the JDK system property user.dir is not set.";
-                throw new IllegalStateException(message);
-            }
-
-            // Don't change the caller's instance
-            b.setInitialCurrentDirectory(new File(userDir));
-        }
-
-        if (b.getCoverageCollector() == null)
-        {
-            if (b.getCoverageConfig() == null)
-            {
-                String property = PROPERTY_COVERAGE_CONFIG;
-                String path = System.getProperty(property);
-                if (path != null)
-                {
-                    Path file = Paths.get(path);
-                    if (! isRegularFile(file) || ! isReadable(file))                    {
-                        String message =
-                            "Value of system property " + property +
-                            " is not a readable file: " + path;
-                        throw new IllegalStateException(message);
-                    }
-
-                    b.setCoverageConfig(file);
-                }
-            }
-
-            if (b.myCoverageDataDirectory == null)
-            {
-                String property = PROPERTY_COVERAGE_DATA_DIR;
-                String path = System.getProperty(property);
-                if (path != null)
-                {
-                    File file = new File(path);
-                    if (file.exists() && ! file.isDirectory())
-                    {
-                        String message =
-                            "Value of system property " + property +
-                            " is not a directory: " + path;
-                        throw new IllegalStateException(message);
-                    }
-
-                    b.setCoverageDataDirectory(file);
-                }
-            }
-
-            // TODO Writing into a private coverageCollector property is weird.
-            //   This should move into build(), or in getCoverageCollector()?
-            //   Note that the property exists so tests can inject a mock.
-            if (b.myCoverageDataDirectory != null)
-            {
-                CoverageCollectorImpl c;
-
-                if (b.myCoverageConfigFile != null)
-                {
-                    CoverageConfiguration config = forConfigFile(b.myCoverageConfigFile);
-                    c = fromDirectory(config, b.myCoverageDataDirectory.toPath());
-                }
-                else
-                {
-                    c = fromDirectory(b.myCoverageDataDirectory.toPath());
-                }
-
-                // Register the active repositories with the collector.
-                // These are persisted in the coverage session, so the reporter
-                // can scan them and identify files that haven't been covered.
-                if (b.myRepositoryDirectories != null)
-                {
-                    for (File f : b.myRepositoryDirectories)
-                    {
-                        c.noteRepository(f);
-                    }
-                }
-
-                b.setCoverageCollector(c);
-            }
-        }
-
-        return b.immutable();
-    }
 
 
     /**
@@ -909,49 +516,6 @@ public class FusionRuntimeBuilder
      * incomplete, inconsistent, or otherwise unusable.
      * @throws FusionException if there's a problem bootstrapping the runtime.
      */
-    public FusionRuntime build()
-        throws IOException, IllegalStateException, FusionException
-    {
-        FusionRuntimeBuilder b = fillDefaults();
-
-        try
-        {
-            return new StandardRuntime(b);
-        }
-        catch (FusionInterrupt e)
-        {
-            throw new FusionInterruptedException(e);
-        }
-    }
-
-
-    //=========================================================================
-
-
-    private static final class Mutable extends FusionRuntimeBuilder
-    {
-        public Mutable() { }
-
-        public Mutable(FusionRuntimeBuilder that)
-        {
-            super(that);
-        }
-
-        @Override
-        public FusionRuntimeBuilder immutable()
-        {
-            return new FusionRuntimeBuilder(this);
-        }
-
-        @Override
-        public FusionRuntimeBuilder mutable()
-        {
-            return this;
-        }
-
-        @Override
-        void mutationCheck()
-        {
-        }
-    }
+    FusionRuntime build()
+        throws IOException, IllegalStateException, FusionException;
 }

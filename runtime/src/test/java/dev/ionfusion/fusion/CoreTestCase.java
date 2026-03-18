@@ -29,6 +29,7 @@ import com.amazon.ion.IonValue;
 import com.amazon.ion.system.IonSystemBuilder;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.embed.FusionRuntime;
+import dev.ionfusion.runtime.embed.FusionRuntimeBuilder;
 import dev.ionfusion.runtime.embed.TopLevel;
 import dev.ionfusion.testing.StdioTestCase;
 import java.io.IOException;

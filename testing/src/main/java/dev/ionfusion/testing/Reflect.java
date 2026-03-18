@@ -38,7 +38,9 @@ public class Reflect
         Class<?> c = o.getClass();
         try
         {
-            return c.getMethod(name, argTypes);
+            Method method = c.getMethod(name, argTypes);
+            method.setAccessible(true);
+            return method;
         }
         catch (NoSuchMethodException e)
         {
@@ -73,11 +75,12 @@ public class Reflect
         }
         catch (InvocationTargetException e)
         {
-            throw new AssertionError(e.getTargetException());
+            throw new AssertionError("Error invoking " + method.getName(),
+                                     e.getTargetException());
         }
         catch (IllegalAccessException e)
         {
-            throw new AssertionError(e);
+            throw new AssertionError("Cannot access " + method.getName(), e);
         }
     }
 
@@ -95,6 +98,7 @@ public class Reflect
             assertNotNull(readMethod,
                           "No public getter for property " + prop.getName() +
                           " on " + expected.getClass().getName());
+            readMethod.setAccessible(true);
 
             Object expectedPropertyValue = invoke(expected, readMethod);
             Object actualPropertyValue   = invoke(actual,   readMethod);

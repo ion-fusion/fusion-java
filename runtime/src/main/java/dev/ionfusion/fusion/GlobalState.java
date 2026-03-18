@@ -16,6 +16,7 @@ import dev.ionfusion.fusion.ModuleNamespace.ModuleDefinedBinding;
 import dev.ionfusion.runtime._private.cover.CoverageCollector;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
+import dev.ionfusion.runtime.embed.FusionRuntimeBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -80,7 +81,7 @@ final class GlobalState
 
 
     private GlobalState(IonSystem                  ionSystem,
-                        FusionRuntimeBuilder       builder,
+                        StandardFusionRuntimeBuilder builder,
                         IonReaderBuilder           ionReaderBuilder,
                         FileSystemSpecialist       fileSystemSpecialist,
                         ModuleInstance             kernel,
@@ -119,7 +120,7 @@ final class GlobalState
 
 
     static GlobalState initialize(IonSystem system,
-                                  FusionRuntimeBuilder builder,
+                                  StandardFusionRuntimeBuilder builder,
                                   ModuleRegistry registry,
                                   Namespace initialCurrentNamespace)
         throws FusionException

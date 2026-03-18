@@ -6,6 +6,7 @@ package dev.ionfusion.fusion;
 import dev.ionfusion.runtime._private.doc.ModuleDocs;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
+import dev.ionfusion.runtime.embed.FusionRuntimeBuilder;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.nio.file.Path;
 import java.util.function.Consumer;
@@ -18,11 +19,15 @@ public class _Private_Trampoline
 {
     private _Private_Trampoline() {}
 
+    public static FusionRuntimeBuilder makeStandardRuntimeBuilder()
+    {
+        return StandardFusionRuntimeBuilder.makeMutable();
+    }
 
     public static void setDocumenting(FusionRuntimeBuilder rb,
                                       boolean documenting)
     {
-        rb.setDocumenting(documenting);
+        ((StandardFusionRuntimeBuilder) rb).setDocumenting(documenting);
     }
 
 
