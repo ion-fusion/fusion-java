@@ -48,22 +48,12 @@ import java.util.Properties;
  *                            .build();
  *</pre>
  *
- * <h3 id="bootrepo">Bootstrap Repository (Deprecated)</h3>
- *
- * Previous releases of this package required configuring a bootstrap repository
- * housing the primary resources needed by the runtime.  This is no longer
- * needed.
- * <p>
- * If a bootstrap repository is configured, either explicitly via this class or
- * implicitly via the {@value #PROPERTY_BOOTSTRAP_REPOSITORY} system property,
- * that directory will instead be used as the first user repository.
- *
- * <h3>User Repositories</h3>
+ * <h3>Repositories</h3>
  *
  * The repositories containing application and library modules can be
  * configured via {@link #addRepositoryDirectory(File)}. This gives the runtime
  * additional places to look for modules and other resources. In general,
- * resources are discovered by searching the bootstrap repository first, then
+ * resources are discovered by searching the runtime repository first, then
  * searching other repositories in the order they were declared.
  *
  * <h3>Default Language</h3>
@@ -118,16 +108,6 @@ import java.util.Properties;
 public class FusionRuntimeBuilder
 {
     /**
-     * The property used to configure the <a href="#bootrepo">bootstrap
-     * repository</a>: {@value}.
-     *
-     * @deprecated Bootstrap configuration is no longer needed.
-     */
-    @Deprecated
-    public static final String PROPERTY_BOOTSTRAP_REPOSITORY =
-        "dev.ionfusion.fusion.BootstrapRepository";
-
-    /**
      * The property used to configure the <a href="#coverage">code coverage
      * data directory</a>: {@value}.
      */
@@ -161,7 +141,6 @@ public class FusionRuntimeBuilder
 
     private OutputStream myCurrentOutputPort;
     private File         myCurrentDirectory;
-    private File         myBootstrapRepository;
     private File[]       myRepositoryDirectories;
     private String       myDefaultLanguage = STANDARD_DEFAULT_LANGUAGE;
     private IonCatalog   myDefaultIonCatalog;
@@ -179,7 +158,6 @@ public class FusionRuntimeBuilder
     {
         this.myCurrentOutputPort     = that.myCurrentOutputPort;
         this.myCurrentDirectory      = that.myCurrentDirectory;
-        this.myBootstrapRepository   = that.myBootstrapRepository;
         this.myRepositoryDirectories = that.myRepositoryDirectories;
         this.myDefaultLanguage       = that.myDefaultLanguage;
         this.myDefaultIonCatalog     = that.myDefaultIonCatalog;
@@ -238,8 +216,6 @@ public class FusionRuntimeBuilder
      * <p>
      * These properties are observed:
      * <ul>
-     *   <li>{@value #PROPERTY_BOOTSTRAP_REPOSITORY} (deprecated)
-     *       invokes {@link #setBootstrapRepository(File)}.
      *   <li>{@value #PROPERTY_COVERAGE_DATA_DIR}
      *       invokes {@link #setCoverageDataDirectory(File)}.
      * </ul>
@@ -255,14 +231,7 @@ public class FusionRuntimeBuilder
     {
         FusionRuntimeBuilder b = this;
 
-        String path = props.getProperty(PROPERTY_BOOTSTRAP_REPOSITORY);
-        if (path != null)
-        {
-            File f = new File(path);
-            b = b.withBootstrapRepository(f);
-        }
-
-        path = props.getProperty(PROPERTY_COVERAGE_DATA_DIR);
+        String path = props.getProperty(PROPERTY_COVERAGE_DATA_DIR);
         if (path != null)
         {
             File f = new File(path);
@@ -285,8 +254,6 @@ public class FusionRuntimeBuilder
      * <p>
      * These properties are observed:
      * <ul>
-     *   <li>{@value #PROPERTY_BOOTSTRAP_REPOSITORY} (deprecated)
-     *       invokes {@link #setBootstrapRepository(File)}.
      *   <li>{@value #PROPERTY_COVERAGE_DATA_DIR}
      *       invokes {@link #setCoverageDataDirectory(File)}.
      * </ul>
@@ -319,8 +286,6 @@ public class FusionRuntimeBuilder
      * <p>
      * These properties are observed:
      * <ul>
-     *   <li>{@value #PROPERTY_BOOTSTRAP_REPOSITORY}
-     *       invokes {@link #setBootstrapRepository(File)}.
      *   <li>{@value #PROPERTY_COVERAGE_DATA_DIR}
      *       invokes {@link #setCoverageDataDirectory(File)}.
      * </ul>
@@ -349,7 +314,7 @@ public class FusionRuntimeBuilder
 
 
     /**
-     * Gets the default language used to bootstrap the runtime's
+     * Gets the default language used to initialize the runtime's
      * {@link TopLevel} namespaces.
      * The standard value of this property is {@code "/fusion"}.
      *
@@ -365,7 +330,7 @@ public class FusionRuntimeBuilder
 
 
     /**
-     * Sets the default language used to bootstrap the runtime's
+     * Sets the default language used to initialize the runtime's
      * {@link TopLevel} namespaces.
      *
      * @param absoluteModulePath identifies the language; must not be null.
@@ -389,7 +354,7 @@ public class FusionRuntimeBuilder
 
 
     /**
-     * Declares the default language used to bootstrap the runtime's
+     * Declares the default language used to initialize the runtime's
      * {@link TopLevel} namespaces.
      *
      * @param absoluteModulePath identifies the language; must not be null.
@@ -591,102 +556,6 @@ public class FusionRuntimeBuilder
     {
         FusionRuntimeBuilder b = mutable();
         b.setInitialCurrentDirectory(directory);
-        return b;
-    }
-
-
-    //=========================================================================
-
-
-    /**
-     * Gets the directory configured for use as the first user repository,
-     * independent of other calls to {@link #addRepositoryDirectory},
-     * {@link #withRepositoryDirectory}, and so on.
-     * By default, this property is null.
-     *
-     * @return the configured directory, or null if one has not been
-     * configured.
-     *
-     * @see #setBootstrapRepository(File)
-     * @see #withBootstrapRepository(File)
-     *
-     * @deprecated A bootstrap repository is no longer needed.
-     */
-    @Deprecated
-    public File getBootstrapRepository()
-    {
-        return myBootstrapRepository;
-    }
-
-
-    /**
-     * Sets the directory to be used as the first user repository.
-     *
-     * @param directory the desired repository.
-     * If a relative path is given, it is immediately resolved as per
-     * {@link File#getAbsolutePath()}.
-     * May be null to clear a previously configured directory.
-     *
-     * @throws UnsupportedOperationException if this is immutable.
-     * @throws IllegalArgumentException if the directory isn't a valid
-     * repository.
-     *
-     * @see #getBootstrapRepository()
-     * @see #withBootstrapRepository(File)
-     *
-     * @deprecated A bootstrap repository is no longer needed.
-     *   Use {@link #addRepositoryDirectory(File)} instead.
-     */
-    @Deprecated
-    public void setBootstrapRepository(File directory)
-    {
-        mutationCheck();
-
-        if (directory != null)
-        {
-            File original = directory;
-
-            if (! directory.isAbsolute())
-            {
-                directory = directory.getAbsoluteFile();
-            }
-
-            if (! directory.isDirectory())
-            {
-                String message = "Not a directory: " + original;
-                throw new IllegalArgumentException(message);
-            }
-        }
-
-        myBootstrapRepository = directory;
-    }
-
-
-    /**
-     * Declares the directory to be used as the first user repository,
-     * returning a new mutable builder if this is immutable.
-     *
-     * @param directory the desired repository.
-     * If a relative path is given, it is immediately resolved as per
-     * {@link File#getAbsolutePath()}.
-     * May be null to clear a previously configured directory.
-     *
-     * @return this builder, if it's mutable; otherwise a new mutable builder.
-     *
-     * @throws IllegalArgumentException if the directory isn't a valid
-     * repository.
-     *
-     * @see #getBootstrapRepository()
-     * @see #setBootstrapRepository(File)
-     *
-     * @deprecated A bootstrap repository is no longer needed.
-     *   Use {@link #withRepositoryDirectory(File)} instead.
-     */
-    @Deprecated
-    public final FusionRuntimeBuilder withBootstrapRepository(File directory)
-    {
-        FusionRuntimeBuilder b = mutable();
-        b.setBootstrapRepository(directory);
         return b;
     }
 
@@ -941,27 +810,6 @@ public class FusionRuntimeBuilder
             b.setInitialCurrentDirectory(new File(userDir));
         }
 
-        if (b.getBootstrapRepository() == null)
-        {
-            String property = PROPERTY_BOOTSTRAP_REPOSITORY;
-            String bootstrap = System.getProperty(property);
-            if (bootstrap != null)
-            {
-                File file = new File(bootstrap);
-                // Directory-ness is verified below by setBootstrapRepository,
-                // but we want to include the property in the error message.
-                if (! file.isDirectory())
-                {
-                    String message =
-                        "Value of system property " + property +
-                        " is not a directory: " + bootstrap;
-                    throw new IllegalStateException(message);
-                }
-
-                b.setBootstrapRepository(file);
-            }
-        }
-
         if (b.getCoverageCollector() == null)
         {
             if (b.getCoverageConfig() == null)
@@ -1021,11 +869,6 @@ public class FusionRuntimeBuilder
                 // Register the active repositories with the collector.
                 // These are persisted in the coverage session, so the reporter
                 // can scan them and identify files that haven't been covered.
-                if (b.getBootstrapRepository() != null)
-                {
-                    c.noteRepository(b.getBootstrapRepository());
-                }
-
                 if (b.myRepositoryDirectories != null)
                 {
                     for (File f : b.myRepositoryDirectories)
@@ -1081,17 +924,9 @@ public class FusionRuntimeBuilder
 
         // When our own unit tests are running in an IDE, this is nonfunctional;
         // we rely on the test setup configuring the bootstrap explicitly.
-        // TODO Need a better way to handle this for our own test cases so we
-        //   can delete the bootstrap repo configuration point.
+        //   See TestSetup and CliTestCase
         repos.add(new ClassLoaderModuleRepository(getClass().getClassLoader(),
                                                   "FUSION-REPO"));
-
-        // This supports legacy cases commingling user code with the bootstrap
-        // and that only configure the bootstrap.
-        if (myBootstrapRepository != null)
-        {
-            repos.add(new FileSystemModuleRepository(myBootstrapRepository));
-        }
 
         if (myRepositoryDirectories != null)
         {

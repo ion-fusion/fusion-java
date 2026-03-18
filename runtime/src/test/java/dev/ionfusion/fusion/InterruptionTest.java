@@ -109,7 +109,7 @@ public class InterruptionTest
     public void interruptMakeTopLevel()
         throws Exception
     {
-        // Bootstrap our FusionRuntime with the bare minimum.
+        // Start with a tiny dialect:
         runtimeBuilder().setDefaultLanguage("/fusion/private/kernel");
 
         EvaluationTask task = new EvaluationTask()

@@ -59,7 +59,7 @@ import dev.ionfusion.runtime.base.FusionException;
 public interface SandboxBuilder
 {
     /**
-     * Declares the language used to bootstrap the sandbox namespace.
+     * Declares the language used to initialize the sandbox namespace.
      * This must be provided before calling {@link #build()}.
      *
      * @param absoluteModulePath identifies the language; must not be null.
@@ -88,7 +88,7 @@ public interface SandboxBuilder
      *
      * @throws IllegalStateException if the builder's configuration is
      * incomplete, inconsistent, or otherwise unusable.
-     * @throws FusionException if there's a problem bootstrapping the sandbox.
+     * @throws FusionException if there's a problem creating the sandbox.
      */
     TopLevel build()
         throws IllegalStateException, FusionException;

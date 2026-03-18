@@ -63,7 +63,7 @@ public interface FusionRuntime
      * state, so applications that require isolated state must create
      * additional {@link TopLevel}s via {@link #makeTopLevel()}.
      * <p>
-     * The default {@link TopLevel} is bootstrapped with bindings from this
+     * The default {@link TopLevel} is initialized with bindings from this
      * runtime's default language.
      *
      * @return not null.
@@ -77,7 +77,7 @@ public interface FusionRuntime
 
 
     /**
-     * Returns a fresh {@link TopLevel} instance, bootstrapped with this
+     * Returns a fresh {@link TopLevel} instance, initialized with this
      * runtime's default language.
      *
      * @return not null.

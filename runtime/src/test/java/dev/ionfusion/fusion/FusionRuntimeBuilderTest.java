@@ -46,7 +46,7 @@ public class FusionRuntimeBuilderTest
     private FusionRuntime build(FusionRuntimeBuilder b)
         throws Exception
     {
-        b = b.withBootstrapRepository(fusionBootstrapDirectory().toFile());
+        b = b.withRepositoryDirectory(fusionBootstrapDirectory().toFile());
         return b.build();
     }
 
@@ -153,7 +153,6 @@ public class FusionRuntimeBuilderTest
         assertEquals("/fusion", b.getDefaultLanguage());
         assertNull(b.getInitialCurrentOutputPort());
         assertNull(b.getInitialCurrentDirectory());
-        assertNull(b.getBootstrapRepository());
         assertNull(b.getCoverageDataDirectory());
         assertNull(b.getCoverageCollector());
         assertFalse(b.isDocumenting());
@@ -374,47 +373,6 @@ public class FusionRuntimeBuilderTest
         assertThrows(UnsupportedOperationException.class,
                      () -> standard().immutable()
                                      .setInitialCurrentDirectory(tmpDir));
-    }
-
-
-    //========================================================================
-
-
-    private void changeBootstrapRepository(FusionRuntimeBuilder orig, File dir)
-    {
-        changeProperty(orig, "BootstrapRepository", File.class,
-                       dir, dir.getAbsoluteFile());
-    }
-
-
-    @Test
-    public void testSetBootstrapRepository()
-    {
-        changeBootstrapRepository(standard(), fusionBootstrapDirectory().toFile());
-    }
-
-
-    @Test
-    public void testBootstrapRepositoryDoesNotExist()
-    {
-        assertThrows(IllegalArgumentException.class,
-                     () -> standard().setBootstrapRepository(noSuchFile()));
-    }
-
-
-    @Test
-    public void testBootstrapRepositoryIsNormalFile()
-    {
-        assertThrows(IllegalArgumentException.class,
-                     () -> standard().setBootstrapRepository(normalFile()));
-    }
-
-    @Test
-    public void testBootstrapRepositoryImmutability()
-    {
-        assertThrows(UnsupportedOperationException.class,
-                     () -> standard().immutable()
-                                     .setBootstrapRepository(tmpDir));
     }
 
 

@@ -3,8 +3,9 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.testing.ProjectLayout.fusionBootstrapDirectory;
+
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.testing.ProjectLayout;
 import java.io.IOException;
 
 public class TestSetup
@@ -19,11 +20,11 @@ public class TestSetup
     {
         FusionRuntimeBuilder b = FusionRuntimeBuilder.standard();
 
-        // This allows tests to run in an IDE, so that we don't have to copy the
+        // This allows tests to run in an IDE so that we don't have to copy the
         // bootstrap repo into the classpath.  In scripted builds, this has no
         // effect since the classpath includes the code, which will shadow the
         // content of this directory.
-        b = b.withBootstrapRepository(ProjectLayout.fusionBootstrapDirectory().toFile());
+        b = b.withRepositoryDirectory(fusionBootstrapDirectory().toFile());
 
         // Enable this to have coverage collected during an IDE run.
 //      b = b.withCoverageDataDirectory(new File("build/private/fcoverage"));

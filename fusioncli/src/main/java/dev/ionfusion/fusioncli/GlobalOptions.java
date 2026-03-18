@@ -28,11 +28,6 @@ final class GlobalOptions
         + "Global Options\n"
         + "==============\n"
         + "\n"
-        + "--bootstrapRepository DIR\n"
-        + "\n"
-        + "  DEPRECATED: a bootstrap repository is no longer needed.\n"
-        + "  If used, the DIR is instead treated as the first user repository.\n"
-        + "\n"
         + "--repositories DIR" + File.pathSeparator + "DIR...\n"
         + "\n"
         + "  Repositories of Fusion modules and resources. This option can be given more\n"
@@ -51,7 +46,6 @@ final class GlobalOptions
     private final PrintStream myStdout;
     private final PrintStream myStderr;
 
-    private String          myBootstrapPath;
     private ArrayList<File> myRepositories;
     private ArrayList<File> myCatalogs;
     private boolean         myDocsEnabled;
@@ -78,13 +72,6 @@ final class GlobalOptions
     PrintStream stderr()
     {
         return myStderr;
-    }
-
-
-    public void setBootstrapRepository(String path)
-    {
-        myStderr.println("WARNING: The --boostrapRepository option is deprecated.");
-        myBootstrapPath = path;
     }
 
 
@@ -132,26 +119,6 @@ final class GlobalOptions
         throws UsageException
     {
         FusionRuntimeBuilder builder = FusionRuntimeBuilder.standard();
-
-        // TODO The CLI should not allow setting a bootstrap repo.
-        //   For now, we assume this option could be in use where the given repo
-        //   has both the bootstrap and user code, so we treat this as if it
-        //   were the first user repo.
-
-        if (myBootstrapPath != null)
-        {
-            File dir = new File(myBootstrapPath);
-
-            try
-            {
-                builder.addRepositoryDirectory(dir);
-            }
-            catch (IllegalArgumentException e)
-            {
-                String message = "bootstrapRepository: " + e.getMessage();
-                throw new UsageException(message);
-            }
-        }
 
         if (myRepositories != null)
         {
