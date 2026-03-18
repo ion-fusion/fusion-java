@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion;
+package dev.ionfusion.runtime._private.cover;
 
 import dev.ionfusion.runtime.base.SourceLocation;
 import java.io.IOException;
@@ -19,7 +19,7 @@ import java.io.IOException;
  * At run time, {@link #locationEvaluated(SourceLocation)} is called each time a
  * coverable code point is (about to be) evaluated.
  */
-public interface _Private_CoverageCollector
+public interface CoverageCollector
 {
     /**
      * Determines if the code at some location should be instrumented.

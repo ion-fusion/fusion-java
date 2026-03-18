@@ -11,6 +11,7 @@ import static dev.ionfusion.runtime._private.util.Ordinals.friendlyIndex;
 import static dev.ionfusion.runtime.base.ModuleIdentity.isValidAbsoluteModulePath;
 
 import com.amazon.ion.IonReader;
+import dev.ionfusion.runtime._private.cover.CoverageCollector;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import dev.ionfusion.runtime.base.SourceName;
@@ -31,7 +32,7 @@ final class StandardTopLevel
                      Object... continuationMarks)
         throws FusionInterrupt, FusionException
     {
-        _Private_CoverageCollector collector = globalState.myCoverageCollector;
+        CoverageCollector collector = globalState.myCoverageCollector;
         Evaluator eval = (collector == null
                             ? new Evaluator(globalState)
                             : new CoverageEvaluator(globalState, collector));

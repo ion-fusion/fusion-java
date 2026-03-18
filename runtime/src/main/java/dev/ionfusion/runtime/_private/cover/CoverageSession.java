@@ -6,7 +6,6 @@ package dev.ionfusion.runtime._private.cover;
 import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.createTempFile;
 
-import dev.ionfusion.fusion._Private_CoverageCollector;
 import dev.ionfusion.runtime._private.util.Flusher;
 import dev.ionfusion.runtime._private.util.InternMap;
 import dev.ionfusion.runtime.base.SourceLocation;
@@ -21,7 +20,7 @@ import java.util.Objects;
  * flush their database to disk when they are garbage-collected or when the JVM exits.
  */
 public class CoverageSession
-    implements _Private_CoverageCollector
+    implements CoverageCollector
 {
     private static final Flusher ourFlusher = new Flusher("Fusion coverage session flusher");
 

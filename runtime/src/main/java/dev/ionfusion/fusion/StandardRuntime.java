@@ -13,6 +13,7 @@ import com.amazon.ion.IonSystem;
 import com.amazon.ion.IonValue;
 import com.amazon.ion.ValueFactory;
 import com.amazon.ion.system.IonSystemBuilder;
+import dev.ionfusion.runtime._private.cover.CoverageCollector;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import dev.ionfusion.runtime.embed.FusionRuntime;
@@ -86,7 +87,7 @@ final class StandardRuntime
     }
 
     // Not public
-    _Private_CoverageCollector getCoverageCollector()
+    CoverageCollector getCoverageCollector()
     {
         return myGlobalState.myCoverageCollector;
     }

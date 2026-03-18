@@ -6,6 +6,7 @@ package dev.ionfusion.fusion;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dev.ionfusion.runtime._private.cover.CoverageCollector;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.SourceLocation;
 import dev.ionfusion.runtime.base.SourceName;
@@ -21,7 +22,7 @@ public class CoverageTest
     extends CoreTestCase
 {
     static class Collector
-        implements _Private_CoverageCollector
+        implements CoverageCollector
     {
         boolean instrumentOnlyLineOne = false;
 

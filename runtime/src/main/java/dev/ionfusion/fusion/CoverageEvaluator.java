@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion;
 
+import dev.ionfusion.runtime._private.cover.CoverageCollector;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.SourceLocation;
 
@@ -12,10 +13,10 @@ import dev.ionfusion.runtime.base.SourceLocation;
 final class CoverageEvaluator
     extends Evaluator
 {
-    private final _Private_CoverageCollector myCollector;
+    private final CoverageCollector myCollector;
 
     CoverageEvaluator(GlobalState globalState,
-                      _Private_CoverageCollector collector)
+                      CoverageCollector collector)
     {
         super(globalState);
         myCollector = collector;
@@ -76,7 +77,7 @@ final class CoverageEvaluator
 
 
     /**
-     * Decorator that notifies the {@link _Private_CoverageCollector} when a
+     * Decorator that notifies the {@link CoverageCollector} when a
      * form has been evaluated.
      */
     private static final class CoverageCompiledForm
@@ -96,8 +97,7 @@ final class CoverageEvaluator
         public Object doEval(Evaluator eval, Store store)
             throws FusionException
         {
-            _Private_CoverageCollector collector =
-                ((CoverageEvaluator) eval).myCollector;
+            CoverageCollector collector = ((CoverageEvaluator) eval).myCollector;
             collector.locationEvaluated(myLocation);
 
             // TODO Eliminate tail-call?

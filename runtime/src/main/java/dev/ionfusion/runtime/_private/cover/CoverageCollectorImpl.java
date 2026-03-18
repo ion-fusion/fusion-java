@@ -3,7 +3,6 @@
 
 package dev.ionfusion.runtime._private.cover;
 
-import dev.ionfusion.fusion._Private_CoverageCollector;
 import dev.ionfusion.runtime.base.SourceLocation;
 import dev.ionfusion.runtime.embed.FusionRuntime;
 import java.io.File;
@@ -24,7 +23,7 @@ import java.io.IOException;
  * @see CoverageConfiguration
  */
 public final class CoverageCollectorImpl
-    implements _Private_CoverageCollector
+    implements CoverageCollector
 {
     private final CoverageConfiguration myConfig;
 

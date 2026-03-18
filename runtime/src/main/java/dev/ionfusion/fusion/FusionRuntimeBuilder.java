@@ -12,6 +12,7 @@ import static java.nio.file.Files.isRegularFile;
 
 import com.amazon.ion.IonCatalog;
 import com.amazon.ion.system.SimpleCatalog;
+import dev.ionfusion.runtime._private.cover.CoverageCollector;
 import dev.ionfusion.runtime._private.cover.CoverageCollectorImpl;
 import dev.ionfusion.runtime._private.cover.CoverageConfiguration;
 import dev.ionfusion.runtime.base.FusionException;
@@ -147,7 +148,7 @@ public class FusionRuntimeBuilder
 
     private File                       myCoverageDataDirectory;
     private Path                       myCoverageConfigFile;
-    private _Private_CoverageCollector myCollector;
+    private CoverageCollector          myCollector;
 
     private boolean myDocumenting;
 
@@ -765,7 +766,7 @@ public class FusionRuntimeBuilder
 
 
     /** NOT FOR APPLICATION USE */
-    _Private_CoverageCollector getCoverageCollector()
+    CoverageCollector getCoverageCollector()
     {
         return myCollector;
     }
@@ -774,7 +775,7 @@ public class FusionRuntimeBuilder
      * NOT FOR APPLICATION USE!
      * Used by unit tests to inject a mock collector.
      */
-    void setCoverageCollector(_Private_CoverageCollector collector)
+    void setCoverageCollector(CoverageCollector collector)
     {
         mutationCheck();
         myCollector = collector;

@@ -13,6 +13,7 @@ import com.amazon.ion.IonSystem;
 import com.amazon.ion.system.IonReaderBuilder;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.ModuleNamespace.ModuleDefinedBinding;
+import dev.ionfusion.runtime._private.cover.CoverageCollector;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.io.IOException;
@@ -49,7 +50,7 @@ final class GlobalState
     final ModuleInstance             myKernelModule;
     final ModuleNameResolver         myModuleNameResolver;
     final LoadHandler                myLoadHandler;
-    final _Private_CoverageCollector myCoverageCollector;
+    final CoverageCollector          myCoverageCollector;
 
     final DynamicParameter myCollectDocsParam;
     final DynamicParameter myCurrentIonReaderParam;
