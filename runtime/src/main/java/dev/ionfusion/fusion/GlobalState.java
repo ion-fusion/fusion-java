@@ -15,8 +15,10 @@ import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.ModuleNamespace.ModuleDefinedBinding;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 /**
  * The core set of objects from that are needed by other parts of the
@@ -154,7 +156,7 @@ final class GlobalState
                                    currentLoadRelativeDirectory,
                                    currentDirectory,
                                    currentModuleDeclareName,
-                                   builder.buildModuleRepositories());
+                                   makeRepositories(builder));
 
         ModuleBuilderImpl ns =
             new ModuleBuilderImpl(resolver, registry, KERNEL_MODULE_IDENTITY,
@@ -192,6 +194,29 @@ final class GlobalState
         GlobalState globals =
             new GlobalState(system, builder, readerBuilder, fs, kernel, resolver, loadHandler);
         return globals;
+    }
+
+
+    private static ModuleRepository[] makeRepositories(FusionRuntimeBuilder builder)
+    {
+        ArrayList<ModuleRepository> repos = new ArrayList<>();
+
+        // When our own unit tests are running in an IDE, this is nonfunctional;
+        // we rely on the test setup configuring the bootstrap explicitly.
+        //   See TestSetup and CliTestCase
+        repos.add(new ClassLoaderModuleRepository(GlobalState.class.getClassLoader(),
+                                                  "FUSION-REPO"));
+
+        File[] dirs = builder.getRepositoryDirectories();
+        if (dirs != null)
+        {
+            for (File f : dirs)
+            {
+                repos.add(new FileSystemModuleRepository(f.toPath()));
+            }
+        }
+
+        return repos.toArray(new ModuleRepository[0]);
     }
 
 

@@ -23,7 +23,6 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -562,6 +561,19 @@ public class FusionRuntimeBuilder
 
     //=========================================================================
 
+    /**
+     * Gets the directories from which Fusion modules can be loaded.
+     *
+     * @return the array of directories, or null if none are configured.
+     *
+     * @see #addRepositoryDirectory(File)
+     * @see #withRepositoryDirectory(File)
+     */
+    public final File[] getRepositoryDirectories()
+    {
+        return myRepositoryDirectories == null ? null : myRepositoryDirectories.clone();
+    }
+
 
     /**
      * Declares a repository from which Fusion modules are loaded.
@@ -909,34 +921,6 @@ public class FusionRuntimeBuilder
         {
             throw new FusionInterruptedException(e);
         }
-    }
-
-
-    /**
-     * NOT PUBLIC!
-     *
-     * @throws IllegalStateException if the builder's configuration is
-     * incomplete, inconsistent, or otherwise unusable.
-     */
-    ModuleRepository[] buildModuleRepositories()
-    {
-        ArrayList<ModuleRepository> repos = new ArrayList<>();
-
-        // When our own unit tests are running in an IDE, this is nonfunctional;
-        // we rely on the test setup configuring the bootstrap explicitly.
-        //   See TestSetup and CliTestCase
-        repos.add(new ClassLoaderModuleRepository(getClass().getClassLoader(),
-                                                  "FUSION-REPO"));
-
-        if (myRepositoryDirectories != null)
-        {
-            for (File f : myRepositoryDirectories)
-            {
-                repos.add(new FileSystemModuleRepository(f.toPath()));
-            }
-        }
-
-        return repos.toArray(new ModuleRepository[0]);
     }
 
 
