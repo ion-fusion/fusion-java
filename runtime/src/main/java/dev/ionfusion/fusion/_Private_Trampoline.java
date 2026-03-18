@@ -31,7 +31,7 @@ public class _Private_Trampoline
                                                    Consumer<ModuleIdentity> results)
         throws FusionException
     {
-        ModuleRepository repo = new FileSystemModuleRepository(repoDir.toFile());
+        ModuleRepository repo = new FileSystemModuleRepository(repoDir);
         repo.collectModules(selector, results);
     }
 

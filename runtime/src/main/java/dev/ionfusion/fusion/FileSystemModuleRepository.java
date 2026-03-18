@@ -5,10 +5,12 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.runtime.base.ModuleIdentity.isValidModuleName;
 import static dev.ionfusion.runtime.base.SourceName.FUSION_SOURCE_EXTENSION;
+import static java.nio.file.Files.isDirectory;
 
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -16,25 +18,25 @@ import java.util.function.Predicate;
 final class FileSystemModuleRepository
     extends ModuleRepository
 {
-    private final File myRepoDir;
+    private final Path myRepoDir;
     private final File mySrcDir;
 
     /**
      * @param repoDir is converted to absolute if it's not already.
      */
-    FileSystemModuleRepository(File repoDir)
+    FileSystemModuleRepository(Path repoDir)
     {
-        myRepoDir = repoDir.getAbsoluteFile();
+        myRepoDir = repoDir.normalize().toAbsolutePath();
 
-        File src = new File(repoDir, "modules");
-        mySrcDir = (src.isDirectory() ? src : null);
+        Path modules = myRepoDir.resolve("modules");
+        mySrcDir = (isDirectory(modules) ? modules.toFile() : null);
     }
 
 
     @Override
     String identify()
     {
-        return myRepoDir.getPath();
+        return myRepoDir.toString();
     }
 
 

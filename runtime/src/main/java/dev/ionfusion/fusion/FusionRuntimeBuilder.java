@@ -932,7 +932,7 @@ public class FusionRuntimeBuilder
         {
             for (File f : myRepositoryDirectories)
             {
-                repos.add(new FileSystemModuleRepository(f));
+                repos.add(new FileSystemModuleRepository(f.toPath()));
             }
         }
 

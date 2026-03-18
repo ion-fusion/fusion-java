@@ -363,6 +363,7 @@ public final class CoverageReportWriter
         if (file != null)
         {
             resource = myRelativeNamesForSources.get(file);
+            assert resource != null : "no relative name for " + file;
         }
         else
         {
