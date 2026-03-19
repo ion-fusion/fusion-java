@@ -5,6 +5,7 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionIo.safeWrite;
 import static dev.ionfusion.fusion.FusionNumber.checkIntArgToJavaInt;
+import static dev.ionfusion.fusion.FusionSyntax.checkSyntaxContainerArg;
 import static dev.ionfusion.fusion.FusionText.checkRequiredTextArg;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.runtime._private.util.Ordinals.writeFriendlyIndex;
@@ -19,7 +20,7 @@ final class SyntaxGetProc
         throws FusionException
     {
         checkArityAtLeast(eval, 1, args);
-        SyntaxContainer stx = checkSyntaxContainerArg(eval, 0, args);
+        SyntaxContainer stx = checkSyntaxContainerArg(eval, this, 0, args);
         SyntaxValue value = stx;
 
         final int lastArg = args.length - 1;

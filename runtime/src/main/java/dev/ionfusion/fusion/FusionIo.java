@@ -6,6 +6,7 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionBool.makeBool;
 import static dev.ionfusion.fusion.FusionLob.isLob;
 import static dev.ionfusion.fusion.FusionLob.unsafeLobBytesNoCopy;
+import static dev.ionfusion.fusion.FusionProcedure.checkRequiredProcedureArg;
 import static dev.ionfusion.fusion.FusionString.checkNonEmptyStringArg;
 import static dev.ionfusion.fusion.FusionString.checkRequiredStringArg;
 import static dev.ionfusion.fusion.FusionString.makeString;
@@ -879,7 +880,7 @@ public final class FusionIo
         {
             checkArityExact(eval, 2, args);
 
-            Procedure thunk = checkProcArg(eval, 1, args);
+            Procedure thunk = checkRequiredProcedureArg(eval, this, 1, args);
             // TODO check thunk arity
             //  https://github.com/ion-fusion/fusion-java/issues/76
 

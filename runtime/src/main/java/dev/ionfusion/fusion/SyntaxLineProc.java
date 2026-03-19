@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionNumber.makeInt;
+import static dev.ionfusion.fusion.FusionSyntax.checkSyntaxArg;
 
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.SourceLocation;
@@ -16,7 +17,7 @@ class SyntaxLineProc
     Object doApply(Evaluator eval, Object arg)
         throws FusionException
     {
-        SyntaxValue stx = checkSyntaxArg(eval, 0, arg);
+        SyntaxValue stx = checkSyntaxArg(eval, this, 0, arg);
         SourceLocation location = stx.getLocation();
         if (location != null)
         {

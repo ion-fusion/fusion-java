@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionIo.safeDisplayManyToString;
+import static dev.ionfusion.fusion.FusionSyntax.checkSyntaxArg;
 import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 
 import dev.ionfusion.runtime.base.FusionException;
@@ -19,7 +20,7 @@ final class WrongSyntaxProc
         throws FusionException
     {
         checkArityAtLeast(eval, 1, args);
-        SyntaxValue stx = checkSyntaxArg(eval, 0, args);
+        SyntaxValue stx = checkSyntaxArg(eval, this, 0, args);
 
         String name = null; // TODO infer name
         String message = safeDisplayManyToString(eval, args, 1);

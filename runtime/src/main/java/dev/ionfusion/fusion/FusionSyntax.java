@@ -153,13 +153,8 @@ final class FusionSyntax
     //========================================================================
     // Procedure Helpers
 
-
-    /**
-     * @param expectation must not be null.
-     */
     static SyntaxValue checkSyntaxArg(Evaluator eval,
                                       Procedure who,
-                                      String    expectation,
                                       int       argNum,
                                       Object... args)
         throws FusionException
@@ -170,7 +165,7 @@ final class FusionSyntax
             return (SyntaxValue) arg;
         }
 
-        throw who.argError(eval, expectation, argNum, args);
+        throw who.argError(eval, "syntax object", argNum, args);
     }
 
 
@@ -191,6 +186,47 @@ final class FusionSyntax
         }
 
         throw who.argError(eval, expectation, argNum, args);
+    }
+
+
+
+    /**
+     * Accepts syntax values wrapping containers, including {@code null.list},
+     * {@code null.sexp}, and {@code null.struct}.
+     */
+    static SyntaxContainer checkSyntaxContainerArg(Evaluator eval,
+                                                   Procedure who,
+                                                   int       argNum,
+                                                   Object... args)
+        throws FusionException
+    {
+        Object arg = args[argNum];
+        if (arg instanceof SyntaxContainer)
+        {
+            return (SyntaxContainer) arg;
+        }
+
+        throw who.argError(eval, "syntax list, sexp, or struct", argNum, args);
+    }
+
+
+    /**
+     * Accepts syntax values wrapping sequences, including {@code null.list} and
+     * {@code null.sexp}.
+     */
+    static SyntaxSequence checkSyntaxSequenceArg(Evaluator eval,
+                                                 Procedure who,
+                                                 int       argNum,
+                                                 Object... args)
+        throws FusionException
+    {
+        Object arg = args[argNum];
+        if (arg instanceof SyntaxSequence)
+        {
+            return (SyntaxSequence) arg;
+        }
+
+        throw who.argError(eval, "syntax list or sexp", argNum, args);
     }
 
 
@@ -231,7 +267,7 @@ final class FusionSyntax
             throws FusionException
         {
             checkArityExact(eval, 1, args);
-            SyntaxValue stx = checkSyntaxArg(eval, 0, args);
+            SyntaxValue stx = checkSyntaxArg(eval, this, 0, args);
             return stx.syntaxToDatum(eval);
         }
     }
@@ -245,7 +281,7 @@ final class FusionSyntax
             throws FusionException
         {
             checkArityExact(eval, 1, args);
-            SyntaxValue stx = checkSyntaxArg(eval, 0, args);
+            SyntaxValue stx = checkSyntaxArg(eval, this, 0, args);
             return stx.unwrap(eval);
         }
     }
@@ -260,8 +296,7 @@ final class FusionSyntax
         {
             checkArityRange(eval, 2, 3, args);
 
-            SyntaxValue stx =
-                FusionSyntax.checkSyntaxArg(eval, this, "syntax object", 0, args);
+            SyntaxValue stx = checkSyntaxArg(eval, this, 0, args);
 
             if (args.length == 2)
             {
@@ -284,10 +319,8 @@ final class FusionSyntax
         {
             checkArityExact(eval, 3, args);
 
-            SyntaxValue newStx =
-                FusionSyntax.checkSyntaxArg(eval, this, "syntax object", 0, args);
-            SyntaxValue origStx =
-                FusionSyntax.checkSyntaxArg(eval, this, "syntax object", 1, args);
+            SyntaxValue newStx = checkSyntaxArg(eval, this, 0, args);
+            SyntaxValue origStx = checkSyntaxArg(eval, this, 1, args);
             SyntaxSymbol origin =
                 checkIdentifierArg(eval, this, "syntax identifier", 2, args);
 
@@ -305,8 +338,7 @@ final class FusionSyntax
         {
             checkArityExact(eval, 1, args);
 
-            SyntaxValue stx =
-                FusionSyntax.checkSyntaxArg(eval, this, "syntax object", 0, args);
+            SyntaxValue stx = checkSyntaxArg(eval, this, 0, args);
 
             boolean o = stx.isOriginal(eval);
             return FusionBool.makeBool(eval, o);

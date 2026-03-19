@@ -6,6 +6,7 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionList.isList;
 import static dev.ionfusion.fusion.FusionList.unsafeListCopy;
 import static dev.ionfusion.fusion.FusionList.unsafeListSize;
+import static dev.ionfusion.fusion.FusionProcedure.checkRequiredProcedureArg;
 import static dev.ionfusion.fusion.FusionSexp.isPair;
 import static dev.ionfusion.fusion.FusionSexp.isSexp;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
@@ -26,7 +27,7 @@ final class ApplyProc
 
         int arity = args.length;
 
-        Procedure proc = checkProcArg(eval, 0, args);
+        Procedure proc = checkRequiredProcedureArg(eval, this, 0, args);
 
         Object rest = args[arity - 1];
         boolean restIsList = isList(eval, rest);

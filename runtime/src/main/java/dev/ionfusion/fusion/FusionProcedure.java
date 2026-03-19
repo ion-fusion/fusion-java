@@ -46,6 +46,26 @@ public final class FusionProcedure
     }
 
 
+
+    /**
+     * Ensures that an argument is a {@link Procedure}.
+     */
+    static Procedure checkRequiredProcedureArg(Evaluator eval,
+                                               Procedure who,
+                                               int       argNum,
+                                               Object... args)
+        throws FusionException
+    {
+        Object arg = args[argNum];
+        if (arg instanceof Procedure)
+        {
+            return (Procedure) arg;
+        }
+
+        throw who.argError(eval, "procedure", argNum, args);
+    }
+
+
     static final class IsProcedureProc
         extends Procedure1
     {

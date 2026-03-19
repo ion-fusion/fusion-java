@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionNumber.makeInt;
+import static dev.ionfusion.fusion.FusionSyntax.checkSyntaxSequenceArg;
 
 import dev.ionfusion.runtime.base.FusionException;
 
@@ -14,7 +15,7 @@ final class SyntaxSizeProc
     Object doApply(Evaluator eval, Object arg)
         throws FusionException
     {
-        SyntaxSequence c = checkSyntaxSequenceArg(eval, 0, arg);
+        SyntaxSequence c = checkSyntaxSequenceArg(eval, this, 0, arg);
         return makeInt(eval, c.size(eval));
     }
 }

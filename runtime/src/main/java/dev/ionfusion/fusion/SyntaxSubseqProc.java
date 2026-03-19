@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionNumber.checkIntArgToJavaInt;
+import static dev.ionfusion.fusion.FusionSyntax.checkSyntaxSequenceArg;
 
 import dev.ionfusion.runtime.base.FusionException;
 
@@ -15,7 +16,7 @@ final class SyntaxSubseqProc
         throws FusionException
     {
         checkArityExact(eval, 2, args);
-        SyntaxSequence sequence = checkSyntaxSequenceArg(eval, 0, args);
+        SyntaxSequence sequence = checkSyntaxSequenceArg(eval, this, 0, args);
         int from = checkIntArgToJavaInt(eval, this, 1, args);
         int size = sequence.size(eval);
 

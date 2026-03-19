@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionString.makeString;
+import static dev.ionfusion.fusion.FusionSyntax.checkSyntaxArg;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 
 import dev.ionfusion.runtime.base.FusionException;
@@ -18,7 +19,7 @@ class SyntaxSourceProc
     Object doApply(Evaluator eval, Object arg)
         throws FusionException
     {
-        SyntaxValue stx = checkSyntaxArg(eval, 0, arg);
+        SyntaxValue stx = checkSyntaxArg(eval, this, 0, arg);
         SourceLocation location = stx.getLocation();
         if (location != null)
         {

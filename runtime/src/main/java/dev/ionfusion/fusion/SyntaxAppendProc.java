@@ -4,6 +4,8 @@
 package dev.ionfusion.fusion;
 
 
+import static dev.ionfusion.fusion.FusionSyntax.checkSyntaxSequenceArg;
+
 import dev.ionfusion.runtime.base.FusionException;
 
 final class SyntaxAppendProc
@@ -14,10 +16,10 @@ final class SyntaxAppendProc
         throws FusionException
     {
         checkArityAtLeast(eval, 1, args);
-        SyntaxSequence seq = checkSyntaxSequenceArg(eval, 0, args);
+        SyntaxSequence seq = checkSyntaxSequenceArg(eval, this, 0, args);
         for (int i = 1; i < args.length; i++)
         {
-            SyntaxSequence next = checkSyntaxSequenceArg(eval, i, args);
+            SyntaxSequence next = checkSyntaxSequenceArg(eval, this, i, args);
             seq = seq.makeAppended(eval, next);
             if (seq == null)
             {
