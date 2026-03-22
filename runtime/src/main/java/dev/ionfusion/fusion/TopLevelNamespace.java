@@ -10,6 +10,7 @@ import static dev.ionfusion.fusion.UnboundIdentifierException.makeUnboundError;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.ModuleNamespace.ProvidedBinding;
+import dev.ionfusion.runtime._private.doc.BindingDoc;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.util.Iterator;
@@ -66,6 +67,14 @@ final class TopLevelNamespace
         public Object lookup(Namespace ns)
         {
             return ns.lookupDefinition(this);
+        }
+
+
+        @Override
+        BindingDoc lookupDoc(Namespace current)
+        {
+            assert current == TopLevelNamespace.this;  // Not always, but just testing
+            return TopLevelNamespace.this.document(myAddress);
         }
 
         @Override

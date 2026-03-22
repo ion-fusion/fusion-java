@@ -140,6 +140,8 @@ abstract class Namespace
             return Namespace.this.myModuleId == ns.myModuleId;
         }
 
+        abstract BindingDoc lookupDoc(Namespace current);
+
         @Override
         public boolean equals(Object other)
         {
