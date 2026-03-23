@@ -151,6 +151,35 @@ abstract class BaseValue
 
 
     /**
+     * Variant of {@link #write(Evaluator, Appendable)} that carries a write
+     * context from the caller.
+     * <p>
+     * Most code shouldn't call this method, and should prefer
+     * {@link FusionIo#dispatchWrite(Evaluator, Appendable, Object, boolean)}.
+     *
+     * @param eval may be null!
+     * @param out the output stream; not null.
+     * @param quoteOperators if false, this value is a direct child of a sexp
+     *     and operator symbols should be written without quoting. Subclasses
+     *     that are not themselves sexps must revert to
+     *     {@code quoteOperators=true} when recursing into their own children.
+     *
+     * <p>The default implementation ignores the flag, which is correct for
+     * all value types that contain no operator symbols (numbers, strings,
+     * bools, etc.). Override only when the type itself may be a symbol, or
+     * when it directly contains symbols as children.
+     *
+     * @throws IOException Propagated from the output stream.
+     * @throws FusionException
+     */
+    void write(Evaluator eval, Appendable out, boolean quoteOperators)
+        throws IOException, FusionException
+    {
+        write(eval, out);
+    }
+
+
+    /**
      * Builder for temporary IonWriters needed for {@link #write}ing
      * lazily injected lists and structs.
      *

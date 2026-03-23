@@ -135,6 +135,31 @@ public final class FusionIo
     }
 
 
+    /**
+     * Variant of {@link #dispatchWrite(Evaluator, Appendable, Object)} that
+     * passes a write context to the value.
+     *
+     * @param quoteOperators if false, operator symbols that are direct
+     *     children of a sexp should be written without quoting. Receivers
+     *     that are not themselves sexps must revert to
+     *     {@code quoteOperators=true} for their own children.
+     */
+    static void dispatchWrite(Evaluator eval, Appendable out, Object value,
+                              boolean quoteOperators)
+        throws IOException, FusionException
+    {
+        if (value instanceof BaseValue)
+        {
+            ((BaseValue) value).write(eval, out, quoteOperators);
+        }
+        else
+        {
+            // Non-BaseValue objects have no operator-quoting behavior.
+            dispatchWrite(eval, out, value);
+        }
+    }
+
+
     static void dispatchDisplay(Evaluator eval, Appendable out, Object value)
         throws IOException, FusionException
     {
@@ -850,7 +875,7 @@ public final class FusionIo
     {
         @Override
         Object doApply(Evaluator eval, Object[] args)
-                throws FusionException
+            throws FusionException
         {
             String output = displayManyToString(eval, args, 0);
             return makeString(eval, output);

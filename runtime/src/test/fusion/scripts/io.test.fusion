@@ -54,6 +54,7 @@
     (check === 3 (read))
     (check_true (is_eof (read)))))
 
+
 // A nice shortcut for reading a single value.
 (check = "hello"
   (with_ion_from_file (test_data_file "hello.ion") read))
@@ -152,4 +153,44 @@
     (display "display")))
 
 
-"SUCCESS (io.test)"
+//=============================================================================
+// Revised Extended I/O Tests
+
+(check === "alive"
+  (with_output_to_string (lambda () (display "alive"))))
+
+(check === "quoted_sym"
+  (with_output_to_string
+    (lambda () (write (quote quoted_sym)))))
+
+(check === "(+ 1 2)"
+  (with_output_to_string
+    (lambda () (write (quote (+ 1 2))))))
+
+(check === "(a {.} b)"
+  (with_output_to_string
+    (lambda () (write (pair (quote a) (quote b))))))
+
+(check === "null.symbol"
+  (with_output_to_string
+    (lambda () (write null.symbol))))
+
+//=============================================================================
+// Extended I/O Tests for Symbols and Sexps
+
+(check === "quoted_sym" (with_output_to_string (lambda () (write (quote quoted_sym)))))
+(check === "'with spaces'" (with_output_to_string (lambda () (write (quote 'with spaces')))))
+(check === "tag::value" (with_output_to_string (lambda () (write (quote tag::value)))))
+
+(check === "(+ 1 2)" (with_output_to_string (lambda () (write (quote (+ 1 2))))))
+(check === "('+')" (with_output_to_string (lambda () (write (quote ('+'))))))
+
+(check === "(a {.} b)" (with_output_to_string (lambda () (write (pair (quote a) (quote b))))))
+
+(let [(annotated_val (quote note::"Hello"))]
+  (check === "note::\"Hello\"" (with_output_to_string (lambda () (write annotated_val))))
+  (check === "Hello" (with_output_to_string (lambda () (display annotated_val)))))
+
+(check === "null.symbol" (with_output_to_string (lambda () (write null.symbol))))
+(check === "null.sexp" (with_output_to_string (lambda () (write null.sexp))))
+(check === "()" (with_output_to_string (lambda () (write (sexp)))))

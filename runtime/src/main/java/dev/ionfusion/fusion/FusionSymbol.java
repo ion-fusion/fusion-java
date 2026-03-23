@@ -305,6 +305,23 @@ final class FusionSymbol
         }
 
         @Override
+        void write(Evaluator eval, Appendable out, boolean quoteOperators)
+            throws IOException
+        {
+            if (quoteOperators)
+            {
+                IonTextUtils.printSymbol(out, myContent);
+            }
+            else
+            {
+                // Sexp context: emit the symbol text directly without quoting,
+                // matching the behavior of IonWriter which tracks sexp context
+                // and applies correct Ion symbol quoting rules.
+                out.append(myContent);
+            }
+        }
+
+        @Override
         void display(Evaluator eval, Appendable out)
             throws IOException
         {
@@ -420,6 +437,16 @@ final class FusionSymbol
         {
             writeAnnotations(out, myAnnotations);
             myValue.write(eval, out);
+        }
+
+        @Override
+        void write(Evaluator eval, Appendable out, boolean quoteOperators)
+            throws IOException, FusionException
+        {
+            // Annotations are always quoted per Ion syntax regardless of
+            // context; only the symbol value itself observes quoteOperators.
+            writeAnnotations(out, myAnnotations);
+            myValue.write(eval, out, quoteOperators);
         }
     }
 

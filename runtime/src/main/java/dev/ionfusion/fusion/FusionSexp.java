@@ -1004,68 +1004,60 @@ final class FusionSexp
         }
 
         /**
-         * For proper sexps, delegates to {@link #ionize} via a temporary
-         * {@link IonWriter} so that symbols are correctly quoted (or not)
-         * based on sexp context. For example, operator symbols like {@code +}
-         * must not be quoted inside a sexp.
+         * Writes this sexp using Fusion's write format.
          * <p>
-         * For improper sexps, falls back to manual rendering using Fusion's
-         * {@code {.}} dotted-pair notation. Note that symbols in improper
-         * sexps may be incorrectly quoted (e.g. {@code '+'} instead of
-         * {@code +}) since {@link IonWriter} cannot be used here.
-         * Improper sexps are a rare edge case and are not valid Ion anyway.
+         * Operator symbols that are direct children of a sexp are written
+         * without quoting (e.g. {@code +} rather than {@code '+'}), matching
+         * the behavior of {@link #ionize} which delegates to {@link IonWriter}
+         * for this purpose. This applies equally to proper sexps
+         * {@code (a b c)} and improper sexps {@code (a {.} b)}: properness
+         * affects only structure, not symbol quoting.
+         * <p>
+         * Unlike {@link #ionize}, this method tolerates non-ionizable values
+         * (e.g. void, closures) by falling back to their own {@code write}
+         * output, so expressions like {@code (write (sexp (quote +) (void)))}
+         * produce {@code (+ {{{void}}})} rather than raising an exception.
          */
         @Override
         void write(Evaluator eval, Appendable out)
             throws IOException, FusionException
         {
-            // Scan to determine if this is a proper sexp (ends with EmptySexp)
-            // or an improper sexp (ends with some other value).
+            writeAnnotations(out, myAnnotations);
+            out.append('(');
+
             ImmutablePair pair = this;
-            while (pair.myTail instanceof ImmutablePair)
+            boolean first = true;
+            while (true)
             {
-                pair = (ImmutablePair) pair.myTail;
-            }
+                if (!first) out.append(' ');
+                first = false;
 
-            if (pair.myTail instanceof EmptySexp)
-            {
-                // Proper sexp: delegate entirely to ionize via IonWriter.
-                // IonWriter tracks sexp context and applies correct Ion symbol
-                // quoting rules, so operators like + are not wrongly quoted.
-                // ionize also handles annotations via setTypeAnnotations.
-                IonWriter iw = WRITER_BUILDER.build(out);
-                ionize(eval, iw);
-                iw.finish();
-            }
-            else
-            {
-                // Improper sexp: cannot ionize (not valid Ion), fall back to
-                // manual rendering with Fusion's {.} dotted-pair notation.
-                writeAnnotations(out, myAnnotations);
-                out.append('(');
+                // Pass quoteOperators=false: direct children of a sexp render
+                // operator symbols unquoted. Each child's write() reverts to
+                // quoteOperators=true for its own children, so only the
+                // immediate children of this sexp are affected.
+                dispatchWrite(eval, out, pair.myHead, false);
 
-                pair = this;
-                while (true)
+                Object tail = pair.myTail;
+                if (tail instanceof ImmutablePair)
                 {
-                    if (pair != this) out.append(' ');
-
-                    dispatchWrite(eval, out, pair.myHead);
-
-                    Object tail = pair.myTail;
-                    if (tail instanceof ImmutablePair)
-                    {
-                        pair = (ImmutablePair) tail;
-                    }
-                    else
-                    {
-                        out.append(" {.} ");
-                        dispatchWrite(eval, out, tail);
-                        break;
-                    }
+                    pair = (ImmutablePair) tail;
                 }
-
-                out.append(')');
+                else if (tail instanceof EmptySexp)
+                {
+                    break;
+                }
+                else
+                {
+                    // Improper sexp: same quoting rules apply to the tail
+                    // element, since it is still a direct child of this sexp.
+                    out.append(" {.} ");
+                    dispatchWrite(eval, out, tail, false);
+                    break;
+                }
             }
+
+            out.append(')');
         }
 
         @Override
