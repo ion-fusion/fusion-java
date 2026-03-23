@@ -1003,38 +1003,69 @@ final class FusionSexp
             }
         }
 
+        /**
+         * For proper sexps, delegates to {@link #ionize} via a temporary
+         * {@link IonWriter} so that symbols are correctly quoted (or not)
+         * based on sexp context. For example, operator symbols like {@code +}
+         * must not be quoted inside a sexp.
+         * <p>
+         * For improper sexps, falls back to manual rendering using Fusion's
+         * {@code {.}} dotted-pair notation. Note that symbols in improper
+         * sexps may be incorrectly quoted (e.g. {@code '+'} instead of
+         * {@code +}) since {@link IonWriter} cannot be used here.
+         * Improper sexps are a rare edge case and are not valid Ion anyway.
+         */
         @Override
         void write(Evaluator eval, Appendable out)
             throws IOException, FusionException
         {
-            writeAnnotations(out, myAnnotations);
-            out.append('(');
-
+            // Scan to determine if this is a proper sexp (ends with EmptySexp)
+            // or an improper sexp (ends with some other value).
             ImmutablePair pair = this;
-            while (true)
+            while (pair.myTail instanceof ImmutablePair)
             {
-                if (pair != this) out.append(' ');
-
-                dispatchWrite(eval, out, pair.myHead);
-
-                Object tail = pair.myTail;
-                if (tail instanceof ImmutablePair)
-                {
-                    pair = (ImmutablePair) tail;
-                }
-                else if (tail instanceof EmptySexp)
-                {
-                    break;
-                }
-                else
-                {
-                    out.append(" {.} ");
-                    dispatchWrite(eval, out, tail);
-                    break;
-                }
+                pair = (ImmutablePair) pair.myTail;
             }
 
-            out.append(')');
+            if (pair.myTail instanceof EmptySexp)
+            {
+                // Proper sexp: delegate entirely to ionize via IonWriter.
+                // IonWriter tracks sexp context and applies correct Ion symbol
+                // quoting rules, so operators like + are not wrongly quoted.
+                // ionize also handles annotations via setTypeAnnotations.
+                IonWriter iw = WRITER_BUILDER.build(out);
+                ionize(eval, iw);
+                iw.finish();
+            }
+            else
+            {
+                // Improper sexp: cannot ionize (not valid Ion), fall back to
+                // manual rendering with Fusion's {.} dotted-pair notation.
+                writeAnnotations(out, myAnnotations);
+                out.append('(');
+
+                pair = this;
+                while (true)
+                {
+                    if (pair != this) out.append(' ');
+
+                    dispatchWrite(eval, out, pair.myHead);
+
+                    Object tail = pair.myTail;
+                    if (tail instanceof ImmutablePair)
+                    {
+                        pair = (ImmutablePair) tail;
+                    }
+                    else
+                    {
+                        out.append(" {.} ");
+                        dispatchWrite(eval, out, tail);
+                        break;
+                    }
+                }
+
+                out.append(')');
+            }
         }
 
         @Override
