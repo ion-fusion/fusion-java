@@ -308,16 +308,20 @@ final class FusionSymbol
         void write(Evaluator eval, Appendable out, boolean quoteOperators)
             throws IOException
         {
-            if (quoteOperators)
+            if (!quoteOperators
+                && IonTextUtils.symbolVariant(myContent) == IonTextUtils.SymbolVariant.OPERATOR)
             {
-                IonTextUtils.printSymbol(out, myContent);
+                // Inside a sexp, operator symbols like + and = are valid Ion
+                // without quoting. Operator content is guaranteed to be
+                // ASCII non-whitespace, so raw emission is safe.
+                out.append(myContent);
             }
             else
             {
-                // Sexp context: emit the symbol text directly without quoting,
-                // matching the behavior of IonWriter which tracks sexp context
-                // and applies correct Ion symbol quoting rules.
-                out.append(myContent);
+                // All other symbols (identifiers, symbols requiring quotes due
+                // to spaces or other characters, etc.) always use printSymbol
+                // regardless of sexp context.
+                IonTextUtils.printSymbol(out, myContent);
             }
         }
 

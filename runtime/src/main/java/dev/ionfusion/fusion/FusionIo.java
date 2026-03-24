@@ -154,7 +154,7 @@ public final class FusionIo
         }
         else
         {
-            // Non-BaseValue objects have no operator-quoting behavior.
+            // quoteOperators defaults to true for non-BaseValue objects.
             dispatchWrite(eval, out, value);
         }
     }
