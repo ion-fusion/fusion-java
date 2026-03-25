@@ -16,7 +16,7 @@ import java.io.PrintWriter;
  * Command executor that uses a shared {@link FusionRuntime} from the
  * {@link GlobalOptions}.
  */
-abstract class FusionExecutor
+public abstract class FusionExecutor
     extends StdioExecutor
 {
     private final GlobalOptions myGlobalOptions;
@@ -74,7 +74,7 @@ abstract class FusionExecutor
     }
 
 
-    void writeResults(TopLevel top, Object result, PrintWriter out)
+    public static void writeResults(TopLevel top, Object result, PrintWriter out)
         throws FusionException
     {
         if (result instanceof Object[])

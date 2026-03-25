@@ -3,16 +3,9 @@
 
 package dev.ionfusion.fusioncli;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
-import com.amazon.ion.IonException;
-import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.embed.TopLevel;
-import java.io.BufferedReader;
-import java.io.Console;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import dev.ionfusion.fusioncli.repl.ConsoleRepLoop;
+import dev.ionfusion.fusioncli.repl.NonConsoleRepLoop;
+import dev.ionfusion.fusioncli.repl.RepLoop;
 import java.io.PrintWriter;
 
 /**
@@ -53,49 +46,16 @@ class Repl
 
         globals.collectDocumentation();
 
-        Console console = System.console();
-        if (console == null)
-        {
-            InputStreamReader isr =
-                new InputStreamReader(globals.stdin(), UTF_8);
-            BufferedReader in = new BufferedReader(isr);
-
-            OutputStreamWriter osw =
-                new OutputStreamWriter(globals.stdout(), UTF_8);
-            PrintWriter out = new PrintWriter(osw);
-
-            return new Executor(globals, in, out);
-        }
-
-        return new Executor(globals, console);
+        return new Executor(globals);
     }
 
 
     private static class Executor
         extends FusionExecutor
     {
-        private       TopLevel       myTopLevel;
-        private final Console        myConsole;
-        private final BufferedReader myIn;
-        private final PrintWriter    myOut;
-
-
-        Executor(GlobalOptions globals, Console console)
+        Executor(GlobalOptions globals)
         {
             super(globals);
-
-            myConsole = console;
-            myIn      = null;
-            myOut     = console.writer();
-        }
-
-        Executor(GlobalOptions globals, BufferedReader in, PrintWriter out)
-        {
-            super(globals);
-
-            myConsole = null;
-            myIn      = in;
-            myOut     = out;
         }
 
 
@@ -103,92 +63,17 @@ class Repl
         public int execute(PrintWriter out, PrintWriter err)
             throws Exception
         {
-            try
+            RepLoop loop;
+            if (System.console() != null)
             {
-                // Bootstrap the runtime before printing the welcome banner, so
-                // that we don't do that when there's usage problems.
-                myTopLevel = runtime().getDefaultTopLevel();
-                myTopLevel.requireModule("/fusion/private/cli/repl");
-
-                welcome();
-
-                while (rep())
-                {
-                    // loop!
-                }
-            }
-            finally
-            {
-                myOut.flush();
-            }
-
-            return 0;
-        }
-
-
-        private void welcome()
-        {
-            red("\nWelcome to Fusion!\n\n");
-            myOut.println("Type...");
-            myOut.println("  ^D                to exit");
-            myOut.println("  (help SOMETHING)  to see documentation; try '(help help)'!\n");
-        }
-
-
-        private boolean rep()
-            throws IOException
-        {
-            blue("$");
-            String line = read();
-
-            if (line == null) // EOF
-            {
-                // Print a newline otherwise the user's shell prompt will be on
-                // the same line as our prompt, and that's ugly.
-                myOut.println();
-                return false;
-            }
-
-            try
-            {
-                Object result = myTopLevel.eval(line);
-                writeResults(myTopLevel, result, myOut);
-            }
-            catch (FusionException | IonException e)
-            {
-                red(e.getMessage());
-                myOut.println();
-            }
-
-            return true;
-        }
-
-        private String read()
-            throws IOException
-        {
-            if (myConsole != null)
-            {
-                return myConsole.readLine(" ");
+                loop = new ConsoleRepLoop(runtime());
             }
             else
             {
-                myOut.flush();
-                return myIn.readLine();
+                loop = new NonConsoleRepLoop(runtime(), globals().stdin(), out);
             }
-        }
 
-        private void blue(String text)
-        {
-            myOut.print("\033[1;34m");
-            myOut.print(text);
-            myOut.print("\033[m");
-        }
-
-        private void red(String text)
-        {
-            myOut.print("\033[1;31m");
-            myOut.print(text);
-            myOut.print("\033[m");
+            return loop.run();
         }
     }
 }
