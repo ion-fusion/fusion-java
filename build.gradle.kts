@@ -66,7 +66,7 @@ val fcovAggregateReport by tasks.registering(JavaExec::class) {
     }
 
     classpath = project(":fusioncli").sourceSets["main"].runtimeClasspath
-    mainClass = "dev.ionfusion.fusioncli.Cli"
+    mainClass = "dev.ionfusion.fusioncli.Main"
     args = listOf("report_coverage",
                   "--configFile", "fcov.properties",
                   "--htmlDir", fcovReportDir.get().asFile.path) +

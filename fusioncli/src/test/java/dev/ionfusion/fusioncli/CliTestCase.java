@@ -46,8 +46,8 @@ public class CliTestCase
     {
         commandLine = prependGlobalOptions(commandLine);
 
-        CommandFactory cf = new CommandFactory(stdin(), stdout(), stderr());
-        return cf.executeCommandLine(commandLine);
+        Main cli = new Main(stdin(), stdout(), stderr());
+        return cli.executeCommandLine(commandLine);
     }
 
     private String[] prependGlobalOptions(String[] commandLine)

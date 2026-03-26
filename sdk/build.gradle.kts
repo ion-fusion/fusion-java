@@ -66,7 +66,7 @@ val fusiondoc by tasks.registering(JavaExec::class) {
     }
 
     classpath = project(":fusioncli").sourceSets["main"].runtimeClasspath
-    mainClass = "dev.ionfusion.fusioncli.Cli"
+    mainClass = "dev.ionfusion.fusioncli.Main"
     args = listOf("document",
                   "--modules",  runtimeRepo.toString(),
                   "--articles", articlesDir.toString(),
