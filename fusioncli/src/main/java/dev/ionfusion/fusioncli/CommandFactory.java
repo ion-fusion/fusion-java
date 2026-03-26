@@ -3,6 +3,8 @@
 
 package dev.ionfusion.fusioncli;
 
+import static dev.ionfusion.fusioncli.framework.OptionParser.extractOptions;
+
 import dev.ionfusion.fusioncli.framework.Executor;
 import dev.ionfusion.fusioncli.framework.UsageException;
 import java.io.InputStream;
@@ -150,7 +152,7 @@ class CommandFactory
 
         try
         {
-            commandLine = Command.extractOptions(globals, commandLine, true);
+            commandLine = extractOptions(globals, commandLine, true);
 
             // Eagerly parse all commands and their args so that any errors can
             // be reported before executing anything.

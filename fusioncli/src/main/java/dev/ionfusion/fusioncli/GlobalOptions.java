@@ -5,6 +5,7 @@ package dev.ionfusion.fusioncli;
 
 import com.amazon.ion.IonException;
 import dev.ionfusion.fusion._Private_Trampoline;
+import dev.ionfusion.fusioncli.framework.OptionParser;
 import dev.ionfusion.fusioncli.framework.UsageException;
 import dev.ionfusion.runtime._private.util.IonCatalogLoader;
 import dev.ionfusion.runtime.base.FusionException;
@@ -20,7 +21,7 @@ import java.util.StringTokenizer;
 /**
  * Stores options and data shared by the entire execution sequence.
  * <p>
- * The properties here are set via reflection by {@link Command#extractOptions}.
+ * The properties here are set via reflection by {@link OptionParser#extractOptions}.
  */
 final class GlobalOptions
 {
