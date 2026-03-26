@@ -3,6 +3,8 @@
 
 package dev.ionfusion.fusioncli;
 
+import dev.ionfusion.fusioncli.framework.Executor;
+import dev.ionfusion.fusioncli.framework.UsageException;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -15,22 +17,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-abstract class Command
+public abstract class Command
 {
-    interface Executor
-    {
-        /**
-         * Execute this command.  Any exception that's thrown will cause the
-         * CLI to display the stack trace to {@link System#err}.
-         *
-         * @return zero to indicate success, any other number to indicate an
-         *  error code.
-         */
-        int execute()
-            throws Exception;
-    }
-
-
     private final String   myCommand;
     private final String[] myAliases;
 

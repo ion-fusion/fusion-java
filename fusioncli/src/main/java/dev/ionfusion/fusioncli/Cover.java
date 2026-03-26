@@ -10,6 +10,7 @@ import static java.nio.file.Files.isRegularFile;
 
 import dev.ionfusion.fusioncli.cover.CoverageReport;
 import dev.ionfusion.fusioncli.cover.CoverageReportWriter;
+import dev.ionfusion.fusioncli.framework.UsageException;
 import dev.ionfusion.runtime._private.cover.CoverageConfiguration;
 import dev.ionfusion.runtime._private.cover.CoverageDatabase;
 import java.io.PrintWriter;

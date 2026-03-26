@@ -6,6 +6,7 @@ package dev.ionfusion.fusioncli;
 import static dev.ionfusion.fusion.FusionIo.write;
 import static dev.ionfusion.fusion.FusionVoid.isVoid;
 
+import dev.ionfusion.fusioncli.framework.UsageException;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.embed.FusionRuntime;
 import dev.ionfusion.runtime.embed.TopLevel;

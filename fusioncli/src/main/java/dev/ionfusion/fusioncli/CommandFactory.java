@@ -3,7 +3,8 @@
 
 package dev.ionfusion.fusioncli;
 
-import dev.ionfusion.fusioncli.Command.Executor;
+import dev.ionfusion.fusioncli.framework.Executor;
+import dev.ionfusion.fusioncli.framework.UsageException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -175,7 +176,7 @@ class CommandFactory
                 myStderr.println(message);
                 myStderr.println();
             }
-            writeUsage(e.myCommand);
+            writeUsage(e.getCommand());
             return USAGE_ERROR_CODE;
         }
     }

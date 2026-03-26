@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusioncli;
 
+import dev.ionfusion.fusioncli.framework.UsageException;
 import dev.ionfusion.fusioncli.repl.ConsoleRepLoop;
 import dev.ionfusion.fusioncli.repl.NonConsoleRepLoop;
 import dev.ionfusion.fusioncli.repl.RepLoop;

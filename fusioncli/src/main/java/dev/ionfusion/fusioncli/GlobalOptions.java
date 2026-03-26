@@ -5,6 +5,7 @@ package dev.ionfusion.fusioncli;
 
 import com.amazon.ion.IonException;
 import dev.ionfusion.fusion._Private_Trampoline;
+import dev.ionfusion.fusioncli.framework.UsageException;
 import dev.ionfusion.runtime._private.util.IonCatalogLoader;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.embed.FusionRuntime;

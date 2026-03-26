@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusioncli;
 
+import dev.ionfusion.fusioncli.framework.UsageException;
 import java.io.IOException;
 import java.io.PrintWriter;
 

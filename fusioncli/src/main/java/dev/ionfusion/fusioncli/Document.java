@@ -7,6 +7,7 @@ import static java.nio.file.Files.isDirectory;
 
 import com.amazon.ion.Timestamp;
 import dev.ionfusion.fusioncli.doc.tool.SiteBuilder;
+import dev.ionfusion.fusioncli.framework.UsageException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import dev.ionfusion.runtime.embed.FusionRuntime;
 import java.io.File;
