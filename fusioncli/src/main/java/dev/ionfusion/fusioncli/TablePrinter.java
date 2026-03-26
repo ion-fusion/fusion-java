@@ -9,7 +9,7 @@ import java.util.ArrayList;
 /**
  * Simple class for neatly printing tabular data.
  */
-class TablePrinter
+public class TablePrinter
 {
     private final ArrayList<String[]> myRows = new ArrayList<>();
 

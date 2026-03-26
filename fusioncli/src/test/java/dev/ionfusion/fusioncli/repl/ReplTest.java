@@ -1,18 +1,17 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusioncli;
+package dev.ionfusion.fusioncli.repl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.endsWith;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 import org.junit.jupiter.api.Test;
 
 public class ReplTest
-    extends FusionCliTestCase
+    extends ReplTestCase
 {
     @Test
     public void replTakesNoArgs()
@@ -24,35 +23,12 @@ public class ReplTest
     }
 
 
-    //==================================================================================
-
-
-    private void expectResponse(String message)
-    {
-        assertThat(stdoutText, containsString(message));
-        assertThat(stderrText, is(emptyString()));
-    }
-
-
-    /**
-     * The REPL only writes to stdout. I'm not sure if that is the right behavior.
-     */
-    private void expectError(String message)
-    {
-        assertThat(stdoutText, containsString(message));
-        assertThat(stderrText, is(emptyString()));
-    }
-
-
-    //==================================================================================
-
-
     @Test
     public void testSimpleExpression()
         throws Exception
     {
         supplyInput("33908\n");
-        run("repl");
+        runRepl();
 
         expectResponse("33908\n");
     }
@@ -63,7 +39,7 @@ public class ReplTest
         throws Exception
     {
         // No input; REPL should exit on EOF
-        run("repl");
+        runRepl();
 
         // We want output to end with a newline.
         assertThat(stdoutText, endsWith("\n"));
@@ -75,7 +51,7 @@ public class ReplTest
         throws Exception
     {
         supplyInput("(void]\n");
-        run("repl");
+        runRepl();
 
         expectError("Error reading source:");
     }
@@ -86,7 +62,7 @@ public class ReplTest
         throws Exception
     {
         supplyInput("(no_binding)\n");
-        run("repl");
+        runRepl();
 
         expectError("Bad syntax: unbound identifier.");
         expectError("no_binding");
@@ -98,8 +74,45 @@ public class ReplTest
         throws Exception
     {
         supplyInput("(help help)\n");
-        run("repl");
+        runRepl();
 
         expectResponse("(help ident ...)");
+    }
+
+
+    //==================================================================================
+    // Basic comma-commands
+
+    @Test
+    public void commaWithoutCommand()
+        throws Exception
+    {
+        supplyInput(",\n");
+        runRepl();
+
+        expectError("No command given.");
+    }
+
+    @Test
+    public void unknownCommand()
+        throws Exception
+    {
+        supplyInput(",bad\n");
+        runRepl();
+
+        expectError("Unknown command: 'bad'");
+    }
+
+
+    @Test
+    public void exitIgnoresSubsequentCommands()
+        throws Exception
+    {
+        supplyInput(",exit\n,bad\n");
+        runRepl();
+
+        // We shouldn't get to the unknown command
+        assertThat(stdoutText, not(containsString("bad")));
+        assertThat(stderrText, not(containsString("bad")));
     }
 }

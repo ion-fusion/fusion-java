@@ -11,6 +11,15 @@ public class FusionCliTest
     extends FusionCliTestCase
 {
     @Test
+    public void noCommand()
+        throws Exception
+    {
+        run(1, "");
+
+        assertThat(stderrText, startsWith("No command given.\n"));
+    }
+
+    @Test
     public void testUsage()
         throws Exception
     {

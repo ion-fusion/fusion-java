@@ -6,6 +6,9 @@ package dev.ionfusion.fusioncli.repl;
 import static dev.ionfusion.fusioncli.FusionExecutor.writeResults;
 
 import com.amazon.ion.IonException;
+import dev.ionfusion.fusioncli.framework.CommandSuite;
+import dev.ionfusion.fusioncli.repl.cmd.ExitCmd;
+import dev.ionfusion.fusioncli.repl.cmd.ReplHelpCmd;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.embed.FusionRuntime;
 import dev.ionfusion.runtime.embed.TopLevel;
@@ -18,6 +21,8 @@ public abstract class RepLoop
     private   final TopLevel       myTopLevel;
     protected final PrintWriter    myOut;
 
+    private  final  ReplCli        myCli;
+
     RepLoop(FusionRuntime runtime, PrintWriter stdout)
         throws FusionException
     {
@@ -27,6 +32,11 @@ public abstract class RepLoop
         myTopLevel.requireModule("/fusion/private/cli/repl");
 
         myOut = stdout;
+
+        CommandSuite commands = new CommandSuite(new ExitCmd(),
+                                                 new ReplHelpCmd());
+        ReplContext context = new ReplContext(commands, stdout);
+        myCli = new ReplCli(context);
     }
 
 
@@ -43,7 +53,7 @@ public abstract class RepLoop
 
             while (rep())
             {
-                // loop!
+                myOut.flush();
             }
         }
         finally
@@ -59,8 +69,9 @@ public abstract class RepLoop
     {
         red("\nWelcome to Fusion!\n\n");
         myOut.println("Type...");
-        myOut.println("  ^D                to exit");
-        myOut.println("  (help SOMETHING)  to see documentation; try '(help help)'!\n");
+        myOut.println("  ,exit  to exit");
+        myOut.println("  ,help  for see all REPL commands. Try `,help help`!");
+        myOut.println();
     }
 
 
@@ -78,6 +89,13 @@ public abstract class RepLoop
             return false;
         }
 
+        line = line.trim();
+        if (line.startsWith(","))
+        {
+            // Drop the leading comma.
+            return handleCommand(line.substring(1));
+        }
+
         // Might need more flushing of both Fusion-side and Java-side buffers?
 
         try
@@ -92,6 +110,28 @@ public abstract class RepLoop
         }
 
         return true;
+    }
+
+    private boolean handleCommand(String lineAfterComma)
+    {
+        // Split on the first space; don't assume that every command splits on space.
+        String[] parts = lineAfterComma.trim().split(" ", 2);
+
+        // Trim any extra whitespace around the single (at this level) argument.
+        if (parts.length == 2)
+        {
+            parts[1] = parts[1].trim();
+        }
+
+        try
+        {
+            int result = myCli.executeCommandLine(parts);
+            return (result == 0);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
 
