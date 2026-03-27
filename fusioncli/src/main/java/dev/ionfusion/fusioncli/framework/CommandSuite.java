@@ -43,33 +43,4 @@ public class CommandSuite
 
         return null;
     }
-
-
-    /**
-     * Finds the command associated with the first word of the {@code commandLine}.
-     *
-     * @param commandLine must not be null.
-     *
-     * @return the matching {@link Command}; not null.
-     *
-     * @throws UsageException if the command-line is empty, or the first word doesn't
-     * match any known command.
-     */
-    public Command matchCommand(String[] commandLine)
-        throws UsageException
-    {
-        if (commandLine.length == 0)
-        {
-            throw new UsageException("No command given.");
-        }
-
-        String command = commandLine[0];
-
-        Command cmd = getMatchingCommand(command);
-        if (cmd == null)
-        {
-            throw new UsageException("Unknown command: '" + command + "'");
-        }
-        return cmd;
-    }
 }
