@@ -3,6 +3,8 @@
 
 package dev.ionfusion.fusioncli;
 
+import dev.ionfusion.fusioncli.framework.CommandSuite;
+import dev.ionfusion.fusioncli.framework.Separator;
 import java.io.InputStream;
 import java.io.PrintStream;
 
@@ -28,7 +30,20 @@ public final class Main
     {
         try
         {
-            CommandFactory cf = new CommandFactory(myStdin, myStdout, myStderr);
+            CommandSuite suite = new CommandSuite(new Repl(),
+                                                  new Load(),
+                                                  new Eval(),
+                                                  new Require(),
+                                                  new Cover(),
+                                                  new Separator(),
+                                                  new Help(),
+                                                  new Version(),
+                                                  new Document());
+
+            GlobalOptions globals =
+                new GlobalOptions(suite, myStdin, myStdout, myStderr);
+
+            CommandFactory cf = new CommandFactory(globals);
             return cf.executeCommandLine(args);
         }
         catch (Throwable e)

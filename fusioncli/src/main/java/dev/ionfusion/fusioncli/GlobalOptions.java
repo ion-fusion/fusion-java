@@ -5,6 +5,8 @@ package dev.ionfusion.fusioncli;
 
 import com.amazon.ion.IonException;
 import dev.ionfusion.fusion._Private_Trampoline;
+import dev.ionfusion.fusioncli.framework.CommandContext;
+import dev.ionfusion.fusioncli.framework.CommandSuite;
 import dev.ionfusion.fusioncli.framework.OptionParser;
 import dev.ionfusion.fusioncli.framework.UsageException;
 import dev.ionfusion.runtime._private.util.IonCatalogLoader;
@@ -24,6 +26,7 @@ import java.util.StringTokenizer;
  * The properties here are set via reflection by {@link OptionParser#extractOptions}.
  */
 final class GlobalOptions
+    extends CommandContext
 {
     static final String HELP =
         "\n\n"
@@ -54,8 +57,10 @@ final class GlobalOptions
     private FusionRuntime   myRuntime;
 
 
-    GlobalOptions(InputStream stdin, PrintStream stdout, PrintStream stderr)
+    GlobalOptions(CommandSuite commands,
+                  InputStream stdin, PrintStream stdout, PrintStream stderr)
     {
+        super(commands);
         myStdin  = stdin;
         myStdout = stdout;
         myStderr = stderr;

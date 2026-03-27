@@ -21,7 +21,7 @@ public abstract class Command
     //=========================================================================
     // Construction and Initialization
 
-    Command(String command, String... aliases)
+    protected Command(String command, String... aliases)
     {
         myCommand = command;
         myAliases = (aliases == null ? new String[0] : aliases);
@@ -41,7 +41,7 @@ public abstract class Command
      * not end with a newline.  It should be (explicitly) wrapped to display
      * within 80 columns.
      */
-    void putHelpText(String oneLiner, String usage, String body)
+    protected void putHelpText(String oneLiner, String usage, String body)
     {
         assert oneLiner != null && !oneLiner.isEmpty();
         assert usage != null && usage.startsWith(myCommand);
@@ -98,7 +98,7 @@ public abstract class Command
      * Verify that the command string used to invoke the command matches
      * the command or one of its aliases.
      */
-    boolean matches(String command)
+    public boolean matches(String command)
     {
         if (getCommand().equals(command)) return true;
         for (String alias : myAliases)

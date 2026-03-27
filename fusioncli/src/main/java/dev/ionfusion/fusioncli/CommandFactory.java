@@ -5,62 +5,30 @@ package dev.ionfusion.fusioncli;
 
 import static dev.ionfusion.fusioncli.framework.OptionParser.extractOptions;
 
+import dev.ionfusion.fusioncli.framework.Cli;
 import dev.ionfusion.fusioncli.framework.Executor;
 import dev.ionfusion.fusioncli.framework.UsageException;
-import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
 class CommandFactory
+    extends Cli<GlobalOptions>
 {
     public static final String APP_NAME = "fusion";
 
     private static final int USAGE_ERROR_CODE = 1;
 
 
-    private final InputStream myStdin;
     private final PrintStream myStdout;
     private final PrintStream myStderr;
 
-    CommandFactory(InputStream stdin, PrintStream stdout, PrintStream stderr)
+    CommandFactory(GlobalOptions context)
     {
-        myStdin  = stdin;
-        myStdout = stdout;
-        myStderr = stderr;
-    }
+        super(context);
 
-
-    public static Command[] getAllCommands()
-    {
-        return new Command[]
-            {
-                new Repl(),
-                new Load(),
-                new Eval(),
-                new Require(),
-                new Cover(),
-                new Separator(),
-                new Help(),
-                new Version(),
-                new Document(),
-            };
-    }
-
-
-    public static Command getMatchingCommand(String subcommand)
-    {
-        Command[] allCommands = getAllCommands();
-
-        for (Command cmd : allCommands)
-        {
-            if (cmd.matches(subcommand))
-            {
-                return cmd;
-            }
-        }
-
-        return null;
+        myStdout = context.stdout();
+        myStderr = context.stderr();
     }
 
 
@@ -85,35 +53,6 @@ class CommandFactory
 
 
     /**
-     *
-     * @param commandLine must not be <code>null</code>.
-     *
-     * @return the {@link Command} to execute; not null.
-     *
-     * @throws UsageException if there are
-     * command-line errors preventing the command from being determined.
-     */
-    public static Command matchCommand(GlobalOptions globals,
-                                       String[] commandLine)
-        throws Exception
-    {
-        if (commandLine.length == 0)
-        {
-            throw new UsageException("No command given.");
-        }
-
-        String command = commandLine[0];
-
-        Command cmd = getMatchingCommand(command);
-        if (cmd == null)
-        {
-            throw new UsageException("Unknown command: '" + command + "'");
-        }
-        return cmd;
-    }
-
-
-    /**
      * Makes an {@link Executor} for a single command in the sequence.
      *
      * @param commandLine includes the leading command name.
@@ -123,9 +62,8 @@ class CommandFactory
      * @throws UsageException if there are
      * command-line errors preventing the command from being used.
      */
-    public static Executor makeExecutor(GlobalOptions globals,
-                                        Command  command,
-                                        String[] commandLine)
+    public Executor makeExecutor(Command  command,
+                                 String[] commandLine)
         throws UsageException
     {
         // Strip off the leading command name, leaving the options and args.
@@ -133,7 +71,7 @@ class CommandFactory
         String[] args = new String[argCount];
         System.arraycopy(commandLine, 1, args, 0, argCount);
 
-        Executor exec = command.prepare(globals, args);
+        Executor exec = command.prepare(context(), args);
         if (exec == null)
         {
             throw new UsageException(command, null);
@@ -148,15 +86,13 @@ class CommandFactory
     int executeCommandLine(String... commandLine)
         throws Exception
     {
-        GlobalOptions globals = new GlobalOptions(myStdin, myStdout, myStderr);
-
         try
         {
-            commandLine = extractOptions(globals, commandLine, true);
+            commandLine = extractOptions(context(), commandLine, true);
 
             // Eagerly parse all commands and their args so that any errors can
             // be reported before executing anything.
-            List<Executor> execs = makeExecutors(globals, commandLine);
+            List<Executor> execs = makeExecutors(commandLine);
             for (Executor exec : execs)
             {
                 int errorCode = exec.execute();
@@ -184,8 +120,7 @@ class CommandFactory
     }
 
 
-    private static List<Executor> makeExecutors(GlobalOptions globals,
-                                                String[] commandLine)
+    private List<Executor> makeExecutors(String[] commandLine)
         throws Exception
     {
         List<Executor> execs = new ArrayList<>();
@@ -196,10 +131,7 @@ class CommandFactory
             if (";".equals(commandLine[i])) {
                 int len = i-curStartPos;
                 if (len > 0) {
-                    Executor exec = makeExecutor(globals,
-                                                 commandLine,
-                                                 curStartPos,
-                                                 len);
+                    Executor exec = makeExecutor(commandLine, curStartPos, len);
                     execs.add(exec);
                 }
                 curStartPos = i+1;
@@ -207,7 +139,7 @@ class CommandFactory
         }
 
         int len = commandLine.length-curStartPos;
-        Executor exec = makeExecutor(globals, commandLine, curStartPos, len);
+        Executor exec = makeExecutor(commandLine, curStartPos, len);
         execs.add(exec);
 
         return execs;
@@ -224,39 +156,16 @@ class CommandFactory
      *
      * @return an error code, zero meaning success.
      */
-    private static Executor makeExecutor(GlobalOptions globals,
-                                         String[] commandLine,
-                                         int start,
-                                         int len)
+    private Executor makeExecutor(String[] commandLine,
+                                  int start,
+                                  int len)
         throws Exception
     {
         String[] segment = new String[len];
         System.arraycopy(commandLine, start, segment, 0, len);
 
-        Command command = matchCommand(globals, segment);
+        Command command = context().commandSuite().matchCommand(segment);
 
-        return makeExecutor(globals, command, segment);
-    }
-
-
-    static class Separator extends Command
-    {
-
-        Separator() {
-            super("-----");
-            putHelpText("-------------------------", "-----", "-----");
-        }
-
-        @Override
-        boolean matches(String command)
-        {
-            return false;
-        }
-
-        @Override
-        public Executor makeExecutor(String[] arguments)
-        {
-            return null;
-        }
+        return makeExecutor(command, segment);
     }
 }
