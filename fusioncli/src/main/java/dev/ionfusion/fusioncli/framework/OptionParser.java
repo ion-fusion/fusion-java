@@ -49,23 +49,7 @@ public class OptionParser
                                           boolean stopAtNonOption)
         throws UsageException
     {
-        // Even if the command doesn't define options, we still need to look
-        // for them on the command line. This "options object" has no setters,
-        // so any options we find will cause an error.
-        if (target == null) { target = new Object(); }
-
-        PropertyDescriptor[] propDescs;
-        try
-        {
-            BeanInfo info = Introspector.getBeanInfo(target.getClass());
-            propDescs = info.getPropertyDescriptors();
-        }
-        catch (IntrospectionException e)
-        {
-            String message =
-                "Internal error: unable to introspect " + target.getClass();
-            throw new RuntimeException(message, e);
-        }
+        PropertyDescriptor[] propDescs = findPropertyDescriptors(target);
 
         List<String> result = new ArrayList<>(args.length);
         for (int i = 0; i < args.length; i++)
@@ -150,6 +134,27 @@ public class OptionParser
 
         return result.toArray(new String[0]);
     }
+
+
+    private static PropertyDescriptor[] findPropertyDescriptors(Object target)
+    {
+        if (target == null)
+        {
+            // No properties, so any option will trigger an error.
+            return new PropertyDescriptor[0];
+        }
+
+        try
+        {
+            BeanInfo info = Introspector.getBeanInfo(target.getClass());
+            return info.getPropertyDescriptors();
+        }
+        catch (IntrospectionException e)
+        {
+            throw new AssertionError("Unable to introspect " + target.getClass(), e);
+        }
+    }
+
 
     /**
      * Looks for a writeable property with a given name amongst the given property
