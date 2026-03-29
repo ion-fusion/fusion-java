@@ -42,6 +42,6 @@ public class HelpTest
         run(1, "help", "bad");
 
         assertThat(stdoutText, startsWith("\nUnknown command: 'bad'\n"));
-        assertThat(stderrText, startsWith("\nType 'fusion help' for more information."));
+        assertThat(stderrText, startsWith("Type 'fusion help' for more information."));
     }
 }

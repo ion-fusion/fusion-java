@@ -18,14 +18,12 @@ class FusionCli
     private static final int USAGE_ERROR_CODE = 1;
 
 
-    private final PrintStream myStdout;
     private final PrintStream myStderr;
 
     FusionCli(GlobalOptions context)
     {
         super(context);
 
-        myStdout = context.stdout();
         myStderr = context.stderr();
     }
 
@@ -61,8 +59,8 @@ class FusionCli
     @Override
     protected int handleUsage(UsageException e)
     {
-        myStdout.flush();                // Avoid commingled console output.
-        myStderr.println();
+        context().stdio().flushQuietly();  // Avoid commingled console output.
+
         String message = e.getMessage();
         if (message != null)
         {
