@@ -110,7 +110,7 @@ class Help
                 String oneLiner = command.getHelpOneLiner();
                 if (oneLiner != null)
                 {
-                    String[] row = { command.getCommand(), oneLiner };
+                    String[] row = { command.getName(), oneLiner };
 
                     table.addRow(row);
                 }
@@ -161,7 +161,7 @@ class Help
         private void renderCommandAndAliases(Command command, Appendable out)
             throws IOException
         {
-            out.append(command.getCommand());
+            out.append(command.getName());
 
             String[] aliases = command.getAliases();
             int len = aliases.length;
