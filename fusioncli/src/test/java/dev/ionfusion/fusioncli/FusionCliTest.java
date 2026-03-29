@@ -8,7 +8,7 @@ import static org.hamcrest.Matchers.startsWith;
 import org.junit.jupiter.api.Test;
 
 public class FusionCliTest
-    extends CliTestCase
+    extends FusionCliTestCase
 {
     @Test
     public void testUsage()
