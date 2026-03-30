@@ -7,15 +7,29 @@ import static dev.ionfusion.fusion.FusionBool.makeBool;
 
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.embed.TopLevel;
 
 
 /**
  * Utilities for working with syntax objects.
  */
-final class FusionSyntax
+public final class FusionSyntax
 {
     private FusionSyntax() {}
 
+
+    /**
+     * Determines whether a Fusion value is a syntax object.
+     *
+     * @param top the top-level that was the source of the value.
+     * @param value the value to test.
+     *
+     * @return {@code true} if the value is a syntax object, otherwise {@code false}.
+     */
+    public static boolean isSyntax(TopLevel top, Object value)
+    {
+        return (value instanceof SyntaxValue);
+    }
 
     /**
      * Determines whether a Fusion value is a syntax object.
@@ -27,6 +41,20 @@ final class FusionSyntax
 
 
     /**
+     * Determines whether a Fusion value is an identifier; that is, a syntax object
+     * wrapping a symbol.
+     *
+     * @param top the top-level that was the source of the value.
+     * @param value the value to test.
+     *
+     * @return {@code true} if the value is a Fusion identifier, otherwise {@code false}.
+     */
+    public static boolean isIdentifier(TopLevel top, Object value)
+    {
+        return (value instanceof SyntaxSymbol);
+    }
+
+    /**
      * Determines whether a Fusion value is an identifier; that is, a syntax
      * object wrapping a symbol.
      */
@@ -35,6 +63,23 @@ final class FusionSyntax
         return (value instanceof SyntaxSymbol);
     }
 
+
+    /**
+     * Unwraps a Fusion value syntax object, returning the enclosed datum.
+     *
+     * @param top the top-level that was the source of the value.
+     * @param stx must be a syntax object.
+     *
+     * @return the plain datum stripped of syntax information.
+     *
+     * @throws FusionException if an error occurs during evaluation.
+     */
+    public static Object unsafeSyntaxUnwrap(TopLevel top, Object stx)
+        throws FusionException
+    {
+        Evaluator eval = StandardTopLevel.toEvaluator(top);
+        return unsafeSyntaxUnwrap(eval, stx);
+    }
 
     static Object unsafeSyntaxUnwrap(Evaluator eval, Object stx)
         throws FusionException
