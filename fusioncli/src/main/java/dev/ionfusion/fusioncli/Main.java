@@ -3,9 +3,6 @@
 
 package dev.ionfusion.fusioncli;
 
-import dev.ionfusion.fusioncli.framework.Cli;
-import dev.ionfusion.fusioncli.framework.CommandSuite;
-import dev.ionfusion.fusioncli.framework.Separator;
 import dev.ionfusion.fusioncli.framework.Stdio;
 
 /**
@@ -26,23 +23,9 @@ public final class Main
     {
         try
         {
-            CommandSuite suite = new CommandSuite(new Repl(),
-                                                  new Load(),
-                                                  new Eval(),
-                                                  new Require(),
-                                                  new Cover(),
-                                                  new Separator(),
-                                                  new Help(),
-                                                  new Version(),
-                                                  new Document());
-
-            GlobalOptions globals = new GlobalOptions(suite, myStdio);
-
-            Cli<?> cli = new FusionCli(globals);
-
             try
             {
-                return cli.executeCommandLine(args);
+                return new FusionCli(myStdio).executeCommandLine(args);
             }
             finally
             {

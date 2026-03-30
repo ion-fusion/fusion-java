@@ -11,7 +11,7 @@ import static org.hamcrest.Matchers.startsWith;
 import org.junit.jupiter.api.Test;
 
 public class HelpTest
-    extends CliTestCase
+    extends FusionCliTestCase
 {
     @Test
     public void testHelpNoArgs()

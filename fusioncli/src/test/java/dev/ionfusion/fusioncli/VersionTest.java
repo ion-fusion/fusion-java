@@ -18,7 +18,7 @@ import dev.ionfusion.runtime.base.FusionJarInfo;
 import org.junit.jupiter.api.Test;
 
 public class VersionTest
-    extends CliTestCase
+    extends FusionCliTestCase
 {
     @Test
     public void testFusionVersion()

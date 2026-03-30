@@ -12,7 +12,7 @@ import static org.hamcrest.Matchers.is;
 import org.junit.jupiter.api.Test;
 
 public class ReplTest
-    extends CliTestCase
+    extends FusionCliTestCase
 {
     @Test
     public void replTakesNoArgs()

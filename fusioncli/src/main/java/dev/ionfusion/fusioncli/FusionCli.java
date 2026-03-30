@@ -6,7 +6,10 @@ package dev.ionfusion.fusioncli;
 import static dev.ionfusion.fusioncli.framework.OptionParser.extractOptions;
 
 import dev.ionfusion.fusioncli.framework.Command;
+import dev.ionfusion.fusioncli.framework.CommandSuite;
+import dev.ionfusion.fusioncli.framework.Separator;
 import dev.ionfusion.fusioncli.framework.SequenceCli;
+import dev.ionfusion.fusioncli.framework.Stdio;
 import dev.ionfusion.fusioncli.framework.UsageException;
 import java.io.PrintStream;
 
@@ -17,14 +20,27 @@ class FusionCli
 
     private static final int USAGE_ERROR_CODE = 1;
 
+    static CommandSuite makeSuite()
+    {
+        return new CommandSuite(new Repl(),
+                                new Load(),
+                                new Eval(),
+                                new Require(),
+                                new Cover(),
+                                new Separator(),
+                                new Help(),
+                                new Version(),
+                                new Document());
+    }
+
 
     private final PrintStream myStderr;
 
-    FusionCli(GlobalOptions context)
+    FusionCli(Stdio stdio)
     {
-        super(context);
+        super(new GlobalOptions(makeSuite(), stdio));
 
-        myStderr = context.stderr();
+        myStderr = stdio.stderr();
     }
 
 
