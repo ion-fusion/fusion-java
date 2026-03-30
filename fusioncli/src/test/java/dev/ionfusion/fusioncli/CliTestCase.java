@@ -7,6 +7,7 @@ import static dev.ionfusion.testing.ProjectLayout.fusionBootstrapDirectory;
 import static dev.ionfusion.testing.ProjectLayout.mainRepositoryDirectory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import dev.ionfusion.fusioncli.framework.Stdio;
 import dev.ionfusion.testing.StdioTestCase;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,7 +47,7 @@ public class CliTestCase
     {
         commandLine = prependGlobalOptions(commandLine);
 
-        Main cli = new Main(stdin(), stdout(), stderr());
+        Main cli = new Main(new Stdio(stdin(), stdout(), stderr()));
         return cli.executeCommandLine(commandLine);
     }
 

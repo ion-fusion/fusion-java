@@ -341,7 +341,7 @@ public final class CoverageReportWriter
                 }
 
                 assert locationIndex == locations.length
-                    : "Not all locations were found in the source";
+                    : "Not all locations were found in the source of " + name.getPath();
 
                 // Copy the rest of the Ion source.
                 copySourceThroughOffset(sourceHtml, ionBytes, Long.MAX_VALUE);

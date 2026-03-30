@@ -16,6 +16,6 @@ public class FusionCliTest
     {
         run(1, "not-a-command");
 
-        assertThat(stderrText, startsWith("\nUnknown command: 'not-a-command'\n"));
+        assertThat(stderrText, startsWith("Unknown command: 'not-a-command'\n"));
     }
 }
