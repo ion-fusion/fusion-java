@@ -4,7 +4,7 @@
 package dev.ionfusion.fusioncli.framework;
 
 
-public class Command<Context>
+public abstract class Command<Context extends CommandContext>
 {
     private final String   myCommand;
     private final String[] myAliases;

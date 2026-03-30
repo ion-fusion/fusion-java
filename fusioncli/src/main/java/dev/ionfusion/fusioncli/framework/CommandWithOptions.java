@@ -5,7 +5,7 @@ package dev.ionfusion.fusioncli.framework;
 
 import static dev.ionfusion.fusioncli.framework.OptionParser.extractOptions;
 
-public abstract class CommandWithOptions<Context>
+public abstract class CommandWithOptions<Context extends CommandContext>
     extends Command<Context>
 {
     protected CommandWithOptions(String command, String... aliases)
