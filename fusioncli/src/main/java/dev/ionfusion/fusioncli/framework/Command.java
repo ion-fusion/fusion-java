@@ -4,14 +4,21 @@
 package dev.ionfusion.fusioncli.framework;
 
 
-public abstract class Command<Context extends CommandContext>
+/**
+ * Base class for CLI commands.  At minimum, subclasses must override one of the
+ * {@code makeExecutor} variants to give the command some functionality.
+ *
+ * @param <Context> contains the global state for the CLI and is available to all
+ * commands.
+ */
+public abstract class Command <Context extends CommandContext>
 {
     private final String   myCommand;
     private final String[] myAliases;
 
     private String myHelpOneLiner = null;
-    private String myHelpUsage = "your guess is as good as mine!";
-    private String myHelpBody = "Sorry, this command is undocumented.\n";
+    private String myHelpUsage    = "your guess is as good as mine!";
+    private String myHelpBody     = "Sorry, this command is undocumented.\n";
 
 
     //=========================================================================
@@ -25,14 +32,14 @@ public abstract class Command<Context extends CommandContext>
 
 
     /**
-     * Sets the help text for this command.
+     * Sets the help text for this command.  This is intended to be called by subclass
+     * constructors.
      *
-     * @param oneLiner must be non-empty. It should start with a verb and end
-     * with a period.
+     * @param oneLiner must be non-empty. It should start with a verb and end with a
+     * period.
      * @param usage must be non-empty and must start with the primary command.
-     * @param body must be non-empty.  It should not be indented, and it must
-     * not end with a newline.  It should be (explicitly) wrapped to display
-     * within 80 columns.
+     * @param body must be non-empty.  It should not be indented, and it must not end
+     * with a newline.  It should be (explicitly) wrapped to display within 80 columns.
      */
     protected void putHelpText(String oneLiner, String usage, String body)
     {
@@ -89,8 +96,8 @@ public abstract class Command<Context extends CommandContext>
     // CLI Argument Processing Methods
 
     /**
-     * Verify that the command string used to invoke the command matches
-     * the command or one of its aliases.
+     * Verify that the command string used to invoke the command matches the command or
+     * one of its aliases.
      */
     public boolean matches(String command)
     {
@@ -104,8 +111,8 @@ public abstract class Command<Context extends CommandContext>
 
 
     /**
-     * Perform pre-processing, including in particular argument processing.
-     * A null result causes the framework to emit command-specific usage help.
+     * Perform pre-processing, including in particular argument processing. A null
+     * result causes the framework to emit command-specific usage help.
      * <p>
      * This implementation ignores the {@code context} and invokes
      * {@link #makeExecutor(String[])}. Subclasses must override one of these variants.
@@ -124,8 +131,7 @@ public abstract class Command<Context extends CommandContext>
     }
 
     /**
-     * Parses the command-line arguments to build a {@link Executor} for
-     * execution.
+     * Parses the command-line arguments to build a {@link Executor} for execution.
      *
      * @param arguments to parse
      *
