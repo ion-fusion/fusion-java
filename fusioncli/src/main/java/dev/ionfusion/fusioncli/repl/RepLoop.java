@@ -35,7 +35,7 @@ public abstract class RepLoop
 
 
     public int run()
-        throws FusionException, IOException
+        throws IOException
     {
         try
         {
