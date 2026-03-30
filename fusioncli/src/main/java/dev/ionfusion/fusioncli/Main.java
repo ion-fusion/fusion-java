@@ -44,7 +44,7 @@ public final class Main
             GlobalOptions globals =
                 new GlobalOptions(suite, myStdin, myStdout, myStderr);
 
-            Cli<?> cli = new CommandFactory(globals);
+            Cli<?> cli = new FusionCli(globals);
             return cli.executeCommandLine(args);
         }
         catch (Throwable e)

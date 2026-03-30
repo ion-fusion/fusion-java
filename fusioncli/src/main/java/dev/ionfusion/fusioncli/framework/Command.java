@@ -13,7 +13,7 @@ package dev.ionfusion.fusioncli.framework;
  */
 public abstract class Command <Context extends CommandContext>
 {
-    private final String   myCommand;
+    private final String   myName;
     private final String[] myAliases;
 
     private String myHelpOneLiner = null;
@@ -24,9 +24,11 @@ public abstract class Command <Context extends CommandContext>
     //=========================================================================
     // Construction and Initialization
 
-    protected Command(String command, String... aliases)
+    protected Command(String name, String... aliases)
     {
-        myCommand = command;
+        assert name != null && !name.isEmpty();
+
+        myName = name;
         myAliases = (aliases == null ? new String[0] : aliases);
     }
 
@@ -44,7 +46,7 @@ public abstract class Command <Context extends CommandContext>
     protected void putHelpText(String oneLiner, String usage, String body)
     {
         assert oneLiner != null && !oneLiner.isEmpty();
-        assert usage != null && usage.startsWith(myCommand);
+        assert usage != null && usage.startsWith(myName);
         assert body != null && !body.endsWith("\n");
 
         myHelpOneLiner = oneLiner;
@@ -56,14 +58,19 @@ public abstract class Command <Context extends CommandContext>
     //=========================================================================
     // Property Accessors
 
-    public String getCommand()
+    /**
+     * Gets the primary name of this command.
+     *
+     * @return the name, not null or empty.
+     */
+    public String getName()
     {
-        return myCommand;
+        return myName;
     }
 
     /**
      * Gets the aliases for this command, generally shortened forms of
-     * {@link #getCommand}.
+     * {@link #getName}.
      *
      * @return the array of aliases, not null.
      */
@@ -101,7 +108,7 @@ public abstract class Command <Context extends CommandContext>
      */
     public boolean matches(String command)
     {
-        if (getCommand().equals(command)) return true;
+        if (getName().equals(command)) return true;
         for (String alias : myAliases)
         {
             if (alias.equals(command)) return true;

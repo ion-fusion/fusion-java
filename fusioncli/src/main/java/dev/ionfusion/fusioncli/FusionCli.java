@@ -10,7 +10,7 @@ import dev.ionfusion.fusioncli.framework.SequenceCli;
 import dev.ionfusion.fusioncli.framework.UsageException;
 import java.io.PrintStream;
 
-class CommandFactory
+class FusionCli
     extends SequenceCli<GlobalOptions>
 {
     public static final String APP_NAME = "fusion";
@@ -21,7 +21,7 @@ class CommandFactory
     private final PrintStream myStdout;
     private final PrintStream myStderr;
 
-    CommandFactory(GlobalOptions context)
+    FusionCli(GlobalOptions context)
     {
         super(context);
 
@@ -51,7 +51,7 @@ class CommandFactory
         if (cmd != null)
         {
             myStderr.print(' ');
-            myStderr.print(cmd.getCommand());
+            myStderr.print(cmd.getName());
         }
 
         myStderr.println("' for more information.");
