@@ -15,14 +15,46 @@ public class ReplTest
     extends CliTestCase
 {
     @Test
+    public void replTakesNoArgs()
+        throws Exception
+    {
+        // This fails before entering the REPL.
+        run(1, "repl", "arg");
+        assertThat(stderrText, containsString("Usage: repl"));
+    }
+
+
+    //==================================================================================
+
+
+    private void expectResponse(String message)
+    {
+        assertThat(stdoutText, containsString(message));
+        assertThat(stderrText, is(emptyString()));
+    }
+
+
+    /**
+     * The REPL only writes to stdout. I'm not sure if that is the right behavior.
+     */
+    private void expectError(String message)
+    {
+        assertThat(stdoutText, containsString(message));
+        assertThat(stderrText, is(emptyString()));
+    }
+
+
+    //==================================================================================
+
+
+    @Test
     public void testSimpleExpression()
         throws Exception
     {
         supplyInput("33908\n");
         run("repl");
 
-        assertThat(stdoutText, containsString("33908\n"));
-        assertThat(stderrText, is(emptyString()));
+        expectResponse("33908\n");
     }
 
 
@@ -39,13 +71,35 @@ public class ReplTest
 
 
     @Test
+    public void testIonSyntaxError()
+        throws Exception
+    {
+        supplyInput("(void]\n");
+        run("repl");
+
+        expectError("Error reading source:");
+    }
+
+
+    @Test
+    public void testFusionSyntaxError()
+        throws Exception
+    {
+        supplyInput("(no_binding)\n");
+        run("repl");
+
+        expectError("Bad syntax: unbound identifier.");
+        expectError("no_binding");
+    }
+
+
+    @Test
     public void testHelpHelp()
         throws Exception
     {
         supplyInput("(help help)\n");
         run("repl");
 
-        assertThat(stdoutText, containsString("(help ident ...)"));
-        assertThat(stderrText, is(emptyString()));
+        expectResponse("(help ident ...)");
     }
 }
