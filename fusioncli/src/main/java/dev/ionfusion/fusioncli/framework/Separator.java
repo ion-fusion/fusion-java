@@ -3,11 +3,10 @@
 
 package dev.ionfusion.fusioncli.framework;
 
-import dev.ionfusion.fusioncli.Command;
-
 /**
  * Dummy command that never matches, but display as a separator in help output.
  */
+@SuppressWarnings("rawtypes")
 public class Separator
     extends Command
 {

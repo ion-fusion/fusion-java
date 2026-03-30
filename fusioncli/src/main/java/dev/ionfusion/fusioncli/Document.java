@@ -7,6 +7,7 @@ import static java.nio.file.Files.isDirectory;
 
 import com.amazon.ion.Timestamp;
 import dev.ionfusion.fusioncli.doc.tool.SiteBuilder;
+import dev.ionfusion.fusioncli.framework.CommandWithOptions;
 import dev.ionfusion.fusioncli.framework.UsageException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import dev.ionfusion.runtime.embed.FusionRuntime;
@@ -18,7 +19,7 @@ import java.util.function.Predicate;
 
 
 class Document
-    extends Command
+    extends CommandWithOptions<GlobalOptions>
 {
     //=+===============================================================================
     @SuppressWarnings("unused")
@@ -85,7 +86,7 @@ class Document
         }
     }
 
-    Object makeOptions(GlobalOptions globals)
+    protected Object makeOptions(GlobalOptions globals)
     {
         return new Options();
     }
@@ -95,7 +96,7 @@ class Document
 
 
     @Override
-    Executor makeExecutor(GlobalOptions globals, Object locals, String[] args)
+    protected Executor makeExecutor(GlobalOptions globals, Object locals, String[] args)
         throws UsageException
     {
         Options options = (Options) locals;

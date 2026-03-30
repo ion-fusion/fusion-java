@@ -10,6 +10,7 @@ import static java.nio.file.Files.isRegularFile;
 
 import dev.ionfusion.fusioncli.cover.CoverageReport;
 import dev.ionfusion.fusioncli.cover.CoverageReportWriter;
+import dev.ionfusion.fusioncli.framework.CommandWithOptions;
 import dev.ionfusion.fusioncli.framework.UsageException;
 import dev.ionfusion.runtime._private.cover.CoverageConfiguration;
 import dev.ionfusion.runtime._private.cover.CoverageDatabase;
@@ -23,7 +24,7 @@ import java.util.List;
  *
  */
 class Cover
-    extends Command
+    extends CommandWithOptions<GlobalOptions>
 {
     //=+===============================================================================
     private static final String HELP_ONE_LINER =
@@ -44,7 +45,7 @@ class Cover
     }
 
 
-    Object makeOptions(GlobalOptions globals)
+    protected Object makeOptions(GlobalOptions globals)
     {
         return new Options();
     }
@@ -80,7 +81,7 @@ class Cover
 
 
     @Override
-    Executor makeExecutor(GlobalOptions globals, Object locals, String[] args)
+    protected Executor makeExecutor(GlobalOptions globals, Object locals, String[] args)
         throws UsageException
     {
         if (args.length == 0) return null;

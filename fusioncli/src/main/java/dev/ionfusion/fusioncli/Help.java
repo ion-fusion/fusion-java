@@ -3,13 +3,14 @@
 
 package dev.ionfusion.fusioncli;
 
+import dev.ionfusion.fusioncli.framework.Command;
 import dev.ionfusion.fusioncli.framework.CommandSuite;
 import dev.ionfusion.fusioncli.framework.UsageException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
 class Help
-    extends Command
+    extends Command<GlobalOptions>
 {
     static final String HELP_ONE_LINER =
         "Describe the usage of this program or its commands.";
@@ -55,7 +56,7 @@ class Help
 
 
     @Override
-    Executor makeExecutor(GlobalOptions globals, String[] args)
+    public Executor makeExecutor(GlobalOptions globals, String[] args)
     {
         return new Executor(globals, args);
     }

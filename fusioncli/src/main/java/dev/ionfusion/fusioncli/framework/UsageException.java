@@ -3,8 +3,6 @@
 
 package dev.ionfusion.fusioncli.framework;
 
-import dev.ionfusion.fusioncli.Command;
-
 /**
  * Indicates that a command argument is malformed or otherwise unusable.
  */

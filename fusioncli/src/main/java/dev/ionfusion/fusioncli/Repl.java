@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusioncli;
 
+import dev.ionfusion.fusioncli.framework.Command;
 import dev.ionfusion.fusioncli.framework.UsageException;
 import dev.ionfusion.fusioncli.repl.ConsoleRepLoop;
 import dev.ionfusion.fusioncli.repl.NonConsoleRepLoop;
@@ -13,7 +14,7 @@ import java.io.PrintWriter;
  * A simple Read-Eval-Print Loop for Fusion.
  */
 class Repl
-    extends Command
+    extends Command<GlobalOptions>
 {
     //=+===============================================================================
     private static final String HELP_ONE_LINER =
@@ -37,7 +38,7 @@ class Repl
     //=========================================================================
 
     @Override
-    Executor makeExecutor(GlobalOptions globals, String[] args)
+    public Executor makeExecutor(GlobalOptions globals, String[] args)
         throws UsageException
     {
         if (args.length != 0)

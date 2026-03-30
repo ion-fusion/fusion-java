@@ -6,6 +6,7 @@ package dev.ionfusion.fusioncli;
 import static dev.ionfusion.fusioncli.framework.OptionParser.extractOptions;
 
 import dev.ionfusion.fusioncli.framework.Cli;
+import dev.ionfusion.fusioncli.framework.Command;
 import dev.ionfusion.fusioncli.framework.Executor;
 import dev.ionfusion.fusioncli.framework.UsageException;
 import java.io.PrintStream;
@@ -32,7 +33,7 @@ class CommandFactory
     }
 
 
-    private void writeUsage(Command cmd)
+    private void writeUsage(Command<?> cmd)
     {
         if (cmd != null)
         {
@@ -71,7 +72,7 @@ class CommandFactory
         String[] args = new String[argCount];
         System.arraycopy(commandLine, 1, args, 0, argCount);
 
-        Executor exec = command.prepare(context(), args);
+        Executor exec = command.makeExecutor(context(), args);
         if (exec == null)
         {
             throw new UsageException(command, null);

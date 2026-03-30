@@ -3,12 +3,13 @@
 
 package dev.ionfusion.fusioncli;
 
+import dev.ionfusion.fusioncli.framework.Command;
 import dev.ionfusion.fusioncli.framework.UsageException;
 import dev.ionfusion.runtime.embed.TopLevel;
 
 
 class Require
-    extends Command
+    extends Command<GlobalOptions>
 {
     //=+===============================================================================
     private static final String HELP_ONE_LINER =
@@ -38,7 +39,7 @@ class Require
 
 
     @Override
-    Executor makeExecutor(GlobalOptions globals, String[] args)
+    public Executor makeExecutor(GlobalOptions globals, String[] args)
         throws UsageException
     {
         if (args.length != 1) throw usage();

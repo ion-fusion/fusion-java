@@ -3,8 +3,6 @@
 
 package dev.ionfusion.fusioncli.framework;
 
-import dev.ionfusion.fusioncli.Command;
-
 /**
  * An ordered collection of commands that define a CLI.
  */

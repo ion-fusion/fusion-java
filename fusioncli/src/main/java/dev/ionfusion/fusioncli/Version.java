@@ -8,13 +8,14 @@ import com.amazon.ion.IonType;
 import com.amazon.ion.IonWriter;
 import com.amazon.ion.system.IonTextWriterBuilder;
 import com.amazon.ion.util.JarInfo;
+import dev.ionfusion.fusioncli.framework.Command;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.FusionJarInfo;
 import java.io.IOException;
 import java.io.PrintWriter;
 
 class Version
-    extends Command
+    extends Command<GlobalOptions>
 {
     private static final String HELP_ONE_LINER =
         "Writes version information about this program.";
@@ -41,7 +42,7 @@ class Version
 
 
     @Override
-    Executor makeExecutor(GlobalOptions globals, String[] args)
+    public Executor makeExecutor(GlobalOptions globals, String[] args)
     {
         return new Executor(globals);
     }
