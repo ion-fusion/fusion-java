@@ -121,6 +121,10 @@ final class ModuleStore
                 {
                     doc.setKind(BindingDoc.Kind.SYNTAX);
                 }
+                else
+                {
+                    doc.setKind(BindingDoc.Kind.CONSTANT);
+                }
             }
             return doc;
         }

@@ -9,6 +9,7 @@ import static dev.ionfusion.fusion.GlobalState.REQUIRE;
 import static dev.ionfusion.fusion.UnboundIdentifierException.makeUnboundError;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
+import dev.ionfusion.runtime._private.doc.BindingDoc;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import dev.ionfusion.runtime.base.SourceLocation;
@@ -376,6 +377,13 @@ final class ModuleNamespace
             }
 
             return store.lookup(myAddress);
+        }
+
+        @Override
+        BindingDoc lookupDoc(Namespace current)
+        {
+            ModuleInstance module = current.getRegistry().lookup(myModuleId);
+            return (module == null) ? null : module.getStore().document(myAddress);
         }
 
         @Override
