@@ -69,7 +69,7 @@ public abstract class RepLoop
     {
         red("\nWelcome to Fusion!\n\n");
         myOut.println("Type...");
-        myOut.println("  ,exit  to exit");
+        myOut.println("  ,exit  to exit. ^D should work too.");
         myOut.println("  ,help  for see all REPL commands. Try `,help help`!");
         myOut.println();
     }
