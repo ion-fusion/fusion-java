@@ -29,7 +29,7 @@ public class StdioTestCase
 
     protected void supplyInput(InputStream data)
     {
-        myStdinData.push(data);
+        myStdinData.add(data);
     }
 
     protected void supplyInput(byte[] bytes)
