@@ -5,19 +5,27 @@ package dev.ionfusion.fusioncli.repl;
 
 import dev.ionfusion.fusioncli.framework.CommandContext;
 import dev.ionfusion.fusioncli.framework.CommandSuite;
+import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.PrintWriter;
 
 public class ReplContext
     extends CommandContext
 {
+    private   final TopLevel    myTopLevel;
     protected final PrintWriter myOut;
 
-    public ReplContext(CommandSuite suite, PrintWriter out)
+    public ReplContext(CommandSuite suite, TopLevel topLevel, PrintWriter out)
     {
         super(suite);
+        myTopLevel = topLevel;
         myOut = out;
     }
 
+
+    public TopLevel top()
+    {
+        return myTopLevel;
+    }
 
     public PrintWriter out()
     {

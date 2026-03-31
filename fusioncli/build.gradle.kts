@@ -33,7 +33,7 @@ tasks.jacocoTestCoverageVerification {
     violationRules {
         rule {
             limit {
-                minimum = "0.40".toBigDecimal()
+                minimum = "0.45".toBigDecimal()
             }
         }
     }
