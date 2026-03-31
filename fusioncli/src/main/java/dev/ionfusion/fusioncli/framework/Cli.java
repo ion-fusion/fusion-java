@@ -109,6 +109,10 @@ public abstract class Cli<Context extends CommandContext>
         }
 
         String commandName = commandLine[start];
+        if (commandName.isEmpty())
+        {
+            throw new UsageException("No command given.");
+        }
 
         Command<Context> command =
             myContext.commandSuite().getMatchingCommand(commandName);
