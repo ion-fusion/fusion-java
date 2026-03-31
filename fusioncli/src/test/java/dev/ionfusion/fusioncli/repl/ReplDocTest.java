@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusioncli.repl;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class ReplDocTest
@@ -41,6 +42,17 @@ public class ReplDocTest
         expectResponse("Returns the product");
     }
 
+    @Test
+    @Disabled("https://github.com/ion-fusion/fusion-java/issues/510")
+    public void docForLocal()
+        throws Exception
+    {
+        supplyInput("(define (local) '''local docs''' true)\n");
+        supplyInput(",doc local\n");
+        runRepl();
+
+        expectResponse("local docs");
+    }
 
     @Test
     public void docForBadSyntax()
