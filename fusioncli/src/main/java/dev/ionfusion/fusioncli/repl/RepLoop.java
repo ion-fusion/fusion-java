@@ -7,6 +7,7 @@ import static dev.ionfusion.fusioncli.FusionExecutor.writeResults;
 
 import com.amazon.ion.IonException;
 import dev.ionfusion.fusioncli.framework.CommandSuite;
+import dev.ionfusion.fusioncli.repl.cmd.DocCmd;
 import dev.ionfusion.fusioncli.repl.cmd.ExitCmd;
 import dev.ionfusion.fusioncli.repl.cmd.ReplHelpCmd;
 import dev.ionfusion.runtime.base.FusionException;
@@ -34,8 +35,10 @@ public abstract class RepLoop
         myOut = stdout;
 
         CommandSuite commands = new CommandSuite(new ExitCmd(),
-                                                 new ReplHelpCmd());
-        ReplContext context = new ReplContext(commands, stdout);
+                                                 new ReplHelpCmd(),
+                                                 new DocCmd());
+        ReplContext context = new ReplContext(commands, myTopLevel, stdout);
+
         myCli = new ReplCli(context);
     }
 
@@ -70,7 +73,8 @@ public abstract class RepLoop
         red("\nWelcome to Fusion!\n\n");
         myOut.println("Type...");
         myOut.println("  ,exit  to exit. ^D should work too.");
-        myOut.println("  ,help  for see all REPL commands. Try `,help help`!");
+        myOut.println("  ,doc   to view documentation for a Fusion feature");
+        myOut.println("  ,help  to view a list of more REPL commands. Try `,help help`!");
         myOut.println();
     }
 

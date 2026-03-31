@@ -15,7 +15,7 @@ import java.io.PrintWriter;
 public class ReplHelpCmd
     extends Command<ReplContext>
 {
-    static final String HELP_ONE_LINER =
+    private static final String HELP_ONE_LINER =
         "Describe available REPL commands";
 
     private static final String HELP_USAGE =

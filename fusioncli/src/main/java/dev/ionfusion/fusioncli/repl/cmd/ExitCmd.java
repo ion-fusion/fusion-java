@@ -11,7 +11,7 @@ import dev.ionfusion.fusioncli.repl.ReplContext;
 public class ExitCmd
     extends Command<ReplContext>
 {
-    static final String HELP_ONE_LINER =
+    private static final String HELP_ONE_LINER =
         "Exit the REPL";
 
     private static final String HELP_USAGE =

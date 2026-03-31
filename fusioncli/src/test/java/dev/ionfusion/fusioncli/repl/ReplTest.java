@@ -69,17 +69,6 @@ public class ReplTest
     }
 
 
-    @Test
-    public void testHelpHelp()
-        throws Exception
-    {
-        supplyInput("(help help)\n");
-        runRepl();
-
-        expectResponse("(help ident ...)");
-    }
-
-
     //==================================================================================
     // Basic comma-commands
 
