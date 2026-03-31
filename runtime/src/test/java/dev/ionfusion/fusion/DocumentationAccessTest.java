@@ -71,8 +71,8 @@ public class DocumentationAccessTest
     {
         ModuleDocs doc = moduleDocs("/documentation");
 
-        assertThat(doc.getOneLiner(), is("These is the module body doc."));
-        assertThat(doc.getOverview(), is("These is the module body doc."));
+        assertThat(doc.getOneLiner(), is("This is the module body doc."));
+        assertThat(doc.getOverview(), is("This is the module body doc."));
 
         assertThat(doc.getProvidedNames(),
                    containsInAnyOrder("const", "macro", "proc"));

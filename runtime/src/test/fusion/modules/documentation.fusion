@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 (module documentation "/fusion"
-  "These is the module body doc."
+  "This is the module body doc."
 
   (require "/fusion/private/syntax")
 
