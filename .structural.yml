@@ -1,0 +1,15 @@
+# Copyright Ion Fusion contributors. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
+packages:
+    - "dev.ionfusion.fusion"
+    - "dev.ionfusion.runtime.base"
+    - "dev.ionfusion.runtime.embed"
+
+rules:
+    # For each package, declare other packages it can depend on.
+    "dev.ionfusion.fusion":
+        - "dev.ionfusion.runtime.base"
+        - "dev.ionfusion.runtime.embed"
+    "dev.ionfusion.runtime.embed":
+        - "dev.ionfusion.runtime.base"
