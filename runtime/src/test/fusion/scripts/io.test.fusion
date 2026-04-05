@@ -186,8 +186,25 @@ v))))]
 (write (quote null.symbol))))
 
 
-//=============================================================================
+
 // write: sexps
+
+// Context-switching: operator symbols in lists, structs, and sexps containing non-Ion values.
+
+// List: operator symbols must be quoted (list is not a sexp context).
+(check === "['+', ['+'], {'+':'+'}, (+ {{{void}}})]"
+(with_output_to_string
+(write (list (quote +) (list (quote +)) (struct "+" (quote +)) (sexp (quote +) (void))))))
+
+// Struct: operator symbols in field names and values must be quoted.
+(check === "{f:'+'}"
+(with_output_to_string
+(write (quote {f: '+'}))))
+
+// Sexp: operator symbols must NOT be quoted; void verified to stay in write mode.
+(check === "(+ ['+', {{{void}}}] {'+':\"+\",f:{{{void}}}} (+ {{{void}}}) {{{void}}})"
+(with_output_to_string
+(write (sexp (quote +) (list (quote +) (void)) (struct "+" "+" "f" (void)) (sexp (quote +) (void)) (void)))))
 
 // Empty and null sexps.
 (check === "()"
@@ -230,4 +247,3 @@ v))))]
 (check === "(a {.} 'with spaces')"
 (with_output_to_string
 (write (pair (quote a) (quote 'with spaces')))))
-

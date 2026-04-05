@@ -3,6 +3,9 @@
 
 package dev.ionfusion.fusion;
 
+import static com.amazon.ion.util.IonTextUtils.symbolVariant;
+import static com.amazon.ion.util.IonTextUtils.SymbolVariant.OPERATOR;
+
 import static dev.ionfusion.fusion.FusionBool.falseBool;
 import static dev.ionfusion.fusion.FusionBool.makeBool;
 import static dev.ionfusion.fusion.FusionBool.trueBool;
@@ -308,8 +311,7 @@ final class FusionSymbol
         void write(Evaluator eval, Appendable out, boolean quoteOperators)
             throws IOException
         {
-            if (!quoteOperators
-                && IonTextUtils.symbolVariant(myContent) == IonTextUtils.SymbolVariant.OPERATOR)
+            if (!quoteOperators && symbolVariant(myContent) == OPERATOR)
             {
                 // Inside a sexp, operator symbols like + and = are valid Ion
                 // without quoting. Operator content is guaranteed to be
