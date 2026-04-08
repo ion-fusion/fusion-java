@@ -6,8 +6,8 @@ Our core team:
 * Jonathan Little drove the externalization process within Amazon.
 * Isaac M. Good has long provided critical community leadership and technical reviews.
 
-In addition, we thank the following individuals for their code contributions to this project. In 
-chronological order:
+In addition, we thank the following individuals for their code contributions to this
+project. In chronological order:
 
 * Jason Lee
 * Travis McMillon
@@ -35,3 +35,4 @@ chronological order:
 * Marco Torres
 * Matt Goertzen
 * Zachary Luckabaugh
+* Dimitrios Dalaklidis
