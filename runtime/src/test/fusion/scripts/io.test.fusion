@@ -29,35 +29,34 @@
 
 
 (with_ion_from_string "0 1 2 3"
-(lambda ()
-(check === 0 (read))
-(check === 1 (read))
-(with_ion_from_string " \"hello\" "
-(lambda ()
-(check = "hello" (read))
-(check_true (is_eof (read)))))
-(check === 2 (read))
-(check === 3 (read))
-(check_true (is_eof (read)))))
+  (lambda ()
+    (check === 0 (read))
+    (check === 1 (read))
+    (with_ion_from_string " \"hello\" "
+      (lambda ()
+        (check = "hello" (read))
+        (check_true (is_eof (read)))))
+    (check === 2 (read))
+    (check === 3 (read))
+    (check_true (is_eof (read)))))
 
 
 // This assumes that current_directory is at the project root.
 (with_ion_from_file (test_data_file "ints.ion")
-(lambda ()
-(check === 0 (read))
-(check === 1 (read))
-(with_ion_from_file (test_data_file "hello.ion")
-(lambda ()
-(check = "hello" (read))
-(check_true (is_eof (read)))))
-(check === 2 (read))
-(check === 3 (read))
-(check_true (is_eof (read)))))
-
+  (lambda ()
+    (check === 0 (read))
+    (check === 1 (read))
+    (with_ion_from_file (test_data_file "hello.ion")
+      (lambda ()
+        (check = "hello" (read))
+        (check_true (is_eof (read)))))
+    (check === 2 (read))
+    (check === 3 (read))
+    (check_true (is_eof (read)))))
 
 // A nice shortcut for reading a single value.
 (check = "hello"
-(with_ion_from_file (test_data_file "hello.ion") read))
+  (with_ion_from_file (test_data_file "hello.ion") read))
 
 (check_true (is_eof eof))
 
@@ -66,22 +65,22 @@
 // Lob I/O
 
 (define_check (check_lob_io value)
-(let [(lob (ionize_to_blob value))]
-(check_pred is_blob lob)
-(check_pred (negate is_null) lob)
-(let [(v (with_ion_from_lob lob
-(thunk
-(let [(v (read))]
-(check_pred (negate is_eof) v)
-(check_pred is_eof (read))
-v))))]
-(check === value v))))
+  (let [(lob (ionize_to_blob value))]
+    (check_pred is_blob lob)
+    (check_pred (negate is_null) lob)
+    (let [(v (with_ion_from_lob lob
+               (thunk
+                 (let [(v (read))]
+                   (check_pred (negate is_eof) v)
+                   (check_pred is_eof (read))
+                   v))))]
+      (check === value v))))
 
 (map (lambda (v) (check_lob_io v)) representative_ion_data)
 
 // Make sure we can read Ion text
 (check === (quote [only_me])
-(with_ion_from_lob {{"[only_me]"}} read))
+  (with_ion_from_lob {{"[only_me]"}} read))
 
 (expect_arity_error (ionize_to_blob))
 (expect_arity_error (ionize_to_blob 1 2))
@@ -134,8 +133,8 @@ v))))]
 (check === "{f:\"a\"}" (display_to_string { f: "a" }))
 
 (check_pred (|r| (or (=== "{f:a,g:b}" r)
-(=== "{g:b,f:a}" r)))
-(display_to_string (quote { f: a, g: b })))
+                     (=== "{g:b,f:a}" r)))
+  (display_to_string (quote { f: a, g: b })))
 
 
 //=============================================================================
@@ -146,11 +145,11 @@ v))))]
 (check === "" (with_output_to_string))
 
 (check === "true12\n\"write\"display"
-(with_output_to_string
-(display "true")
-(displayln 12)
-(write "write")
-(display "display")))
+  (with_output_to_string
+    (display "true")
+    (displayln 12)
+    (write "write")
+    (display "display")))
 
 
 //=============================================================================
@@ -158,32 +157,32 @@ v))))]
 
 // Plain identifier: written as-is, no quotes needed.
 (check === "quoted_sym"
-(with_output_to_string
-(write (quote quoted_sym))))
+  (with_output_to_string
+    (write (quote quoted_sym))))
 
 // Symbol requiring quotes (contains spaces): always quoted regardless of context.
 (check === "'with spaces'"
-(with_output_to_string
-(write (quote 'with spaces'))))
+  (with_output_to_string
+    (write (quote 'with spaces'))))
 
 // Annotated symbol: annotation and value both written correctly.
 (check === "tag::value"
-(with_output_to_string
-(write (quote tag::value))))
+  (with_output_to_string
+    (write (quote tag::value))))
 
 // Operator symbol outside a sexp: must be quoted.
 (check === "'+'"
-(with_output_to_string
-(write (quote '+'))))
+  (with_output_to_string
+    (write (quote '+'))))
 
 (check === "'+='"
-(with_output_to_string
-(write (quote +=))))
+  (with_output_to_string
+    (write (quote +=))))
 
 // null symbol
 (check === "null.symbol"
-(with_output_to_string
-(write (quote null.symbol))))
+  (with_output_to_string
+    (write (quote null.symbol))))
 
 
 
@@ -193,57 +192,57 @@ v))))]
 
 // List: operator symbols must be quoted (list is not a sexp context).
 (check === "['+', ['+'], {'+':'+'}, (+ {{{void}}})]"
-(with_output_to_string
-(write (list (quote +) (list (quote +)) (struct "+" (quote +)) (sexp (quote +) (void))))))
+  (with_output_to_string
+    (write (list (quote +) (list (quote +)) (struct "+" (quote +)) (sexp (quote +) (void))))))
 
 // Struct: operator symbols in field names and values must be quoted.
 (check === "{f:'+'}"
-(with_output_to_string
-(write (quote {f: '+'}))))
+  (with_output_to_string
+    (write (quote {f: '+'}))))
 
 // Sexp: operator symbols must NOT be quoted; void verified to stay in write mode.
 (check === "(+ ['+', {{{void}}}] {'+':\"+\",f:{{{void}}}} (+ {{{void}}}) {{{void}}})"
-(with_output_to_string
-(write (sexp (quote +) (list (quote +) (void)) (struct "+" "+" "f" (void)) (sexp (quote +) (void)) (void)))))
+  (with_output_to_string
+    (write (sexp (quote +) (list (quote +) (void)) (struct "+" "+" "f" (void)) (sexp (quote +) (void)) (void)))))
 
 // Empty and null sexps.
 (check === "()"
-(with_output_to_string
-(write (sexp))))
+  (with_output_to_string
+    (write (sexp))))
 
 (check === "null.sexp"
-(with_output_to_string
-(write (quote null.sexp))))
+  (with_output_to_string
+    (write (quote null.sexp))))
 
 // Operator symbols inside a sexp: must NOT be quoted.
 (check === "(+ 1 2)"
-(with_output_to_string
-(write (quote (+ 1 2)))))
+  (with_output_to_string
+    (write (quote (+ 1 2)))))
 
 (check === "(+ =)"
-(with_output_to_string
-(write (quote (+ =)))))
+  (with_output_to_string
+    (write (quote (+ =)))))
 
 // Symbol requiring quotes inside a sexp: must still be quoted.
 (check === "('with spaces')"
-(with_output_to_string
-(write (quote ('with spaces')))))
+  (with_output_to_string
+    (write (quote ('with spaces')))))
 
 // Annotated value inside a sexp: annotation written correctly.
 (check === "(note::\"Hello\")"
-(with_output_to_string
-(write (quote (note::"Hello")))))
+  (with_output_to_string
+    (write (quote (note::"Hello")))))
 
 // Improper sexp (pair): operator symbols in both head and tail unquoted.
 (check === "(a {.} b)"
-(with_output_to_string
-(write (pair (quote a) (quote b)))))
+  (with_output_to_string
+    (write (pair (quote a) (quote b)))))
 
 (check === "(+ {.} =)"
-(with_output_to_string
-(write (pair (quote +) (quote =)))))
+  (with_output_to_string
+    (write (pair (quote +) (quote =)))))
 
 // Symbol requiring quotes in improper sexp tail: must still be quoted.
 (check === "(a {.} 'with spaces')"
-(with_output_to_string
-(write (pair (quote a) (quote 'with spaces')))))
+  (with_output_to_string
+    (write (pair (quote a) (quote 'with spaces')))))

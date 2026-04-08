@@ -84,6 +84,7 @@ public class FusionIoTest
     }
 
 
+
     @Test
     public void testLoadCurrentNamespace()
         throws Exception
@@ -185,7 +186,6 @@ public class FusionIoTest
 
         assertEquals(iv, container.get(0));
     }
-
 
     @Test
     public void testIonizeInjectedDom()
