@@ -152,4 +152,97 @@
     (display "display")))
 
 
-"SUCCESS (io.test)"
+//=============================================================================
+// write: symbols
+
+// Plain identifier: written as-is, no quotes needed.
+(check === "quoted_sym"
+  (with_output_to_string
+    (write (quote quoted_sym))))
+
+// Symbol requiring quotes (contains spaces): always quoted regardless of context.
+(check === "'with spaces'"
+  (with_output_to_string
+    (write (quote 'with spaces'))))
+
+// Annotated symbol: annotation and value both written correctly.
+(check === "tag::value"
+  (with_output_to_string
+    (write (quote tag::value))))
+
+// Operator symbol outside a sexp: must be quoted.
+(check === "'+'"
+  (with_output_to_string
+    (write (quote '+'))))
+
+(check === "'+='"
+  (with_output_to_string
+    (write (quote +=))))
+
+// null symbol
+(check === "null.symbol"
+  (with_output_to_string
+    (write (quote null.symbol))))
+
+
+
+// write: sexps
+
+// Context-switching: operator symbols in lists, structs, and sexps containing non-Ion values.
+
+// List: operator symbols must be quoted (list is not a sexp context).
+(check === "['+', ['+'], {'+':'+'}, (+ {{{void}}})]"
+  (with_output_to_string
+    (write (list (quote +) (list (quote +)) (struct "+" (quote +)) (sexp (quote +) (void))))))
+
+// Struct: operator symbols in field names and values must be quoted.
+(check === "{f:'+'}"
+  (with_output_to_string
+    (write (quote {f: '+'}))))
+
+// Sexp: operator symbols must NOT be quoted; void verified to stay in write mode.
+(check === "(+ ['+', {{{void}}}] {'+':\"+\",f:{{{void}}}} (+ {{{void}}}) {{{void}}})"
+  (with_output_to_string
+    (write (sexp (quote +) (list (quote +) (void)) (struct "+" "+" "f" (void)) (sexp (quote +) (void)) (void)))))
+
+// Empty and null sexps.
+(check === "()"
+  (with_output_to_string
+    (write (sexp))))
+
+(check === "null.sexp"
+  (with_output_to_string
+    (write (quote null.sexp))))
+
+// Operator symbols inside a sexp: must NOT be quoted.
+(check === "(+ 1 2)"
+  (with_output_to_string
+    (write (quote (+ 1 2)))))
+
+(check === "(+ =)"
+  (with_output_to_string
+    (write (quote (+ =)))))
+
+// Symbol requiring quotes inside a sexp: must still be quoted.
+(check === "('with spaces')"
+  (with_output_to_string
+    (write (quote ('with spaces')))))
+
+// Annotated value inside a sexp: annotation written correctly.
+(check === "(note::\"Hello\")"
+  (with_output_to_string
+    (write (quote (note::"Hello")))))
+
+// Improper sexp (pair): operator symbols in both head and tail unquoted.
+(check === "(a {.} b)"
+  (with_output_to_string
+    (write (pair (quote a) (quote b)))))
+
+(check === "(+ {.} =)"
+  (with_output_to_string
+    (write (pair (quote +) (quote =)))))
+
+// Symbol requiring quotes in improper sexp tail: must still be quoted.
+(check === "(a {.} 'with spaces')"
+  (with_output_to_string
+    (write (pair (quote a) (quote 'with spaces')))))

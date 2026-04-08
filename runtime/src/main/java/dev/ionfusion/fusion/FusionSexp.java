@@ -1021,6 +1021,21 @@ public final class FusionSexp
             }
         }
 
+        /**
+         * Writes this sexp using Fusion's write format.
+         * <p>
+         * Operator symbols that are direct children of a sexp are written
+         * without quoting (e.g. {@code +} rather than {@code '+'}), matching
+         * the behavior of {@link #ionize} which delegates to {@link IonWriter}
+         * for this purpose. This applies equally to proper sexps
+         * {@code (a b c)} and improper sexps {@code (a {.} b)}: properness
+         * affects only structure, not symbol quoting.
+         * <p>
+         * Unlike {@link #ionize}, this method tolerates non-ionizable values
+         * (e.g. void, closures) by falling back to their own {@code write}
+         * output, so expressions like {@code (write (sexp (quote +) (void)))}
+         * produce {@code (+ {{{void}}})} rather than raising an exception.
+         */
         @Override
         void write(Evaluator eval, Appendable out)
             throws IOException, FusionException
@@ -1029,11 +1044,17 @@ public final class FusionSexp
             out.append('(');
 
             ImmutablePair pair = this;
+            boolean first = true;
             while (true)
             {
-                if (pair != this) out.append(' ');
+                if (!first) out.append(' ');
+                first = false;
 
-                dispatchWrite(eval, out, pair.myHead);
+                // Pass quoteOperators=false: direct children of a sexp render
+                // operator symbols unquoted. Each child's write() reverts to
+                // quoteOperators=true for its own children, so only the
+                // immediate children of this sexp are affected.
+                dispatchWrite(eval, out, pair.myHead, false);
 
                 Object tail = pair.myTail;
                 if (tail instanceof ImmutablePair)
@@ -1046,8 +1067,10 @@ public final class FusionSexp
                 }
                 else
                 {
+                    // Improper sexp: same quoting rules apply to the tail
+                    // element, since it is still a direct child of this sexp.
                     out.append(" {.} ");
-                    dispatchWrite(eval, out, tail);
+                    dispatchWrite(eval, out, tail, false);
                     break;
                 }
             }
