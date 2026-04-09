@@ -7,18 +7,11 @@
 Helper forms for the REPL.
   '''
 
-  (require "/fusion/ffi/java")
+  (require
+    "/fusion/private/syntax")
 
   (provide
-    help
+    quote_syntax   // Needed by ,doc
   )
-
-  (define help
-    '''
-    (help ident ...)
-
-Prints documentation for the given bindings, if available.
-    '''
-    (java_new "dev.ionfusion.fusion._Private_HelpForm"))
 
 )

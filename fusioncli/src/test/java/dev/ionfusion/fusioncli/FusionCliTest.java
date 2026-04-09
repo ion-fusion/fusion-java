@@ -7,15 +7,24 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.startsWith;
 import org.junit.jupiter.api.Test;
 
-public class CommandFactoryTest
-    extends CliTestCase
+public class FusionCliTest
+    extends FusionCliTestCase
 {
+    @Test
+    public void noCommand()
+        throws Exception
+    {
+        run(1, "");
+
+        assertThat(stderrText, startsWith("No command given.\n"));
+    }
+
     @Test
     public void testUsage()
         throws Exception
     {
         run(1, "not-a-command");
 
-        assertThat(stderrText, startsWith("\nUnknown command: 'not-a-command'\n"));
+        assertThat(stderrText, startsWith("Unknown command: 'not-a-command'\n"));
     }
 }

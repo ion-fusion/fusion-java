@@ -30,12 +30,16 @@ import dev.ionfusion.fusion.FusionSequence.BaseSequence;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
 
-final class FusionSexp
+/**
+ * Utilities for working with S-expressions.
+ */
+public final class FusionSexp
 {
     private FusionSexp() {}
 
@@ -260,6 +264,20 @@ final class FusionSexp
     static boolean isSexp(Evaluator eval, Object v)
     {
         return (v instanceof BaseSexp);
+    }
+
+
+    /**
+     * Determines whether the given value is an empty sexp.
+     *
+     * @param top the top-level that was the source of the value.
+     * @param value the value to test.
+     *
+     * @return {@code true} if the value is a Fusion procedure, otherwise {@code false}.
+     */
+    public static boolean isEmptySexp(TopLevel top, Object value)
+    {
+        return (value instanceof EmptySexp);
     }
 
     static boolean isEmptySexp(Evaluator eval, Object v)

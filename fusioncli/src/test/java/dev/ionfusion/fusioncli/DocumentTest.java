@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 public class DocumentTest
-    extends CliTestCase
+    extends FusionCliTestCase
 {
     @TempDir
     public File tmpDir;

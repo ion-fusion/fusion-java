@@ -5,6 +5,11 @@ package dev.ionfusion.fusioncli;
 
 import com.amazon.ion.IonException;
 import dev.ionfusion.fusion._Private_Trampoline;
+import dev.ionfusion.fusioncli.framework.CommandContext;
+import dev.ionfusion.fusioncli.framework.CommandSuite;
+import dev.ionfusion.fusioncli.framework.OptionParser;
+import dev.ionfusion.fusioncli.framework.Stdio;
+import dev.ionfusion.fusioncli.framework.UsageException;
 import dev.ionfusion.runtime._private.util.IonCatalogLoader;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.embed.FusionRuntime;
@@ -12,6 +17,7 @@ import dev.ionfusion.runtime.embed.FusionRuntimeBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -19,9 +25,10 @@ import java.util.StringTokenizer;
 /**
  * Stores options and data shared by the entire execution sequence.
  * <p>
- * The properties here are set via reflection by {@link Command#extractOptions}.
+ * The properties here are set via reflection by {@link OptionParser#extractOptions}.
  */
 final class GlobalOptions
+    extends CommandContext
 {
     static final String HELP =
         "\n\n"
@@ -42,9 +49,7 @@ final class GlobalOptions
         ;
 
 
-    private final InputStream myStdin;
-    private final PrintStream myStdout;
-    private final PrintStream myStderr;
+    private final Stdio myStdio;
 
     private ArrayList<File> myRepositories;
     private ArrayList<File> myCatalogs;
@@ -52,26 +57,31 @@ final class GlobalOptions
     private FusionRuntime   myRuntime;
 
 
-    GlobalOptions(InputStream stdin, PrintStream stdout, PrintStream stderr)
+    GlobalOptions(CommandSuite commands, Stdio stdio)
     {
-        myStdin  = stdin;
-        myStdout = stdout;
-        myStderr = stderr;
+        super(commands);
+        myStdio = stdio;
+    }
+
+
+    Stdio stdio()
+    {
+        return myStdio;
     }
 
     InputStream stdin()
     {
-        return myStdin;
+        return myStdio.stdin();
     }
 
-    PrintStream stdout()
+    OutputStream stdout()
     {
-        return myStdout;
+        return myStdio.stdout();
     }
 
     PrintStream stderr()
     {
-        return myStderr;
+        return myStdio.stderr();
     }
 
 
@@ -152,7 +162,7 @@ final class GlobalOptions
             }
         }
 
-        builder.setInitialCurrentOutputPort(myStdout);
+        builder.setInitialCurrentOutputPort(stdout());
 
         _Private_Trampoline.setDocumenting(builder, myDocsEnabled);
 

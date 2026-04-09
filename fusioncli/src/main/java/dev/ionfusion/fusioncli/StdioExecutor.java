@@ -4,7 +4,8 @@
 package dev.ionfusion.fusioncli;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import dev.ionfusion.fusioncli.Command.Executor;
+
+import dev.ionfusion.fusioncli.framework.Executor;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
@@ -20,6 +21,11 @@ abstract class StdioExecutor
     StdioExecutor(GlobalOptions globals)
     {
         myGlobals = globals;
+    }
+
+    protected GlobalOptions globals()
+    {
+        return myGlobals;
     }
 
 

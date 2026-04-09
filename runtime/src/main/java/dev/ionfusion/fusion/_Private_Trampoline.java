@@ -3,6 +3,8 @@
 
 package dev.ionfusion.fusion;
 
+import dev.ionfusion.fusion.Namespace.NsDefinedBinding;
+import dev.ionfusion.runtime._private.doc.BindingDoc;
 import dev.ionfusion.runtime._private.doc.ModuleDocs;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
@@ -58,6 +60,24 @@ public class _Private_Trampoline
     {
         ModuleInstance moduleInstance = ((StandardTopLevel) top).instantiateLoadedModule(id);
         return (moduleInstance == null ? null : moduleInstance.getDocs());
+    }
+
+
+    /**
+     * @param identifier must be a syntax symbol.
+     *
+     * @return null if no documentation is available.
+     */
+    public static BindingDoc findBindingDoc(TopLevel top, Object identifier)
+    {
+        Evaluator eval    = ((StandardTopLevel) top).getEvaluator();
+        Binding   binding = ((SyntaxSymbol) identifier).resolve().target();
+        if (binding instanceof NsDefinedBinding)
+        {
+            Namespace current = eval.findCurrentNamespace();
+            return ((NsDefinedBinding) binding).lookupDoc(current);
+        }
+        return null;
     }
 
 

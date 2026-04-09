@@ -11,7 +11,7 @@ import static org.hamcrest.Matchers.startsWith;
 import org.junit.jupiter.api.Test;
 
 public class HelpTest
-    extends CliTestCase
+    extends FusionCliTestCase
 {
     @Test
     public void testHelpNoArgs()
@@ -42,6 +42,6 @@ public class HelpTest
         run(1, "help", "bad");
 
         assertThat(stdoutText, startsWith("\nUnknown command: 'bad'\n"));
-        assertThat(stderrText, startsWith("\nType 'fusion help' for more information."));
+        assertThat(stderrText, startsWith("Type 'fusion help' for more information."));
     }
 }

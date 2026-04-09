@@ -3,11 +3,14 @@
 
 package dev.ionfusion.fusioncli;
 
+import dev.ionfusion.fusioncli.framework.Command;
+import dev.ionfusion.fusioncli.framework.CommandSuite;
+import dev.ionfusion.fusioncli.framework.UsageException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
 class Help
-    extends Command
+    extends Command<GlobalOptions>
 {
     static final String HELP_ONE_LINER =
         "Describe the usage of this program or its commands.";
@@ -53,7 +56,7 @@ class Help
 
 
     @Override
-    Executor makeExecutor(GlobalOptions globals, String[] args)
+    public Executor makeExecutor(GlobalOptions globals, String[] args)
     {
         return new Executor(globals, args);
     }
@@ -62,12 +65,14 @@ class Help
     private static class Executor
         extends StdioExecutor
     {
-        private final String[] myCommands;
+        private final CommandSuite mySuite;
+        private final String[]     myCommands;
 
         private Executor(GlobalOptions globals, String[] commands)
         {
             super(globals);
 
+            mySuite = globals.commandSuite();
             myCommands = commands;
         }
 
@@ -99,13 +104,13 @@ class Help
             TablePrinter table = new TablePrinter();
             table.setIndent(2);
 
-            Command[] allCommands = CommandFactory.getAllCommands();
+            Command[] allCommands = mySuite.getAllCommands();
             for (Command command : allCommands)
             {
                 String oneLiner = command.getHelpOneLiner();
                 if (oneLiner != null)
                 {
-                    String[] row = { command.getCommand(), oneLiner };
+                    String[] row = { command.getName(), oneLiner };
 
                     table.addRow(row);
                 }
@@ -132,8 +137,7 @@ class Help
 
                 String command = myCommands[i];
 
-                Command commandObj =
-                    CommandFactory.getMatchingCommand(command);
+                Command commandObj = mySuite.getMatchingCommand(command);
                 if (commandObj == null)
                 {
                     out.append("Unknown command: '");
@@ -157,7 +161,7 @@ class Help
         private void renderCommandAndAliases(Command command, Appendable out)
             throws IOException
         {
-            out.append(command.getCommand());
+            out.append(command.getName());
 
             String[] aliases = command.getAliases();
             int len = aliases.length;

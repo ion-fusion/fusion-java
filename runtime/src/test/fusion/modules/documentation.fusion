@@ -1,0 +1,24 @@
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(module documentation "/fusion"
+  "This is the module body doc."
+
+  (require "/fusion/private/syntax")
+
+  (provide const proc macro)
+
+
+  (define const
+    "This is the const doc."
+    true)
+
+  (define (proc)
+    "This is the proc doc."
+    true)
+
+  (define_syntax macro
+    "This is the macro doc."
+    (lambda (stx)
+      (quote_syntax (void))))
+)

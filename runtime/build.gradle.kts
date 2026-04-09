@@ -5,6 +5,7 @@ plugins {
     id("buildlogic.fusion-common-conventions")
     id("buildlogic.java-library-conventions")
     id("buildlogic.jacoco-conventions")
+    id("com.adrianczuczka.structural")
 }
 
 dependencies {
@@ -74,6 +75,13 @@ tasks.jacocoTestCoverageVerification {
             }
         }
     }
+}
+
+
+structural {
+    // Plugin (@1.1.4) resolves this relative to the root directory, not this project.
+    // https://github.com/adrianczuczka/structural/issues/5
+    config = ".structural.yml"
 }
 
 

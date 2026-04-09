@@ -33,7 +33,7 @@ tasks.jacocoTestCoverageVerification {
     violationRules {
         rule {
             limit {
-                minimum = "0.40".toBigDecimal()
+                minimum = "0.45".toBigDecimal()
             }
         }
     }
@@ -56,7 +56,7 @@ tasks.startScripts {
 
 application {
     applicationName = "fusion"
-    mainClass.set("dev.ionfusion.fusioncli.Cli")
+    mainClass.set("dev.ionfusion.fusioncli.Main")
     // This is unused today, but is likely to be useful, and it was hard to do.
     applicationDefaultJvmArgs = listOf("-Ddev.ionfusion.fusion.Home={{APP_HOME}}/fusion")
 }
