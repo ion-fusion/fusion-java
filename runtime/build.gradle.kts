@@ -78,10 +78,17 @@ tasks.jacocoTestCoverageVerification {
 }
 
 
+//=============================================================================
+// Checking intended package dependency structure
+
+// Run task `structuralGenerateBaseline` to update the baseline (exception) files.
 structural {
-    // Plugin (@1.1.4) resolves this relative to the root directory, not this project.
-    // https://github.com/adrianczuczka/structural/issues/5
-    config = ".structural.yml"
+    config   = ".structural.yml"
+    baseline = ".structural-baseline.xml"
+}
+
+tasks.check {
+    dependsOn(tasks.structuralCheck)
 }
 
 
