@@ -5,8 +5,8 @@ ecosystem and community, including the language, runtime, tools, documentation, 
 This project would not exist without its [contributors](CONTRIBUTORS.md)!
 
 > [!IMPORTANT]
-> This document is a work in progress. If you have a question that's not addressed here,
-> please open an issue so we know what needs improvement.
+> This document is a work in progress. If you have a question not addressed here,
+> please open an issue so we can make improvements.
 
 <!-- TODO Add issue-creation link to the above. -->
 <!-- TODO Style guides (Java code; Fusion code; commit messages; documentation) -->
@@ -36,23 +36,23 @@ Please be aware that there is a high bar in terms of design, terminology, consis
 documentation, and testing. Not everything will "fit" into the language or standard library, and
 many features can reside in user modules without problems.
 
-Documentation is the easiest thing to contribute, and offers a good route to getting to know the
-code base and the language’s library and internals.
+Documentation is the easiest thing to contribute and offers a good route to getting to
+know the code base and the language’s library and internals.
 <!-- TODO Link to info focused on contributing documentation (as opposed to code). -->
 
 Standard-library procedures are usually straightforward, especially those that can be implemented in
 Fusion with reasonable efficiency. If Java code is required, it’s somewhat more complicated (and
 poorly-documented at present).
 
-New syntactic forms are more advanced, since they require understanding Fusion’s macro system pretty
-thoroughly.
+New syntactic forms are more advanced since they require understanding Fusion’s macro
+system pretty thoroughly.
 
 
 ## Pull Request Expectations
 
-Before going further, we want you to understand what our team considers to be best practice.
+Before going further, we want you to understand our team's best practices.
 These are cultural expectations, and following them yourself (while here, at least) will
-accelerate merges and improve everyone's experience.
+speed up merges and improve everyone's experience.
 
 * Work incrementally. Review early, review often. Don't wait until the code is polished, get
   feedback on where you're going to ensure that we have the same goals. There's nothing worse than
@@ -67,7 +67,7 @@ accelerate merges and improve everyone's experience.
   cases we are looking for a specific functional change.
 
 * Our approach to AI use is cautious. Understand that you are responsible for your PR's content,
-  even if it's AI generated. We expect you to note where the AI contribution is non-trivial, and
+  even if it's AI-generated. We expect you to note where the AI contribution is non-trivial, and
   especially if any manual prompting was involved. In general, we are aligned with the [Apache
   Software Foundation's AI policy][asf] and require that commits be tagged `Generated-by:` when
   they include non-trivial AI-generated content.  See [this commit](233dfd8) for an example.
@@ -83,26 +83,27 @@ accelerate merges and improve everyone's experience.
    raise the topic. This is a quick way to ensure that there’s not already a reasonable solution,
    that the feature fits within the scope and aims of the language and library, and to gather
    general feedback on the idea.
-2. Create a GitHub fork of this repository. You'll push changes to your fork in order to create
-   pull requests to the official repository.
+2. Create a GitHub fork of this repository. You'll push changes to your fork, then
+   create pull requests to the official repository.
 3. Get a design review. Draft documentation for the proposed feature and post it as a PR. In most
    cases, this should basically be the documentation for the procedure you’re adding. This allows
    experts to ensure the proposed behavior is well-designed and well-defined, to suggest test cases,
    and so on, before you invest time in implementation.
-    * While not required, this step is recommended in order to use your time wisely! We all feel bad
+    * While not required, this step helps use your time wisely! We all feel bad
       if your efforts go down the wrong path. Writing docs first is a lightweight way for you to get
       early feedback. It's best to get the high-level details right—particularly the terminology and
       contract—before digging into details.
-4. Code it! Don’t forget the unit tests.
-5. Post a pull request, and iterate as necessary. **Review early, review often!**
-6. Upon approval, your PR will be merged by a code owner, and in most cases the change will be part
-   of the next release.
+4. Code it! Remember to add unit tests covering the new behavior.
+5. Make sure that a full build succeeds by running `./gradlew clean build`.
+6. Post a pull request and iterate as necessary. **Review early, review often!**
+7. Upon approval, your PR will be merged by a code owner, and in most cases the change
+   will be part of the next release.
 
 
 ### Issue Management
 
-We track all work items using GitHub issues, and sketch our roadmap using [milestones][]. Code
-owners are responsible for maintaining [types][] and labels on issues.
+We track work items using GitHub issues and sketch our roadmap using [milestones][].
+Code owners are responsible for maintaining [types][] and labels on issues.
 
 Within a milestone, issues are prioritized with the following labels:
 
@@ -134,7 +135,7 @@ approach that process.
 ### Follow Racket
 
 Fusion’s overall architecture is based on Racket, and most of its features are intentionally aligned
-with Racket in both name and behavior. Since Fusion is still very small, most of the features that
+with Racket in both name and behavior. Since Fusion is still small, most of the features that
 users want are already available in Racket, and so contributors should look to Racket for design
 guidance and attempt to align with that prior art as much as possible.
 
@@ -155,26 +156,27 @@ Fusion library module that includes the proposed documentation.
 
 ### Syntax
 
-The documentation of the Fusion language and libraries is primarily expressed as
-code inside the production modules in the `fusion` directory.  HTML is generated at build time
-in a manner very similar to JavaDoc; we refer to this as "fdoc" or "fusiondoc".
+The documentation of the Fusion language and libraries is primarily expressed as code
+inside the production modules in the `fusion` directory. HTML is generated at build time
+in a manner very similar to Javadoc; we refer to this as "fdoc" or "fusiondoc".
 
 > [!WARNING]
-> The specifics of this mechanism are at present unstable and undocumented from the
-> perspective of code outside this repository.
+> The specifics of this mechanism are unstable and undocumented from the perspective
+> of code outside this repository.
 
-Similar to JavaDoc, prose can be attached to each module overall, and to individual bindings
-provided by the module.  The former is accomplished by inserting a string literal immediately after
-the module's dialect declaration:
+Similar to Javadoc, prose can be attached to each module overall and to individual
+bindings provided by the module. The former is achieved by inserting a string literal
+immediately after the module's dialect declaration:
 
 ```ion
 (module M "/fusion"
   '''
-This is the overview documentation for module `M`.  Using Ion's triple-quoted long strings makes it
-easy to write long passeges of prose with reasonable formatting.
+This is the overview documentation for module `M`.  Ion's triple-quoted strings make it
+possible to embed paragraphs of prose with reasonable formatting.
   '''
 
-  (define something ...
+  (define something ... )
+)
 ```
 
 To document a binding, insert a string literal into `define` just after the name or signature
@@ -224,7 +226,7 @@ this is to run something like:
 ./gradlew fusiondoc && open build/docs/fusiondoc/fusion.html
 ```
 
-Browser keyword-bookmarks can allow you to quickly access locally-built docs.
+Browser keyword-bookmarks can allow you to quickly access locally built docs.
 
 
 ## Implementation
@@ -232,7 +234,7 @@ Browser keyword-bookmarks can allow you to quickly access locally-built docs.
 ### Which language should I use?
 
 The fundamental guideline in this project is to build in Fusion itself whenever possible, falling
-back to Java only when Fusion cannot express the feature, or when a performance degradation would
+back to Java only when Fusion cannot express the feature or when a performance degradation would
 affect existing code.
 
 ### Testing
@@ -242,7 +244,8 @@ assertion framework provided by the `/fusion/experimental/check` module.
 
 #### Test the Unhappy Cases
 
-Ensure there’s test coverage for failure modes, and that the new procedure behaves as intended.
+Ensure there’s test coverage for failure modes and that the new procedure behaves as
+intended.
 
 * Check arity problems if the procedure is variadic and/or intrinsic. Ensure that invocations with
   too few or too many arguments raises `arity_exn`.
@@ -275,14 +278,14 @@ The book I most recommend is [Lisp in Small Pieces][] by Christian Queinnec. It 
 graduate-level textbook on implementation of Lisp-family languages. I studied it deeply while
 building Fusion, and more recently while building a formal semantic model for Ion. The book covers a
 broad scope of programming language features, exploring various implementation techniques for each.
-It starts with a near trivial language and gradually builds up more and more functionality, while
-also iteratively evolving the implementation approach all they way to C code generation. The Fusion
+It starts with a near-trivial language and gradually builds up more and more functionality, while
+also iteratively evolving the implementation approach all the way to C code generation. The Fusion
 implementation is effectively the “Fast Interpretation” approach in chapter 6.
 
 [Lisp in Small Pieces]: https://www.amazon.com/Lisp-Small-Pieces-Christian-Queinnec/dp/0521545668
 
-To be fair, the book is dense, and sometimes forces the reader to connect the dots a bit. I found it
-required attentive and thoughtful reading, but I was rewarded with a deep understanding of the
-problem space.
+To be fair, the book is dense and sometimes forces the reader to connect the dots a bit.
+I found it required attentive and thoughtful reading, but I was rewarded with a deep
+understanding of the problem space.
 
 The book is also a good repository of high-quality, fairly complex Scheme code.
