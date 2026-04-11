@@ -4,6 +4,7 @@
 package dev.ionfusion.runtime.embed;
 
 import com.amazon.ion.IonReader;
+import dev.ionfusion.fusion.FusionInterruptedException;
 import com.amazon.ion.IonWriter;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.SourceName;
@@ -36,7 +37,7 @@ import java.io.File;
  *
  * <ul>
  *   <li>
- *     {@code FusionInterruptedException} is thrown if the evaluation is
+ *     {@link FusionInterruptedException} is thrown if the evaluation is
  *     canceled by calling {@link Thread#interrupt()} on the current thread.
  *     When this is thrown, the thread's interrupt status will have been set.
  *   </li>
