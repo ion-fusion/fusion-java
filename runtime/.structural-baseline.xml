@@ -1,8 +1,7 @@
 <?xml version="1.0" ?>
 <StructuralBaseline>
   <CurrentIssues>
-    <ID>ForbiddenImport$TopLevel$7$dev.ionfusion.runtime.embed$dev.ionfusion.fusion</ID>
-    <ID>ForbiddenImport$FusionRuntimeBuilder$8$dev.ionfusion.runtime.embed$dev.ionfusion.fusion</ID>
     <ID>ForbiddenImport$FusionJarInfo$6$dev.ionfusion.runtime.base$dev.ionfusion.fusion</ID>
+    <ID>ForbiddenImport$FusionRuntimeBuilder$8$dev.ionfusion.runtime.embed$dev.ionfusion.fusion</ID>
   </CurrentIssues>
 </StructuralBaseline>
