@@ -11,6 +11,7 @@ import static dev.ionfusion.runtime._private.util.Ordinals.friendlyIndex;
 import static dev.ionfusion.runtime.base.ModuleIdentity.isValidAbsoluteModulePath;
 
 import com.amazon.ion.IonReader;
+import com.amazon.ion.IonWriter;
 import dev.ionfusion.runtime._private.cover.CoverageCollector;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
@@ -34,8 +35,8 @@ final class StandardTopLevel
     {
         CoverageCollector collector = globalState.myCoverageCollector;
         Evaluator eval = (collector == null
-                            ? new Evaluator(globalState)
-                            : new CoverageEvaluator(globalState, collector));
+                          ? new Evaluator(globalState)
+                          : new CoverageEvaluator(globalState, collector));
 
         if (continuationMarks.length != 0)
         {
@@ -157,6 +158,21 @@ final class StandardTopLevel
 
 
     @Override
+    public void ionize(Object value, IonWriter out)
+        throws FusionException
+    {
+        try
+        {
+            FusionIo.ionize(myEvaluator, out, value);
+        }
+        catch (FusionInterrupt e)
+        {
+            throw new FusionInterruptedException(e);
+        }
+    }
+
+
+    @Override
     public void loadModule(String     absoluteModulePath,
                            IonReader  source,
                            SourceName name)
@@ -263,7 +279,6 @@ final class StandardTopLevel
 
         try
         {
-
             myNamespace.bind(name, fv);
         }
         catch (FusionInterrupt e)
