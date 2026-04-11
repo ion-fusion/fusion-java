@@ -5,6 +5,7 @@ package dev.ionfusion.runtime.embed;
 
 import com.amazon.ion.IonReader;
 import dev.ionfusion.fusion.FusionInterruptedException;
+import com.amazon.ion.IonWriter;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.SourceName;
 import java.io.File;
@@ -132,7 +133,6 @@ public interface TopLevel
         throws FusionException;
 
 
-
     /**
      * Evaluates top-level forms within this namespace.
      * Top-level {@code define} forms will alter the environment and will be
@@ -253,6 +253,26 @@ public interface TopLevel
      * or if one of the {@code arguments} cannot be injected.
      */
     Object call(Object procedure, Object... arguments)
+        throws FusionException;
+
+
+    //========================================================================
+    // I/O operations
+
+
+    /**
+     * <a href="{@docRoot}/../fusion/io.html#ionize">Ionizes</a> a Fusion
+     * value, writing its Ion representation to the given writer.
+     * An exception is thrown if the value contains any non-Ion data
+     * like closures.
+     *
+     * @param value the value to ionize; must not be null.
+     * @param out the output writer; not null.
+     *
+     * @throws FusionException if some part of the value cannot be ionized,
+     * or if there's an exception thrown by the writer.
+     */
+    void ionize(Object value, IonWriter out)
         throws FusionException;
 
 

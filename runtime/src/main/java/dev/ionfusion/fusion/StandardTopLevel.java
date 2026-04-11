@@ -11,6 +11,7 @@ import static dev.ionfusion.runtime._private.util.Ordinals.friendlyIndex;
 import static dev.ionfusion.runtime.base.ModuleIdentity.isValidAbsoluteModulePath;
 
 import com.amazon.ion.IonReader;
+import com.amazon.ion.IonWriter;
 import dev.ionfusion.runtime._private.cover.CoverageCollector;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
@@ -263,7 +264,6 @@ final class StandardTopLevel
 
         try
         {
-
             myNamespace.bind(name, fv);
         }
         catch (FusionInterrupt e)
@@ -368,5 +368,20 @@ final class StandardTopLevel
         }
 
         return call((Procedure) procedure, arguments);
+    }
+
+
+    @Override
+    public void ionize(Object value, IonWriter out)
+        throws FusionException
+    {
+        try
+        {
+            FusionIo.ionize(myEvaluator, out, value);
+        }
+        catch (FusionInterrupt e)
+        {
+            throw new FusionInterruptedException(e);
+        }
     }
 }
