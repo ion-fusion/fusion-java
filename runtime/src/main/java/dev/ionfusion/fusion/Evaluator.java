@@ -38,19 +38,50 @@ import com.amazon.ion.Timestamp;
 import com.amazon.ion.system.IonReaderBuilder;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.embed.FusionRuntime;
+import dev.ionfusion.runtime.embed.TopLevel;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Main entry point to the Fusion evaluation engine.
+ * The central interpreter loop and entry point to Fusion's internal evaluation engine,
+ * holding both thread-local context and {@link GlobalState} shared across an entire
+ * {@link FusionRuntime}. As a result, it is a required argument, directly or
+ * indirectly, to almost everything that happens in the language and applications
+ * embedding it.
+ * <p>
+ * This is not intended to be a public API, but it's historically been used by customers
+ * who have implemented Fusion procedures in Java before there was any supported FFI.
+ * The evaluator's role in that context is to provide the context needed to access
+ * Fusion code and many internal features.
+ * <p>
+ * Within the public API, {@link TopLevel} plays that role. This leads to many methods
+ * having two variants, one accepting a {@code TopLevel} and one accepting an
+ * {@code Evaluator}, for embeddend and (unsupported) FFI use cases respectively.
+ *
+ * <h2>Usage Notes</h2>
+ *
+ * From the perspective of the embedding APIs, particularly {@code TopLevel}, calls into
+ * this class require special care across a few dimensions, most notably value
+ * projection and exception handling.
+ * <p>
+ * One specific exception requires explicit treatment at the embedding layer:
+ * {@code FusionInterrupt}. This is an internal unchecked exception type thrown by the
+ * {@code Evaluator} when it detects a {@code Thread.interrupt()} condition, and it must
+ * be caught outside the evaluator and replaced by {@code FusionInterruptedException}.
  */
 class Evaluator
 {
     private final GlobalState myGlobalState;
-    private final IonSystem mySystem;
-    private final Evaluator myOuterFrame;
+    private final IonSystem   mySystem;
+    private final Evaluator   myOuterFrame;
+
+    // TODO OPTIM Don't allocate more HashMap than is needed.
+    //   Consider whether a Map is needed at all, most frames probably
+    //   have only one or a small number of marks.
+    //   Perhaps use our HAMT? I'm not sure if this is mutable.
     private final Map<Object, Object> myContinuationMarks = new HashMap<>();
 
 
@@ -277,7 +308,7 @@ class Evaluator
     //========================================================================
 
     // This is a shady implementation of Racket's continuation marks.
-    // It's not full featured: we don't create every continuation frame, so we
+    // It's not fully featured: we don't create every continuation frame, so we
     // can't implement the primitive with-continuation-mark.
 
     Object firstContinuationMark(Object key)
@@ -440,11 +471,11 @@ class Evaluator
     Object eval(Store store, CompiledForm form)
         throws FusionException
     {
-        evaluating: while (true)
+        evaluating: while (true) // GOTO target
         {
             Object result = form.doEval(this, store);
 
-            checkingResult: while (true)
+            checkingResult: while (true) // GOTO target
             {
                 if (Thread.currentThread().isInterrupted())
                 {
@@ -453,6 +484,7 @@ class Evaluator
 
                 if (result instanceof TailForm)
                 {
+                    // Imitate a tail-recursive call via GOTO
                     TailForm tail = (TailForm) result;
                     store = tail.myStore;
                     form  = tail.myForm;
@@ -513,7 +545,7 @@ class Evaluator
     {
         SourceLocation callLocation = null;
 
-        calling: while (true)
+        calling: while (true) // GOTO target
         {
             Object result;
             try
@@ -527,7 +559,7 @@ class Evaluator
                 throw e;
             }
 
-            checkingResult: while (true)
+            checkingResult: while (true) // GOTO target
             {
                 if (Thread.currentThread().isInterrupted())
                 {
@@ -542,6 +574,7 @@ class Evaluator
                 }
                 if (result instanceof TailCall)
                 {
+                    // Imitate a tail-recursive call via GOTO
                     TailCall tail = (TailCall) result;
                     callLocation = tail.myLoc;
                     proc = tail.myProc;
@@ -618,8 +651,9 @@ class Evaluator
 
 
     /**
-     * Wraps an expression for evaluation in tail position.
-     * Must be returned back to this {@link Evaluator} for proper behavior.
+     * Wraps an expression for evaluation in tail-position. MUST not be called from a
+     * procedure. The result MUST be immediately returned to this evaluator, it's not a
+     * normal value!
      */
     Object bounceTailForm(Store store, CompiledForm form)
     {
@@ -649,8 +683,8 @@ class Evaluator
 
 
     /**
-     * Makes a procedure call from tail position.
-     * The result MUST be immediately returned to the evaluator,
+     * Makes a procedure call from tail-position.
+     * The result MUST be immediately returned to this evaluator,
      * it's not a normal value!
      *
      * @return not null
@@ -663,8 +697,8 @@ class Evaluator
 
 
     /**
-     * Makes a procedure call from tail position.
-     * The result MUST be immediately returned to the evaluator,
+     * Makes a procedure call from tail-position.
+     * The result MUST be immediately returned to this evaluator,
      * it's not a normal value!
      *
      * @return not null
