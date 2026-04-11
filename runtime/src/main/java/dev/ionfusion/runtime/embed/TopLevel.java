@@ -5,7 +5,6 @@ package dev.ionfusion.runtime.embed;
 
 import com.amazon.ion.IonReader;
 import com.amazon.ion.IonWriter;
-import dev.ionfusion.fusion.FusionInterruptedException;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.SourceName;
 import java.io.File;
