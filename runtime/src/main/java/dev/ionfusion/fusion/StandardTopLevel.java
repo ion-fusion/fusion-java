@@ -35,8 +35,8 @@ final class StandardTopLevel
     {
         CoverageCollector collector = globalState.myCoverageCollector;
         Evaluator eval = (collector == null
-                          ? new Evaluator(globalState)
-                          : new CoverageEvaluator(globalState, collector));
+                            ? new Evaluator(globalState)
+                            : new CoverageEvaluator(globalState, collector));
 
         if (continuationMarks.length != 0)
         {
