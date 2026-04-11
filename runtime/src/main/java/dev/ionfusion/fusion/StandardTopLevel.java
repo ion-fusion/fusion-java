@@ -158,21 +158,6 @@ final class StandardTopLevel
 
 
     @Override
-    public void ionize(Object value, IonWriter out)
-        throws FusionException
-    {
-        try
-        {
-            FusionIo.ionize(myEvaluator, out, value);
-        }
-        catch (FusionInterrupt e)
-        {
-            throw new FusionInterruptedException(e);
-        }
-    }
-
-
-    @Override
     public void loadModule(String     absoluteModulePath,
                            IonReader  source,
                            SourceName name)
@@ -383,5 +368,20 @@ final class StandardTopLevel
         }
 
         return call((Procedure) procedure, arguments);
+    }
+
+
+    @Override
+    public void ionize(Object value, IonWriter out)
+        throws FusionException
+    {
+        try
+        {
+            FusionIo.ionize(myEvaluator, out, value);
+        }
+        catch (FusionInterrupt e)
+        {
+            throw new FusionInterruptedException(e);
+        }
     }
 }
