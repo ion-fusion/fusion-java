@@ -36,7 +36,7 @@ import java.io.File;
  *
  * <ul>
  *   <li>
- *     {@link FusionInterruptedException} is thrown if the evaluation is
+ *     {@code FusionInterruptedException} is thrown if the evaluation is
  *     canceled by calling {@link Thread#interrupt()} on the current thread.
  *     When this is thrown, the thread's interrupt status will have been set.
  *   </li>
