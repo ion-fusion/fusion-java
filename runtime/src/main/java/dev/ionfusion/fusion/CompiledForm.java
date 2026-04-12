@@ -14,7 +14,11 @@ interface CompiledForm
     CompiledForm[] EMPTY_ARRAY = new CompiledForm[0];
 
 
-    /** Don't call directly! Go through the evaluator. */
+    /**
+     * Evaluates a compiled form using the given dynamic context.
+     * <p>
+     * <em>Do not call this directly! Go through the evaluator.</em>
+     */
     Object doEval(Evaluator eval, Store store)
         throws FusionException;
 }
