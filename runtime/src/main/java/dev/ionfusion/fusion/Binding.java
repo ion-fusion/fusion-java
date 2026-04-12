@@ -74,7 +74,7 @@ abstract class Binding
 
     /**
      * Gets the original binding to which this binding refers.
-     * Returns itself, if and only if this binding is original.
+     * Returns itself if and only if this binding is original.
      *
      * @return not null.
      */

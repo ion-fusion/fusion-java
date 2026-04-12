@@ -284,8 +284,12 @@ abstract class Namespace
 
     private final SyntaxWraps          myWraps;
     private final BoundIdMap<NsBinding> myBindings = new BoundIdMap<>();
-    private       int                   myDefinitionCount;
-    private final ArrayList<Object>    myValues   = new ArrayList<>();
+
+    /**
+     * Storage for the values of namespace-level definitions.
+     */
+    private final ArrayList<Object> myDefinedValues = new ArrayList<>();
+
     private ArrayList<BindingDoc> myBindingDocs;
 
 
@@ -369,7 +373,10 @@ abstract class Namespace
      */
     final int definitionCount()
     {
-        return myDefinitionCount;
+        synchronized (myDefinedValues)
+        {
+            return myDefinedValues.size();
+        }
     }
 
     /**
@@ -516,8 +523,15 @@ abstract class Namespace
         }
         if (newDefinition == null)
         {
-            newDefinition = newDefinedBinding(identifier, myDefinitionCount);
-            myDefinitionCount++;
+            // Allocate a new address for this definition.
+            int address;
+            synchronized (myDefinedValues)
+            {
+                address = myDefinedValues.size();
+                myDefinedValues.add(null);
+            }
+
+            newDefinition = newDefinedBinding(identifier, address);
         }
 
         installBinding(identifier, newDefinition);
@@ -548,7 +562,7 @@ abstract class Namespace
         }
         else // We need to grow the list. Annoying lack of API to do this.
         {
-            list.ensureCapacity(myDefinitionCount);        // Grow all at once
+            list.ensureCapacity(definitionCount());        // Grow all at once
             for (int i = size; i < address; i++)
             {
                 list.add(null);
@@ -567,7 +581,10 @@ abstract class Namespace
     @Override
     public final void set(int address, Object value)
     {
-        set(myValues, address, value);
+        synchronized (myDefinedValues)
+        {
+            myDefinedValues.set(address, value);
+        }
     }
 
 
@@ -811,9 +828,13 @@ abstract class Namespace
         if (binding.isOwnedBy(this))
         {
             int address = binding.myAddress;
-            if (address < myValues.size())         // for prepare-time lookup
+
+            synchronized (myDefinedValues)
             {
-                return myValues.get(address);
+                if (address < myDefinedValues.size())         // for prepare-time lookup
+                {
+                    return myDefinedValues.get(address);
+                }
             }
         }
         return null;
@@ -855,7 +876,10 @@ abstract class Namespace
     @Override
     public final Object lookup(int address)
     {
-        return myValues.get(address);
+        synchronized (myDefinedValues)
+        {
+            return myDefinedValues.get(address);
+        }
     }
 
     @Override
@@ -867,7 +891,10 @@ abstract class Namespace
 
     final Object[] extractValues()
     {
-        return myValues.toArray();
+        synchronized (myDefinedValues)
+        {
+            return myDefinedValues.toArray();
+        }
     }
 
 
