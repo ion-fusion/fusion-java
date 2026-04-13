@@ -35,8 +35,8 @@ final class StandardTopLevel
     {
         CoverageCollector collector = globalState.myCoverageCollector;
         Evaluator eval = (collector == null
-                            ? new Evaluator(globalState)
-                            : new CoverageEvaluator(globalState, collector));
+                          ? new Evaluator(globalState)
+                          : new CoverageEvaluator(globalState, collector));
 
         if (continuationMarks.length != 0)
         {
@@ -77,6 +77,28 @@ final class StandardTopLevel
         return myNamespace.getRegistry();
     }
 
+    @FunctionalInterface
+    interface EvalTask<T>
+    {
+        T run() throws FusionException;
+    }
+
+    <T> T withEvaluator(EvalTask<T> task)
+        throws FusionException
+    {
+        try
+        {
+            return task.run();
+        }
+        catch (FusionInterrupt e)
+        {
+            throw new FusionInterruptedException(e);
+        }
+    }
+
+
+    //========================================================================
+
     @Override
     public Object eval(String source, SourceName name)
         throws FusionInterruptedException, FusionException
@@ -106,8 +128,7 @@ final class StandardTopLevel
     public Object eval(IonReader source, SourceName name)
         throws FusionInterruptedException, FusionException
     {
-        try
-        {
+        return withEvaluator(() -> {
             Object result = voidValue(myEvaluator);
 
             if (source.getType() == null) source.next();
@@ -121,11 +142,7 @@ final class StandardTopLevel
             }
 
             return result;
-        }
-        catch (FusionInterrupt e)
-        {
-            throw new FusionInterruptedException(e);
-        }
+        });
     }
 
 
@@ -141,19 +158,12 @@ final class StandardTopLevel
     public Object load(File source)
         throws FusionInterruptedException, FusionException
     {
-        try
-        {
+        return withEvaluator(() -> {
             LoadHandler load = myEvaluator.getGlobalState().myLoadHandler;
 
             // This method parameterizes current_namespace for us:
-            return load.loadTopLevel(myEvaluator,
-                                     myNamespace,
-                                     source.toString());
-        }
-        catch (FusionInterrupt e)
-        {
-            throw new FusionInterruptedException(e);
-        }
+            return load.loadTopLevel(myEvaluator, myNamespace, source.toString());
+        });
     }
 
 
@@ -170,8 +180,7 @@ final class StandardTopLevel
             throw new IllegalArgumentException(message);
         }
 
-        try
-        {
+        withEvaluator(() -> {
             // Make sure we use the registry on our namespace.
             Evaluator eval =
                 myEvaluator.parameterizeCurrentNamespace(myNamespace);
@@ -184,24 +193,15 @@ final class StandardTopLevel
                 ModuleLocation.forIonReader(source, name);
 
             resolver.loadModule(eval, id, loc, true /* reload it */);
-        }
-        catch (FusionInterrupt e)
-        {
-            throw new FusionInterruptedException(e);
-        }
+            return null;
+        });
     }
 
     ModuleIdentity loadModule(String modulePath)
         throws FusionInterruptedException, FusionException
     {
-        try
-        {
-            return myNamespace.resolveAndLoadModule(myEvaluator, modulePath);
-        }
-        catch (FusionInterrupt e)
-        {
-            throw new FusionInterruptedException(e);
-        }
+        return withEvaluator(() ->
+                                 myNamespace.resolveAndLoadModule(myEvaluator, modulePath));
     }
 
     /**
@@ -210,42 +210,28 @@ final class StandardTopLevel
     ModuleInstance instantiateLoadedModule(ModuleIdentity id)
         throws FusionInterruptedException, FusionException
     {
-        try
-        {
-            return getRegistry().instantiate(myEvaluator, id);
-        }
-        catch (FusionInterrupt e)
-        {
-            throw new FusionInterruptedException(e);
-        }
+        return withEvaluator(() ->
+                                 getRegistry().instantiate(myEvaluator, id));
     }
 
 
     void attachModule(StandardTopLevel src, String modulePath)
         throws FusionInterruptedException, FusionException
     {
-        try
-        {
+        withEvaluator(() -> {
             myNamespace.attachModule(myEvaluator, src.myNamespace, modulePath);
-        }
-        catch (FusionInterrupt e)
-        {
-            throw new FusionInterruptedException(e);
-        }
+            return null;
+        });
     }
 
     @Override
     public void requireModule(String modulePath)
         throws FusionInterruptedException, FusionException
     {
-        try
-        {
+        withEvaluator(() -> {
             myNamespace.require(myEvaluator, modulePath);
-        }
-        catch (FusionInterrupt e)
-        {
-            throw new FusionInterruptedException(e);
-        }
+            return null;
+        });
     }
 
 
@@ -262,14 +248,10 @@ final class StandardTopLevel
             throw new IllegalArgumentException(msg);
         }
 
-        try
-        {
+        withEvaluator(() -> {
             myNamespace.bind(name, fv);
-        }
-        catch (FusionInterrupt e)
-        {
-            throw new FusionInterruptedException(e);
-        }
+            return null;
+        });
     }
 
 
@@ -277,24 +259,17 @@ final class StandardTopLevel
     public Object lookup(String name)
         throws FusionInterruptedException, FusionException
     {
-        try
-        {
-            return myNamespace.lookup(name);
-        }
-        catch (FusionInterrupt e)
-        {
-            // I don't think this can happen, but I prefer to be consistent
-            // throughout this class to be more resilient to changes.
-            throw new FusionInterruptedException(e);
-        }
+        return withEvaluator(() ->
+                                 // I don't think this can happen, but I prefer to be consistent
+                                 // throughout this class to be more resilient to changes.
+                                 myNamespace.lookup(name));
     }
 
 
     private Procedure lookupProcedure(String procedureName)
         throws FusionInterruptedException, FusionException
     {
-        try
-        {
+        return withEvaluator(() -> {
             Object proc = lookup(procedureName);
             if (proc instanceof Procedure)
             {
@@ -310,11 +285,7 @@ final class StandardTopLevel
             throw new FusionException(printQuotedSymbol(procedureName) +
                                       " is not a procedure: " +
                                       safeWriteToString(myEvaluator, proc));
-        }
-        catch (FusionInterrupt e)
-        {
-            throw new FusionInterruptedException(e);
-        }
+        });
     }
 
 
@@ -336,15 +307,9 @@ final class StandardTopLevel
             arguments[i] = fv;
         }
 
-        try
-        {
-            // TODO Should this set current_namespace?
-            return myEvaluator.callNonTail(proc, arguments);
-        }
-        catch (FusionInterrupt e)
-        {
-            throw new FusionInterruptedException(e);
-        }
+        return withEvaluator(() ->
+                                 // TODO Should this set current_namespace?
+                                 myEvaluator.callNonTail(proc, arguments));
     }
 
 
@@ -375,13 +340,9 @@ final class StandardTopLevel
     public void ionize(Object value, IonWriter out)
         throws FusionException
     {
-        try
-        {
+        withEvaluator(() -> {
             FusionIo.ionize(myEvaluator, out, value);
-        }
-        catch (FusionInterrupt e)
-        {
-            throw new FusionInterruptedException(e);
-        }
+            return null;
+        });
     }
 }

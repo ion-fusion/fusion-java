@@ -37,8 +37,8 @@ final class StandardRuntime
     {
         IonSystem ionSystem =
             IonSystemBuilder.standard()
-                .withCatalog(builder.getDefaultIonCatalog())
-                .build();
+                            .withCatalog(builder.getDefaultIonCatalog())
+                            .build();
         myRegistry = new ModuleRegistry();
 
         myDefaultLanguage = builder.getDefaultLanguage();
@@ -196,14 +196,15 @@ final class StandardRuntime
     }
 
 
-    //========================================================================
+
 
 
     @Override
     public IonValue ionize(Object fusionValue, ValueFactory factory)
         throws FusionException
     {
-        return FusionValue.copyToIonValue(myTopLevel.getEvaluator(), fusionValue, factory);
+        return myTopLevel.withEvaluator(() ->
+                                            FusionValue.copyToIonValue(myTopLevel.getEvaluator(), fusionValue, factory));
     }
 
 
@@ -211,11 +212,12 @@ final class StandardRuntime
     public IonValue ionizeMaybe(Object fusionValue, ValueFactory factory)
         throws FusionException
     {
-        return FusionValue.copyToIonValueMaybe(myTopLevel.getEvaluator(), fusionValue, factory);
+        return myTopLevel.withEvaluator(() ->
+                                            FusionValue.copyToIonValueMaybe(myTopLevel.getEvaluator(), fusionValue, factory));
     }
 
 
-    //========================================================================
+
 
 
     private class SandboxBuilderImpl
