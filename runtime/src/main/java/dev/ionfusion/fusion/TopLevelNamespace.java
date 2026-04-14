@@ -4,7 +4,6 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
-import static dev.ionfusion.fusion.NamedValue.inferObjectName;
 import static dev.ionfusion.fusion.ResultFailure.makeResultError;
 import static dev.ionfusion.fusion.UnboundIdentifierException.makeUnboundError;
 
@@ -252,6 +251,14 @@ final class TopLevelNamespace
         throw new UnsupportedOperationException();
     }
 
+    void define(SyntaxSymbol id, Object value)
+        throws FusionException
+    {
+        SyntaxSymbol boundId = predefine(id, id);
+        TopLevelDefinedBinding binding = (TopLevelDefinedBinding) boundId.getBinding();
+        bind(binding, value);
+    }
+
 
     //========================================================================
     // Compiled Forms
@@ -273,24 +280,12 @@ final class TopLevelNamespace
             throws FusionException
         {
             Object value = eval.eval(store, myValueForm);
-            value = processValue(eval, store, value);
+            eval.checkSingleResult(value, "top-level definition");
 
             TopLevelNamespace ns = (TopLevelNamespace) store.namespace();
-            SyntaxSymbol boundId = ns.predefine(myId, myId);
-            TopLevelDefinedBinding binding = (TopLevelDefinedBinding) boundId.getBinding();
-
-            ns.set(binding.myAddress, value);
-
-            inferObjectName(value, myId.getName());
+            ns.define(myId, value);
 
             return voidValue(eval);
-        }
-
-        Object processValue(Evaluator eval, Store store, Object value)
-            throws FusionException
-        {
-            eval.checkSingleResult(value, "top-level definition");
-            return value;
         }
     }
 
@@ -298,6 +293,7 @@ final class TopLevelNamespace
     /**
      * Interprets non-single-binding {@code define_values} at top-level.
      * Single-binding forms are interpreted by {@link CompiledTopDefine}.
+     * Zero-binding forms are handled here.
      */
     static final class CompiledTopDefineValues
         implements CompiledForm
@@ -307,6 +303,7 @@ final class TopLevelNamespace
 
         CompiledTopDefineValues(SyntaxSymbol[] ids, CompiledForm valuesForm)
         {
+            assert ids.length != 1;
             myIds        = ids;
             myValuesForm = valuesForm;
         }
@@ -319,13 +316,8 @@ final class TopLevelNamespace
 
             TopLevelNamespace ns = (TopLevelNamespace) store.namespace();
 
-            int expectedCount = myIds.length;
-            if (expectedCount == 1)
-            {
-                eval.checkSingleResult(values, "top-level definition");
-                defineAndBind(ns, 0, values);
-            }
-            else if (values instanceof Object[])
+            int expectedCount = myIds.length;  // != 1
+            if (values instanceof Object[])
             {
                 Object[] vals = (Object[]) values;
                 int actualCount = vals.length;
@@ -339,32 +331,16 @@ final class TopLevelNamespace
 
                 for (int i = 0; i < expectedCount; i++)
                 {
-                    Object       value   = vals[i];
-                    defineAndBind(ns, i, value);
+                    ns.define(myIds[i], vals[i]);
                 }
             }
             else
             {
-                String expectation =
-                    expectedCount + " results but received 1";
+                String expectation = expectedCount + " results but received 1";
                 throw makeResultError(eval, "top-level definition", expectation, values);
             }
 
             return voidValue(eval);
-        }
-
-        private void defineAndBind(TopLevelNamespace ns, int i, Object value)
-            throws FusionException
-        {
-            SyntaxSymbol boundId = myIds[i];
-            boundId = ns.predefine(boundId, boundId);
-
-            TopLevelDefinedBinding binding =
-                (TopLevelDefinedBinding) boundId.getBinding();
-
-            ns.set(binding.myAddress, value);
-
-            inferObjectName(value, boundId.getName());
         }
     }
 
