@@ -540,7 +540,7 @@ abstract class Namespace
     }
 
     /**
-     * Creates or updates a namespace-level binding.
+     * Creates or updates a namespace-level binding and infers the object's name.
      * Allows rebinding of existing names!
      *
      * @param value must not be null
