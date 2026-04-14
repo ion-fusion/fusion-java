@@ -509,10 +509,17 @@ public class CoreTestCase
     }
 
 
-    void expectUnboundIdentifierExn(String expr)
+    UnboundIdentifierException expectUnboundIdentifierExn(String expr)
         throws Exception
     {
-        assertEvalThrows(UnboundIdentifierException.class, expr);
+        return assertEvalThrows(UnboundIdentifierException.class, expr);
+    }
+
+    void expectUnboundIdentifierExn(String expr, String varName)
+        throws Exception
+    {
+        UnboundIdentifierException e = expectUnboundIdentifierExn(expr);
+        assertEquals(varName, e.getIdentifierString(), "implicated variable name");
     }
 
 
