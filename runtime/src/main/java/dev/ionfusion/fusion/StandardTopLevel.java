@@ -35,8 +35,8 @@ final class StandardTopLevel
     {
         CoverageCollector collector = globalState.myCoverageCollector;
         Evaluator eval = (collector == null
-                          ? new Evaluator(globalState)
-                          : new CoverageEvaluator(globalState, collector));
+                            ? new Evaluator(globalState)
+                            : new CoverageEvaluator(globalState, collector));
 
         if (continuationMarks.length != 0)
         {
@@ -259,10 +259,7 @@ final class StandardTopLevel
     public Object lookup(String name)
         throws FusionInterruptedException, FusionException
     {
-        return withEvaluator(eval ->
-                                 // I don't think this can happen, but I prefer to be consistent
-                                 // throughout this class to be more resilient to changes.
-                                 myNamespace.lookup(name));
+        return withEvaluator(eval -> myNamespace.lookup(name));
     }
 
 
@@ -307,9 +304,8 @@ final class StandardTopLevel
             arguments[i] = fv;
         }
 
-        return withEvaluator(eval ->
-                                 // TODO Should this set current_namespace?
-                                 eval.callNonTail(proc, arguments));
+        // TODO Should this set current_namespace?
+        return withEvaluator(eval -> eval.callNonTail(proc, arguments));
     }
 
 
