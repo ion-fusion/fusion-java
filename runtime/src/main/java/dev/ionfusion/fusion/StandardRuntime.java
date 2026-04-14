@@ -203,8 +203,8 @@ final class StandardRuntime
     public IonValue ionize(Object fusionValue, ValueFactory factory)
         throws FusionException
     {
-        return myTopLevel.withEvaluator(() ->
-                                            FusionValue.copyToIonValue(myTopLevel.getEvaluator(), fusionValue, factory));
+        return myTopLevel.withEvaluator(eval ->
+                                            FusionValue.copyToIonValue(eval, fusionValue, factory));
     }
 
 
@@ -212,12 +212,9 @@ final class StandardRuntime
     public IonValue ionizeMaybe(Object fusionValue, ValueFactory factory)
         throws FusionException
     {
-        return myTopLevel.withEvaluator(() ->
-                                            FusionValue.copyToIonValueMaybe(myTopLevel.getEvaluator(), fusionValue, factory));
+        return myTopLevel.withEvaluator(eval ->
+                                            FusionValue.copyToIonValueMaybe(eval, fusionValue, factory));
     }
-
-
-
 
 
     private class SandboxBuilderImpl
