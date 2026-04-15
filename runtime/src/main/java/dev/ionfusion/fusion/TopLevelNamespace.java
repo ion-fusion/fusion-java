@@ -374,20 +374,24 @@ final class TopLevelNamespace
     /**
      * A reference to a top-level variable in the lexically-enclosing
      * namespace, when the binding isn't known at compile-time.
-     * In other words, a forward reference.
-     * <p>
-     * The first time the variable is dereferenced, we have to resolve the
-     * binding. We cache the resulting address so we only have to perform the
-     * expensive work once.
-     * <p>
-     * This uses a rare safe instance of the double-checked locking idiom:
-     * http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html
+     * In other words, a forward reference, or perhaps an erroneous unbound variable.
      */
     static final class CompiledFreeVariableReference
         implements CompiledForm
     {
-        private SyntaxSymbol myId;
+        /**
+         * The address of this variable in its namespace store.
+         * Since the variable was free at compile-time, we have to determine it lazily.
+         * As an invariant, this field is non-negative IFF the binding has been
+         * initialized with a value.
+         */
         private volatile int myAddress = -1;
+
+        /**
+         * The identifier used by this variable reference, to be resolved lazily.
+         * We clear it out when the fast path is enabled.
+         */
+        private volatile SyntaxSymbol myId;
 
         CompiledFreeVariableReference(SyntaxSymbol id)
         {
@@ -400,37 +404,53 @@ final class TopLevelNamespace
         {
             Namespace ns = (Namespace) store.namespace();
 
+            // Minimize reads from a volatile member.
+            // TBH I'm not sure if this has any meaningful effect.
             int address = myAddress;
-            if (address < 0)
+            if (address >= 0)
             {
-                synchronized (this)
-                {
-                    if (myAddress < 0)
-                    {
-                        NsDefinedBinding binding = ns.resolveDefinition(myId);
-                        if (binding == null)
-                        {
-                            throw makeUnboundError(myId);
-                        }
-
-                        myAddress = binding.myAddress;
-                        myId = null;
-                    }
-                }
-
-                address = myAddress;
+                // Fast path: the binding is defined and initialized.
+                return ns.lookup(address);
             }
 
-            // There's a potential failure here: the binding may have had an
-            // address assigned, but not yet a value. That could happen when
-            // another thread is in the midst of defining the binding.
-            // In such a scenario, the `result` may be null or even corrupt
-            // (if we happen to read from the store while it's being updated).
-            // However, that scenario is an *application* thread-safety
-            // violation since Fusion doesn't promise that concurrent
-            // mutation of a top-level namespace is thread-safe.
+            // Slow path: the identifier is not known to be defined and initialized.
+            // Use of double-checked locking idiom is safe b/c `myAddress` is volatile.
+            // http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html
+            synchronized (this)
+            {
+                address = myAddress;
+                if (address >= 0)    // double-check!
+                {
+                    // Another thread won the race through this slow path, so go fast.
+                    return ns.lookup(address);
+                }
 
-            return ns.lookup(address);
+                NsDefinedBinding binding = ns.resolveDefinition(myId);
+                if (binding != null)
+                {
+                    address = binding.myAddress;
+
+                    // Address allocation and slot initialization are not atomic!
+                    // The slot may still be empty.
+                    Object val = ns.lookup(address);
+                    if (val != null)
+                    {
+                        // Initialization is complete, so switch to the fast path.
+                        myAddress = address;
+
+                        // An identifier can carry lots of metadata. Let the GC take it.
+                        myId = null;
+
+                        return val;
+                    }
+
+                    // The slot is allocated but not yet initialized. From this thread's
+                    // perspective, the variable is effectively unbound.
+                }
+            }
+
+            throw makeUnboundError(myId);
+            // We will return to the slow path next time around.
         }
     }
 }
