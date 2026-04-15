@@ -18,6 +18,8 @@ interface CompiledForm
      * Evaluates a compiled form using the given dynamic context.
      * <p>
      * <em>Do not call this directly! Go through the evaluator.</em>
+     *
+     * @return not null.
      */
     Object doEval(Evaluator eval, Store store)
         throws FusionException;
