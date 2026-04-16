@@ -1,8 +1,8 @@
 <?xml version="1.0" ?>
 <StructuralBaseline>
   <CurrentIssues>
-    <ID>ForbiddenImport$FusionJarInfo$6$dev.ionfusion.runtime.base$dev.ionfusion.fusion</ID>
-    <ID>ForbiddenImport$FusionRuntimeBuilder$8$dev.ionfusion.runtime.embed$dev.ionfusion.fusion</ID>
-    <ID>ForbiddenImport$TopLevel$7$dev.ionfusion.runtime.embed$dev.ionfusion.fusion</ID>
+    <ID>ForbiddenImport$FusionJarInfo$dev.ionfusion.runtime.base$dev.ionfusion.fusion._Private_Trampoline</ID>
+    <ID>ForbiddenImport$FusionRuntimeBuilder$dev.ionfusion.runtime.embed$dev.ionfusion.fusion._Private_Trampoline</ID>
+    <ID>ForbiddenImport$TopLevel$dev.ionfusion.runtime.embed$dev.ionfusion.fusion.FusionInterruptedException</ID>
   </CurrentIssues>
 </StructuralBaseline>
