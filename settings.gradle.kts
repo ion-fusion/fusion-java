@@ -19,7 +19,7 @@ pluginManagement {
     plugins {
         // Enforce our desired inter-package dependency structure.
         // https://github.com/adrianczuczka/structural
-        id("com.adrianczuczka.structural") version "1.1.5"
+        id("com.adrianczuczka.structural") version "1.1.6"
     }
 }
 
