@@ -1,15 +1,37 @@
 # Copyright Ion Fusion contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-packages:
-    - "dev.ionfusion.fusion"
-    - "dev.ionfusion.runtime.base"
-    - "dev.ionfusion.runtime.embed"
+# Configuration for the Structural plugin.
+# https://github.com/adrianczuczka/structural
 
 rules:
     # For each package, declare other packages it can depend on.
-    "dev.ionfusion.fusion":
+    "dev.ionfusion.fusion!":
+        - "dev.ionfusion.runtime._private.cover"
+        - "dev.ionfusion.runtime._private.doc"
+        - "dev.ionfusion.runtime._private.util"
         - "dev.ionfusion.runtime.base"
         - "dev.ionfusion.runtime.embed"
+
+    "dev.ionfusion.runtime._private.cover":
+        - "dev.ionfusion.runtime._private.util"
+        - "dev.ionfusion.runtime.base"
+        - "dev.ionfusion.runtime.embed"
+
+    "dev.ionfusion.runtime._private.doc":
+        - "dev.ionfusion.runtime._private.util"
+        - "dev.ionfusion.runtime.base"
+        - "dev.ionfusion.runtime.embed"
+
+    "dev.ionfusion.runtime.base":
+        - "dev.ionfusion.runtime._private.util"
+
     "dev.ionfusion.runtime.embed":
+        - "dev.ionfusion.runtime.base"
+
+# Declare class-import-class rules, generally for exceptions to the package rules above.
+classAllowlist:
+    "dev.ionfusion.**":
+        - "dev.ionfusion.fusion._Private_*"
+    "dev.ionfusion.runtime._private.util.IonCatalogLoader":
         - "dev.ionfusion.runtime.base"

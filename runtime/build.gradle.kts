@@ -77,7 +77,6 @@ tasks.jacocoTestCoverageVerification {
 // Run task `structuralGenerateBaseline` to update the baseline (exception) files.
 structural {
     config   = ".structural.yml"
-    baseline = ".structural-baseline.xml"
 }
 
 tasks.check {
