@@ -32,6 +32,27 @@ To experiment with the CLI, add the `bin` to your path:
 That should give you an overview of the CLI's subcommands.
 
 
+## About JAVA_HOME
+
+In general, we recommend that you avoid setting `JAVA_HOME` in your shell while working
+with this project (or, frankly, any time). Since different projects have different JDK
+requirements, it's quite likely that any setting will be wrong _somewhere_.
+
+This project compiles with and runs on a relatively old JDK version, while requiring a
+relatively new JDK version for its Gradle build tooling.
+Gradle's startup process will use the JDK from `JAVA_HOME` if that is set, otherwise
+the `java` command on your `PATH`.  We recommend that the `java` on `PATH` be as new
+as possible.
+
+In some contexts, `JAVA_HOME` and/or the `java` on `PATH` might be injected by your
+tools.
+For example, recent releases of IntelliJ IDEs will do this by default for its built-in
+terminal, setting `JAVA_HOME` to the project's runtime JDK, not the one required to
+build.
+You should disable this in **Settings | Tools | Terminal | Add project JDK to `PATH`**
+to avoid interference.
+
+
 ## What's Next?
 
 With the `fusion` CLI ready to go, you can follow the [CLI tutorial](tutorial_cli.html) and run
