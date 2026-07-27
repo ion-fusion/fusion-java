@@ -3,7 +3,9 @@
 
 package dev.ionfusion.fusion;
 
+import com.amazon.ion.IonException;
 import com.amazon.ion.IonReader;
+import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import dev.ionfusion.runtime.base.SourceName;
 import java.io.File;
@@ -20,8 +22,7 @@ import java.nio.file.Files;
  * encapsulating the physical location of the module code.  They are consumed by
  * the {@link LoadHandler}, when loading the module.
  * <p>
- * "ModuleResource" might be a better name, or perhaps "ModuleCodeProvider"
- * since they can only be consumed once (see {@link #read}).
+ * "ModuleResource" might be a better name, or perhaps "ModuleCodeProvider".
  * <p>
  * TODO: {@link SourceName} should track the repository holding the module.
  *    This would enable better messaging, cover Jar-based resources nicely, and
@@ -53,6 +54,22 @@ abstract class ModuleLocation
     abstract IonReader read(Evaluator eval)
         throws IOException;
 
+    IonReader openReader(Evaluator eval)
+        throws FusionException
+    {
+        try
+        {
+            return this.read(eval);
+        }
+        catch (IOException | IonException e)
+        {
+            String where = myName.getModuleIdentity().toString();
+            String message =
+                "Error loading " + where + ": " + e.getMessage();
+            throw new FusionException(message, e);
+        }
+    }
+
 
     @Override
     public String toString()
@@ -61,17 +78,22 @@ abstract class ModuleLocation
         return (name == null ? super.toString() : name.toString());
     }
 
-    static ModuleLocation forIonReader(IonReader source, SourceName name)
-    {
-        return new IonReaderModuleLocation(source, name);
-    }
 
+    /**
+     * @param id must not be null.
+     * @param sourceFile must not be null.
+     * @return a new {@link ModuleLocation}.
+     */
     static ModuleLocation forFile(ModuleIdentity id, File sourceFile)
     {
         return new FileModuleLocation(id, sourceFile);
     }
 
-
+    /**
+     * @param id must not be null.
+     * @param url must not be null.
+     * @return a new {@link ModuleLocation}.
+     */
     static ModuleLocation forUrl(ModuleIdentity id, URL url)
     {
         // TODO We may want to handle jar: URLs specially, so we can distinguish
@@ -92,25 +114,6 @@ abstract class ModuleLocation
         catch (URISyntaxException e)
         {
             throw new RuntimeException("Malformed `file:` URL", e);
-        }
-    }
-
-
-    private static final class IonReaderModuleLocation
-        extends ModuleLocation
-    {
-        private final IonReader  mySource;
-
-        IonReaderModuleLocation(IonReader source, SourceName name)
-        {
-            super(name);
-            mySource = source;
-        }
-
-        @Override
-        IonReader read(Evaluator eval)
-        {
-            return mySource;
         }
     }
 

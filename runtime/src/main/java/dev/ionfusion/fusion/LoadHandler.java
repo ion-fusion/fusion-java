@@ -11,6 +11,7 @@ import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 
 import com.amazon.ion.IonException;
 import com.amazon.ion.IonReader;
+import dev.ionfusion.fusion.Evaluator.Thunk;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import dev.ionfusion.runtime.base.SourceLocation;
@@ -21,7 +22,7 @@ import java.io.InputStream;
 import java.nio.file.Path;
 
 /**
- * Parallel to Racket's load handler.
+ * Parallel to Racket's default load handler, usually {@code (current-load)}.
  */
 final class LoadHandler
 {
@@ -141,25 +142,23 @@ final class LoadHandler
     }
 
 
+    /**
+     * @param name may be null
+     */
     private SyntaxSexp readModuleDeclaration(Evaluator eval,
-                                             ModuleIdentity id,
-                                             ModuleLocation loc)
+                                             Thunk<IonReader> readerMaker,
+                                             SourceName name,
+                                             ModuleIdentity id)
         throws FusionException
     {
-        SourceName sourceName = loc.sourceName();
-        try
+        try (IonReader reader = readerMaker.eval(eval))
         {
-            try (IonReader reader = loc.read(eval))
-            {
-                return readModuleDeclaration(eval, id, sourceName, reader);
-            }
+            return readModuleDeclaration(eval, id, name, reader);
         }
         catch (IOException | IonException e)
         {
-            String where =
-                (sourceName == null ? id.toString() : sourceName.display());
-            String message =
-                "Error loading " + where + ": " + e.getMessage();
+            String where = (name == null ? id.toString() : name.display());
+            String message = "Error loading " + where + ": " + e.getMessage();
             throw new FusionException(message, e);
         }
     }
@@ -186,6 +185,7 @@ final class LoadHandler
     /**
      * Reads module source and declares it in the current namespace's registry.
      * The module is not instantiated.
+     * Its identity is determined by the current-module-declare-name parameter.
      */
     private void evalModuleDeclaration(Evaluator eval,
                                        SourceName sourceName,
@@ -219,24 +219,30 @@ final class LoadHandler
 
 
     /**
-     * Reads module source and declares it in the current namespace's registry.
-     * The module is not instantiated.
+     * Reads module source and declares it in the current namespace's registry. The
+     * module is not instantiated.
+     *
+     * @param name may be null.
      */
-    void loadModule(Evaluator eval, ModuleIdentity id, ModuleLocation loc)
+    void loadModule(Evaluator eval,
+                    Thunk<IonReader> reader,
+                    SourceName name,
+                    ModuleIdentity id)
         throws FusionException
     {
-        SyntaxSexp moduleDeclaration = readModuleDeclaration(eval, id, loc);
+        SyntaxSexp decl = readModuleDeclaration(eval, reader, name, id);
 
         try
         {
-            evalModuleDeclaration(eval, loc.sourceName(), moduleDeclaration);
+            evalModuleDeclaration(eval, name, decl);
         }
         catch (AssertionError e)
         {
             // Attempt to make debugging easier.
             // TODO Similarly wrap other unchecked exceptions?
             // TODO this doesn't need to be rewrapped by each module
-            throw new AssertionError("Assertion failure in " + loc + ": ", e);
+            String where = (name == null ? id.toString() : name.display());
+            throw new AssertionError("Assertion failure loading " + where + ": ", e);
         }
     }
 }

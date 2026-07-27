@@ -189,10 +189,8 @@ final class StandardTopLevel
                 eval.getGlobalState().myModuleNameResolver;
             ModuleIdentity id =
                 ModuleIdentity.forAbsolutePath(absoluteModulePath);
-            ModuleLocation loc =
-                ModuleLocation.forIonReader(source, name);
 
-            resolver.loadModule(parameterized, id, loc, true /* reload it */);
+            resolver.loadModule(parameterized, (e) -> source, name, id, true /* reload it */);
             return null;
         });
     }

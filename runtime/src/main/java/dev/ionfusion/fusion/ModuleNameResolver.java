@@ -13,8 +13,11 @@ import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 import static dev.ionfusion.runtime.base.ModuleIdentity.isValidAbsoluteModulePath;
 import static dev.ionfusion.runtime.base.ModuleIdentity.isValidModulePath;
 
+import com.amazon.ion.IonReader;
+import dev.ionfusion.fusion.Evaluator.Thunk;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
+import dev.ionfusion.runtime.base.SourceName;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -99,7 +102,7 @@ final class ModuleNameResolver
     /**
      * Check whether we know that a module has been declared in a registry.
      */
-    boolean isDeclared(ModuleRegistry registry, ModuleIdentity id)
+    private boolean isDeclared(ModuleRegistry registry, ModuleIdentity id)
     {
         synchronized (myRegistryCache)
         {
@@ -190,10 +193,11 @@ final class ModuleNameResolver
 
         if (isDeclared(reg, id)) return id;
 
+        // Ensure that the requested module exists in one of our repositories.
         ModuleLocation loc = locate(eval, id, stxForErrors);
         if (loc != null)
         {
-            if (load) loadModule(eval, id, loc, false /* don't reload */);
+            if (load) loadModule(eval, loc::openReader, loc.sourceName(), id, false /* don't reload */);
             return id;
         }
 
@@ -253,23 +257,25 @@ final class ModuleNameResolver
 
 
     /**
-     * Loads a module from a known location into the current namespace's
-     * registry. The module is not instantiated.
+     * Loads a module from a known location into the current namespace's registry. The
+     * module is not instantiated.
      * <p>
-     * This method is awkwardly placed in this class, and might make more sense
-     * in {@link LoadHandler}.  However, Racket gives this component the task
-     * of parameterizing current_module_declare_name and performing cycle
-     * detection, and I'm loath to change that without good cause.
+     * This method is awkwardly placed in this class, and might make more sense in
+     * {@link LoadHandler}.  However, Racket gives this component the task of
+     * parameterizing current_module_declare_name and performing cycle detection, and
+     * I'm loath to change that without good cause.
      * <p>
-     * Also, its unclear how all of this will play out for enclosed submodules
-     * like {@code (module Parent ... (module Child ...))}.
+     * Also, its unclear how all of this will play out for enclosed submodules like
+     * {@code (module Parent ... (module Child ...))}.
      *
-     * @param reload indicates whether the module should be reloaded if it's
-     * already in the registry.
+     * @param name may be null.
+     * @param reload indicates whether the module should be reloaded if it's already in
+     * the registry.
      */
     void loadModule(Evaluator      eval,
+                    Thunk<IonReader> reader,
+                    SourceName name,
                     ModuleIdentity id,
-                    ModuleLocation loc,
                     boolean reload)
         throws FusionException
     {
@@ -288,7 +294,7 @@ final class ModuleNameResolver
                     eval.markedContinuation(new Object[]{ myCurrentModuleDeclareName,
                                                           MODULE_LOADING_MARK },
                                             new Object[]{ id, id });
-                myLoadHandler.loadModule(loadEval, id, loc);
+                myLoadHandler.loadModule(loadEval, reader, name, id);
                 // Evaluation of 'module' declares it, but doesn't instantiate.
                 // It also calls-back to registerDeclaredModule().
             }

@@ -129,6 +129,13 @@ class Evaluator
     //========================================================================
 
 
+    interface Thunk<R>
+    {
+        R eval(Evaluator eval)
+            throws FusionException;
+    }
+
+
     /**
      * Injects an Ion DOM into the equivalent Fusion runtime objects.
      * It is an error for modifications to be made to the argument instance
