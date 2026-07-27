@@ -225,8 +225,7 @@ public class CoverageReport
      */
     private void noteLocationCoverage(SourceLocation loc, Boolean covered)
     {
-        SourceName name = loc.getSourceName();
-        ModuleIdentity id = name.getModuleIdentity();
+        ModuleIdentity id = loc.getModuleIdentity();
         if (id != null)
         {
             CoveredModule module = myCoveredModules.get(id);
@@ -237,10 +236,12 @@ public class CoverageReport
             module.noteLocationCoverage(loc, covered);
         }
 
-        // WARNING: `loc` may have been normalized above.
-        URI uri = loc.getSourceName().getUri();
+        // WARNING: `loc` may have been normalized above, in which case this uses the
+        // preferred SourceName.
+        SourceName name = loc.getSourceName();
+        URI uri = name.getUri();
         CoveredFile file = myCoveredFiles.get(uri);
-        assert file != null : "No CoveredFile for " + loc.getSourceName();
+        assert file != null : "No CoveredFile for " + name;
 
         file.noteLocationCoverage(loc, covered);
     }

@@ -227,13 +227,14 @@ public final class CoverageConfiguration
      */
     boolean locationIsSelected(SourceLocation loc)
     {
+        ModuleIdentity id = loc.getModuleIdentity();
+        if (moduleIsSelected(id)) return true;
+
         SourceName name = loc.getSourceName();
         if (name == null) return false;
 
-        ModuleIdentity id   = name.getModuleIdentity();
-        Path           file = name.getPath();
-
-        return (moduleIsSelected(id) || fileIsSelected(file));
+        Path file = name.getPath();
+        return fileIsSelected(file);
     }
 
 

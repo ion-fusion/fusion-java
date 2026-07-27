@@ -126,7 +126,7 @@ public class CoveredModule
      */
     public void noteLocationCoverage(SourceLocation loc, Boolean covered)
     {
-        assert myId == loc.getSourceName().getModuleIdentity();
+        assert myId == loc.getModuleIdentity();
 
         // Assume the caller has normalized the location, otherwise we'll have
         // two different keys for the same effective location.

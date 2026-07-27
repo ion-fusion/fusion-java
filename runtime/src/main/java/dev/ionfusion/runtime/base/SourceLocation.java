@@ -80,6 +80,12 @@ public class SourceLocation
     }
 
 
+    public ModuleIdentity getModuleIdentity()
+    {
+        return (myName == null) ? null : myName.getModuleIdentity();
+    }
+
+
     //==================================================================================
     // Concrete implementations
 
