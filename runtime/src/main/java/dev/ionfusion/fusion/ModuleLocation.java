@@ -54,19 +54,6 @@ abstract class ModuleLocation
         throws IOException;
 
 
-    /**
-     * Returns the directory (if any) containing the module.  This is used to
-     * set the load-relative-directory when evaluating a module declaration.
-     * <p>
-     * At present, this doesn't work for Jar-bundled resources.
-     * Perhaps this mechanism should use URLs instead of Strings.
-     */
-    String parentDirectory()
-    {
-        return null;
-    }
-
-
     @Override
     public String toString()
     {
@@ -175,12 +162,6 @@ abstract class ModuleLocation
             throws IOException
         {
             return Files.newInputStream(sourceName().getFile().toPath());
-        }
-
-        @Override
-        String parentDirectory()
-        {
-            return sourceName().getFile().getParentFile().getAbsolutePath();
         }
     }
 

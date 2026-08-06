@@ -18,6 +18,7 @@ import dev.ionfusion.runtime.base.SourceName;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 
 /**
  * Parallel to Racket's load handler.
@@ -187,7 +188,7 @@ final class LoadHandler
      * The module is not instantiated.
      */
     private void evalModuleDeclaration(Evaluator eval,
-                                       ModuleLocation loc,
+                                       SourceName sourceName,
                                        SyntaxSexp moduleDeclaration)
         throws FusionException
     {
@@ -198,13 +199,16 @@ final class LoadHandler
 
         // TODO Jar-bundled modules won't have a directory, so `load` with
         //      relative paths won't be able to access sibling resources.
-        String dirPath = loc.parentDirectory();
-        if (dirPath != null)
+        if (sourceName != null)
         {
-            bodyEval =
-                eval.markedContinuation(myCurrentLoadRelativeDirectory,
-                                        makeString(eval, dirPath));
-            // TODO Should this set other params like current_namespace?
+            Path srcPath = sourceName.getPath();
+            if (srcPath != null)
+            {
+                String dirPath = srcPath.getParent().toAbsolutePath().toString();
+                bodyEval = eval.markedContinuation(myCurrentLoadRelativeDirectory,
+                                                   makeString(eval, dirPath));
+                // TODO Should this set other params like current_namespace?
+            }
         }
 
         // TODO Do we need an Evaluator with no continuation marks?
@@ -225,7 +229,7 @@ final class LoadHandler
 
         try
         {
-            evalModuleDeclaration(eval, loc, moduleDeclaration);
+            evalModuleDeclaration(eval, loc.sourceName(), moduleDeclaration);
         }
         catch (AssertionError e)
         {
