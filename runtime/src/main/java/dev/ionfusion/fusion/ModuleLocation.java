@@ -34,12 +34,13 @@ abstract class ModuleLocation
 
     private ModuleLocation(SourceName name)
     {
-        this.myName = name;
+        assert name.getModuleIdentity() != null;
+        myName = name;
     }
 
 
     /**
-     * @return may be null.
+     * @return not null.
      */
     final SourceName sourceName()
     {
@@ -47,11 +48,7 @@ abstract class ModuleLocation
     }
 
 
-    /**
-     * This method may only be called once per instance.
-     * The result may be positioned on the value to be read.
-     */
-    abstract IonReader read(Evaluator eval)
+    abstract InputStream openStream()
         throws IOException;
 
     IonReader openReader(Evaluator eval)
@@ -59,7 +56,21 @@ abstract class ModuleLocation
     {
         try
         {
-            return this.read(eval);
+            IonReader reader = null;
+            InputStream in = openStream();
+            try
+            {
+                reader = eval.getIonReaderBuilder().build(in);
+                return reader;
+            }
+            finally
+            {
+                if (reader == null)
+                {
+                    // We failed constructing the IonReader!
+                    in.close();
+                }
+            }
         }
         catch (IOException | IonException e)
         {
@@ -74,8 +85,7 @@ abstract class ModuleLocation
     @Override
     public String toString()
     {
-        SourceName name = sourceName();
-        return (name == null ? super.toString() : name.toString());
+        return myName.toString();
     }
 
 
@@ -118,42 +128,8 @@ abstract class ModuleLocation
     }
 
 
-    private abstract static class InputStreamModuleLocation
-        extends ModuleLocation
-    {
-        InputStreamModuleLocation(SourceName name)
-        {
-            super(name);
-        }
-
-        abstract InputStream open()
-            throws IOException;
-
-        @Override
-        IonReader read(Evaluator eval)
-            throws IOException
-        {
-            IonReader reader = null;
-            InputStream in = open();
-            try
-            {
-                reader = eval.getIonReaderBuilder().build(in);
-                return reader;
-            }
-            finally
-            {
-                if (reader == null)
-                {
-                    // We failed constructing the IonReader!
-                    in.close();
-                }
-            }
-        }
-    }
-
-
     private static final class FileModuleLocation
-        extends InputStreamModuleLocation
+        extends ModuleLocation
     {
         public FileModuleLocation(ModuleIdentity id, File sourceFile)
         {
@@ -161,16 +137,16 @@ abstract class ModuleLocation
         }
 
         @Override
-        InputStream open()
+        InputStream openStream()
             throws IOException
         {
-            return Files.newInputStream(sourceName().getFile().toPath());
+            return Files.newInputStream(sourceName().getPath());
         }
     }
 
 
     private static final class UrlModuleLocation
-        extends InputStreamModuleLocation
+        extends ModuleLocation
     {
         public UrlModuleLocation(ModuleIdentity id, URL url)
         {
@@ -178,7 +154,7 @@ abstract class ModuleLocation
         }
 
         @Override
-        InputStream open()
+        InputStream openStream()
             throws IOException
         {
             return sourceName().getUrl().openStream();

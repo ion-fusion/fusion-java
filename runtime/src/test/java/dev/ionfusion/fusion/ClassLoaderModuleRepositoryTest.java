@@ -51,7 +51,7 @@ public class ClassLoaderModuleRepositoryTest
         assertTrue(name.display().contains("/ftst/symbol.fusion"));
 
         Evaluator eval       = evaluator();
-        IonReader ionReader  = loc.read(eval);
+        IonReader ionReader  = loc.openReader(eval);
         Object    moduleSexp = read(eval, ionReader);
         assertTrue(isPair(eval, moduleSexp));
     }
