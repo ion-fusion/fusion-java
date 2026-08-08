@@ -301,11 +301,11 @@ abstract class Namespace
      */
     Namespace(ModuleRegistry                   registry,
               ModuleIdentity                   id,
-              Function<Namespace, SyntaxWraps> wraps)
+              Function<Namespace, NamespaceWrap> initialWrap)
     {
         myRegistry = registry;
         myModuleId = id;
-        myWraps    = wraps.apply(this);
+        myWraps    = SyntaxWraps.make(initialWrap.apply(this));
     }
 
     @Override

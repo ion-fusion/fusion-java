@@ -14,7 +14,6 @@ import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.function.Function;
 
 
 /**
@@ -124,9 +123,10 @@ final class TopLevelNamespace
         // TODO Unit tests passed when this extended EnvironmentWrap, but that
         //   has the wrong variant of resolveTop. What tests are missing?
 
-        TopLevelWrap(TopLevelNamespace ns)
+        TopLevelWrap(Namespace ns)
         {
             super(ns);
+            assert ns instanceof TopLevelNamespace;
         }
 
         @Override
@@ -213,14 +213,7 @@ final class TopLevelNamespace
     TopLevelNamespace(ModuleRegistry registry)
     {
         super(registry, ModuleIdentity.forUniqueScope(TOP_LEVEL_MODULE_PREFIX),
-              new Function<Namespace, SyntaxWraps>()
-              {
-                  @Override
-                  public SyntaxWraps apply(Namespace _this) {
-                      TopLevelNamespace __this = (TopLevelNamespace) _this;
-                      return SyntaxWraps.make(new TopLevelWrap(__this));
-                  }
-              });
+              TopLevelWrap::new);
     }
 
 

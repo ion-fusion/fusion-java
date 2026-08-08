@@ -18,7 +18,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Function;
 
 
 /**
@@ -413,9 +412,10 @@ final class ModuleNamespace
     private static final class ModuleWrap
         extends NamespaceWrap
     {
-        ModuleWrap(ModuleNamespace ns)
+        ModuleWrap(Namespace ns)
         {
             super(ns);
+            assert ns instanceof ModuleNamespace;
         }
 
         @Override
@@ -440,19 +440,6 @@ final class ModuleNamespace
     }
 
 
-    /**
-     * Helper to work around inability of constructors to invoke virtual methods.
-     */
-    private static final Function<Namespace, SyntaxWraps> MAKE_SYNTAX_WRAPS =
-        new Function<Namespace, SyntaxWraps>() {
-            @Override
-            public SyntaxWraps apply(Namespace ns)
-            {
-                return SyntaxWraps.make(new ModuleWrap((ModuleNamespace) ns));
-            }
-        };
-
-
     private final List<BaseSymbol> myDefinedNames = new ArrayList<>();
 
     /**
@@ -472,7 +459,7 @@ final class ModuleNamespace
                     ModuleIdentity languageId)
         throws FusionException
     {
-        super(registry, moduleId, MAKE_SYNTAX_WRAPS);
+        this(registry, moduleId);
 
         ModuleInstance language = instantiateRequiredModule(eval, languageId);
         for (ProvidedBinding provided : language.providedBindings())
@@ -496,7 +483,7 @@ final class ModuleNamespace
                     ModuleIdentity[] requiredModules)
         throws FusionException
     {
-        super(registry, moduleId, MAKE_SYNTAX_WRAPS);
+        this(registry, moduleId);
 
         for (ModuleIdentity m : requiredModules)
         {
@@ -513,7 +500,7 @@ final class ModuleNamespace
      */
     ModuleNamespace(ModuleRegistry registry, ModuleIdentity moduleId)
     {
-        super(registry, moduleId, MAKE_SYNTAX_WRAPS);
+        super(registry, moduleId, ModuleWrap::new);
     }
 
 
