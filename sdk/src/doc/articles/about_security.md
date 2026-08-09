@@ -63,7 +63,7 @@ The mechanism for doing this is straightforward. When a namespace is created, th
 the identity of a single module representing the desired dialect. The new namespace is initialized
 with exactly the set of bindings exported by that module. The invoker can then add more bindings as
 necessary before evaluating code. The same thing happens when declaring a module. Every module
-declares it’s dialect explicitly: in the canonical prologue `(module M "/fusion" ...)` the new
+declares its dialect explicitly: in the canonical prologue `(module M "/fusion" ...)` the new
 module `M` declares its dialect to be the `/fusion` module. That dialect is generally the default
 for non-module scripts and ad-hoc evaluation from a programmatic invoker, but all such facilities
 allow explicit dialect control.
