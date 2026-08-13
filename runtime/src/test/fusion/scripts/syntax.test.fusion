@@ -4,6 +4,7 @@
 (require
   "/fusion/experimental/check"
   "/fusion/experimental/syntax"
+  "/fusion/private/syntax"
   "/fusion/list"
   "/testutils"
   )
@@ -301,3 +302,11 @@
     (quote_syntax a::(true))
     (quote_syntax a::{f:true})
     ))
+
+
+//==========================================================================
+// syntax_source
+
+(check_pred
+  (|s| (string_ends_with s "/runtime/src/test/fusion/scripts/syntax.test.fusion"))
+  (syntax_source (quote_syntax here)))

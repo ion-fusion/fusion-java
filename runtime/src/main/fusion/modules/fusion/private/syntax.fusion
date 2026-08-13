@@ -22,6 +22,7 @@ Intrinsic operators for working with syntax objects.
     syntax_line
     syntax_property
     syntax_size
+    syntax_source
     syntax_subseq
     syntax_to_datum
     syntax_track_origin

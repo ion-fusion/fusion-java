@@ -8,8 +8,8 @@ import static dev.ionfusion.fusion.FusionSyntax.checkSyntaxArg;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
-import dev.ionfusion.runtime.base.SourceName;
+import dev.ionfusion.runtime.base.ResourceDescriptor;
+import dev.ionfusion.runtime.base.ResourcePosition;
 
 
 class SyntaxSourceProc
@@ -19,15 +19,12 @@ class SyntaxSourceProc
     Object doApply(Evaluator eval, Object arg)
         throws FusionException
     {
-        SyntaxValue stx = checkSyntaxArg(eval, this, 0, arg);
-        SourceLocation location = stx.getLocation();
-        if (location != null)
+        SyntaxValue      stx = checkSyntaxArg(eval, this, 0, arg);
+        ResourcePosition pos = stx.getPosition();
+        if (pos != null)
         {
-            SourceName name = location.getSourceName();
-            if (name != null)
-            {
-                return makeString(eval, name.display());
-            }
+            ResourceDescriptor rsrc = pos.getResourceDesc();
+            return makeString(eval, rsrc.display());
         }
         return voidValue(eval);
     }
