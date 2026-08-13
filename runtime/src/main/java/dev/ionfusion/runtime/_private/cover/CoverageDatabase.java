@@ -118,7 +118,7 @@ public class CoverageDatabase
     public AtomicInteger locationInstrumented(SourceLocation loc)
     {
         URI uri = loc.getResourceId().getUri();
-        long offset = loc.getStartOffset();
+        long offset = loc.getOffset();
         ModuleIdentity module = loc.getModuleIdentity();
 
         return resourceInstrumented(uri).containsModule(module)

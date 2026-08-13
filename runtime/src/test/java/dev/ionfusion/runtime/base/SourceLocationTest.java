@@ -137,7 +137,7 @@ public class SourceLocationTest
 
         assertEquals(line,   loc.getLine(),   "line");
         assertEquals(column, loc.getColumn(), "column");
-        assertEquals(offset, loc.getStartOffset(), "offset");
+        assertEquals(offset, loc.getOffset(), "offset");
 
         SourceName name = loc.getSourceName();
         if (display == null)

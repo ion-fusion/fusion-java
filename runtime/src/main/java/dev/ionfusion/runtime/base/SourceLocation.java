@@ -14,15 +14,14 @@ import java.util.Objects;
 
 
 /**
- * A specific location within some source of data.  In this library they are
- * generally used to reference Fusion source code, but they are equally useful
- * for other forms of serialized data.
+ * A specific location within some Fusion source code.
  * <p>
  * Because Fusion is oriented around Ion data, these locations have semantics
  * aligned with {@link com.amazon.ion.TextSpan} and
  * {@link com.amazon.ion.OffsetSpan}.
  */
 public class SourceLocation
+    implements CodePosition
 {
     /** May be null. */
     private final SourceName myName;
@@ -37,16 +36,11 @@ public class SourceLocation
     }
 
 
-    /**
-     * Identifies the resource containing this location if it's known.
-     *
-     * @return can be null.
-     */
-    public ResourceIdentifier getResourceId()
+    @Override
+    public ResourceDescriptor getResourceDesc()
     {
-        return myName != null ? myName.getResourceId() : null;
+        return myName != null ? myName : ResourceDescriptor.unknown();
     }
-
 
     /**
      * Gets the name of the source of this location.
@@ -61,6 +55,7 @@ public class SourceLocation
      * Gets the one-based line number.
      * @return zero if the line is unknown.
      */
+    @Override
     public long getLine()
     {
         return 0;
@@ -74,13 +69,13 @@ public class SourceLocation
      * </p>
      * @return zero if the column is unknown.
      */
+    @Override
     public long getColumn()
     {
         return 0;
     }
 
 
-    // TODO Define what this offset is counting.
     /**
      * Gets the zero-based starting offset.
      * @return -1 if the offset is unknown.
@@ -90,7 +85,14 @@ public class SourceLocation
         return -1;
     }
 
+    @Override
+    public long getOffset()
+    {
+        return getStartOffset();
+    }
 
+
+    @Override
     public ModuleIdentity getModuleIdentity()
     {
         return (myName == null) ? null : myName.getModuleIdentity();
@@ -398,6 +400,7 @@ public class SourceLocation
      *
      * @throws IOException if thrown by the {@link Appendable}.
      */
+    @Override
     public void display(Appendable out)
         throws IOException
     {

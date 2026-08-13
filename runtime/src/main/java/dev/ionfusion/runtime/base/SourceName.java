@@ -17,6 +17,7 @@ import java.nio.file.Path;
  * for error reporting to users.
  */
 public class SourceName
+    implements ResourceDescriptor
 {
     /**
      * The standard extension for Fusion source code files.
@@ -37,6 +38,7 @@ public class SourceName
      *
      * @return the displayable name of this source
      */
+    @Override
     public String display()
     {
         return myDisplay;
@@ -47,6 +49,7 @@ public class SourceName
      *
      * @return can be null.
      */
+    @Override
     public ResourceIdentifier getResourceId()
     {
         return null;
