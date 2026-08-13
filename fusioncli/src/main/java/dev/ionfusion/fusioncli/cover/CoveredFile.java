@@ -34,7 +34,7 @@ public class CoveredFile
     {
         assert uri != null;
         myUri = uri;
-        myPath = path.normalize();
+        myPath = path;
     }
 
 
@@ -43,7 +43,7 @@ public class CoveredFile
         String scheme = uri.getScheme();
         if ("file".equalsIgnoreCase(scheme))
         {
-            return new CoveredFile(uri, Paths.get(uri));
+            return new CoveredFile(uri, Paths.get(uri).normalize());
         }
         if ("jar".equalsIgnoreCase(scheme))
         {
@@ -57,7 +57,7 @@ public class CoveredFile
     @Override
     public String describe()
     {
-        return myPath.toString();
+        return myPath != null ? myPath.toString() : myUri.toString();
     }
 
     public URI getUri()
