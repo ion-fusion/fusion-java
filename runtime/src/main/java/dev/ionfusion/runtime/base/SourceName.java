@@ -7,7 +7,6 @@ import static java.util.Objects.requireNonNull;
 
 import java.io.File;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 
@@ -43,6 +42,15 @@ public class SourceName
         return myDisplay;
     }
 
+    /**
+     * Returns the resource identifier for this source if one exists.
+     *
+     * @return can be null.
+     */
+    public ResourceIdentifier getResourceId()
+    {
+        return null;
+    }
 
     /**
      * Returns the absolute path of the source file if one is known.
@@ -134,22 +142,39 @@ public class SourceName
     //=========================================================================
 
 
-    private static class FileSourceName
+    private static class ResourceSourceName
         extends SourceName
     {
-        private final File myFile;
+        private final ResourceIdentifier myResource;
 
-        FileSourceName(File file)
+        private ResourceSourceName(String display, ResourceIdentifier resource)
         {
-            super(file.getAbsolutePath());
-            myFile = file;
+            super(display);
+            myResource = resource;
+        }
+
+        private ResourceSourceName(ResourceIdentifier resource)
+        {
+            this(resource.toString(), resource);
         }
 
         @Override
-        public Path getPath() { return myFile.toPath(); }
+        public ResourceIdentifier getResourceId()
+        {
+            return myResource;
+        }
 
         @Override
-        public URI getUri() { return myFile.toURI(); }
+        public Path getPath()
+        {
+            return myResource.getPath();
+        }
+
+        @Override
+        public URI getUri()
+        {
+            return myResource.getUri();
+        }
     }
 
 
@@ -157,61 +182,14 @@ public class SourceName
 
 
     private static class ModuleSourceName
-        extends SourceName
+        extends ResourceSourceName
     {
         private final ModuleIdentity myId;
-        private final File           myFile;
 
-        ModuleSourceName(ModuleIdentity id, File file)
+        ModuleSourceName(ResourceIdentifier rsrc, ModuleIdentity id)
         {
-            super(id + " (at file:" + file + ")");
-            assert file.isAbsolute();
+            super(id + " (at " + rsrc.toString() + ")", rsrc);
             myId   = id;
-            myFile = file;
-        }
-
-        @Override
-        public Path getPath() { return myFile.toPath(); }
-
-        public URI getUri() { return myFile.toURI(); }
-
-        @Override
-        public ModuleIdentity getModuleIdentity() { return myId; }
-    }
-
-
-    //=========================================================================
-
-
-    /**
-     * Identifies a data source using a URL.
-     */
-    private static class UrlSourceName
-        extends SourceName
-    {
-        private final ModuleIdentity myId;
-        private final URL            myUrl;
-
-        private UrlSourceName(ModuleIdentity id, URL url)
-        {
-            super(id + " (at " + url.toExternalForm() + ")");
-            assert !url.getProtocol().equalsIgnoreCase("file")
-                : "Use FileSourceName for local files";
-            myId  = id;
-            myUrl = url;
-        }
-
-        @Override
-        public URI getUri()
-        {
-            try
-            {
-                return myUrl.toURI();
-            }
-            catch (URISyntaxException e)
-            {
-                throw new AssertionError(e); // should not happen
-            }
         }
 
         @Override
@@ -249,10 +227,8 @@ public class SourceName
      */
     public static SourceName forFile(String path)
     {
-        if (path.isEmpty()) {
-            throw new IllegalArgumentException("path must not be empty");
-        }
-        return new FileSourceName(new File(path).getAbsoluteFile());
+        ResourceIdentifier rsrc = ResourceIdentifier.forFile(path);
+        return new ResourceSourceName(rsrc);
     }
 
     /**
@@ -267,7 +243,8 @@ public class SourceName
      */
     public static SourceName forFile(File path)
     {
-        return new FileSourceName(path.getAbsoluteFile());
+        ResourceIdentifier rsrc = ResourceIdentifier.forFile(path);
+        return new ResourceSourceName(rsrc);
     }
 
 
@@ -279,7 +256,8 @@ public class SourceName
     public static SourceName forModule(ModuleIdentity id, File sourceFile)
     {
         requireNonNull(id, "id must not be null");
-        return new ModuleSourceName(id, sourceFile);
+        ResourceIdentifier rsrc = ResourceIdentifier.forFile(sourceFile);
+        return new ModuleSourceName(rsrc, id);
     }
 
 
@@ -291,6 +269,7 @@ public class SourceName
     public static SourceName forUrl(ModuleIdentity id, URL url)
     {
         requireNonNull(id, "id must not be null");
-        return new UrlSourceName(id, url);
+        ResourceIdentifier rsrc = ResourceIdentifier.forUrl(url);
+        return new ModuleSourceName(rsrc, id);
     }
 }

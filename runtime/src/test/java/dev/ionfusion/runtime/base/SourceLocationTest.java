@@ -16,6 +16,31 @@ import org.junit.jupiter.api.Test;
 
 public class SourceLocationTest
 {
+    private void checkConsistency(SourceName name, SourceLocation loc)
+    {
+        assertSame(name, loc.getSourceName());
+        if (name != null)
+        {
+            assertSame(name.getResourceId(), loc.getResourceId());
+        }
+        else
+        {
+            assertNull(loc.getResourceId());
+        }
+    }
+
+
+    private void checkPath(String path, SourceLocation loc)
+    {
+        ResourceIdentifier rsrc = loc.getResourceId();
+
+        assertEquals("file://" + path, rsrc.getUri().toString());
+        assertEquals(path, rsrc.getPath().toString());
+
+        assertSame(rsrc.getUri(), loc.getSourceName().getUri());
+        assertSame(rsrc.getPath(), loc.getSourceName().getPath());
+    }
+
     private void assertNoLocation(IonReader ir)
     {
         SourceLocation loc = SourceLocation.forCurrentSpan(ir);
@@ -26,20 +51,36 @@ public class SourceLocationTest
 
         SourceName name = SourceName.forDisplay("test source");
         loc = SourceLocation.forCurrentSpan(ir, name);
+        checkConsistency(name, loc);
         assertEquals("unknown location in test source", loc.display());
+
+        name = SourceName.forFile("/dummy/path");
+        loc = SourceLocation.forCurrentSpan(ir, name);
+        checkConsistency(name, loc);
+        checkPath("/dummy/path", loc);
+        assertEquals("unknown location in /dummy/path", loc.display());
     }
 
     private void assertLocation(String expectedOffsets, IonReader ir)
     {
         SourceLocation loc = SourceLocation.forCurrentSpan(ir);
         assertEquals(expectedOffsets, loc.display());
+        checkConsistency(null, loc);
 
         loc = SourceLocation.forCurrentSpan(ir, null);
         assertEquals(expectedOffsets, loc.display());
+        checkConsistency(null, loc);
 
         SourceName name = SourceName.forDisplay("test source");
         loc = SourceLocation.forCurrentSpan(ir, name);
+        checkConsistency(name, loc);
         assertEquals(expectedOffsets + " of test source", loc.display());
+
+        name = SourceName.forFile("/dummy/path");
+        loc = SourceLocation.forCurrentSpan(ir, name);
+        checkConsistency(name, loc);
+        checkPath("/dummy/path", loc);
+        assertEquals(expectedOffsets + " of /dummy/path", loc.display());
     }
 
 

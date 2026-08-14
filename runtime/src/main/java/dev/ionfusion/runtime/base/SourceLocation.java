@@ -38,6 +38,17 @@ public class SourceLocation
 
 
     /**
+     * Identifies the resource containing this location if it's known.
+     *
+     * @return can be null.
+     */
+    public ResourceIdentifier getResourceId()
+    {
+        return myName != null ? myName.getResourceId() : null;
+    }
+
+
+    /**
      * Gets the name of the source of this location.
      * @return null if the source name isn't known.
      */
