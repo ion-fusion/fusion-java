@@ -157,7 +157,7 @@ abstract class ModuleLocation
         InputStream openStream()
             throws IOException
         {
-            return sourceName().getUrl().openStream();
+            return sourceName().getUri().toURL().openStream();
         }
     }
 }

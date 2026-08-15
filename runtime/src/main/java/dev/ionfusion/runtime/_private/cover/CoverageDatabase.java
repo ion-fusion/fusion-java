@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -99,7 +100,7 @@ public class CoverageDatabase
     {
         // We can record a location with either a file or a URL.
         SourceName name = loc.getSourceName();
-        return name != null && (name.getFile() != null || name.getUrl() != null);
+        return name != null && (name.getPath() != null || name.getUri() != null);
     }
 
 
@@ -188,17 +189,17 @@ public class CoverageDatabase
     {
         iw.stepIn(STRUCT);
         {
-            File file = name.getFile();
+            Path file = name.getPath();
             if (file != null)
             {
                 iw.setFieldName("file");
-                iw.writeString(file.getPath());
+                iw.writeString(file.toString());
             }
             else
             {
-                URL url = name.getUrl();
+                URI url = name.getUri();
                 iw.setFieldName("url");
-                iw.writeString(url.toExternalForm());
+                iw.writeString(url.toString());
             }
 
             ModuleIdentity id = name.getModuleIdentity();

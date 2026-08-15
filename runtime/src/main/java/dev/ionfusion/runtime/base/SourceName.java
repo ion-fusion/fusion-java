@@ -51,33 +51,18 @@ public class SourceName
      *
      * @return null if this source is not an actual file.
      */
-    public File getFile()
-    {
-        return null;
-    }
-
-    /**
-     * Returns the absolute path of the source file if one is known.
-     *
-     * @return null if this source is not an actual file.
-     */
     public Path getPath()
     {
         return null;
     }
 
     /**
-     * Returns a URL for the source. The protocol can vary; at least {@code file}
-     * and {@code jar} are possible. In general, {@link URL#openStream()} is
+     * Returns a URI for the source. The protocol can vary; at least {@code file}
+     * and {@code jar} are possible. In general, {@code toUrl().openStream()} is
      * expected to work.
      *
-     * @return null if this source cannot be identified as a URL.
+     * @return null if this source cannot be identified as a URI.
      */
-    public URL getUrl()
-    {
-        return null;
-    }
-
     public URI getUri()
     {
         return null;
@@ -161,9 +146,6 @@ public class SourceName
         }
 
         @Override
-        public File getFile() { return myFile; }
-
-        @Override
         public Path getPath() { return myFile.toPath(); }
 
         @Override
@@ -187,9 +169,6 @@ public class SourceName
             myId   = id;
             myFile = file;
         }
-
-        @Override
-        public File getFile() { return myFile; }
 
         @Override
         public Path getPath() { return myFile.toPath(); }
@@ -221,9 +200,6 @@ public class SourceName
             myId  = id;
             myUrl = url;
         }
-
-        @Override
-        public URL getUrl() { return myUrl; }
 
         @Override
         public URI getUri()
@@ -295,6 +271,11 @@ public class SourceName
     }
 
 
+    /**
+     * @param id must not be null.
+     * @param sourceFile must not be null.
+     * @return a new {@link SourceName}.
+     */
     public static SourceName forModule(ModuleIdentity id, File sourceFile)
     {
         requireNonNull(id, "id must not be null");
@@ -302,6 +283,11 @@ public class SourceName
     }
 
 
+    /**
+     * @param id must not be null.
+     * @param url must not be null.
+     * @return a new {@link SourceName}.
+     */
     public static SourceName forUrl(ModuleIdentity id, URL url)
     {
         requireNonNull(id, "id must not be null");
