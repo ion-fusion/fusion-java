@@ -9,6 +9,7 @@ import static java.nio.file.Files.exists;
 import static java.util.Collections.emptySet;
 
 import dev.ionfusion.runtime.base.ModuleIdentity;
+import dev.ionfusion.runtime.base.ResourceIdentifier;
 import dev.ionfusion.runtime.base.SourceLocation;
 import dev.ionfusion.runtime.base.SourceName;
 import java.io.File;
@@ -230,11 +231,10 @@ public final class CoverageConfiguration
         ModuleIdentity id = loc.getModuleIdentity();
         if (moduleIsSelected(id)) return true;
 
-        SourceName name = loc.getSourceName();
-        if (name == null) return false;
+        ResourceIdentifier rsrc = loc.getResourceId();
+        if (rsrc == null) return false;
 
-        Path file = name.getPath();
-        return fileIsSelected(file);
+        return fileIsSelected(rsrc.getPath());
     }
 
 

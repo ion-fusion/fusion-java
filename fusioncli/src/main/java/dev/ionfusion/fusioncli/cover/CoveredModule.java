@@ -5,21 +5,19 @@ package dev.ionfusion.fusioncli.cover;
 
 import dev.ionfusion.runtime._private.cover.CoverageDatabase;
 import dev.ionfusion.runtime.base.ModuleIdentity;
-import dev.ionfusion.runtime.base.SourceName;
+import dev.ionfusion.runtime.base.ResourceIdentifier;
 import java.net.URI;
 import java.nio.file.Path;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Represents a module and associated coverage metrics.
  * <p>
  * One subtle challenge is that a module may have coverage data using two different
- * source names: one test session might load the module via a concrete path, while
+ * resources: one test session might load the module via a concrete path, while
  * another might load it from a jar.  This class normalizes such duplicates to a
  * preferred form, which is the first concrete path encountered, else the first jar.
  * <p>
- * This normalization should really be happening in the {@link CoverageDatabase}.
+ * This normalization should perhaps be happening in the {@link CoverageDatabase}.
  */
 public class CoveredModule
     extends CoveredEntity
@@ -27,22 +25,15 @@ public class CoveredModule
     private final ModuleIdentity myId;
 
     /**
-     * Tracks the source code we want to present for this module.
-     * We prefer a file-based source if one exists.
+     * Tracks the resource we want to present for this module, preferring a Path-based
+     * resource if one exists.
      */
-    private SourceName myPreferredSource;
-
-    /**
-     * Remembers that we've processed a particular source to avoid the clunky
-     * normalization for every location.
-     */
-    private final Set<SourceName> myNames;
+    private ResourceIdentifier myPreferredSource;
 
 
     CoveredModule(ModuleIdentity id)
     {
         myId = id;
-        myNames = new HashSet<>();
     }
 
 
@@ -59,6 +50,7 @@ public class CoveredModule
 
     /**
      * @return the URI of the preferred source.
+     * Can be null for synthetic parent modules.
      */
     @Override
     public URI getUri()
@@ -68,6 +60,7 @@ public class CoveredModule
 
     /**
      * @return the path of the preferred source.
+     * Can be null for synthetic parent modules.
      */
     @Override
     public Path getPath()
@@ -76,29 +69,26 @@ public class CoveredModule
     }
 
 
-    void noteSourceName(SourceName sourceName)
+    void noteResource(ResourceIdentifier rsrc)
     {
-        if (myNames.add(sourceName))
+        if (myPreferredSource == null)
         {
-            if (myPreferredSource == null)
+            myPreferredSource = rsrc;
+        }
+        else
+        {
+            Path preferredPath = myPreferredSource.getPath();
+            Path givenPath = rsrc.getPath();
+            if (preferredPath == null)
             {
-                myPreferredSource = sourceName;
+                // Prefer a Path-based source over a URL-based one.
+                if (givenPath != null) myPreferredSource = rsrc;
             }
             else
             {
-                Path preferredPath = myPreferredSource.getPath();
-                Path givenPath = sourceName.getPath();
-                if (preferredPath == null)
-                {
-                    // Prefer a Path-based source over a URL-based one.
-                    if (givenPath != null) myPreferredSource = sourceName;
-                }
-                else
-                {
-                    // We don't expect the same module to come from two different
-                    // concrete files.
-                    assert givenPath == null || preferredPath.equals(givenPath);
-                }
+                // We don't expect the same module to come from two different
+                // concrete files.
+                assert givenPath == null || preferredPath.equals(givenPath);
             }
         }
     }

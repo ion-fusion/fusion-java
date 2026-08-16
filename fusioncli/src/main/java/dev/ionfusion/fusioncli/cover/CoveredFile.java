@@ -3,14 +3,12 @@
 
 package dev.ionfusion.fusioncli.cover;
 
-import static java.nio.file.Files.newInputStream;
-
 import dev.ionfusion.runtime.base.ModuleIdentity;
+import dev.ionfusion.runtime.base.ResourceIdentifier;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 /**
  * Represents a source file (either physical or embedded in a Jar) and associated
@@ -21,8 +19,7 @@ import java.nio.file.Paths;
 public class CoveredFile
     extends CoveredEntity
 {
-    private final URI  myUri;
-    private final Path myPath;
+    private final ResourceIdentifier myResource;
 
     /**
      * Tracks the module defined in this file.
@@ -30,51 +27,39 @@ public class CoveredFile
     private ModuleIdentity myModuleId;
 
 
-    private CoveredFile(URI uri, Path path)
+    private CoveredFile(ResourceIdentifier resource)
     {
-        assert uri != null;
-        myUri = uri;
-        myPath = path;
+        myResource = resource;
     }
 
 
     static CoveredFile forUri(URI uri)
     {
-        String scheme = uri.getScheme();
-        if ("file".equalsIgnoreCase(scheme))
-        {
-            return new CoveredFile(uri, Paths.get(uri).normalize());
-        }
-        if ("jar".equalsIgnoreCase(scheme))
-        {
-            return new CoveredFile(uri, null);
-        }
-
-        throw new IllegalArgumentException("URI must have file or jar scheme: " + uri);
+        return new CoveredFile(ResourceIdentifier.forUri(uri));
     }
 
 
     @Override
     public String describe()
     {
-        return myPath != null ? myPath.toString() : myUri.toString();
+        return myResource.toString();
     }
 
     public URI getUri()
     {
-        return myUri;
+        return myResource.getUri();
     }
 
     public Path getPath()
     {
-        return myPath;
+        return myResource.getPath();
     }
 
 
     public InputStream readSource()
         throws IOException
     {
-        return myPath != null ? newInputStream(myPath) : myUri.toURL().openStream();
+        return myResource.openStream();
     }
 
 

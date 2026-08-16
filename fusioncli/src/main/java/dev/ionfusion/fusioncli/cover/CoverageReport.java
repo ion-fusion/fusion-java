@@ -12,7 +12,7 @@ import dev.ionfusion.runtime._private.cover.CoverageConfiguration;
 import dev.ionfusion.runtime._private.cover.CoverageDatabase;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
-import dev.ionfusion.runtime.base.SourceName;
+import dev.ionfusion.runtime.base.ResourceIdentifier;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -63,7 +63,7 @@ public class CoverageReport
 
         // Traverse the database's instrumented sources, noting source files and
         // determining the preferred source of each module.
-        db.sourceNames().forEach(this::noteSourceName);
+        db.forEachResource(this::noteResource);
 
         // With all module sources collected, we can note a single one for each module.
         myCoveredModules.values().forEach(this::notePreferredSourceOfModule);
@@ -181,22 +181,23 @@ public class CoverageReport
     }
 
 
-    private void noteSourceName(SourceName name)
+    private void noteResource(URI uri, ModuleIdentity id)
     {
-        ModuleIdentity id = name.getModuleIdentity();
+        ResourceIdentifier rsrc = ResourceIdentifier.forUri(uri);
+
         if (myConfig.moduleIsSelected(id))
         {
             // A module can occur in different sessions with different locations,
             // one with a file Path and the other with a jar URI.  Here we look for
             // such duplicates and normalize to the file Path.
 
-            noteModule(id).noteSourceName(name);
+            noteModule(id).noteResource(rsrc);
             // We'll come back later to note the preferred source file.
         }
         else
         {
             // TODO Warn about instrumented scripts that are not selected by our config?
-            Path path = name.getPath();
+            Path path = rsrc.getPath();
             if (path != null)
             {
                 noteScript(path);

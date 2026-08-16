@@ -16,9 +16,7 @@ import com.amazon.ion.IonWriter;
 import com.amazon.ion.system.IonReaderBuilder;
 import com.amazon.ion.system.IonTextWriterBuilder;
 import dev.ionfusion.runtime.base.ModuleIdentity;
-import dev.ionfusion.runtime.base.ResourceIdentifier;
 import dev.ionfusion.runtime.base.SourceLocation;
-import dev.ionfusion.runtime.base.SourceName;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,7 +26,6 @@ import java.net.URI;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -127,19 +124,6 @@ public class CoverageDatabase
 
 
     //=====================================================================
-
-    public Set<SourceName> sourceNames()
-    {
-        Set<SourceName> names = new HashSet<>();
-
-        forEachResource( (uri, module) -> {
-            ResourceIdentifier rsrc = ResourceIdentifier.forUri(uri);
-            SourceName name = SourceName.forResource(rsrc, module);
-            names.add(name);
-        });
-
-        return names;
-    }
 
 
     public interface ResourceVisitor
