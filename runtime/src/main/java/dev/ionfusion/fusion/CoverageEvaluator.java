@@ -4,8 +4,8 @@
 package dev.ionfusion.fusion;
 
 import dev.ionfusion.runtime._private.cover.CoverageCollector;
+import dev.ionfusion.runtime.base.CodePosition;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -61,7 +61,7 @@ final class CoverageEvaluator
         {
             CompiledForm form = super.compileExpression(env, source);
 
-            SourceLocation loc = source.getLocation();
+            CodePosition loc = source.getLocation();
             if (loc != null)
             {
                 if (myCollector.locationIsRecordable(loc))

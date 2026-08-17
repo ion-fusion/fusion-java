@@ -16,8 +16,8 @@ import com.amazon.ion.IonType;
 import com.amazon.ion.IonWriter;
 import com.amazon.ion.system.IonReaderBuilder;
 import com.amazon.ion.system.IonTextWriterBuilder;
+import dev.ionfusion.runtime.base.CodePosition;
 import dev.ionfusion.runtime.base.ModuleIdentity;
-import dev.ionfusion.runtime.base.SourceLocation;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -95,7 +95,7 @@ public class CoverageDatabase
      * Indicates whether this database can record the given location.
      */
     @Override
-    public boolean locationIsRecordable(SourceLocation loc)
+    public boolean locationIsRecordable(CodePosition loc)
     {
         // We can record locations within identified resources.
         return loc.getResourceId() != null;
@@ -113,7 +113,7 @@ public class CoverageDatabase
      * @param loc must be {@linkplain #locationIsRecordable recordable}.
      */
     @Override
-    public AtomicInteger locationInstrumented(SourceLocation loc)
+    public AtomicInteger locationInstrumented(CodePosition loc)
     {
         URI uri = loc.getResourceId().getUri();
         long offset = loc.getOffset();

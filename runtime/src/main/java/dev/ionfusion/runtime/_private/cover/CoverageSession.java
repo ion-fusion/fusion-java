@@ -8,7 +8,7 @@ import static java.nio.file.Files.createTempFile;
 
 import dev.ionfusion.runtime._private.util.Flusher;
 import dev.ionfusion.runtime._private.util.InternMap;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.CodePosition;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -78,13 +78,13 @@ public class CoverageSession
     }
 
     @Override
-    public boolean locationIsRecordable(SourceLocation loc)
+    public boolean locationIsRecordable(CodePosition loc)
     {
         return myDatabase.locationIsRecordable(loc);
     }
 
     @Override
-    public AtomicInteger locationInstrumented(SourceLocation loc)
+    public AtomicInteger locationInstrumented(CodePosition loc)
     {
         return myDatabase.locationInstrumented(loc);
     }

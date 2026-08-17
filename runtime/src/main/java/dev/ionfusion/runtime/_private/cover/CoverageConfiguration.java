@@ -8,10 +8,9 @@ import static dev.ionfusion.runtime.base.ModuleIdentity.isValidAbsoluteModulePat
 import static java.nio.file.Files.exists;
 import static java.util.Collections.emptySet;
 
+import dev.ionfusion.runtime.base.CodePosition;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import dev.ionfusion.runtime.base.ResourceIdentifier;
-import dev.ionfusion.runtime.base.SourceLocation;
-import dev.ionfusion.runtime.base.SourceName;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -218,15 +217,14 @@ public final class CoverageConfiguration
 
 
     /**
-     * A {@link SourceLocation} is selected for coverage if it has a
-     * {@link SourceName} and either its {@link ModuleIdentity} or its file is
-     * selected.
+     * A {@link CodePosition} is selected for coverage if either its
+     * {@link ModuleIdentity} or its file is selected.
      *
      * @param loc must not be null.
      *
      * @return true iff the location should be instrumented.
      */
-    boolean locationIsSelected(SourceLocation loc)
+    boolean locationIsSelected(CodePosition loc)
     {
         ModuleIdentity id = loc.getModuleIdentity();
         if (moduleIsSelected(id)) return true;

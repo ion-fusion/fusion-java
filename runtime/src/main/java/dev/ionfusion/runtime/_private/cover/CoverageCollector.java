@@ -3,13 +3,13 @@
 
 package dev.ionfusion.runtime._private.cover;
 
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.CodePosition;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * EXPERIMENTAL extension point for collecting code-coverage statistics.
  * <p>
- * At compile time, {@link #locationIsRecordable(SourceLocation)} is called
+ * At compile time, {@link #locationIsRecordable} is called
  * for each (runtime) code point for which a location is known.  The collector
  * may constrain the extent of coverage metrics by filtering based on location:
  * a {@code false} result indicates that the code point should not be
@@ -27,7 +27,7 @@ public interface CoverageCollector
      * If false, then {@link #locationInstrumented} must not be called with an
      * equivalent location.
      */
-    boolean locationIsRecordable(SourceLocation loc);
+    boolean locationIsRecordable(CodePosition loc);
 
     /**
      * Records that the code at some location has been instrumented.
@@ -39,5 +39,5 @@ public interface CoverageCollector
      *
      * @return the counter for the location, to be incremented for each evaluation.
      */
-    AtomicInteger locationInstrumented(SourceLocation loc);
+    AtomicInteger locationInstrumented(CodePosition loc);
 }

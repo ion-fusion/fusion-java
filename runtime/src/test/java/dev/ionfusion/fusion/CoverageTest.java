@@ -8,7 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.ionfusion.runtime._private.cover.CoverageCollector;
+import dev.ionfusion.runtime.base.CodePosition;
 import dev.ionfusion.runtime.base.FusionException;
+import dev.ionfusion.runtime.base.ResourceDescriptor;
 import dev.ionfusion.runtime.base.SourceLocation;
 import dev.ionfusion.runtime.base.SourceName;
 import dev.ionfusion.runtime.embed.TopLevel;
@@ -31,17 +33,21 @@ public class CoverageTest
         final Map<SourceLocation, AtomicInteger> instrumented = new HashMap<>();
 
         @Override
-        public boolean locationIsRecordable(SourceLocation loc)
+        public boolean locationIsRecordable(CodePosition loc)
         {
             return (!instrumentOnlyLineOne || loc.getLine() == 1);
         }
 
         @Override
-        public AtomicInteger locationInstrumented(SourceLocation loc)
+        public AtomicInteger locationInstrumented(CodePosition loc)
         {
+            // Temporary
+            ResourceDescriptor rsrc = loc.getResourceDesc();
+            SourceName name = (rsrc instanceof SourceName ? (SourceName) rsrc : null);
+
             // For simplicity, we'll ignore the offset.
             SourceLocation loc2 =
-                SourceLocation.forLineColumn(loc.getLine(), loc.getColumn(), loc.getSourceName());
+                SourceLocation.forLineColumn(loc.getLine(), loc.getColumn(), name);
             return instrumented.computeIfAbsent(loc2,l ->new AtomicInteger());
         }
     }
