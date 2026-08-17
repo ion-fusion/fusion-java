@@ -8,7 +8,6 @@ import static java.util.Objects.requireNonNull;
 import dev.ionfusion.runtime.base.SourceNameImpl.ModuleSourceName;
 import dev.ionfusion.runtime.base.SourceNameImpl.ResourceSourceName;
 import java.io.File;
-import java.net.URL;
 
 /**
  * Identifies a source of Fusion code or other data: a file, URL, <em>etc.</em>
@@ -78,32 +77,6 @@ public interface SourceName
     {
         ResourceIdentifier rsrc = ResourceIdentifier.forFile(path);
         return new ResourceSourceName(rsrc);
-    }
-
-
-    /**
-     * @param id must not be null.
-     * @param sourceFile must not be null.
-     * @return a new {@link SourceName}.
-     */
-    static SourceName forModule(ModuleIdentity id, File sourceFile)
-    {
-        requireNonNull(id, "id must not be null");
-        ResourceIdentifier rsrc = ResourceIdentifier.forFile(sourceFile);
-        return new ModuleSourceName(rsrc, id);
-    }
-
-
-    /**
-     * @param id must not be null.
-     * @param url must not be null.
-     * @return a new {@link SourceName}.
-     */
-    static SourceName forUrl(ModuleIdentity id, URL url)
-    {
-        requireNonNull(id, "id must not be null");
-        ResourceIdentifier rsrc = ResourceIdentifier.forUrl(url);
-        return new ModuleSourceName(rsrc, id);
     }
 
 

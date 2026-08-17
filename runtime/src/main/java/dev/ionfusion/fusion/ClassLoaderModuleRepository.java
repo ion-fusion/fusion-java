@@ -3,10 +3,13 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.runtime.base.ResourceIdentifier.forUrl;
 import static dev.ionfusion.runtime.embed.FusionRuntime.FUSION_SOURCE_CODE_FILE_EXTENSION;
 
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
+import dev.ionfusion.runtime.base.ResourceDescriptor;
+import dev.ionfusion.runtime.base.SourceName;
 import java.net.URL;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -36,7 +39,7 @@ final class ClassLoaderModuleRepository
 
 
     @Override
-    ModuleLocation locateModule(Evaluator eval, final ModuleIdentity id)
+    ResourceDescriptor locateModule(Evaluator eval, final ModuleIdentity id)
         throws FusionException
     {
         final String resourceName =
@@ -46,7 +49,7 @@ final class ClassLoaderModuleRepository
         URL url = myClassLoader.getResource(resourceName);
         if (url == null) return null;
 
-        return ModuleLocation.forUrl(id, url);
+        return SourceName.forResource(forUrl(url), id);
     }
 
 

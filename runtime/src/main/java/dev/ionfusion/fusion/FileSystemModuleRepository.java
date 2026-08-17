@@ -9,6 +9,9 @@ import static java.nio.file.Files.isDirectory;
 
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
+import dev.ionfusion.runtime.base.ResourceDescriptor;
+import dev.ionfusion.runtime.base.ResourceIdentifier;
+import dev.ionfusion.runtime.base.SourceName;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.function.Consumer;
@@ -41,7 +44,7 @@ final class FileSystemModuleRepository
 
 
     @Override
-    ModuleLocation locateModule(Evaluator eval, final ModuleIdentity id)
+    ResourceDescriptor locateModule(Evaluator eval, final ModuleIdentity id)
     {
         if (mySrcDir == null) return null;
 
@@ -51,7 +54,7 @@ final class FileSystemModuleRepository
         final File libFile = new File(mySrcDir, fileName);
         if (libFile.exists())
         {
-            return ModuleLocation.forFile(id, libFile);
+            return SourceName.forResource(ResourceIdentifier.forFile(libFile), id);
         }
 
         return null;

@@ -144,17 +144,18 @@ final class ModuleNameResolver
 
 
     /**
-     * @return null if the referenced module couldn't be located in any repository.
+     * @return a descriptor with a {@link ResourceIdentifier}; null if the referenced
+     * module couldn't be located in any repository.
      */
-    private ModuleLocation locate(Evaluator eval,
-                                  ModuleIdentity id,
-                                  SyntaxValue stxForErrors)
+    private ResourceDescriptor locate(Evaluator eval,
+                                      ModuleIdentity id,
+                                      SyntaxValue stxForErrors)
         throws FusionException
     {
         for (ModuleRepository repo : myRepositories)
         {
-            ModuleLocation loc = repo.locateModule(eval, id);
-            if (loc != null) return loc;
+            ResourceDescriptor desc = repo.locateModule(eval, id);
+            if (desc != null) return desc;
         }
 
         return null;
@@ -196,12 +197,11 @@ final class ModuleNameResolver
         if (isDeclared(reg, id)) return id;
 
         // Ensure that the requested module exists in one of our repositories.
-        ModuleLocation loc = locate(eval, id, stxForErrors);
-        if (loc != null)
+        ResourceDescriptor desc = locate(eval, id, stxForErrors);
+        if (desc != null)
         {
             if (load)
             {
-                ResourceDescriptor desc = loc.sourceName();
                 ResourceIdentifier rsrc = desc.getResourceId();
                 Thunk<IonReader> openReader = (e) -> openIonReader(e, rsrc);
                 loadModule(eval, openReader, desc, id, false /* don't reload */);
