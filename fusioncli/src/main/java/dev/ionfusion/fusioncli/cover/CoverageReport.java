@@ -221,10 +221,12 @@ public class CoverageReport
 
     /**
      * Can be called multiple times for the same (effective) location; if any
-     * invocation passes true, then the location is considered covered.
+     * invocation passes nonzero, then the location is considered covered.
      */
-    private void noteLocationCoverage(SourceLocation loc, Boolean covered)
+    private void noteLocationCoverage(SourceLocation loc, Number count)
     {
+        boolean covered = count.longValue() > 0;
+
         ModuleIdentity id = loc.getModuleIdentity();
         if (id != null)
         {

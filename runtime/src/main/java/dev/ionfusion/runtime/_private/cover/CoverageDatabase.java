@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 
 
@@ -39,10 +40,11 @@ import java.util.function.BiConsumer;
  * Collects, reads, and writes coverage instrumentation data.
  */
 public class CoverageDatabase
+    implements CoverageCollector
 {
     private final Set<File> myRepositories = ConcurrentHashMap.newKeySet();
 
-    private final Map<SourceLocation,Boolean> myLocations = new ConcurrentHashMap<>();
+    private final Map<SourceLocation, AtomicInteger> myLocations = new ConcurrentHashMap<>();
 
 
     public CoverageDatabase()
@@ -96,7 +98,8 @@ public class CoverageDatabase
     /**
      * Indicates whether this database can record the given location.
      */
-    boolean locationIsRecordable(SourceLocation loc)
+    @Override
+    public boolean locationIsRecordable(SourceLocation loc)
     {
         // We can record a location with either a file or a URL.
         SourceName name = loc.getSourceName();
@@ -109,27 +112,18 @@ public class CoverageDatabase
      *
      * @param loc must be {@linkplain #locationIsRecordable recordable}.
      */
-    void locationInstrumented(SourceLocation loc)
+    @Override
+    public AtomicInteger locationInstrumented(SourceLocation loc)
     {
-        myLocations.computeIfAbsent(loc, l -> Boolean.FALSE);
-    }
-
-
-    /**
-     * Records that the code at some location is about to be evaluated.
-     *
-     * @param loc must have been {@linkplain #locationInstrumented instrumented}.
-     */
-    void locationEvaluated(SourceLocation loc)
-    {
-        myLocations.put(loc, Boolean.TRUE);
+        return myLocations.computeIfAbsent(loc, l -> new AtomicInteger());
     }
 
 
     /** Has a location been covered? */
     public boolean locationCovered(SourceLocation loc)
     {
-        return myLocations.getOrDefault(loc, false);
+        AtomicInteger covered = myLocations.get(loc);
+        return (covered != null && covered.get() > 0);
     }
 
 
@@ -149,7 +143,7 @@ public class CoverageDatabase
     }
 
 
-    public void forEachLocationCoverage(BiConsumer<SourceLocation, Boolean> visitor)
+    public void forEachLocationCoverage(BiConsumer<SourceLocation, AtomicInteger> visitor)
     {
         myLocations.forEach(visitor);
     }
@@ -416,14 +410,13 @@ public class CoverageDatabase
                 }
             }
 
-            SourceLocation loc =
-                SourceLocation.forLineColumn(line, column, name);
-            assert loc != null;
+            SourceLocation loc = SourceLocation.forLineColumn(line, column, name);
 
-            locationInstrumented(loc);
+            // Record the location even if it isn't covered
+            AtomicInteger counter = locationInstrumented(loc);
             if (covered)
             {
-                locationEvaluated(loc);
+                counter.getAndIncrement();
             }
         }
         in.stepOut();

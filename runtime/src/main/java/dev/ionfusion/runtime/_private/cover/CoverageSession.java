@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
@@ -83,15 +84,9 @@ public class CoverageSession
     }
 
     @Override
-    public void locationInstrumented(SourceLocation loc)
+    public AtomicInteger locationInstrumented(SourceLocation loc)
     {
-        myDatabase.locationInstrumented(loc);
-    }
-
-    @Override
-    public void locationEvaluated(SourceLocation loc)
-    {
-        myDatabase.locationEvaluated(loc);
+        return myDatabase.locationInstrumented(loc);
     }
 
     @Override

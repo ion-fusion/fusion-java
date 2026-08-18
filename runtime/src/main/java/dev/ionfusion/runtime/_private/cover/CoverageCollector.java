@@ -4,6 +4,7 @@
 package dev.ionfusion.runtime._private.cover;
 
 import dev.ionfusion.runtime.base.SourceLocation;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * EXPERIMENTAL extension point for collecting code-coverage statistics.
@@ -13,10 +14,8 @@ import dev.ionfusion.runtime.base.SourceLocation;
  * may constrain the extent of coverage metrics by filtering based on location:
  * a {@code false} result indicates that the code point should not be
  * instrumented.  If the code is instrumented, it must be recorded with
- * {@link #locationInstrumented}.
- * <p>
- * At run time, {@link #locationEvaluated(SourceLocation)} is called each time a
- * coverable code point is (about to be) evaluated.
+ * {@link #locationInstrumented}. The resulting counter should be incremented each time
+ * the instrumented location is (about to be) evaluated.
  */
 public interface CoverageCollector
 {
@@ -25,28 +24,20 @@ public interface CoverageCollector
      * A true result is not an obligation to instrument the code.
      *
      * @return whether the compiler should record coverage for the location.
-     * If false, then {@link #locationInstrumented} and {@link #locationEvaluated}
-     * must not be called with an equivalent location.
+     * If false, then {@link #locationInstrumented} must not be called with an
+     * equivalent location.
      */
     boolean locationIsRecordable(SourceLocation loc);
 
     /**
      * Records that the code at some location has been instrumented.
      * <p>
-     * This method is called during compilation, so the code point hasn't been
-     * evaluated yet (and may never be evaluated).
-     * Implementations must be idempotent.
+     * This method is called during compilation, so the code point hasn't been evaluated
+     * yet (and may never be evaluated). Implementations must be idempotent.
      *
      * @param loc must be {@linkplain #locationIsRecordable recordable}.
-     */
-    void locationInstrumented(SourceLocation loc);
-
-    /**
-     * Records that the code at some location is about to be evaluated.
-     * This method will be called once for each evaluation associated with the
-     * location.
      *
-     * @param loc must have been {@linkplain #locationInstrumented instrumented}.
+     * @return the counter for the location, to be incremented for each evaluation.
      */
-    void locationEvaluated(SourceLocation loc);
+    AtomicInteger locationInstrumented(SourceLocation loc);
 }

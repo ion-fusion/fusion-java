@@ -3,7 +3,8 @@
 
 package dev.ionfusion.fusion;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.ionfusion.runtime._private.cover.CoverageCollector;
@@ -11,8 +12,9 @@ import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.SourceLocation;
 import dev.ionfusion.runtime.base.SourceName;
 import dev.ionfusion.runtime.embed.TopLevel;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -26,35 +28,21 @@ public class CoverageTest
     {
         boolean instrumentOnlyLineOne = false;
 
-        final Set<SourceLocation> instrumented = new HashSet<>();
-        final Set<SourceLocation> evaluated    = new HashSet<>();
+        final Map<SourceLocation, AtomicInteger> instrumented = new HashMap<>();
 
         @Override
         public boolean locationIsRecordable(SourceLocation loc)
         {
-            return (instrumentOnlyLineOne ? loc.getLine() == 1 : true);
+            return (!instrumentOnlyLineOne || loc.getLine() == 1);
         }
 
         @Override
-        public void locationInstrumented(SourceLocation loc)
+        public AtomicInteger locationInstrumented(SourceLocation loc)
         {
             // For simplicity, we'll ignore the offset.
             SourceLocation loc2 =
-                SourceLocation.forLineColumn(loc.getLine(),
-                                             loc.getColumn(),
-                                             loc.getSourceName());
-            instrumented.add(loc2);
-        }
-
-        @Override
-        public void locationEvaluated(SourceLocation loc)
-        {
-            // For simplicity, we'll ignore the offset.
-            SourceLocation loc2 =
-                SourceLocation.forLineColumn(loc.getLine(),
-                                             loc.getColumn(),
-                                             loc.getSourceName());
-            evaluated.add(loc2);
+                SourceLocation.forLineColumn(loc.getLine(), loc.getColumn(), loc.getSourceName());
+            return instrumented.computeIfAbsent(loc2,l ->new AtomicInteger());
         }
     }
 
@@ -69,8 +57,7 @@ public class CoverageTest
     private void checkCovered(SourceName name, long line, long column)
     {
         SourceLocation loc = SourceLocation.forLineColumn(line, column, name);
-        assertTrue(collector.instrumented.contains(loc));
-        assertTrue(collector.evaluated.contains(loc));
+        assertTrue(collector.instrumented.get(loc).get() > 0);
     }
 
 
@@ -91,8 +78,7 @@ public class CoverageTest
     private void checkNotCovered(SourceName name, long line, long column)
     {
         SourceLocation loc = SourceLocation.forLineColumn(line, column, name);
-        assertTrue(collector.instrumented.contains(loc));
-        assertFalse(collector.evaluated.contains(loc));
+        assertEquals(0, collector.instrumented.get(loc).get());
     }
 
 
@@ -112,8 +98,7 @@ public class CoverageTest
     private void checkNotInstrumented(SourceName name, long line, long column)
     {
         SourceLocation loc = SourceLocation.forLineColumn(line, column, name);
-        assertFalse(collector.instrumented.contains(loc));
-        assertFalse(collector.evaluated.contains(loc));
+        assertNull(collector.instrumented.get(loc));
     }
 
 

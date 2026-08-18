@@ -6,6 +6,7 @@ package dev.ionfusion.fusion;
 import dev.ionfusion.runtime._private.cover.CoverageCollector;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.SourceLocation;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  *
@@ -65,9 +66,8 @@ final class CoverageEvaluator
             {
                 if (myCollector.locationIsRecordable(loc))
                 {
-                    form = new CoverageCompiledForm(loc, form);
-
-                    myCollector.locationInstrumented(loc);
+                    AtomicInteger counter = myCollector.locationInstrumented(loc);
+                    form = new CoverageCompiledForm(counter, form);
                 }
             }
 
@@ -83,22 +83,20 @@ final class CoverageEvaluator
     private static final class CoverageCompiledForm
         implements CompiledForm
     {
-        private final SourceLocation myLocation;
-        private final CompiledForm   myForm;
+        private final AtomicInteger myCounter;
+        private final CompiledForm  myForm;
 
-        CoverageCompiledForm(SourceLocation location,
-                             CompiledForm   decorated)
+        CoverageCompiledForm(AtomicInteger counter, CompiledForm decorated)
         {
-            myLocation  = location;
-            myForm      = decorated;
+            myCounter = counter;
+            myForm    = decorated;
         }
 
         @Override
         public Object doEval(Evaluator eval, Store store)
             throws FusionException
         {
-            CoverageCollector collector = ((CoverageEvaluator) eval).myCollector;
-            collector.locationEvaluated(myLocation);
+            myCounter.getAndIncrement();
 
             // TODO Eliminate tail-call?
             return myForm.doEval(eval, store);

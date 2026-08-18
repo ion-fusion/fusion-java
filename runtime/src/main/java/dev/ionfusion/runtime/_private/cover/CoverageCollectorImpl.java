@@ -6,6 +6,7 @@ package dev.ionfusion.runtime._private.cover;
 import dev.ionfusion.runtime.base.SourceLocation;
 import dev.ionfusion.runtime.embed.FusionRuntime;
 import java.io.File;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Implements code-coverage metrics collection.
@@ -59,15 +60,8 @@ public final class CoverageCollectorImpl
 
 
     @Override
-    public void locationInstrumented(SourceLocation loc)
+    public AtomicInteger locationInstrumented(SourceLocation loc)
     {
-        mySession.locationInstrumented(loc);
-    }
-
-
-    @Override
-    public void locationEvaluated(SourceLocation loc)
-    {
-        mySession.locationEvaluated(loc);
+        return mySession.locationInstrumented(loc);
     }
 }
