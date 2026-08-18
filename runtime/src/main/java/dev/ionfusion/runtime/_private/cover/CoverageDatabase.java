@@ -28,10 +28,10 @@ import java.net.URL;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 
 
@@ -40,9 +40,9 @@ import java.util.function.BiConsumer;
  */
 public class CoverageDatabase
 {
-    private final Set<File> myRepositories = new HashSet<>();
+    private final Set<File> myRepositories = ConcurrentHashMap.newKeySet();
 
-    private final Map<SourceLocation,Boolean> myLocations = new HashMap<>();
+    private final Map<SourceLocation,Boolean> myLocations = new ConcurrentHashMap<>();
 
 
     public CoverageDatabase()
@@ -80,14 +80,14 @@ public class CoverageDatabase
      *
      * @param repoDir must not be null.
      */
-    synchronized void noteRepository(File repoDir)
+    void noteRepository(File repoDir)
     {
         assert repoDir != null : "repoDir is null";
         myRepositories.add(repoDir);
     }
 
 
-    public synchronized Set<File> getRepositories()
+    public Set<File> getRepositories()
     {
         return myRepositories;
     }
@@ -109,17 +109,9 @@ public class CoverageDatabase
      *
      * @param loc must be {@linkplain #locationIsRecordable recordable}.
      */
-    synchronized void locationInstrumented(SourceLocation loc)
+    void locationInstrumented(SourceLocation loc)
     {
-        // TODO JAVA8 Use ConcurrentHashMap.computeIfAbsent()
-        Boolean prev = myLocations.put(loc, Boolean.FALSE);
-
-        // If already covered, don't un-cover it!
-        // TODO This is expensive for repeatedly compiled sources.
-        if (prev != null && prev)
-        {
-            myLocations.put(loc, prev);
-        }
+        myLocations.computeIfAbsent(loc, l -> Boolean.FALSE);
     }
 
 
@@ -128,22 +120,21 @@ public class CoverageDatabase
      *
      * @param loc must have been {@linkplain #locationInstrumented instrumented}.
      */
-    synchronized void locationEvaluated(SourceLocation loc)
+    void locationEvaluated(SourceLocation loc)
     {
         myLocations.put(loc, Boolean.TRUE);
     }
 
 
     /** Has a location been covered? */
-    public synchronized boolean locationCovered(SourceLocation loc)
+    public boolean locationCovered(SourceLocation loc)
     {
-        Boolean covered = myLocations.get(loc);
-        return (covered != null && covered);
+        return myLocations.getOrDefault(loc, false);
     }
 
 
     // TODO Collect this eagerly
-    public synchronized Set<SourceName> sourceNames()
+    public Set<SourceName> sourceNames()
     {
         Set<SourceName> names = new HashSet<>();
 
@@ -158,8 +149,7 @@ public class CoverageDatabase
     }
 
 
-    public synchronized
-    void forEachLocationCoverage(BiConsumer<SourceLocation, Boolean> visitor)
+    public void forEachLocationCoverage(BiConsumer<SourceLocation, Boolean> visitor)
     {
         myLocations.forEach(visitor);
     }
