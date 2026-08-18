@@ -95,12 +95,6 @@ public class CoverageSession
     }
 
     @Override
-    public void flushMetrics()
-    {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public boolean equals(Object o)
     {
         if (o == null || getClass() != o.getClass()) { return false; }

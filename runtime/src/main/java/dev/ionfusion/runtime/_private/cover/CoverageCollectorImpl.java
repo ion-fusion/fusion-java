@@ -6,7 +6,6 @@ package dev.ionfusion.runtime._private.cover;
 import dev.ionfusion.runtime.base.SourceLocation;
 import dev.ionfusion.runtime.embed.FusionRuntime;
 import java.io.File;
-import java.io.IOException;
 
 /**
  * Implements code-coverage metrics collection.
@@ -70,13 +69,5 @@ public final class CoverageCollectorImpl
     public void locationEvaluated(SourceLocation loc)
     {
         mySession.locationEvaluated(loc);
-    }
-
-
-    @Override
-    public void flushMetrics()
-        throws IOException
-    {
-        mySession.flushMetrics();
     }
 }

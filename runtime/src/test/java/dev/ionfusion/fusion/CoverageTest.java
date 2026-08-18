@@ -56,11 +56,6 @@ public class CoverageTest
                                              loc.getSourceName());
             evaluated.add(loc2);
         }
-
-        @Override
-        public void flushMetrics()
-        {
-        }
     }
 
 

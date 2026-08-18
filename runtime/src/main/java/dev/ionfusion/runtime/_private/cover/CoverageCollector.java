@@ -4,7 +4,6 @@
 package dev.ionfusion.runtime._private.cover;
 
 import dev.ionfusion.runtime.base.SourceLocation;
-import java.io.IOException;
 
 /**
  * EXPERIMENTAL extension point for collecting code-coverage statistics.
@@ -50,11 +49,4 @@ public interface CoverageCollector
      * @param loc must have been {@linkplain #locationInstrumented instrumented}.
      */
     void locationEvaluated(SourceLocation loc);
-
-
-    // TODO Think this through. I'm not really convinced this is correct.
-    //      Perhaps close() would be better?  save()?
-    // This appears to be unused.
-    void flushMetrics()
-        throws IOException;
 }
