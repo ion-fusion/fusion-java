@@ -3,6 +3,7 @@
 
 package dev.ionfusion.runtime.base;
 
+import static dev.ionfusion.runtime.base.ResourceIdentifier.forFile;
 import static dev.ionfusion.testing.Assertions.assertHashEquals;
 import static dev.ionfusion.testing.Assertions.assertNotHashEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -46,7 +47,7 @@ public class ResourceDescriptorTest
     @Test
     void testIdentifiedDescriptor()
     {
-        checkIdentified(ResourceIdentifier.forFile("/rsrc"));
+        checkIdentified(forFile("/rsrc"));
         checkIdentified(ResourceIdentifier.forUri("file:///rsrc"));
         checkIdentified(ResourceIdentifier.forUri("http://example.com/rsrc"));
     }
@@ -54,7 +55,7 @@ public class ResourceDescriptorTest
     @Test
     void sameUriMeansEqual()
     {
-        ResourceIdentifier id1  = ResourceIdentifier.forFile("/rsrc");
+        ResourceIdentifier id1  = forFile("/rsrc");
         ResourceIdentifier id2  = ResourceIdentifier.forUri("file:///rsrc");
         assertNotSame(id1, id2);
         checkEquality(id1, id2);
@@ -102,33 +103,15 @@ public class ResourceDescriptorTest
                      () -> ResourceDescriptor.named(""));
     }
 
-    //==================================================================================
-    // SourceNames
-
     @Test
-    void sourceNamesMatchOnResourceIdentifier()
+    void namedAndIdentifiedAreNotEqual()
     {
-        ResourceDescriptor foo1 = ResourceDescriptor.named("/foo");
-        ResourceDescriptor foo2 = ResourceDescriptor.named("/foo");
-
-        checkInequality(foo1, foo2);
-
-        ResourceDescriptor fooFile1 =
-            ResourceDescriptor.identified(ResourceIdentifier.forFile("/foo"));
-        ResourceDescriptor fooFile2 =
+        ResourceDescriptor fooNamed = ResourceDescriptor.named("/foo");
+        ResourceDescriptor fooFile =
             ResourceDescriptor.identified(ResourceIdentifier.forFile("/foo"));
 
-        checkEquality(fooFile1, fooFile2);
-        checkInequality(foo1, fooFile1);
-    }
-
-    @Test
-    void sourceNamesDontMatchNewDescriptors()
-    {
-        ResourceDescriptor desc = ResourceDescriptor.named("name");
-        ResourceDescriptor name = ResourceDescriptor.named("name");
-
-        checkInequality(desc, name);
+        assertEquals(fooNamed.display(), fooFile.display());
+        checkInequality(fooNamed, fooFile);
     }
 
 
