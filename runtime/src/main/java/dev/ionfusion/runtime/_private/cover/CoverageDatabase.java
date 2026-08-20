@@ -4,6 +4,7 @@
 package dev.ionfusion.runtime._private.cover;
 
 import static com.amazon.ion.IonType.LIST;
+import static com.amazon.ion.IonType.SEXP;
 import static com.amazon.ion.IonType.STRING;
 import static com.amazon.ion.IonType.STRUCT;
 import static java.nio.file.Files.isRegularFile;
@@ -175,20 +176,18 @@ public class CoverageDatabase
     private void writeSourceName(IonWriter iw, CovResource rsrc)
         throws IOException
     {
-        iw.stepIn(STRUCT);
-        {
-            URI uri = rsrc.uri;
-            iw.setFieldName("uri");
-            iw.writeString(uri.toString());
+        iw.writeString(rsrc.uri.toString());
 
-            ModuleIdentity id = rsrc.moduleId;
-            if (id != null)
-            {
-                iw.setFieldName("module");
-                iw.writeString(id.absolutePath());
-            }
+        ModuleIdentity id = rsrc.moduleId;
+        if (id == null)
+        {
+            iw.setTypeAnnotations("module");
+            iw.writeNull();
         }
-        iw.stepOut();
+        else
+        {
+            iw.writeString(id.absolutePath());
+        }
     }
 
     private void writeLocation(IonWriter iw, long offset, Number coverage)
@@ -227,12 +226,9 @@ public class CoverageDatabase
     private void writeSource(IonWriter iw, CovResource rsrc)
         throws IOException
     {
-        iw.stepIn(STRUCT);
+        iw.stepIn(SEXP);
         {
-            iw.setFieldName("name");
             writeSourceName(iw, rsrc);
-
-            iw.setFieldName("locations");
             writeLocations(iw, rsrc);
         }
         iw.stepOut();
@@ -294,42 +290,18 @@ public class CoverageDatabase
 
     private CovResource readSourceName(IonReader in)
     {
-        CovResource rsrc;
+        in.next();
+        assert in.getType() == STRING;
+        URI uri = URI.create(in.stringValue());
+        CovResource rsrc = resourceInstrumented(uri);
 
-        assert in.getType() == STRUCT;
-        in.stepIn();
+        in.next();
+        if (!in.isNullValue())
         {
-            URI uri = null;
-            ModuleIdentity module = null;
-
-            while (in.next() != null)
-            {
-                String path = in.stringValue();
-
-                switch (in.getFieldName())
-                {
-                    // TODO Defend against repeated fields.
-                    case "uri":
-                    {
-                        uri = URI.create(path);
-                        break;
-                    }
-                    case "module":
-                    {
-                        module = ModuleIdentity.forAbsolutePath(path);
-                        break;
-                    }
-                    default:
-                    {
-                        // Ignore it.
-                        break;
-                    }
-                }
-            }
-
-            rsrc = resourceInstrumented(uri).containsModule(module);
+            assert in.getType() == STRING;
+            ModuleIdentity id = ModuleIdentity.forAbsolutePath(in.stringValue());
+            rsrc.containsModule(id);
         }
-        in.stepOut();
 
         return rsrc;
     }
@@ -379,6 +351,7 @@ public class CoverageDatabase
 
     private void readLocations(IonReader in, CovResource rsrc)
     {
+        in.next();
         assert in.getType() == LIST;
         in.stepIn();
         {
@@ -394,34 +367,12 @@ public class CoverageDatabase
     private void readSource(IonReader in)
         throws IOException
     {
-        assert in.getType() == STRUCT;
+        assert in.getType() == SEXP;
         in.stepIn();
         {
-            CovResource rsrc = null;
+            CovResource rsrc = readSourceName(in);
 
-            while (in.next() != null)
-            {
-                switch (in.getFieldName())
-                {
-                    case "name":
-                    {
-                        rsrc = readSourceName(in);
-                        break;
-                    }
-                    case "locations":
-                    {
-                        // TODO I'm too lazy to handle out-of-order fields.
-                        assert rsrc != null;
-                        readLocations(in, rsrc);
-                        break;
-                    }
-                    default:
-                    {
-                        // Ignore it.
-                        break;
-                    }
-                }
-            }
+            readLocations(in, rsrc);
         }
         in.stepOut();
     }
