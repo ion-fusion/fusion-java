@@ -15,8 +15,8 @@ import java.util.Set;
  */
 abstract class CoveredEntity
 {
-    private final Map<SourceLocation, Boolean> myCoverage;
-    private final CoverageInfoPair             mySummary;
+    private final Map<Long, Boolean> myCoverage;
+    private final CoverageInfoPair   mySummary;
 
     CoveredEntity()
     {
@@ -45,19 +45,20 @@ abstract class CoveredEntity
 
     void noteLocationCoverage(SourceLocation loc, Boolean covered)
     {
+        assert loc.getStartOffset() >= 0;
         assert loc.getSourceName().getUri().equals(getUri());
-        myCoverage.merge(loc, covered, (a, b) -> a || b);
+        myCoverage.merge(loc.getStartOffset(), covered, (a, b) -> a || b);
     }
 
 
-    Set<SourceLocation> locations()
+    Set<Long> recordedOffsets()
     {
         return myCoverage.keySet();
     }
 
-    boolean isLocationCovered(SourceLocation loc)
+    boolean isOffsetCovered(long offset)
     {
-        return myCoverage.get(loc);
+        return myCoverage.get(offset);
     }
 
 

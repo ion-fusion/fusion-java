@@ -116,8 +116,7 @@ public class CoveredModule
             return loc;
         }
 
-        return SourceLocation.forLineColumn(loc.getLine(),
-                                            loc.getColumn(), myPreferredSource);
+        return SourceLocation.forOffset(loc.getStartOffset(), myPreferredSource);
     }
 
 

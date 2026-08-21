@@ -217,6 +217,35 @@ public class SourceLocation
 
 
     /**
+     * Returns an instance that represents the given offset.
+     *
+     * @param offset is zero-based; values less than zero denote an unknown offset.
+     * @param name can be null.
+     *
+     * @return null when all parameters are unknown.
+     */
+    public static SourceLocation forOffset(long offset, SourceName name)
+    {
+        if (offset < 0)
+        {
+            return forName(name);
+        }
+
+        if (offset <= Short.MAX_VALUE)
+        {
+            return new Shorts(name, (short) 0, (short) 0, (short) offset);
+        }
+
+        if (offset <= Integer.MAX_VALUE)
+        {
+            return new Ints(name, (int) 0, (int) 0, (int) offset);
+        }
+
+        return new Longs(name, 0, 0, offset);
+    }
+
+
+    /**
      * Returns an instance that represents the given text location.
      *
      * @param line one-based.

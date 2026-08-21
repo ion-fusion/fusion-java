@@ -3,7 +3,6 @@
 
 package dev.ionfusion.fusioncli.cover;
 
-import static dev.ionfusion.runtime.base.SourceLocation.compareByLineColumn;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
@@ -14,9 +13,9 @@ import com.amazon.ion.Span;
 import com.amazon.ion.SpanProvider;
 import com.amazon.ion.Timestamp;
 import com.amazon.ion.system.IonReaderBuilder;
+import com.amazon.ion.util.Spans;
 import dev.ionfusion.runtime._private.io.StreamWriter;
 import dev.ionfusion.runtime.base.ModuleIdentity;
-import dev.ionfusion.runtime.base.SourceLocation;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -168,13 +167,14 @@ public final class CoverageReportWriter
                        .collect(toList());
     }
 
-    private SourceLocation[] sortedLocations(CoveredFile name)
+    private long[] sortRecordedOffsets(CoveredEntity entity)
     {
-        SourceLocation[] locations = name.locations().toArray(new SourceLocation[0]);
-        assert locations.length == name.getSummary().total()
-            : "Number of locations doesn't match coverage summary";
-        Arrays.sort(locations, SourceLocation::compareByLineColumn);
-        return locations;
+        long[] offsets = entity.recordedOffsets()
+                               .stream()
+                               .mapToLong(Long::longValue)
+                               .toArray();
+        Arrays.sort(offsets);
+        return offsets;
     }
 
 
@@ -276,19 +276,17 @@ public final class CoverageReportWriter
             }
         }
 
-        SourceLocation[] locations = sortedLocations(name);
-        assert locations.length != 0;
-
-        int locationIndex = 0;
-
         sourceHtml.append("\n<hr/>\n");
         sourceHtml.append("<pre>");
 
         // Copy the document in chunks separated by coverage state changes.
-        // At each change, we insert appropriate HTML <span> markup.
+        // At each change, we insert the appropriate HTML <span> markup.
         try (InputStream ionBytes = name.readSource())
         {
             myIonBytesRead = 0;
+
+            long[] recordedOffsets = sortRecordedOffsets(name);
+            int recordedIndex = 0;
 
             try (IonReader ionReader =
                      IonReaderBuilder.standard().build(name.readSource()))
@@ -296,37 +294,35 @@ public final class CoverageReportWriter
                 SpanProvider spanProvider =
                     ionReader.asFacet(SpanProvider.class);
 
-                // We always start with a span so we can always end with one,
+                // We always start with a span, so we can always end with one,
                 // regardless of the data in between.
                 coverageState = false;
                 sourceHtml.append("<span class='uncovered'>");
 
                 for (IonType t = ionReader.next(); t != null; )
                 {
-                    // Determine whether this value has been covered.
-                    SourceLocation currentLoc =
-                        SourceLocation.forCurrentSpan(ionReader);
-
-                    SourceLocation coverageLoc = locations[locationIndex];
+                    // Determine whether this offset has been covered.
+                    long currentOffset = Spans.currentSpan(OffsetSpan.class, ionReader)
+                                              .getStartOffset();
 
                     // We shouldn't skip past a known location.
-                    int cmp = compareByLineColumn(currentLoc, coverageLoc);
-                    if (cmp == 0)
+                    long recordedOffset = recordedOffsets[recordedIndex];
+                    if (currentOffset == recordedOffset)
                     {
-                        boolean covered = name.isLocationCovered(coverageLoc);
+                        boolean covered = name.isOffsetCovered(recordedOffset);
                         setCoverageState(sourceHtml, ionBytes, spanProvider,
                                          covered);
-                        locationIndex++;
-                        if (locationIndex == locations.length) break;
+                        recordedIndex++;
+                        if (recordedIndex == recordedOffsets.length) break;
                     }
-                    else if (cmp > 0) {
+                    else if (currentOffset > recordedOffset) {
                         // The current location is past the next one in the database.
                         String msg =
                             "Inconsistent coverage data for " + name.getPath() +
                             "\n  This happens when a file changes between coverage sessions." +
                             "\n  Clean the project and rebuild to fix.";
                         throw new AssertionError(msg);
-                    };
+                    }
 
                     if (IonType.isContainer(t))
                     {
@@ -340,7 +336,7 @@ public final class CoverageReportWriter
                     }
                 }
 
-                assert locationIndex == locations.length
+                assert recordedIndex == recordedOffsets.length
                     : "Not all locations were found in the source of " + name.getPath();
 
                 // Copy the rest of the Ion source.

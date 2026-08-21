@@ -202,16 +202,13 @@ public class CoverageDatabase
     {
         iw.stepIn(STRUCT);
         {
-            long line = loc.getLine();
-            long col  = loc.getColumn();
+            long offset = loc.getStartOffset();
+            assert offset >= 0;
 
             boolean covered = locationCovered(loc);
 
-            iw.setFieldName("line");
-            iw.writeInt(line);
-
-            iw.setFieldName("column");
-            iw.writeInt(col);
+            iw.setFieldName("offset");
+            iw.writeInt(offset);
 
             iw.setFieldName("covered");
             iw.writeBool(covered);
@@ -379,22 +376,16 @@ public class CoverageDatabase
         assert in.getType() == STRUCT;
         in.stepIn();
         {
-            long    line    = 0;
-            long    column  = 0;
+            long    offset  = -1;
             boolean covered = false;
 
             while (in.next() != null)
             {
                 switch (in.getFieldName())
                 {
-                    case "line":
+                    case "offset":
                     {
-                        line = in.longValue();
-                        break;
-                    }
-                    case "column":
-                    {
-                        column = in.longValue();
+                        offset = in.longValue();
                         break;
                     }
                     case "covered":
@@ -409,8 +400,9 @@ public class CoverageDatabase
                     }
                 }
             }
+            assert offset >= 0;
 
-            SourceLocation loc = SourceLocation.forLineColumn(line, column, name);
+            SourceLocation loc = SourceLocation.forOffset(offset, name);
 
             // Record the location even if it isn't covered
             AtomicInteger counter = locationInstrumented(loc);
