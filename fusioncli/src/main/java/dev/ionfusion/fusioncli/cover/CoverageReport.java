@@ -12,7 +12,6 @@ import dev.ionfusion.runtime._private.cover.CoverageConfiguration;
 import dev.ionfusion.runtime._private.cover.CoverageDatabase;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
-import dev.ionfusion.runtime.base.SourceLocation;
 import dev.ionfusion.runtime.base.SourceName;
 import java.io.File;
 import java.io.IOException;
@@ -69,8 +68,8 @@ public class CoverageReport
         // With all module sources collected, we can note a single one for each module.
         myCoveredModules.values().forEach(this::notePreferredSourceOfModule);
 
-        // With all source files identified, we can collect location metrics.
-        db.forEachLocationCoverage(this::noteLocationCoverage);
+        // With all source files identified, we can collect coverage metrics.
+        db.forEachCoverageEntry(this::noteCoverageEntry);
     }
 
 
@@ -223,29 +222,24 @@ public class CoverageReport
      * Can be called multiple times for the same (effective) location; if any
      * invocation passes nonzero, then the location is considered covered.
      */
-    private void noteLocationCoverage(SourceLocation loc, Number count)
+    private void noteCoverageEntry(URI uri, long offset, ModuleIdentity id,
+                                   Number count)
     {
         boolean covered = count.longValue() > 0;
 
-        ModuleIdentity id = loc.getModuleIdentity();
         if (id != null)
         {
             CoveredModule module = myCoveredModules.get(id);
+            module.noteOffsetCoverage(offset, covered);
 
-            // Use a SourceLocation with the module's preferred SourceName.
-            loc = module.normalizeLocation(loc);
-
-            module.noteLocationCoverage(loc, covered);
+            // Record stats using the module's preferred resource.
+            uri = module.getUri();
         }
 
-        // WARNING: `loc` may have been normalized above, in which case this uses the
-        // preferred SourceName.
-        SourceName name = loc.getSourceName();
-        URI uri = name.getUri();
         CoveredFile file = myCoveredFiles.get(uri);
-        assert file != null : "No CoveredFile for " + name;
+        assert file != null : "No CoveredFile for module " + id + " at " + uri;
 
-        file.noteLocationCoverage(loc, covered);
+        file.noteOffsetCoverage(offset, covered);
     }
 
 

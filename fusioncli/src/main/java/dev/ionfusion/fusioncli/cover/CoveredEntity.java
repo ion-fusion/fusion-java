@@ -3,7 +3,6 @@
 
 package dev.ionfusion.fusioncli.cover;
 
-import dev.ionfusion.runtime.base.SourceLocation;
 import java.net.URI;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -43,11 +42,10 @@ abstract class CoveredEntity
     abstract Path getPath();
 
 
-    void noteLocationCoverage(SourceLocation loc, Boolean covered)
+    void noteOffsetCoverage(long offset, Boolean covered)
     {
-        assert loc.getStartOffset() >= 0;
-        assert loc.getSourceName().getUri().equals(getUri());
-        myCoverage.merge(loc.getStartOffset(), covered, (a, b) -> a || b);
+        assert offset >= 0;
+        myCoverage.merge(offset, covered, (a, b) -> a || b);
     }
 
 

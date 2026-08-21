@@ -33,7 +33,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BiConsumer;
 
 
 /**
@@ -143,9 +142,19 @@ public class CoverageDatabase
     }
 
 
-    public void forEachLocationCoverage(BiConsumer<SourceLocation, AtomicInteger> visitor)
+    public interface CoverageEntryVisitor
     {
-        myLocations.forEach(visitor);
+        void visit(URI uri, long offset, ModuleIdentity module, AtomicInteger count);
+    }
+
+    public void forEachCoverageEntry(CoverageEntryVisitor visitor)
+    {
+        myLocations.forEach((loc, count) -> {
+            visitor.visit(loc.getSourceName().getUri(),
+                          loc.getStartOffset(),
+                          loc.getModuleIdentity(),
+                          count);
+        });
     }
 
 

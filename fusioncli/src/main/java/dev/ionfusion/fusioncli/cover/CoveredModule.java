@@ -5,7 +5,6 @@ package dev.ionfusion.fusioncli.cover;
 
 import dev.ionfusion.runtime._private.cover.CoverageDatabase;
 import dev.ionfusion.runtime.base.ModuleIdentity;
-import dev.ionfusion.runtime.base.SourceLocation;
 import dev.ionfusion.runtime.base.SourceName;
 import java.net.URI;
 import java.nio.file.Path;
@@ -102,33 +101,5 @@ public class CoveredModule
                 }
             }
         }
-    }
-
-
-    /**
-     * Returns an equivalent location using our preferred source name.
-     */
-    public SourceLocation normalizeLocation(SourceLocation loc)
-    {
-        assert myPreferredSource != null;
-        if (loc.getSourceName().equals(myPreferredSource))
-        {
-            return loc;
-        }
-
-        return SourceLocation.forOffset(loc.getStartOffset(), myPreferredSource);
-    }
-
-
-    /**
-     * @param loc must have been {@link #normalizeLocation normalized}.
-     */
-    public void noteLocationCoverage(SourceLocation loc, Boolean covered)
-    {
-        assert myId == loc.getModuleIdentity();
-
-        // Assume the caller has normalized the location, otherwise we'll have
-        // two different keys for the same effective location.
-        super.noteLocationCoverage(loc, covered);
     }
 }
