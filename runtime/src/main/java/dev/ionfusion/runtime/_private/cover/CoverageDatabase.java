@@ -16,6 +16,7 @@ import com.amazon.ion.IonWriter;
 import com.amazon.ion.system.IonReaderBuilder;
 import com.amazon.ion.system.IonTextWriterBuilder;
 import dev.ionfusion.runtime.base.ModuleIdentity;
+import dev.ionfusion.runtime.base.ResourceIdentifier;
 import dev.ionfusion.runtime.base.SourceLocation;
 import dev.ionfusion.runtime.base.SourceName;
 import java.io.File;
@@ -24,7 +25,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.net.URI;
-import java.net.URL;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -43,8 +43,7 @@ public class CoverageDatabase
 {
     private final Set<File> myRepositories = ConcurrentHashMap.newKeySet();
 
-    private final Map<SourceLocation, AtomicInteger> myLocations = new ConcurrentHashMap<>();
-
+    private final Map<URI, CovResource> myResources = new ConcurrentHashMap<>();
 
     public CoverageDatabase()
     {
@@ -100,11 +99,15 @@ public class CoverageDatabase
     @Override
     public boolean locationIsRecordable(SourceLocation loc)
     {
-        // We can record a location with either a file or a URL.
-        SourceName name = loc.getSourceName();
-        return name != null && (name.getPath() != null || name.getUri() != null);
+        // We can record locations within identified resources.
+        return loc.getResourceId() != null;
     }
 
+
+    private CovResource resourceInstrumented(URI uri)
+    {
+        return myResources.computeIfAbsent(uri, CovResource::new);
+    }
 
     /**
      * Records that the code at some location has been instrumented.
@@ -114,31 +117,41 @@ public class CoverageDatabase
     @Override
     public AtomicInteger locationInstrumented(SourceLocation loc)
     {
-        return myLocations.computeIfAbsent(loc, l -> new AtomicInteger());
+        URI uri = loc.getResourceId().getUri();
+        long offset = loc.getStartOffset();
+        ModuleIdentity module = loc.getModuleIdentity();
+
+        return resourceInstrumented(uri).containsModule(module)
+                                        .offsetInstrumented(offset);
     }
 
 
-    /** Has a location been covered? */
-    public boolean locationCovered(SourceLocation loc)
-    {
-        AtomicInteger covered = myLocations.get(loc);
-        return (covered != null && covered.get() > 0);
-    }
+    //=====================================================================
 
-
-    // TODO Collect this eagerly
     public Set<SourceName> sourceNames()
     {
         Set<SourceName> names = new HashSet<>();
 
-        for (SourceLocation loc : myLocations.keySet())
-        {
-            SourceName name = loc.getSourceName();
-            assert name != null;  // per locationIsRecordable()
+        forEachResource( (uri, module) -> {
+            ResourceIdentifier rsrc = ResourceIdentifier.forUri(uri);
+            SourceName name = SourceName.forResource(rsrc, module);
             names.add(name);
-        }
+        });
 
         return names;
+    }
+
+
+    public interface ResourceVisitor
+    {
+        void visit(URI uri, ModuleIdentity module);
+    }
+
+    public void forEachResource(ResourceVisitor visitor)
+    {
+        myResources.forEach((uri, cov) -> {
+            visitor.visit(uri, cov.moduleId);
+        });
     }
 
 
@@ -149,11 +162,10 @@ public class CoverageDatabase
 
     public void forEachCoverageEntry(CoverageEntryVisitor visitor)
     {
-        myLocations.forEach((loc, count) -> {
-            visitor.visit(loc.getSourceName().getUri(),
-                          loc.getStartOffset(),
-                          loc.getModuleIdentity(),
-                          count);
+        myResources.forEach((uri, cov) -> {
+            cov.offsets.forEach((offset, count) -> {
+                visitor.visit(uri, offset, cov.moduleId, count);
+            });
         });
     }
 
@@ -176,26 +188,16 @@ public class CoverageDatabase
         iw.stepOut();
     }
 
-
-    private void writeSourceName(IonWriter iw, SourceName name)
+    private void writeSourceName(IonWriter iw, CovResource rsrc)
         throws IOException
     {
         iw.stepIn(STRUCT);
         {
-            Path file = name.getPath();
-            if (file != null)
-            {
-                iw.setFieldName("file");
-                iw.writeString(file.toString());
-            }
-            else
-            {
-                URI url = name.getUri();
-                iw.setFieldName("url");
-                iw.writeString(url.toString());
-            }
+            URI uri = rsrc.uri;
+            iw.setFieldName("uri");
+            iw.writeString(uri.toString());
 
-            ModuleIdentity id = name.getModuleIdentity();
+            ModuleIdentity id = rsrc.moduleId;
             if (id != null)
             {
                 iw.setFieldName("module");
@@ -205,16 +207,14 @@ public class CoverageDatabase
         iw.stepOut();
     }
 
-
-    private void writeLocation(IonWriter iw, SourceLocation loc)
+    private void writeLocation(IonWriter iw, long offset, Number coverage)
         throws IOException
     {
         iw.stepIn(STRUCT);
         {
-            long offset = loc.getStartOffset();
             assert offset >= 0;
 
-            boolean covered = locationCovered(loc);
+            boolean covered = coverage.longValue() > 0;
 
             iw.setFieldName("offset");
             iw.writeInt(offset);
@@ -226,33 +226,30 @@ public class CoverageDatabase
     }
 
 
-    private void writeLocations(IonWriter iw, SourceName name)
+    private void writeLocations(IonWriter iw, CovResource rsrc)
         throws IOException
     {
         iw.stepIn(LIST);
         {
-            for (SourceLocation loc : myLocations.keySet())
+            for (Map.Entry<Long, AtomicInteger> entry : rsrc.offsets.entrySet())
             {
-                if (name.equals(loc.getSourceName()))
-                {
-                    writeLocation(iw, loc);
-                }
+                writeLocation(iw, entry.getKey(), entry.getValue());
             }
         }
         iw.stepOut();
     }
 
 
-    private void writeSource(IonWriter iw, SourceName name)
+    private void writeSource(IonWriter iw, CovResource rsrc)
         throws IOException
     {
         iw.stepIn(STRUCT);
         {
             iw.setFieldName("name");
-            writeSourceName(iw, name);
+            writeSourceName(iw, rsrc);
 
             iw.setFieldName("locations");
-            writeLocations(iw, name);
+            writeLocations(iw, rsrc);
         }
         iw.stepOut();
     }
@@ -270,9 +267,9 @@ public class CoverageDatabase
             {
                 writeRepositories(iw);
 
-                for (SourceName name : sourceNames())
+                for (CovResource rsrc : myResources.values())
                 {
-                    writeSource(iw, name);
+                   writeSource(iw, rsrc);
                 }
             }
         }
@@ -311,17 +308,15 @@ public class CoverageDatabase
     }
 
 
-    private SourceName readSourceName(IonReader in)
-        throws IOException
+    private CovResource readSourceName(IonReader in)
     {
-        SourceName name;
+        CovResource rsrc;
 
         assert in.getType() == STRUCT;
         in.stepIn();
         {
-            String file   = null;
-            URL    url    = null;
-            String module = null;
+            URI uri = null;
+            ModuleIdentity module = null;
 
             while (in.next() != null)
             {
@@ -330,19 +325,14 @@ public class CoverageDatabase
                 switch (in.getFieldName())
                 {
                     // TODO Defend against repeated fields.
-                    case "file":
+                    case "uri":
                     {
-                        file = path;
-                        break;
-                    }
-                    case "url":
-                    {
-                        url = new URL(path);
+                        uri = URI.create(path);
                         break;
                     }
                     case "module":
                     {
-                        module = path;
+                        module = ModuleIdentity.forAbsolutePath(path);
                         break;
                     }
                     default:
@@ -353,34 +343,15 @@ public class CoverageDatabase
                 }
             }
 
-            if (module != null)
-            {
-                ModuleIdentity id = ModuleIdentity.forAbsolutePath(module);
-                if (file != null)
-                {
-                    name = SourceName.forModule(id, new File(file));
-                }
-                else
-                {
-                    assert url != null;
-                    name = SourceName.forUrl(id, url);
-                }
-            }
-            else
-            {
-                // Without a module ID, this must've been a file-system script.
-                assert file != null && url == null;
-                name = SourceName.forFile(file);
-            }
+            rsrc = resourceInstrumented(uri).containsModule(module);
         }
         in.stepOut();
 
-        return name;
+        return rsrc;
     }
 
 
-    private void readLocation(IonReader in, SourceName name)
-        throws IOException
+    private void readLocation(IonReader in, CovResource rsrc)
     {
         assert in.getType() == STRUCT;
         in.stepIn();
@@ -411,10 +382,8 @@ public class CoverageDatabase
             }
             assert offset >= 0;
 
-            SourceLocation loc = SourceLocation.forOffset(offset, name);
-
             // Record the location even if it isn't covered
-            AtomicInteger counter = locationInstrumented(loc);
+            AtomicInteger counter = rsrc.offsetInstrumented(offset);
             if (covered)
             {
                 counter.getAndIncrement();
@@ -424,15 +393,14 @@ public class CoverageDatabase
     }
 
 
-    private void readLocations(IonReader in, SourceName name)
-        throws IOException
+    private void readLocations(IonReader in, CovResource rsrc)
     {
         assert in.getType() == LIST;
         in.stepIn();
         {
             while (in.next() != null)
             {
-                readLocation(in, name);
+                readLocation(in, rsrc);
             }
         }
         in.stepOut();
@@ -445,7 +413,7 @@ public class CoverageDatabase
         assert in.getType() == STRUCT;
         in.stepIn();
         {
-            SourceName name = null;
+            CovResource rsrc = null;
 
             while (in.next() != null)
             {
@@ -453,14 +421,14 @@ public class CoverageDatabase
                 {
                     case "name":
                     {
-                        name = readSourceName(in);
+                        rsrc = readSourceName(in);
                         break;
                     }
                     case "locations":
                     {
                         // TODO I'm too lazy to handle out-of-order fields.
-                        assert name != null;
-                        readLocations(in, name);
+                        assert rsrc != null;
+                        readLocations(in, rsrc);
                         break;
                     }
                     default:
@@ -494,6 +462,36 @@ public class CoverageDatabase
         {
             String msg = "Error reading coverage data at " + session;
             throw new IOException(msg, e);
+        }
+    }
+
+
+    private static class CovResource
+    {
+        final URI                uri;
+        ModuleIdentity           moduleId;
+        Map<Long, AtomicInteger> offsets = new ConcurrentHashMap<>();
+
+        public CovResource(URI uri)
+        {
+            assert uri != null;
+            this.uri = uri;
+        }
+
+        AtomicInteger offsetInstrumented(long startOffset)
+        {
+            return offsets.computeIfAbsent(startOffset, o -> new AtomicInteger());
+        }
+
+        CovResource containsModule(ModuleIdentity id)
+        {
+            if (moduleId == null)
+            {
+                moduleId = id;
+            }
+            // We currently support at most one module per resource.
+            assert id == null || id == moduleId;
+            return this;
         }
     }
 }

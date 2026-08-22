@@ -272,4 +272,20 @@ public class SourceName
         ResourceIdentifier rsrc = ResourceIdentifier.forUrl(url);
         return new ModuleSourceName(rsrc, id);
     }
+
+
+    /**
+     * Convert a resource identifier to a source name.
+     *
+     * @param resource must not be null.
+     * @param id can be null.
+     *
+     * @return a new {@link SourceName}.
+     */
+    public static SourceName forResource(ResourceIdentifier resource, ModuleIdentity id)
+    {
+        requireNonNull(resource, "resource must not be null");
+        if (id == null) return new ResourceSourceName(resource);
+        return new ModuleSourceName(resource, id);
+    }
 }
