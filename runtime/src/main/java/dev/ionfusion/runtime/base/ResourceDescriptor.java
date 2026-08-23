@@ -29,6 +29,17 @@ public interface ResourceDescriptor
 
 
     /**
+     * Returns true if this descriptor came from {@link #unknown()}.
+     *
+     * @return true for instances returned by {@link #unknown()}.
+     */
+    default boolean isUnknown()
+    {
+        return false;
+    }
+
+
+    /**
      * Returns a descriptor that displays as "unknown resource" and has no
      * {@link ResourceIdentifier}.
      *
@@ -48,6 +59,12 @@ public interface ResourceDescriptor
             public ResourceIdentifier getResourceId()
             {
                 return null;
+            }
+
+            @Override
+            public boolean isUnknown()
+            {
+                return true;
             }
 
             // Default equals/hashCode are correct
