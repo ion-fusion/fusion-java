@@ -3,14 +3,12 @@
 
 package dev.ionfusion.runtime.base;
 
-import static dev.ionfusion.runtime._private.util.Ordinals.writeFriendlyOrdinal;
 import static dev.ionfusion.runtime.base._Private_Attributes.MODULE_IDENTITY_ATTRIBUTE;
 
 import com.amazon.ion.IonReader;
 import com.amazon.ion.OffsetSpan;
 import com.amazon.ion.TextSpan;
 import com.amazon.ion.util.Spans;
-import java.io.IOException;
 import java.util.Objects;
 
 
@@ -309,61 +307,6 @@ public class SourceLocation
         }
 
         return forName(desc);
-    }
-
-
-    /**
-     * Displays this location in a human-readable form, in terms of line,
-     * column, and source name.
-     *
-     * @param out the stream to write
-     *
-     * @throws IOException if thrown by the {@link Appendable}.
-     */
-    @Override
-    public void display(Appendable out)
-        throws IOException
-    {
-        long line   = getLine();
-        long column = getColumn();
-
-        if (line < 1)
-        {
-            out.append("unknown location");
-            if (!myResource.isUnknown())
-            {
-                out.append(" in ").append(myResource.display());
-            }
-        }
-        else
-        {
-            writeFriendlyOrdinal(out, line);
-            out.append(" line");
-
-            if (column > 0)
-            {
-                out.append(", ");
-                writeFriendlyOrdinal(out, column);
-                out.append(" column");
-            }
-
-            if (!myResource.isUnknown())
-            {
-                out.append(" of ");
-                ModuleIdentity module = getModuleIdentity();
-                if (module != null)
-                {
-                    out.append(module.absolutePath())
-                       .append(" (at ")
-                       .append(myResource.display())
-                       .append(')');
-                }
-                else
-                {
-                    out.append(myResource.display());
-                }
-            }
-        }
     }
 
 

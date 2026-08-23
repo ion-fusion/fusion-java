@@ -37,13 +37,13 @@ public class SourceLocationTest
         ResourceDescriptor name = SourceName.forDisplay("test source");
         loc = SourceLocation.forCurrentSpan(ir, name);
         assertHashEquals(name, loc.getResourceDesc());
-        assertEquals("unknown location in test source", loc.display());
+        assertEquals("unknown position of test source", loc.display());
 
         name = SourceName.forFile("/dummy/path");
         loc = SourceLocation.forCurrentSpan(ir, name);
         assertHashEquals(name, loc.getResourceDesc());
         checkPath("/dummy/path", loc);
-        assertEquals("unknown location in /dummy/path", loc.display());
+        assertEquals("unknown position of /dummy/path", loc.display());
     }
 
     private void assertLocation(String expectedOffsets, IonReader ir)
@@ -123,10 +123,10 @@ public class SourceLocationTest
         ResourceDescriptor name = loc.getResourceDesc();
         if (display == null)
         {
-            display = "unknown location";
-            if (name != null)
+            display = "unknown position";
+            if (!name.isUnknown())
             {
-                display += " in " + name.display();
+                display += " of " + name.display();
             }
         }
         else if (!name.isUnknown())

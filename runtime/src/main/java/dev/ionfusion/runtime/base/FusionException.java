@@ -3,6 +3,8 @@
 
 package dev.ionfusion.runtime.base;
 
+import static dev.ionfusion.runtime._private.util.Ordinals.displayFriendlyPosition;
+import static dev.ionfusion.runtime.base._Private_Attributes.MODULE_IDENTITY_ATTRIBUTE;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 
@@ -110,11 +112,37 @@ public class FusionException
                 else
                 {
                     out.append("\n  ...at ");
-                    loc.display(out);
+                    displayFrame(out, loc);
                 }
             }
         }
     }
+
+    /**
+     * Alternative to {@link ResourcePosition#display()} that adds the module identity.
+     */
+    private static void displayFrame(Appendable out, ResourcePosition loc)
+        throws IOException
+    {
+        displayFriendlyPosition(out, loc.getLine(), loc.getColumn(), loc.getOffset());
+
+        ResourceDescriptor rsrc = loc.getResourceDesc();
+
+        ModuleIdentity module = rsrc.getAttribute(MODULE_IDENTITY_ATTRIBUTE);
+        if (module != null)
+        {
+            out.append(" of ").append(module.absolutePath());
+            if (!rsrc.isUnknown())
+            {
+                out.append(" (at ").append(rsrc.display()).append(')');
+            }
+        }
+        else if (!rsrc.isUnknown())
+        {
+            out.append(" of ").append(rsrc.display());
+        }
+    }
+
 
     /**
      * Gets the value that was passed to Fusion's {@code raise} procedure.

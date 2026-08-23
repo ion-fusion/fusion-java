@@ -85,4 +85,40 @@ public class Ordinals
         String suffix = friendlySuffix(i);
         out.append(suffix);
     }
+
+
+    /**
+     * Displays the line and column, if known, otherwise the offset.
+     *
+     * @param out the stream to write into.
+     *
+     * @throws IOException if thrown by the {@link Appendable}.
+     */
+    public static void displayFriendlyPosition(Appendable out,
+                                               long line,
+                                               long column,
+                                               long offset)
+        throws IOException
+    {
+        if (line > 0)
+        {
+            writeFriendlyOrdinal(out, line);
+            out.append(" line");
+
+            if (column > 0)
+            {
+                out.append(", ");
+                writeFriendlyOrdinal(out, column);
+                out.append(" column");
+            }
+        }
+        else if (offset >= 0)
+        {
+            out.append("offset ").append(Long.toString(offset));
+        }
+        else
+        {
+            out.append("unknown position");
+        }
+    }
 }
