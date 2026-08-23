@@ -3,10 +3,12 @@
 
 package dev.ionfusion.fusion;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import java.util.Iterator;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -14,27 +16,27 @@ import org.junit.jupiter.api.Test;
 public class StackTraceTest
     extends CoreTestCase
 {
-    private Iterator<SourceLocation> myStack;
+    private Iterator<ResourcePosition> myStack;
 
 
     private void evalForTrace(String code)
         throws Exception
     {
         FusionException e = assertEvalThrows(FusionException.class, code);
-        List<SourceLocation> locations = e.getContext();
+        List<ResourcePosition> locations = e.getContext();
         if (locations.isEmpty())
         {
             // This is probably a parsing error, since the evaluator will
-            // otherwise ensure a topmost locations.
+            // otherwise ensure a topmost frame.
             throw e;
         }
         myStack = locations.iterator();
     }
 
 
-    private SourceLocation popLocation()
+    private ResourcePosition popLocation()
     {
-        SourceLocation loc = myStack.next();
+        ResourcePosition loc = myStack.next();
 
         // Ignore library code from known resources; test code has an unknown resource.
         while (!loc.getResourceDesc().isUnknown())
@@ -47,7 +49,7 @@ public class StackTraceTest
 
     private void expectLocation(int line, int column)
     {
-        SourceLocation loc = popLocation();
+        ResourcePosition loc = popLocation();
         if (line != loc.getLine() || column != loc.getColumn())
         {
             fail("Expected L" + line +" C" + column
@@ -56,6 +58,19 @@ public class StackTraceTest
     }
 
 
+
+    //========================================================================
+
+    @Test
+    public void traceIncludesModuleIdentity()
+        throws Exception
+    {
+        useTstRepo();
+        String code = "(require '/module/bad_lang_symbol')";
+        FusionException e = assertEvalThrows(FusionException.class, code);
+        assertThat(e.getMessage(),
+                   containsString("of /module/bad_lang_symbol (at "));
+    }
 
     //========================================================================
 

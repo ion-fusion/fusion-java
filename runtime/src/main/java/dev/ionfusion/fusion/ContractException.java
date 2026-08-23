@@ -4,7 +4,7 @@
 package dev.ionfusion.fusion;
 
 
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 
 /**
  * Indicates inappropriate run-time use of a procedure or syntactic form;
@@ -30,7 +30,7 @@ public class ContractException
     /**
      * @param location may be null.
      */
-    ContractException(String message, SourceLocation location)
+    ContractException(String message, ResourcePosition location)
     {
         super(message);
         addContext(location);
@@ -39,8 +39,7 @@ public class ContractException
     /**
      * @param location may be null.
      */
-    ContractException(String message, SourceLocation location,
-                      Throwable cause)
+    ContractException(String message, ResourcePosition location, Throwable cause)
     {
         super(message, cause);
         addContext(location);

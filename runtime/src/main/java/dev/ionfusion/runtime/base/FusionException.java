@@ -36,7 +36,7 @@ public class FusionException
      * The Fusion stack trace, aggregated by {@code catch} clauses in the
      * interpreter as the Java stack unwinds.
      */
-    private List<SourceLocation> myContext;
+    private List<ResourcePosition> myContext;
 
 
     public FusionException(String message)
@@ -60,7 +60,7 @@ public class FusionException
      *
      * @param location can be null to indicate an unknown location.
      */
-    public void addContext(SourceLocation location)
+    public void addContext(ResourcePosition location)
     {
         if (myContext == null)
         {
@@ -70,7 +70,7 @@ public class FusionException
         else
         {
             // Collapse equal adjacent locations
-            SourceLocation prev = myContext.get(myContext.size() - 1);
+            ResourcePosition prev = myContext.get(myContext.size() - 1);
             if (! Objects.equals(prev, location))
             {
                 myContext.add(location);
@@ -90,7 +90,7 @@ public class FusionException
      *
      * @return an immutable list; not null.
      */
-    public List<SourceLocation> getContext()
+    public List<ResourcePosition> getContext()
     {
         return (myContext == null ? emptyList() : unmodifiableList(myContext));
     }
@@ -101,7 +101,7 @@ public class FusionException
     {
         if (myContext != null)
         {
-            for (SourceLocation loc : myContext)
+            for (ResourcePosition loc : myContext)
             {
                 if (loc == null)
                 {
