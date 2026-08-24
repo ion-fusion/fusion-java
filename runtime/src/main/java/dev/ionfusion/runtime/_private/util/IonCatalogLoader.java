@@ -13,6 +13,8 @@ import com.amazon.ion.SymbolTable;
 import com.amazon.ion.system.IonReaderBuilder;
 import com.amazon.ion.system.IonSystemBuilder;
 import com.amazon.ion.system.SimpleCatalog;
+import dev.ionfusion.runtime.base.ResourceDescriptor;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import dev.ionfusion.runtime.base.SourceLocation;
 import dev.ionfusion.runtime.base.SourceName;
 import java.io.File;
@@ -58,15 +60,15 @@ public final class IonCatalogLoader
     }
 
 
-    private String prefix(SourceLocation loc)
+    private String prefix(ResourcePosition loc)
     {
         return "Error reading symbol table at " + loc.display() + ":\n";
     }
 
 
-    void loadSymtab(SourceName name, IonReader reader)
+    void loadSymtab(ResourceDescriptor rsrc, IonReader reader)
     {
-        SourceLocation loc = SourceLocation.forCurrentSpan(reader, name);
+        ResourcePosition loc = SourceLocation.forCurrentSpan(reader, rsrc);
 
         if (reader.getType() != IonType.STRUCT)
         {
@@ -96,7 +98,7 @@ public final class IonCatalogLoader
         catch (IonException e)
         {
             // We use the location of the symtab as a whole, because when things
-            // fail the IonReader's cursor is usually in between values and thus
+            // fail, the IonReader's cursor is usually in between values and thus
             // there's no current span.
             String message = prefix(loc) + e.getMessage();
             throw new IonException(message, e);
@@ -107,7 +109,7 @@ public final class IonCatalogLoader
     private void loadFile(File file)
         throws IOException
     {
-        SourceName name = SourceName.forFile(file.getPath());
+        ResourceDescriptor name = SourceName.forFile(file.getPath());
 
         try (FileInputStream stream = new FileInputStream(file);
              IonReader reader = myReaderBuilder.build(stream))

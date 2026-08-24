@@ -4,6 +4,7 @@
 package dev.ionfusion.runtime.base;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 
 /**
  * A specific location within some resource.
@@ -66,4 +67,26 @@ public interface ResourcePosition
      */
     void display(Appendable out)
         throws IOException;
+
+
+    /**
+     * Displays this position in a human-readable form, in terms of line, column, and
+     * resource.  Additional semantic context may also be included.
+     *
+     * @return not null.
+     */
+    default String display()
+    {
+        StringBuilder out = new StringBuilder();
+        try
+        {
+            display(out);
+        }
+        catch (IOException e)
+        {
+            // StringBuilder shouldn't throw this, but let's be safe.
+            throw new UncheckedIOException(e);
+        }
+        return out.toString();
+    }
 }
