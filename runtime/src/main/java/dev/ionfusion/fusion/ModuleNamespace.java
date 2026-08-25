@@ -12,6 +12,7 @@ import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime._private.doc.BindingDoc;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import dev.ionfusion.runtime.base.SourceLocation;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,11 +32,11 @@ final class ModuleNamespace
     static abstract class ProvidedBinding
         extends Binding
     {
-        private final BaseSymbol     myName;
-        private final SourceLocation myLoc;
-        private BindingSite          mySite;
+        private final BaseSymbol       myName;
+        private final ResourcePosition myLoc;
+        private       BindingSite      mySite;
 
-        ProvidedBinding(BaseSymbol name, SourceLocation sourceLocation)
+        ProvidedBinding(BaseSymbol name, ResourcePosition sourceLocation)
         {
             myName = name;
             myLoc  = sourceLocation;
@@ -56,7 +57,7 @@ final class ModuleNamespace
 
         @Override
         final ProvidedBinding provideAs(BaseSymbol name,
-                                        SourceLocation sourceLocation)
+                                        ResourcePosition sourceLocation)
         {
             return new ImportedProvidedBinding(name, sourceLocation, this);
         }
@@ -87,7 +88,7 @@ final class ModuleNamespace
         private final ModuleDefinedBinding myDefinition;
 
         DefinedProvidedBinding(BaseSymbol name,
-                               SourceLocation sourceLocation,
+                               ResourcePosition sourceLocation,
                                ModuleDefinedBinding binding)
         {
             super(name, sourceLocation);
@@ -99,7 +100,7 @@ final class ModuleNamespace
         DefinedProvidedBinding(ModuleDefinedBinding binding)
         {
             this(binding.getName(),
-                 binding.getBindingSite().getSourceLocation(),
+                 binding.getBindingSite().getPosition(),
                  binding);
         }
 
@@ -144,7 +145,7 @@ final class ModuleNamespace
         private final ProvidedBinding myImport;
 
         ImportedProvidedBinding(BaseSymbol name,
-                                SourceLocation sourceLocation,
+                                ResourcePosition sourceLocation,
                                 ProvidedBinding imported)
         {
             super(name, sourceLocation);
@@ -226,7 +227,7 @@ final class ModuleNamespace
 
         @Override
         ProvidedBinding provideAs(BaseSymbol name,
-                                  SourceLocation sourceLocation)
+                                  ResourcePosition sourceLocation)
         {
             return new ImportedProvidedBinding(name, sourceLocation, getProvided());
         }
@@ -338,7 +339,7 @@ final class ModuleNamespace
         }
 
         @Override
-        ProvidedBinding provideAs(BaseSymbol name, SourceLocation idLocation)
+        ProvidedBinding provideAs(BaseSymbol name, ResourcePosition idLocation)
         {
             return new DefinedProvidedBinding(name, idLocation, this);
         }

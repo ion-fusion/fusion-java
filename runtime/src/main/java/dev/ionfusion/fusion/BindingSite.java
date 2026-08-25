@@ -3,7 +3,7 @@
 
 package dev.ionfusion.fusion;
 
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 
 /**
  * Exposes binding metadata about an identifier in Fusion source code.
@@ -20,11 +20,11 @@ import dev.ionfusion.runtime.base.SourceLocation;
  */
 public class BindingSite
 {
-    private final SourceLocation srcLoc;
-    private final BindingSite    targetSite;
+    private final ResourcePosition srcLoc;
+    private final BindingSite      targetSite;
 
-    private BindingSite(SourceLocation sourceLocation,
-                        BindingSite    targetInformation)
+    private BindingSite(ResourcePosition sourceLocation,
+                        BindingSite      targetInformation)
     {
         srcLoc = sourceLocation;
         targetSite = targetInformation;
@@ -37,7 +37,7 @@ public class BindingSite
      * @return null if called on a site with no explicit identifier.
      * This happens when there is no identifier given during import or export.
      */
-    public SourceLocation getSourceLocation()
+    public ResourcePosition getPosition()
     {
         return srcLoc;
     }
@@ -119,7 +119,7 @@ public class BindingSite
     private static final class LocalSite
         extends BindingSite
     {
-        private LocalSite(SourceLocation bindingIdLoc)
+        private LocalSite(ResourcePosition bindingIdLoc)
         {
             super(bindingIdLoc, null);
         }
@@ -135,7 +135,7 @@ public class BindingSite
     private static final class DefinitionSite
         extends BindingSite
     {
-        private DefinitionSite(SourceLocation definitionLoc)
+        private DefinitionSite(ResourcePosition definitionLoc)
         {
             super(definitionLoc, null);
         }
@@ -153,8 +153,8 @@ public class BindingSite
     {
         private final BindingSite myInsideSite;
 
-        private ExportSite(SourceLocation outsideIdLoc,
-                           BindingSite    insideSite)
+        private ExportSite(ResourcePosition outsideIdLoc,
+                           BindingSite      insideSite)
         {
             super(outsideIdLoc, insideSite.target());
             myInsideSite = insideSite;
@@ -179,8 +179,8 @@ public class BindingSite
     {
         private final BindingSite myExportSite;
 
-        private ImportSite(SourceLocation importLocation,
-                           BindingSite    exportSite)
+        private ImportSite(ResourcePosition importLocation,
+                           BindingSite      exportSite)
         {
             super(importLocation, exportSite.target());
             myExportSite = exportSite;
@@ -212,7 +212,7 @@ public class BindingSite
      * @param bindingIdLoc the location of the identifier where the binding
      * was declared.
      */
-    static BindingSite makeLocalBindingSite(SourceLocation bindingIdLoc)
+    static BindingSite makeLocalBindingSite(ResourcePosition bindingIdLoc)
     {
         return new LocalSite(bindingIdLoc);
     }
@@ -223,7 +223,7 @@ public class BindingSite
      * @param definitionLoc the location of the identifier where the binding
      * was declared.
      */
-    static BindingSite makeDefineBindingSite(SourceLocation definitionLoc)
+    static BindingSite makeDefineBindingSite(ResourcePosition definitionLoc)
     {
         return new DefinitionSite(definitionLoc);
     }
@@ -237,15 +237,15 @@ public class BindingSite
      * @param insideSite the site of the module-level definition or import
      *   that's being exported.
      */
-    static BindingSite makeExportBindingSite(SourceLocation outsideIdLoc,
-                                             BindingSite    insideSite)
+    static BindingSite makeExportBindingSite(ResourcePosition outsideIdLoc,
+                                             BindingSite      insideSite)
     {
         return new ExportSite(outsideIdLoc, insideSite);
     }
 
 
-    static BindingSite makeImportBindingSite(SourceLocation importLocation,
-                                             BindingSite    exportSite)
+    static BindingSite makeImportBindingSite(ResourcePosition importLocation,
+                                             BindingSite      exportSite)
     {
         return new ImportSite(importLocation, exportSite);
     }

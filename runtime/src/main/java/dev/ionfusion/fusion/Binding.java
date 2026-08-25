@@ -11,7 +11,7 @@ import dev.ionfusion.fusion.Namespace.NsDefinedBinding;
 import dev.ionfusion.fusion.Namespace.RequiredBinding;
 import dev.ionfusion.fusion.TopLevelNamespace.TopLevelDefinedBinding;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 
 /**
  * Bindings are used during expansion and compilation to identify a specific
@@ -102,7 +102,7 @@ abstract class Binding
      *   exported identifier. May be null if the name isn't explicitly given
      *   in the form, as in {@code (provide (all_defined_out))}.
      */
-    ProvidedBinding provideAs(BaseSymbol name, SourceLocation idLocation)
+    ProvidedBinding provideAs(BaseSymbol name, ResourcePosition idLocation)
     {
         throw new IllegalStateException("This kind of binding can't be exported");
     }

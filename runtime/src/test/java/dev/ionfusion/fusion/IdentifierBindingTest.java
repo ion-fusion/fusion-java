@@ -12,16 +12,17 @@ import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import dev.ionfusion.runtime.base.SourceName;
 import org.junit.jupiter.api.Test;
 
 
 /**
- * Tests the unsafeIdentifierBinding Function. It's mainly being used to to
+ * Tests the unsafeIdentifierBinding Function. It's mainly being used to
  * travel to the binding site of a reference.
  */
 public class IdentifierBindingTest
@@ -105,18 +106,17 @@ public class IdentifierBindingTest
         assertBindingAt(3, 9, topLevelSite);
         assertTrue(topLevelSite.isDefinitionSite());
         assertNull(topLevelSite.nextSite());
-        assertEquals(sourceName,
-                     topLevelSite.getSourceLocation().getSourceName());
+        assertSame(sourceName, topLevelSite.getPosition().getResourceDesc());
 
 
         // We expect the BindingSite's SourceLocation to be null because
         // there is no local reference for the binding to go to. Thus, we'll jump
-        // to the provide site using getModuleBindingInformation after confirming
+        // to the export site using getModuleBindingInformation after confirming
         // that this is a required binding.
         BindingSite moduleProvidedBinding =
             unsafeIdentifierBinding(eval,
                                     traversal.moduleReference);
-        assertNull(moduleProvidedBinding.getSourceLocation());
+        assertNull(moduleProvidedBinding.getPosition());
         assertTrue(moduleProvidedBinding.isImportSite());
         assertBindingAt(4, 12,
                         moduleProvidedBinding.nextSite());
@@ -125,7 +125,7 @@ public class IdentifierBindingTest
         BindingSite renameProvidedBinding =
             unsafeIdentifierBinding(eval,
                                     traversal.renamedModuleReference);
-        assertNull(renameProvidedBinding.getSourceLocation());
+        assertNull(renameProvidedBinding.getPosition());
         assertTrue(renameProvidedBinding.isImportSite());
         assertBindingAt(5, 22, renameProvidedBinding.nextSite());
 
@@ -135,8 +135,8 @@ public class IdentifierBindingTest
 
 
         BindingSite renamedDefinedBinding = renameProvidedBinding.target();
-        assertEquals(moduleDefinedBinding.getSourceLocation(),
-                     renamedDefinedBinding.getSourceLocation());
+        assertEquals(moduleDefinedBinding.getPosition(),
+                     renamedDefinedBinding.getPosition());
 
         // TODO test chained renames
         // TODO test local bindings
@@ -181,8 +181,8 @@ public class IdentifierBindingTest
 
         BindingSite definition = onlyInBinding.target();
         assertBindingAt(2, 11, definition);
-        assertNotEquals(enclosingProvide.getSourceLocation(),
-                        definition.getSourceLocation());
+        assertNotEquals(enclosingProvide.getPosition(),
+                        definition.getPosition());
     }
 
 
@@ -190,7 +190,7 @@ public class IdentifierBindingTest
                                  int         expectedSourceColumn,
                                  BindingSite bindingInfo)
     {
-        SourceLocation locn = bindingInfo.getSourceLocation();
+        ResourcePosition locn = bindingInfo.getPosition();
         assertEquals(expectedSourceLine,   locn.getLine());
         assertEquals(expectedSourceColumn, locn.getColumn());
     }
