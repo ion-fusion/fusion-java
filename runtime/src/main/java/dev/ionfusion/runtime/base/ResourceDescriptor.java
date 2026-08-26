@@ -49,6 +49,8 @@ public interface ResourceDescriptor
             {
                 return null;
             }
+
+            // Default equals/hashCode are correct
         };
     }
 }

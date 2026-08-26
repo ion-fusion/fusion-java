@@ -3,6 +3,7 @@
 
 package dev.ionfusion.runtime.base;
 
+import static dev.ionfusion.testing.Assertions.assertHashEquals;
 import static dev.ionfusion.testing.ProjectLayout.testDataDirectory;
 import static dev.ionfusion.testing.ProjectLayout.testDataFile;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -54,8 +55,11 @@ public class ResourceIdentifierTest
         ResourceIdentifier rsrc = ResourceIdentifier.forFile(path);
         checkPathResource(path, rsrc);
 
+        ResourceIdentifier orig = rsrc;
+
         rsrc = ResourceIdentifier.forFile(path.toFile());
         checkPathResource(path, rsrc);
+        assertHashEquals(orig, rsrc);
 
         rsrc = ResourceIdentifier.forFile(path.toString());
         checkPathResource(path, rsrc);

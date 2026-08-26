@@ -17,6 +17,8 @@ import java.nio.file.Paths;
  * Identifies a persistent, external resource, such as a file or a JAR entry.
  * <p>
  * On the whole, this offers a Fusion-oriented alternative to {@link URI}.
+ * <p>
+ * Two identifiers are equal if they have equal URIs.
  */
 public abstract class ResourceIdentifier
 {
@@ -59,6 +61,25 @@ public abstract class ResourceIdentifier
     public String toString()
     {
         return getUri().toString();
+    }
+
+
+    public boolean equals(ResourceIdentifier that)
+    {
+        return this.getUri().equals(that.getUri());
+    }
+
+    @Override
+    public boolean equals(Object that)
+    {
+        return that instanceof ResourceIdentifier &&
+               this.equals((ResourceIdentifier) that);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return getUri().hashCode();
     }
 
 
