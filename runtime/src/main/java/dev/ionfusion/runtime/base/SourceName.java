@@ -5,6 +5,8 @@ package dev.ionfusion.runtime.base;
 
 import static java.util.Objects.requireNonNull;
 
+import dev.ionfusion.runtime.base.SourceNameImpl.ModuleSourceName;
+import dev.ionfusion.runtime.base.SourceNameImpl.ResourceSourceName;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
@@ -16,44 +18,14 @@ import java.nio.file.Path;
  * The primary purpose of this class is to display a suitable message fragment
  * for error reporting to users.
  */
-public class SourceName
-    implements ResourceDescriptor
+public interface SourceName
+    extends ResourceDescriptor
 {
     /**
      * The standard extension for Fusion source code files.
      */
-    public static final String FUSION_SOURCE_EXTENSION = ".fusion";
+    String FUSION_SOURCE_EXTENSION = ".fusion";
 
-    private final String myDisplay;
-
-
-    private SourceName(String display)
-    {
-        myDisplay = display;
-    }
-
-
-    /**
-     * Returns the human-readable source name, for display in messages.
-     *
-     * @return the displayable name of this source
-     */
-    @Override
-    public String display()
-    {
-        return myDisplay;
-    }
-
-    /**
-     * Returns the resource identifier for this source if one exists.
-     *
-     * @return can be null.
-     */
-    @Override
-    public ResourceIdentifier getResourceId()
-    {
-        return null;
-    }
 
     /**
      * Returns the absolute path of the source file if one is known.
@@ -62,10 +34,7 @@ public class SourceName
      *
      * @return null if this source is not an actual file.
      */
-    public Path getPath()
-    {
-        return null;
-    }
+    Path getPath();
 
     /**
      * Returns a URI for the source. The protocol can vary; at least {@code file}
@@ -74,130 +43,18 @@ public class SourceName
      *
      * @return null if this source cannot be identified as a URI.
      */
-    public URI getUri()
-    {
-        return null;
-    }
+    URI getUri();
 
 
     /**
      * It is not guaranteed that the module declaration is the only content of
      * the file or URL.
-     * The resource could be a script with several modules inside, and modules
+     * The resource could be a script with several modules inside, and module
      * declarations will eventually nest.
      *
      * @return the module associated with this source, if any.
      */
-    public ModuleIdentity getModuleIdentity()
-    {
-        return null;
-    }
-
-
-    /**
-     * Returns a view of this object suitable for debugging.
-     * For displaying messages to users, use {@link #display()} instead.
-     */
-    @Override
-    public String toString()
-    {
-        return myDisplay;
-    }
-
-
-    public boolean equals(SourceName other)
-    {
-        return (other != null && myDisplay.equals(other.myDisplay));
-    }
-
-    @Override
-    public boolean equals(Object other)
-    {
-        return (other instanceof SourceName && equals((SourceName) other));
-    }
-
-    private static final int HASH_SEED = SourceName.class.hashCode();
-
-    @Override
-    public int hashCode()
-    {
-        int result = HASH_SEED + myDisplay.hashCode();
-        result ^= (result << 29) ^ (result >> 3);
-        return result;
-    }
-
-
-    /**
-     * Compares sources by their {@linkplain #display() display form}.
-     *
-     * @param o1 the first object to be compared.
-     * @param o2 the second object to be compared.
-     *
-     * @return a negative integer, zero, or a positive integer as the first argument is
-     * less than, equal to, or greater than the second.
-     */
-    public static int compareByDisplay(SourceName o1, SourceName o2)
-    {
-        return o1.display().compareTo(o2.display());
-    }
-
-
-    //=========================================================================
-
-
-    private static class ResourceSourceName
-        extends SourceName
-    {
-        private final ResourceIdentifier myResource;
-
-        private ResourceSourceName(String display, ResourceIdentifier resource)
-        {
-            super(display);
-            myResource = resource;
-        }
-
-        private ResourceSourceName(ResourceIdentifier resource)
-        {
-            this(resource.toString(), resource);
-        }
-
-        @Override
-        public ResourceIdentifier getResourceId()
-        {
-            return myResource;
-        }
-
-        @Override
-        public Path getPath()
-        {
-            return myResource.getPath();
-        }
-
-        @Override
-        public URI getUri()
-        {
-            return myResource.getUri();
-        }
-    }
-
-
-    //=========================================================================
-
-
-    private static class ModuleSourceName
-        extends ResourceSourceName
-    {
-        private final ModuleIdentity myId;
-
-        ModuleSourceName(ResourceIdentifier rsrc, ModuleIdentity id)
-        {
-            super(id + " (at " + rsrc.toString() + ")", rsrc);
-            myId   = id;
-        }
-
-        @Override
-        public ModuleIdentity getModuleIdentity() { return myId; }
-    }
+    ModuleIdentity getModuleIdentity();
 
 
     //=========================================================================
@@ -210,12 +67,12 @@ public class SourceName
      *
      * @return a new {@link SourceName} instance
      */
-    public static SourceName forDisplay(String display)
+    static SourceName forDisplay(String display)
     {
         if (display.isEmpty()) {
             throw new IllegalArgumentException("display must not be empty");
         }
-        return new SourceName(display);
+        return new SourceNameImpl(display);
     }
 
 
@@ -228,7 +85,7 @@ public class SourceName
      *
      * @see #forFile(File)
      */
-    public static SourceName forFile(String path)
+    static SourceName forFile(String path)
     {
         ResourceIdentifier rsrc = ResourceIdentifier.forFile(path);
         return new ResourceSourceName(rsrc);
@@ -244,7 +101,7 @@ public class SourceName
      *
      * @see #forFile(String)
      */
-    public static SourceName forFile(File path)
+    static SourceName forFile(File path)
     {
         ResourceIdentifier rsrc = ResourceIdentifier.forFile(path);
         return new ResourceSourceName(rsrc);
@@ -256,7 +113,7 @@ public class SourceName
      * @param sourceFile must not be null.
      * @return a new {@link SourceName}.
      */
-    public static SourceName forModule(ModuleIdentity id, File sourceFile)
+    static SourceName forModule(ModuleIdentity id, File sourceFile)
     {
         requireNonNull(id, "id must not be null");
         ResourceIdentifier rsrc = ResourceIdentifier.forFile(sourceFile);
@@ -269,7 +126,7 @@ public class SourceName
      * @param url must not be null.
      * @return a new {@link SourceName}.
      */
-    public static SourceName forUrl(ModuleIdentity id, URL url)
+    static SourceName forUrl(ModuleIdentity id, URL url)
     {
         requireNonNull(id, "id must not be null");
         ResourceIdentifier rsrc = ResourceIdentifier.forUrl(url);
@@ -285,7 +142,7 @@ public class SourceName
      *
      * @return a new {@link SourceName}.
      */
-    public static SourceName forResource(ResourceIdentifier resource, ModuleIdentity id)
+    static SourceName forResource(ResourceIdentifier resource, ModuleIdentity id)
     {
         requireNonNull(resource, "resource must not be null");
         if (id == null) return new ResourceSourceName(resource);
