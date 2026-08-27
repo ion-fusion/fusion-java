@@ -23,23 +23,30 @@ import java.util.Objects;
 public class SourceLocation
     implements CodePosition
 {
-    /** May be null. */
-    private final SourceName myName;
+    /**
+     * This descriptor is used by all instances constructed with a null SourceName,
+     * preserving the legacy behavior of this class WRT equals and hashCode.
+     */
+    private static final ResourceDescriptor DISTINCT_UNKNOWN_RESOURCE =
+        ResourceDescriptor.unknown();
+
+    /** Not null. */
+    private final ResourceDescriptor myResource;
 
 
     /**
-     * @param name may be null
+     * @param rsrc null will be replaced by {@link #DISTINCT_UNKNOWN_RESOURCE}.
      */
-    private SourceLocation(SourceName name)
+    private SourceLocation(ResourceDescriptor rsrc)
     {
-        myName = name;
+        myResource = (rsrc != null ? rsrc : DISTINCT_UNKNOWN_RESOURCE);
     }
 
 
     @Override
     public ResourceDescriptor getResourceDesc()
     {
-        return myName != null ? myName : ResourceDescriptor.unknown();
+        return myResource;
     }
 
     /**
@@ -48,7 +55,7 @@ public class SourceLocation
      */
     public SourceName getSourceName()
     {
-        return myName;
+        return (myResource instanceof SourceName) ? (SourceName) myResource : null;
     }
 
     /**
@@ -95,7 +102,8 @@ public class SourceLocation
     @Override
     public ModuleIdentity getModuleIdentity()
     {
-        return (myName == null) ? null : myName.getModuleIdentity();
+        SourceName name = getSourceName();
+        return (name == null) ? null : name.getModuleIdentity();
     }
 
 
@@ -109,7 +117,7 @@ public class SourceLocation
         private final short myColumn;
         private final short myStartOffset;
 
-        private Shorts(SourceName name, short line, short column,
+        private Shorts(ResourceDescriptor name, short line, short column,
                        short startOffset)
         {
             super(name);
@@ -145,7 +153,7 @@ public class SourceLocation
         private final int myColumn;
         private final int myStartOffset;
 
-        private Ints(SourceName name, int line, int column, int startOffset)
+        private Ints(ResourceDescriptor name, int line, int column, int startOffset)
         {
             super(name);
             myLine = line;
@@ -180,7 +188,7 @@ public class SourceLocation
         private final long myColumn;
         private final long myStartOffset;
 
-        private Longs(SourceName name, long line, long column, long startOffset)
+        private Longs(ResourceDescriptor name, long line, long column, long startOffset)
         {
             super(name);
             myLine = line;
@@ -219,7 +227,7 @@ public class SourceLocation
      *
      * @return null when all parameters are unknown.
      */
-    public static SourceLocation forName(SourceName name)
+    public static SourceLocation forName(ResourceDescriptor name)
     {
         if (name == null) return null;
 
@@ -326,7 +334,7 @@ public class SourceLocation
      * the source.
      */
     public static SourceLocation forCurrentSpan(IonReader  source,
-                                                SourceName name)
+                                                ResourceDescriptor name)
     {
         // SpanProvider.currentSpan() crashes if not on a value.
         if (source.getType() != null)
@@ -404,16 +412,17 @@ public class SourceLocation
     public void display(Appendable out)
         throws IOException
     {
+        SourceName name = getSourceName();
         long line   = getLine();
         long column = getColumn();
 
         if (line < 1)
         {
             out.append("unknown location");
-            if (myName != null)
+            if (name != null)
             {
                 out.append(" in ");
-                out.append(myName.display());
+                out.append(name.display());
             }
         }
         else
@@ -428,10 +437,10 @@ public class SourceLocation
                 out.append(" column");
             }
 
-            if (myName != null)
+            if (name != null)
             {
                 out.append(" of ");
-                out.append(myName.display());
+                out.append(name.display());
             }
         }
     }
@@ -464,20 +473,21 @@ public class SourceLocation
     }
 
 
-    public boolean equals(SourceLocation that)
+    public boolean equals(ResourcePosition that)
     {
         return (this == that
                 || (that != null
-                    && Objects.equals(this.myName, that.myName)
-                    && this.getLine()        == that.getLine()
-                    && this.getColumn()      == that.getColumn()
-                    && this.getStartOffset() == that.getStartOffset()));
+                    && this.myResource.equals(that.getResourceDesc())
+                    && this.getLine()   == that.getLine()
+                    && this.getColumn() == that.getColumn()
+                    && this.getOffset() == that.getOffset()));
     }
 
     @Override
     public boolean equals(Object that)
     {
-        return that instanceof SourceLocation && equals((SourceLocation) that);
+        return that instanceof ResourcePosition &&
+               this.equals((ResourcePosition) that);
     }
 
 
@@ -487,7 +497,7 @@ public class SourceLocation
     public int hashCode()
     {
         final int prime = 8191;
-        int result = HASH_SEED + Objects.hashCode(myName);
+        int result = HASH_SEED + Objects.hashCode(myResource);
         result ^= (result << 29) ^ (result >> 3);
         result = prime * result + (int) getLine();
         result ^= (result << 29) ^ (result >> 3);
