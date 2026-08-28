@@ -386,20 +386,6 @@ public class SourceLocation
     }
 
 
-    private void displayOrdinal(Appendable out, long ord)
-        throws IOException
-    {
-        if (ord < 1)
-        {
-            out.append("???");
-        }
-        else
-        {
-            writeFriendlyOrdinal(out, ord);
-        }
-    }
-
-
     /**
      * Displays this location in a human-readable form, in terms of line,
      * column, and source name.
@@ -427,13 +413,13 @@ public class SourceLocation
         }
         else
         {
-            displayOrdinal(out, line);
+            writeFriendlyOrdinal(out, line);
             out.append(" line");
 
             if (column > 0)
             {
                 out.append(", ");
-                displayOrdinal(out, column);
+                writeFriendlyOrdinal(out, column);
                 out.append(" column");
             }
 
