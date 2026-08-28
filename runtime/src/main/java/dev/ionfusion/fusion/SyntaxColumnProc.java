@@ -7,7 +7,7 @@ import static dev.ionfusion.fusion.FusionNumber.makeInt;
 import static dev.ionfusion.fusion.FusionSyntax.checkSyntaxArg;
 
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 
 
 class SyntaxColumnProc
@@ -17,11 +17,11 @@ class SyntaxColumnProc
     Object doApply(Evaluator eval, Object arg)
         throws FusionException
     {
-        SyntaxValue stx = checkSyntaxArg(eval, this, 0, arg);
-        SourceLocation location = stx.getLocation();
-        if (location != null)
+        SyntaxValue      stx      = checkSyntaxArg(eval, this, 0, arg);
+        ResourcePosition pos = stx.getPosition();
+        if (pos != null)
         {
-            return makeInt(eval, location.getColumn());
+            return makeInt(eval, pos.getColumn());
         }
         return FusionNumber.ZERO_INT;
     }
