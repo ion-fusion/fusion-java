@@ -19,7 +19,7 @@ import com.amazon.ion.util.IonTextUtils;
 import dev.ionfusion.fusion.FusionBool.BaseBool;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import dev.ionfusion.runtime.embed.FusionRuntime;
 import java.io.IOException;
 
@@ -77,9 +77,9 @@ abstract class BaseValue
     }
 
 
-    SyntaxValue makeOriginalSyntax(Evaluator eval, SourceLocation loc)
+    SyntaxValue makeOriginalSyntax(Evaluator eval, ResourcePosition pos)
     {
-        return SimpleSyntaxValue.makeOriginalSyntax(eval, loc, this);
+        return SimpleSyntaxValue.makeOriginalSyntax(eval, pos, this);
     }
 
 
@@ -95,10 +95,10 @@ abstract class BaseValue
      */
     SyntaxValue datumToSyntaxMaybe(Evaluator      eval,
                                    SyntaxSymbol   context,
-                                   SourceLocation loc)
+                                   ResourcePosition pos)
         throws FusionException
     {
-        SyntaxValue stx = datumToSyntaxMaybe(eval, loc);
+        SyntaxValue stx = datumToSyntaxMaybe(eval, pos);
         if (stx == null) return null;
 
         return Syntax.applyContext(eval, context, stx);
@@ -107,7 +107,7 @@ abstract class BaseValue
     /**
      * @return null if something in the datum can't be converted into syntax.
      */
-    SyntaxValue datumToSyntaxMaybe(Evaluator eval, SourceLocation loc)
+    SyntaxValue datumToSyntaxMaybe(Evaluator eval, ResourcePosition pos)
         throws FusionException
     {
         return null;

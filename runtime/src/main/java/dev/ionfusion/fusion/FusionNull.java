@@ -13,7 +13,7 @@ import com.amazon.ion.ValueFactory;
 import dev.ionfusion.fusion.FusionBool.BaseBool;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.IOException;
 
@@ -62,9 +62,9 @@ public final class FusionNull
         }
 
         @Override
-        SyntaxValue datumToSyntaxMaybe(Evaluator eval, SourceLocation loc)
+        SyntaxValue datumToSyntaxMaybe(Evaluator eval, ResourcePosition pos)
         {
-            return makeSyntax(eval, loc, this);
+            return makeSyntax(eval, pos, this);
         }
 
         @Override

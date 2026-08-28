@@ -3,9 +3,8 @@
 
 package dev.ionfusion.fusion;
 
-import static com.amazon.ion.util.IonTextUtils.symbolVariant;
 import static com.amazon.ion.util.IonTextUtils.SymbolVariant.OPERATOR;
-
+import static com.amazon.ion.util.IonTextUtils.symbolVariant;
 import static dev.ionfusion.fusion.FusionBool.falseBool;
 import static dev.ionfusion.fusion.FusionBool.makeBool;
 import static dev.ionfusion.fusion.FusionBool.trueBool;
@@ -21,7 +20,7 @@ import com.amazon.ion.util.IonTextUtils;
 import dev.ionfusion.fusion.FusionBool.BaseBool;
 import dev.ionfusion.runtime._private.util.InternMap;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.IOException;
 import java.util.Arrays;
@@ -148,24 +147,24 @@ final class FusionSymbol
         }
 
         @Override
-        SyntaxValue makeOriginalSyntax(Evaluator eval, SourceLocation loc)
+        SyntaxValue makeOriginalSyntax(Evaluator eval, ResourcePosition pos)
         {
             if (isKeyword())
             {
-                return SyntaxKeyword.makeOriginal(eval, loc, this);
+                return SyntaxKeyword.makeOriginal(eval, pos, this);
             }
-            return SyntaxSymbol.makeOriginal(loc, this);
+            return SyntaxSymbol.makeOriginal(pos, this);
         }
 
         @Override
-        SyntaxValue datumToSyntaxMaybe(Evaluator eval, SourceLocation loc)
+        SyntaxValue datumToSyntaxMaybe(Evaluator eval, ResourcePosition pos)
             throws FusionException
         {
             if (isKeyword())
             {
-                return SyntaxKeyword.make(eval, loc, this);
+                return SyntaxKeyword.make(eval, pos, this);
             }
-            return SyntaxSymbol.make(loc, this);
+            return SyntaxSymbol.make(pos, this);
         }
     }
 
@@ -204,18 +203,18 @@ final class FusionSymbol
         }
 
         @Override
-        SyntaxValue makeOriginalSyntax(Evaluator eval, SourceLocation loc)
+        SyntaxValue makeOriginalSyntax(Evaluator eval, ResourcePosition pos)
         {
             // No need to check for keywords.
-            return SyntaxSymbol.makeOriginal(loc, this);
+            return SyntaxSymbol.makeOriginal(pos, this);
         }
 
         @Override
-        SyntaxValue datumToSyntaxMaybe(Evaluator eval, SourceLocation loc)
+        SyntaxValue datumToSyntaxMaybe(Evaluator eval, ResourcePosition pos)
             throws FusionException
         {
             // No need to check for keywords.
-            return SyntaxSymbol.make(loc, this);
+            return SyntaxSymbol.make(pos, this);
         }
 
         @Override

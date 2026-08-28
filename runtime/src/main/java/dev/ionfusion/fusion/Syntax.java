@@ -7,7 +7,7 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.ArgumentException.makeArgumentError;
 
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 
 /**
  * Utilities for working with {@link SyntaxValue}s.
@@ -57,13 +57,12 @@ final class Syntax
     static SyntaxValue datumToSyntaxMaybe(Evaluator      eval,
                                           Object         datum,
                                           SyntaxSymbol   context,
-                                          SourceLocation location)
+                                          ResourcePosition pos)
         throws FusionException
     {
         if (datum instanceof BaseValue)
         {
-            return ((BaseValue) datum).datumToSyntaxMaybe(eval, context,
-                                                          location);
+            return ((BaseValue) datum).datumToSyntaxMaybe(eval, context, pos);
         }
 
         return null;
@@ -80,11 +79,11 @@ final class Syntax
     static SyntaxValue datumToSyntax(Evaluator      eval,
                                      Object         datum,
                                      SyntaxSymbol   context,
-                                     SourceLocation location,
+                                     ResourcePosition pos,
                                      String         whosCalling)
         throws FusionException
     {
-        SyntaxValue stx = datumToSyntaxMaybe(eval, datum, context, location);
+        SyntaxValue stx = datumToSyntaxMaybe(eval, datum, context, pos);
         if (stx == null)
         {
             if (whosCalling == null) whosCalling = "datum_to_syntax";
@@ -111,9 +110,9 @@ final class Syntax
     static SyntaxValue datumToSyntax(Evaluator      eval,
                                      Object         datum,
                                      SyntaxSymbol   context,
-                                     SourceLocation location)
+                                     ResourcePosition pos)
         throws FusionException
     {
-        return datumToSyntax(eval, datum, context, location, null);
+        return datumToSyntax(eval, datum, context, pos, null);
     }
 }

@@ -34,7 +34,7 @@ import dev.ionfusion.fusion.FusionBool.BaseBool;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.FusionText.BaseText;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -95,15 +95,15 @@ public final class FusionString
         }
 
         @Override
-        SyntaxString makeOriginalSyntax(Evaluator eval, SourceLocation loc)
+        SyntaxString makeOriginalSyntax(Evaluator eval, ResourcePosition pos)
         {
-            return SyntaxString.makeOriginal(eval, loc, this);
+            return SyntaxString.makeOriginal(eval, pos, this);
         }
 
         @Override
-        SyntaxString datumToSyntaxMaybe(Evaluator eval, SourceLocation loc)
+        SyntaxString datumToSyntaxMaybe(Evaluator eval, ResourcePosition pos)
         {
-            return SyntaxString.make(eval, loc, this);
+            return SyntaxString.make(eval, pos, this);
         }
 
 

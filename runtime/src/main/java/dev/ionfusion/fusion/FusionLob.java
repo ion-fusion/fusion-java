@@ -11,7 +11,7 @@ import static dev.ionfusion.fusion.SimpleSyntaxValue.makeSyntax;
 
 import dev.ionfusion.fusion.FusionBool.BaseBool;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -70,9 +70,9 @@ public final class FusionLob
         }
 
         @Override
-        SyntaxValue datumToSyntaxMaybe(Evaluator eval, SourceLocation loc)
+        SyntaxValue datumToSyntaxMaybe(Evaluator eval, ResourcePosition pos)
         {
-            return makeSyntax(eval, loc, this);
+            return makeSyntax(eval, pos, this);
         }
     }
 

@@ -35,7 +35,7 @@ import dev.ionfusion.fusion.FusionIterator.AbstractIterator;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime._private.util.hamt.MultiHashTrie;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Iterator;
@@ -583,18 +583,18 @@ final class FusionStruct
         }
 
         @Override
-        SyntaxValue makeOriginalSyntax(Evaluator eval, SourceLocation loc)
+        SyntaxValue makeOriginalSyntax(Evaluator eval, ResourcePosition pos)
         {
-            return SyntaxStruct.makeOriginal(eval, loc, this);
+            return SyntaxStruct.makeOriginal(eval, pos, this);
         }
 
         @Override
         SyntaxValue datumToSyntaxMaybe(Evaluator      eval,
                                        SyntaxSymbol   context,
-                                       SourceLocation loc)
+                                       ResourcePosition pos)
             throws FusionException
         {
-            SyntaxValue stx = SyntaxStruct.make(eval, loc, this);
+            SyntaxValue stx = SyntaxStruct.make(eval, pos, this);
 
             // TODO This should retain context, but not push it
             //      down to the current children (which already have it).
@@ -872,7 +872,7 @@ final class FusionStruct
         }
 
         @Override
-        SyntaxValue makeOriginalSyntax(Evaluator eval, SourceLocation loc)
+        SyntaxValue makeOriginalSyntax(Evaluator eval, ResourcePosition pos)
         {
             throw new IllegalStateException("Cannot wrap mutable struct as syntax");
         }
@@ -891,11 +891,12 @@ final class FusionStruct
         @Override
         SyntaxValue datumToSyntaxMaybe(final Evaluator      eval,
                                        final SyntaxSymbol   context,
-                                       final SourceLocation loc)
+                                       final ResourcePosition pos)
             throws FusionException
         {
             StructFieldVisitor visitor = (name, value) -> {
-                SyntaxValue converted = Syntax.datumToSyntaxMaybe(eval, value, context, loc);
+                SyntaxValue converted = Syntax.datumToSyntaxMaybe(eval, value, context,
+                                                                  pos);
                 if (converted == null)
                 {
                     // Hit something that's not syntax-able
@@ -907,7 +908,7 @@ final class FusionStruct
             try
             {
                 ImmutableStruct datum = transformFields(eval, visitor);
-                return SyntaxStruct.make(eval, loc, datum);
+                return SyntaxStruct.make(eval, pos, datum);
             }
             catch (VisitFailure e)  // This is crazy.
             {
@@ -1171,9 +1172,9 @@ final class FusionStruct
         }
 
         @Override
-        SyntaxValue makeOriginalSyntax(Evaluator eval, SourceLocation loc)
+        SyntaxValue makeOriginalSyntax(Evaluator eval, ResourcePosition pos)
         {
-            return SyntaxStruct.makeOriginal(eval, loc, this);
+            return SyntaxStruct.makeOriginal(eval, pos, this);
         }
 
         @Override

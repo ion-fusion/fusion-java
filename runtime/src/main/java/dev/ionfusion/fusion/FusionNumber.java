@@ -24,7 +24,7 @@ import com.amazon.ion.util.IonTextUtils;
 import dev.ionfusion.fusion.FusionBool.BaseBool;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -114,9 +114,9 @@ public final class FusionNumber
         }
 
         @Override
-        SyntaxValue datumToSyntaxMaybe(Evaluator eval, SourceLocation loc)
+        SyntaxValue datumToSyntaxMaybe(Evaluator eval, ResourcePosition pos)
         {
-            return makeSyntax(eval, loc, this);
+            return makeSyntax(eval, pos, this);
         }
     }
 

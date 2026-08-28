@@ -29,7 +29,7 @@ import dev.ionfusion.fusion.FusionSequence.BaseSequence;
 import dev.ionfusion.fusion.FusionSexp.BaseSexp;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -607,9 +607,9 @@ final class FusionList
         }
 
         @Override
-        SyntaxValue makeOriginalSyntax(Evaluator eval, SourceLocation loc)
+        SyntaxValue makeOriginalSyntax(Evaluator eval, ResourcePosition pos)
         {
-            return SyntaxList.makeOriginal(eval, loc, this);
+            return SyntaxList.makeOriginal(eval, pos, this);
         }
 
         /**
@@ -622,7 +622,7 @@ final class FusionList
         @Override
         SyntaxValue datumToSyntaxMaybe(Evaluator      eval,
                                        SyntaxSymbol   context,
-                                       SourceLocation loc)
+                                       ResourcePosition pos)
             throws FusionException
         {
             SyntaxList stx;
@@ -639,7 +639,7 @@ final class FusionList
                 {
                     Object rawChild = unsafeRef(eval, i);
                     Object child =
-                        Syntax.datumToSyntaxMaybe(eval, rawChild, context, loc);
+                        Syntax.datumToSyntaxMaybe(eval, rawChild, context, pos);
                     if (child == null)
                     {
                         // Hit something that's not syntax-able
@@ -650,7 +650,7 @@ final class FusionList
 
                 BaseSymbol[] anns = getAnnotations();
                 Object list = immutableList(eval, anns, children);
-                stx = SyntaxList.make(eval, loc, list);
+                stx = SyntaxList.make(eval, pos, list);
             }
 
             // TODO This should retain context, but not push it

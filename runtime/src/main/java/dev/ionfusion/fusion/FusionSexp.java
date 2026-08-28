@@ -29,7 +29,7 @@ import dev.ionfusion.fusion.FusionList.BaseList;
 import dev.ionfusion.fusion.FusionSequence.BaseSequence;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -538,20 +538,20 @@ public final class FusionSexp
         }
 
         @Override
-        SyntaxValue makeOriginalSyntax(Evaluator eval, SourceLocation loc)
+        SyntaxValue makeOriginalSyntax(Evaluator eval, ResourcePosition pos)
         {
-            return SyntaxSexp.makeOriginal(eval, loc, this);
+            return SyntaxSexp.makeOriginal(eval, pos, this);
         }
 
         @Override
         SyntaxValue datumToSyntaxMaybe(Evaluator      eval,
                                        SyntaxSymbol   context,
-                                       SourceLocation loc)
+                                       ResourcePosition pos)
             throws FusionException
         {
             assert size(eval) == 0;
 
-            SyntaxValue stx = SyntaxSexp.make(eval, loc, this);
+            SyntaxValue stx = SyntaxSexp.make(eval, pos, this);
             return Syntax.applyContext(eval, context, stx);
         }
 
@@ -936,11 +936,11 @@ public final class FusionSexp
          */
         private BaseSexp toPairOfSyntaxMaybe(Evaluator eval,
                                              SyntaxSymbol   context,
-                                             SourceLocation loc)
+                                             ResourcePosition pos)
             throws FusionException
         {
             SyntaxValue head =
-                Syntax.datumToSyntaxMaybe(eval, myHead, context, loc);
+                Syntax.datumToSyntaxMaybe(eval, myHead, context, pos);
             if (head == null) return null;
 
             Object tail = myTail;
@@ -948,11 +948,11 @@ public final class FusionSexp
             {
                 tail = ((ImmutablePair)tail).toPairOfSyntaxMaybe(eval,
                                                                  context,
-                                                                 loc);
+                                                                 pos);
             }
             else if (! isEmptySexp(eval, tail))
             {
-                tail = Syntax.datumToSyntaxMaybe(eval, tail, context, loc);
+                tail = Syntax.datumToSyntaxMaybe(eval, tail, context, pos);
             }
             if (tail == null) return null;
 
@@ -968,13 +968,13 @@ public final class FusionSexp
         @Override
         SyntaxValue datumToSyntaxMaybe(Evaluator      eval,
                                        SyntaxSymbol   context,
-                                       SourceLocation loc)
+                                       ResourcePosition pos)
             throws FusionException
         {
-            BaseSexp newPair = toPairOfSyntaxMaybe(eval, context, loc);
+            BaseSexp newPair = toPairOfSyntaxMaybe(eval, context, pos);
             if (newPair == null) return null;
 
-            SyntaxValue stx = SyntaxSexp.make(eval, loc, newPair);
+            SyntaxValue stx = SyntaxSexp.make(eval, pos, newPair);
 
             // TODO This should retain context, but not push it
             //      down to the current children (which already have it).
