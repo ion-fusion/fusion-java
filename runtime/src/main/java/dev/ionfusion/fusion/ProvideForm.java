@@ -143,7 +143,7 @@ final class ProvideForm
             // but is needed for syntax analysis and origin tracking.
             SyntaxSymbol allDefinedSym =
                 syntaxTrackOrigin(eval,
-                                  SyntaxSymbol.make(specId.getLocation(),
+                                  SyntaxSymbol.make(specId.getPosition(),
                                                     makeSymbol(eval, "all_defined")),
                                   specForm, specId);
             expanded.add(specForm.copyReplacingChildren(eval, allDefinedSym));
@@ -180,7 +180,7 @@ final class ProvideForm
 
             SyntaxSymbol renameSym =
                 syntaxTrackOrigin(eval,
-                                  SyntaxSymbol.make(specId.getLocation(),
+                                  SyntaxSymbol.make(specId.getPosition(),
                                                     makeSymbol(eval, "rename")),
                                   specForm, specId);
 

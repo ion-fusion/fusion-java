@@ -90,7 +90,7 @@ class SimpleSyntaxValue
     @Override
     SyntaxValue copyReplacingProperties(Object[] properties)
     {
-        return new SimpleSyntaxValue(getLocation(), properties, myDatum);
+        return new SimpleSyntaxValue(getPosition(), properties, myDatum);
     }
 
 

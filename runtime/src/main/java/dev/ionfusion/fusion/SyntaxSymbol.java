@@ -104,10 +104,8 @@ final class SyntaxSymbol
     @Override
     SyntaxSymbol copyReplacingProperties(Object[] properties)
     {
-        SyntaxSymbol id = new SyntaxSymbol(myWraps,
-                                           getLocation(),
-                                           properties,
-                                           getName());
+        SyntaxSymbol id =
+            new SyntaxSymbol(myWraps, getPosition(), properties, getName());
         id.myBoundId = myBoundId;
         return id;
     }
@@ -121,15 +119,14 @@ final class SyntaxSymbol
     {
         // We intentionally don't copy the binding, since the wraps are
         // probably different, so the binding may be different.
-        return new SyntaxSymbol(wraps, getLocation(), getProperties(), getName());
+        return new SyntaxSymbol(wraps, getPosition(), getProperties(), getName());
     }
 
 
     SyntaxSymbol copyReplacingBinding(Binding binding)
     {
         SyntaxSymbol copy =
-            new SyntaxSymbol(myWraps, getLocation(), getProperties(),
-                             getName());
+            new SyntaxSymbol(myWraps, getPosition(), getProperties(), getName());
         copy.myBoundId = uncachedResolveBoundIdentifier().copyReplacingBinding(binding);
         return copy;
     }

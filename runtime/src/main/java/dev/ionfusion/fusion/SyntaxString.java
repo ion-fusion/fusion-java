@@ -41,7 +41,7 @@ final class SyntaxString
     SyntaxString copyReplacingWraps(SyntaxWraps wraps)
     {
         return new SyntaxString(wraps,
-                                getLocation(),
+                                getPosition(),
                                 getProperties(),
                                 (BaseString) myDatum);
     }
@@ -50,7 +50,7 @@ final class SyntaxString
     SyntaxString copyReplacingProperties(Object[] properties)
     {
         return new SyntaxString(myWraps,
-                                getLocation(),
+                                getPosition(),
                                 properties,
                                 (BaseString) myDatum);
     }

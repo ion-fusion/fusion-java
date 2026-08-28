@@ -60,7 +60,7 @@ final class SyntaxKeyword
     SyntaxKeyword copyReplacingWraps(SyntaxWraps wraps)
     {
         return new SyntaxKeyword(wraps,
-                                 getLocation(),
+                                 getPosition(),
                                  getProperties(),
                                  (BaseSymbol) myDatum);
     }
@@ -69,7 +69,7 @@ final class SyntaxKeyword
     SyntaxKeyword copyReplacingProperties(Object[] properties)
     {
         return new SyntaxKeyword(myWraps,
-                                 getLocation(),
+                                 getPosition(),
                                  properties,
                                  (BaseSymbol) myDatum);
     }

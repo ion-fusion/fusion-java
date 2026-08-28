@@ -76,14 +76,13 @@ final class SyntaxStruct
     @Override
     SyntaxStruct copyReplacingProperties(Object[] properties)
     {
-        return new SyntaxStruct(getLocation(), properties, myWraps, myStruct);
+        return new SyntaxStruct(getPosition(), properties, myWraps, myStruct);
     }
 
     @Override
     SyntaxStruct copyReplacingWraps(SyntaxWraps wraps)
     {
-        return new SyntaxStruct(getLocation(), getProperties(), wraps,
-                                myStruct);
+        return new SyntaxStruct(getPosition(), getProperties(), wraps, myStruct);
     }
 
 
@@ -105,7 +104,7 @@ final class SyntaxStruct
         ImmutableStruct s = myStruct.transformFields(eval, visitor);
         if (s == myStruct) return this;
 
-        return new SyntaxStruct(getLocation(), getProperties(), null, s);
+        return new SyntaxStruct(getPosition(), getProperties(), null, s);
     }
 
 
@@ -199,7 +198,7 @@ final class SyntaxStruct
         ImmutableStruct s = myStruct.transformFields(eval, visitor);
 
         // Wraps have been pushed down so the copy doesn't need them.
-        return new SyntaxStruct(getLocation(), s);
+        return new SyntaxStruct(getPosition(), s);
     }
 
 

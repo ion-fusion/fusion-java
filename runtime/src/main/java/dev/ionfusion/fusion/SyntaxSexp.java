@@ -135,14 +135,14 @@ final class SyntaxSexp
         BaseSexp datum = (children == null
                               ? nullSexp(eval, annotations)
                               : immutableSexp(eval, annotations, children));
-        return new SyntaxSexp(getLocation(), getProperties(), myWraps, datum);
+        return new SyntaxSexp(getPosition(), getProperties(), myWraps, datum);
     }
 
 
     @Override
     SyntaxSexp copyReplacingProperties(Object[] properties)
     {
-        return new SyntaxSexp(getLocation(), properties, myWraps, mySexp);
+        return new SyntaxSexp(getPosition(), properties, myWraps, mySexp);
     }
 
 
@@ -151,7 +151,7 @@ final class SyntaxSexp
         throws FusionException
     {
         assert ! hasNoChildren() && wraps != null;
-        return new SyntaxSexp(getLocation(), getProperties(), wraps, mySexp);
+        return new SyntaxSexp(getPosition(), getProperties(), wraps, mySexp);
     }
 
 
@@ -289,7 +289,7 @@ final class SyntaxSexp
         if (hasNoChildren()) return this;  // No children, no marks, all okay!
 
         BaseSexp newSexp = stripWraps(eval, (ImmutablePair) mySexp);
-        return new SyntaxSexp(getLocation(), getProperties(), null, newSexp);
+        return new SyntaxSexp(getPosition(), getProperties(), null, newSexp);
     }
 
 

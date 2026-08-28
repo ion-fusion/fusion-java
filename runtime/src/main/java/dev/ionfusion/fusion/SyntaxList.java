@@ -87,22 +87,20 @@ final class SyntaxList
         BaseList datum = (children == null
                               ? nullList(eval, annotations)
                               : immutableList(eval, annotations, children));
-        return new SyntaxList(getLocation(), getProperties(), myWraps, datum);
+        return new SyntaxList(getPosition(), getProperties(), myWraps, datum);
     }
 
 
     @Override
     SyntaxList copyReplacingProperties(Object[] properties)
     {
-        return new SyntaxList(getLocation(), properties, myWraps,
-                              myImmutableList);
+        return new SyntaxList(getPosition(), properties, myWraps, myImmutableList);
     }
 
     @Override
     SyntaxList copyReplacingWraps(SyntaxWraps wraps)
     {
-        return new SyntaxList(getLocation(), getProperties(), wraps,
-                              myImmutableList);
+        return new SyntaxList(getPosition(), getProperties(), wraps, myImmutableList);
     }
 
 
@@ -163,7 +161,7 @@ final class SyntaxList
 
         BaseSymbol[] annotations = myImmutableList.getAnnotations();
         BaseList newList = immutableList(eval, annotations, children);
-        return new SyntaxList(getLocation(), getProperties(), null, newList);
+        return new SyntaxList(getPosition(), getProperties(), null, newList);
     }
 
 
