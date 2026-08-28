@@ -19,6 +19,7 @@ import com.amazon.ion.IonValue;
 import com.amazon.ion.IonWriter;
 import com.amazon.ion.system.IonTextWriterBuilder;
 import dev.ionfusion.runtime.base.FusionException;
+import dev.ionfusion.runtime.base.ResourceDescriptor;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -27,6 +28,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Objects;
 
 /**
  * Utilities for input and output of Fusion data.
@@ -182,31 +184,32 @@ public final class FusionIo
 
 
     /**
-     * Reads a single Fusion value from an Ion stream.
-     * If the reader is positioned on a value, that value is read and returned.
-     * Otherwise, the reader's {@link IonReader#next()} method is called;
-     * if there's not another value then the result is {@code eof}.
+     * Reads a single Fusion value from an Ion stream. If the reader is positioned on a
+     * value, that value is read and returned. Otherwise, the reader's
+     * {@link IonReader#next()} method is called; if there's not another value, then the
+     * result is {@code eof}.
      * <p>
-     * After consuming the value, the reader is moved to the next
-     * value by calling {@link IonReader#next()}.
+     * After consuming the value, the reader is moved to the next value by calling
+     * {@link IonReader#next()}.
      *
      * @param top the {@link TopLevel} to use for evaluation
      * @param reader must be positioned on the value to read.
+     * @param desc describes the input; must not be null.
      *
      * @return an immutable Fusion value.
      *
      * @throws FusionException if an error occurs during evaluation
-     *
      * @see #isEof(TopLevel, Object)
      */
-    public static Object read(TopLevel top, IonReader reader)
+    public static Object read(TopLevel top, IonReader reader, ResourceDescriptor desc)
         throws FusionException
     {
+        Objects.requireNonNull(desc, "desc");
         Evaluator eval = StandardTopLevel.toEvaluator(top);
-        return read(eval, reader);
+        return read(eval, reader, desc);
     }
 
-    static Object read(Evaluator eval, IonReader reader)
+    static Object read(Evaluator eval, IonReader reader, ResourceDescriptor desc)
         throws FusionException
     {
         try
@@ -219,14 +222,13 @@ public final class FusionIo
                 }
             }
 
-            Object fv = StandardReader.read(eval, reader);
+            Object fv = StandardReader.read(eval, reader, desc);
             reader.next();
             return fv;
         }
         catch (IonException e)
         {
-            throw new FusionException("Error reading data: " + e.getMessage(),
-                                      e);
+            throw new FusionException("Error reading data: " + e.getMessage(), e);
         }
     }
 
@@ -650,7 +652,7 @@ public final class FusionIo
         {
             IonReader r = myCurrentIonReaderParam.currentValue(eval);
 
-            return FusionIo.read(eval, r);
+            return FusionIo.read(eval, r, ResourceDescriptor.unknown());
         }
     }
 

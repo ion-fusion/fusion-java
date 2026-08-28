@@ -16,6 +16,7 @@ import com.amazon.ion.IonList;
 import com.amazon.ion.IonReader;
 import com.amazon.ion.IonValue;
 import com.amazon.ion.IonWriter;
+import dev.ionfusion.runtime.base.ResourceDescriptor;
 import dev.ionfusion.runtime.embed.TopLevel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -110,24 +111,25 @@ public class FusionIoTest
     {
         TopLevel  top  = topLevel();
         Evaluator eval = evaluator();
+        ResourceDescriptor desc = ResourceDescriptor.unknown();
 
         IonReader reader = system().newReader("{}");
-        Object fv = read(top, reader);
+        Object fv = read(top, reader, desc);
         assertTrue(isImmutableStruct(eval, fv));
         assertEquals(0, unsafeStructSize(eval, fv));
-        fv = read(top, reader);
+        fv = read(top, reader, desc);
         assertTrue(isEof(top, fv));
 
         reader = system().newReader("{f:9} 10");
         reader.next();
-        fv = FusionIo.read(top, reader);
+        fv = FusionIo.read(top, reader, desc);
         assertTrue(isImmutableStruct(eval, fv));
         assertEquals(1, unsafeStructSize(eval, fv));
-        fv = read(top, reader);
+        fv = read(top, reader, desc);
         checkLong(10, fv);
-        fv = read(top, reader);
+        fv = read(top, reader, desc);
         assertTrue(isEof(top, fv));
-        fv = read(top, reader);
+        fv = read(top, reader, desc);
         assertTrue(isEof(top, fv));  // EOF "sticks"
     }
 

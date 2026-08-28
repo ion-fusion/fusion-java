@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.amazon.ion.IonReader;
 import dev.ionfusion.runtime.base.ModuleIdentity;
-import dev.ionfusion.runtime.base.SourceName;
+import dev.ionfusion.runtime.base.ResourceDescriptor;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
@@ -52,12 +52,12 @@ public class ClassLoaderModuleRepositoryTest
         assertNotNull(loc);
         assertNotNull(loc.toString());
 
-        SourceName name = loc.sourceName();
-        assertThat(name.display(), endsWith("/ftst/symbol.fusion"));
+        ResourceDescriptor desc = loc.sourceName();
+        assertThat(desc.display(), endsWith("/ftst/symbol.fusion"));
 
         Evaluator eval       = evaluator();
-        IonReader ionReader  = openIonReader(eval, name.getResourceId());
-        Object    moduleSexp = read(eval, ionReader);
+        IonReader ionReader  = openIonReader(eval, desc.getResourceId());
+        Object    moduleSexp = read(eval, ionReader, desc);
         assertTrue(isPair(eval, moduleSexp));
     }
 

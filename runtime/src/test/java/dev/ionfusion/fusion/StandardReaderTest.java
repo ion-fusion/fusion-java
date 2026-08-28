@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionStruct.unsafeStructSize;
+import static dev.ionfusion.fusion.StandardReader.read;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
@@ -11,6 +12,7 @@ import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.amazon.ion.IonReader;
+import dev.ionfusion.runtime.base.ResourceDescriptor;
 import org.junit.jupiter.api.Test;
 
 public class StandardReaderTest
@@ -38,7 +40,7 @@ public class StandardReaderTest
     {
         IonReader reader = system().newReader("{f:1,f:2}");
         reader.next();
-        Object s = StandardReader.read(evaluator(), reader);
+        Object s = read(evaluator(), reader, ResourceDescriptor.unknown());
         assertEquals(2, unsafeStructSize(evaluator(), s));
     }
 }

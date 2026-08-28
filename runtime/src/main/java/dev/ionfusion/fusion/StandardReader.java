@@ -30,9 +30,9 @@ import com.amazon.ion.Timestamp;
 import dev.ionfusion.fusion.FusionList.BaseList;
 import dev.ionfusion.fusion.FusionSexp.BaseSexp;
 import dev.ionfusion.runtime.base.FusionException;
+import dev.ionfusion.runtime.base.ResourceDescriptor;
 import dev.ionfusion.runtime.base.ResourceIdentifier;
 import dev.ionfusion.runtime.base.ResourcePosition;
-import dev.ionfusion.runtime.base.SourceName;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
@@ -78,43 +78,41 @@ class StandardReader
      *
      * @param source must be positioned on the value to be read.
      */
-    static Object read(Evaluator eval,
-                       IonReader source)
+    static Object read(Evaluator eval, IonReader source, ResourceDescriptor desc)
         throws FusionException
     {
         try
         {
-            return read(eval, source, null, false);
+            return read(eval, source, desc, false);
         }
         catch (IonException e)
         {
-            throw new FusionException("Error reading data: " + e.getMessage(),
-                                      e);
+            throw new FusionException("Error reading data: " + e.getMessage(), e);
         }
     }
 
 
     /**
-     * Reads a single Ion datum as source.
+     * Reads a single Ion datum as syntax.
      *
      * @param source must be positioned on the value to be read.
-     * @param name may be null.
+     * @param desc must not be null.
      */
-    static SyntaxValue readSyntax(Evaluator  eval,
-                                  IonReader  source,
-                                  SourceName name)
+    static SyntaxValue readSyntax(Evaluator eval,
+                                  IonReader source,
+                                  ResourceDescriptor desc)
         throws FusionException
     {
         try
         {
-            return (SyntaxValue) read(eval, source, name, true);
+            return (SyntaxValue) read(eval, source, desc, true);
         }
         catch (IonException e)
         {
             // We don't try to create a SourceLocation from the reader because
             // it usually doesn't have a current span when an error is thrown,
             // and since the IonException's message will contain it.
-            String nameStr = (name != null ? name.display() : "source");
+            String nameStr = (desc != null ? desc.display() : "source");
             String message =
                 "Error reading " + nameStr + ":\n" + e.getMessage();
             throw new FusionErrorException(message, e);
@@ -125,13 +123,13 @@ class StandardReader
     /**
      * Reads a single Ion datum, optionally as syntax objects.
      * @param source must be positioned on the value to be read.
-     * @param name may be null.
+     * @param desc can be null.
      *
      * @throws IonException if there's a problem reading the source data.
      */
     private static Object read(Evaluator  eval,
                                IonReader  source,
-                               SourceName name,
+                               ResourceDescriptor desc,
                                boolean    readingSyntax)
         throws FusionException, IonException
     {
@@ -139,7 +137,7 @@ class StandardReader
         assert type != null;
 
         String[] anns = source.getTypeAnnotations();
-        ResourcePosition pos = (readingSyntax ? forCurrentSpan(source, name) : null);
+        ResourcePosition pos = (readingSyntax ? forCurrentSpan(source, desc) : null);
 
         BaseValue datum;
         switch (type)
@@ -243,17 +241,17 @@ class StandardReader
             }
             case LIST:
             {
-                datum = readList(eval, source, name, readingSyntax, anns);
+                datum = readList(eval, source, desc, readingSyntax, anns);
                 break;
             }
             case SEXP:
             {
-                datum = readSexp(eval, source, name, readingSyntax, anns);
+                datum = readSexp(eval, source, desc, readingSyntax, anns);
                 break;
             }
             case STRUCT:
             {
-                datum = readStruct(eval, source, name, readingSyntax, anns);
+                datum = readStruct(eval, source, desc, readingSyntax, anns);
                 break;
             }
             default:
@@ -278,13 +276,13 @@ class StandardReader
     /**
      * @param source must be positioned on the value to be read, but not
      * stepped-in.  Must not be positioned on a null value.
-     * @param name may be null.
+     * @param desc can be null.
      *
      * @throws IonException if there's a problem reading the source data.
      */
     private static ArrayList<Object> readSequence(Evaluator  eval,
                                                   IonReader  source,
-                                                  SourceName name,
+                                                  ResourceDescriptor desc,
                                                   boolean    readingSyntax)
         throws FusionException, IonException
     {
@@ -295,7 +293,7 @@ class StandardReader
         source.stepIn();
         while (source.next() != null)
         {
-            Object child = read(eval, source, name, readingSyntax);
+            Object child = read(eval, source, desc, readingSyntax);
             children.add(child);
         }
         source.stepOut();
@@ -311,7 +309,7 @@ class StandardReader
      */
     private static BaseList readList(Evaluator  eval,
                                      IonReader  source,
-                                     SourceName name,
+                                     ResourceDescriptor desc,
                                      boolean    readingSyntax,
                                      String[]   annotations)
         throws FusionException, IonException
@@ -321,8 +319,7 @@ class StandardReader
             return nullList(eval, annotations);
         }
 
-        ArrayList<Object> elements =
-            readSequence(eval, source, name, readingSyntax);
+        ArrayList<Object> elements = readSequence(eval, source, desc, readingSyntax);
         return immutableList(eval, annotations, elements);
     }
 
@@ -332,7 +329,7 @@ class StandardReader
      */
     private static BaseSexp readSexp(Evaluator  eval,
                                      IonReader  source,
-                                     SourceName name,
+                                     ResourceDescriptor desc,
                                      boolean    readingSyntax,
                                      String[]   annotations)
         throws FusionException, IonException
@@ -342,8 +339,7 @@ class StandardReader
             return nullSexp(eval, annotations);
         }
 
-        List<Object> elements =
-            readSequence(eval, source, name, readingSyntax);
+        List<Object> elements = readSequence(eval, source, desc, readingSyntax);
         return immutableSexp(eval, annotations, elements);
     }
 
@@ -353,7 +349,7 @@ class StandardReader
      */
     private static BaseValue readStruct(Evaluator  eval,
                                         IonReader  source,
-                                        SourceName name,
+                                        ResourceDescriptor desc,
                                         boolean    readingSyntax,
                                         String[]   anns)
         throws FusionException, IonException
@@ -370,7 +366,7 @@ class StandardReader
             while (source.next() != null)
             {
                 String key   = source.getFieldName();
-                Object value = read(eval, source, name, readingSyntax);
+                Object value = read(eval, source, desc, readingSyntax);
                 builder.add(key, value);
             }
         }
