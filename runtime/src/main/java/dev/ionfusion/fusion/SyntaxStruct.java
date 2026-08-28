@@ -8,7 +8,7 @@ import com.amazon.ion.IonWriter;
 import dev.ionfusion.fusion.FusionStruct.ImmutableStruct;
 import dev.ionfusion.fusion.FusionStruct.StructFieldVisitor;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import java.io.IOException;
 
 final class SyntaxStruct
@@ -20,43 +20,39 @@ final class SyntaxStruct
     /**
      * @param struct must not be null.
      */
-    private SyntaxStruct(SourceLocation  loc,
+    private SyntaxStruct(ResourcePosition pos,
                          Object[] properties,
                          SyntaxWraps wraps,
                          ImmutableStruct struct)
     {
-        super(loc, properties, wraps);
+        super(pos, properties, wraps);
         myStruct = struct;
     }
 
     /**
      * @param struct must not be null.
      */
-    private SyntaxStruct(SourceLocation  loc,
-                         ImmutableStruct struct)
+    private SyntaxStruct(ResourcePosition pos, ImmutableStruct struct)
     {
-        super(loc);
+        super(pos);
         myStruct = struct;
     }
 
 
-
-    static SyntaxStruct makeOriginal(Evaluator       eval,
-                                     SourceLocation  loc,
+    static SyntaxStruct makeOriginal(Evaluator eval,
+                                     ResourcePosition pos,
                                      ImmutableStruct struct)
     {
-        return new SyntaxStruct(loc, ORIGINAL_STX_PROPS, null, struct);
+        return new SyntaxStruct(pos, ORIGINAL_STX_PROPS, null, struct);
     }
 
 
     /**
      * @param datum must be an immutable struct
      */
-    static SyntaxStruct make(Evaluator eval,
-                             SourceLocation loc,
-                             Object datum)
+    static SyntaxStruct make(Evaluator eval, ResourcePosition pos, Object datum)
     {
-        return new SyntaxStruct(loc, (ImmutableStruct) datum);
+        return new SyntaxStruct(pos, (ImmutableStruct) datum);
     }
 
 

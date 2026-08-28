@@ -22,7 +22,7 @@ import dev.ionfusion.fusion.FusionSexp.BaseSexp;
 import dev.ionfusion.fusion.FusionSexp.ImmutablePair;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.IdentityHashMap;
@@ -37,12 +37,12 @@ final class SyntaxSexp
     /**
      * @param sexp must not be null.
      */
-    private SyntaxSexp(SourceLocation loc,
-                       Object[]       properties,
-                       SyntaxWraps    wraps,
-                       BaseSexp       sexp)
+    private SyntaxSexp(ResourcePosition pos,
+                       Object[]         properties,
+                       SyntaxWraps      wraps,
+                       BaseSexp         sexp)
     {
-        super(loc, properties, wraps);
+        super(pos, properties, wraps);
         assert sexp != null;
         mySexp = sexp;
     }
@@ -51,9 +51,9 @@ final class SyntaxSexp
     /**
      * @param sexp must not be null.
      */
-    private SyntaxSexp(SourceLocation loc, BaseSexp sexp)
+    private SyntaxSexp(ResourcePosition pos, BaseSexp sexp)
     {
-        super(loc);
+        super(pos);
         assert sexp != null;
         mySexp = sexp;
     }
@@ -66,45 +66,43 @@ final class SyntaxSexp
     }
 
 
-    static SyntaxSexp makeOriginal(Evaluator      eval,
-                                   SourceLocation loc,
-                                   BaseSexp       sexp)
+    static SyntaxSexp makeOriginal(Evaluator eval, ResourcePosition pos, BaseSexp sexp)
     {
-        return new SyntaxSexp(loc, ORIGINAL_STX_PROPS, null, sexp);
+        return new SyntaxSexp(pos, ORIGINAL_STX_PROPS, null, sexp);
     }
 
-    static SyntaxSexp make(Evaluator eval, SourceLocation loc, BaseSexp sexp)
+    static SyntaxSexp make(Evaluator eval, ResourcePosition pos, BaseSexp sexp)
     {
-        return new SyntaxSexp(loc, sexp);
+        return new SyntaxSexp(pos, sexp);
     }
 
     /**
-     * Instance will be {@link #isAnyNull()} if children is null.
+     * Instance will be {@link #isAnyNull()} if {@code children} is null.
      *
      * @param anns must not be null.
      * This method takes ownership of the array; the array and its elements
-     * must not be changed by calling code afterwards!
+     * must not be changed by calling code afterward!
      * @param children the children of the new sexp.
      * This method takes ownership of the array; the array and its elements
-     * must not be changed by calling code afterwards!
+     * must not be changed by calling code afterward!
      */
     static SyntaxSexp make(Evaluator eval,
-                           SourceLocation loc,
+                           ResourcePosition pos,
                            BaseSymbol[] anns,
                            SyntaxValue[] children)
     {
         BaseSexp datum = (children == null
                               ? nullSexp(eval, anns)
                               : immutableSexp(eval, anns, children));
-        return new SyntaxSexp(loc, datum);
+        return new SyntaxSexp(pos, datum);
     }
 
     /**
-     * Instance will be {@link #isAnyNull()} if children is null.
+     * Instance will be {@link #isAnyNull()} if {@code children} is null.
 
      * @param children the children of the new sexp.
      * This method takes ownership of the array; the array and its elements
-     * must not be changed by calling code afterwards!
+     * must not be changed by calling code afterward!
      */
     static SyntaxSexp make(Evaluator eval, SyntaxValue... children)
     {
@@ -112,16 +110,16 @@ final class SyntaxSexp
     }
 
     /**
-     * Instance will be {@link #isAnyNull()} if children is null.
+     * Instance will be {@link #isAnyNull()} if {@code children} is null.
 
      * @param children the children of the new sexp.
      * This method takes ownership of the array; the array and its elements
-     * must not be changed by calling code afterwards!
+     * must not be changed by calling code afterward!
      */
-    static SyntaxSexp make(Evaluator eval, SourceLocation loc,
+    static SyntaxSexp make(Evaluator eval, ResourcePosition pos,
                            SyntaxValue... children)
     {
-        return make(eval, loc, BaseSymbol.EMPTY_ARRAY, children);
+        return make(eval, pos, BaseSymbol.EMPTY_ARRAY, children);
     }
 
 

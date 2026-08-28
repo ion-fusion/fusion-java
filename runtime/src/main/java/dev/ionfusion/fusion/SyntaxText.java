@@ -5,7 +5,7 @@ package dev.ionfusion.fusion;
 
 import dev.ionfusion.fusion.FusionText.BaseText;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 
 abstract class SyntaxText<Sub extends SyntaxText>
     extends SimpleSyntaxValue
@@ -13,17 +13,17 @@ abstract class SyntaxText<Sub extends SyntaxText>
     final SyntaxWraps myWraps;   // TODO make non-null to streamline logic.
 
     /**
-     * @param wraps may be null.
-     * @param loc may be null.
+     * @param wraps can be null.
+     * @param pos can be null.
      * @param properties must not be null.
      * @param datum must not be null.
      */
     SyntaxText(SyntaxWraps    wraps,
-               SourceLocation loc,
+               ResourcePosition pos,
                Object[]       properties,
                BaseText       datum)
     {
-        super(loc, properties, datum);
+        super(pos, properties, datum);
         myWraps = wraps;
     }
 

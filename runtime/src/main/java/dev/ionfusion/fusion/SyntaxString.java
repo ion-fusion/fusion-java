@@ -6,7 +6,7 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.runtime._private.util.Empties.EMPTY_OBJECT_ARRAY;
 
 import dev.ionfusion.fusion.FusionString.BaseString;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 
 final class SyntaxString
     extends SyntaxText<SyntaxString>
@@ -14,26 +14,26 @@ final class SyntaxString
     /**
      * @param datum must not be null.
      */
-    private SyntaxString(SyntaxWraps    wraps,
-                         SourceLocation loc,
-                         Object[]       properties,
-                         BaseString     datum)
+    private SyntaxString(SyntaxWraps      wraps,
+                         ResourcePosition pos,
+                         Object[]         properties,
+                         BaseString       datum)
     {
-        super(wraps, loc, properties, datum);
+        super(wraps, pos, properties, datum);
     }
 
-    static SyntaxString makeOriginal(Evaluator      eval,
-                                     SourceLocation loc,
-                                     BaseString     datum)
+    static SyntaxString makeOriginal(Evaluator        eval,
+                                     ResourcePosition pos,
+                                     BaseString       datum)
     {
-        return new SyntaxString(null, loc, ORIGINAL_STX_PROPS, datum);
+        return new SyntaxString(null, pos, ORIGINAL_STX_PROPS, datum);
     }
 
-    static SyntaxString make(Evaluator      eval,
-                             SourceLocation loc,
-                             BaseString     datum)
+    static SyntaxString make(Evaluator        eval,
+                             ResourcePosition pos,
+                             BaseString       datum)
     {
-        return new SyntaxString(null, loc, EMPTY_OBJECT_ARRAY, datum);
+        return new SyntaxString(null, pos, EMPTY_OBJECT_ARRAY, datum);
     }
 
 

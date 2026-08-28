@@ -28,7 +28,7 @@ abstract class SyntaxValue
 
     /**
      * Private key used to identify syntax objects constructed by the reader.
-     * We don't use a normal symbol here, because the property key must be
+     * We don't use a normal symbol here because the property key must be
      * kept private: a symbol would be interned and therefore reproducible.
      */
     static final Object STX_PROPERTY_ORIGINAL = new String("is_original");
@@ -41,20 +41,20 @@ abstract class SyntaxValue
         new Object[] { STX_PROPERTY_ORIGINAL, Boolean.TRUE };
 
 
-    private final SourceLocation mySrcLoc;
+    private final ResourcePosition myPosition;
 
     /** Not null, to streamline things. */
     private final Object[] myProperties;
 
 
     /**
-     * @param loc may be null.
+     * @param pos can be null.
      * @param properties must not be null.
      */
-    SyntaxValue(SourceLocation loc, Object[] properties)
+    SyntaxValue(ResourcePosition pos, Object[] properties)
     {
         assert properties != null;
-        mySrcLoc = loc;
+        myPosition = pos;
         myProperties = properties;
     }
 
@@ -70,11 +70,13 @@ abstract class SyntaxValue
 
     /**
      * Gets the location associated with this syntax node, if it exists.
-     * @return may be null.
+     * @return can be null.
      */
     SourceLocation getLocation()
     {
-        return mySrcLoc;
+        return (myPosition instanceof SourceLocation
+                ? (SourceLocation) myPosition
+                : null);
     }
 
     /**
@@ -83,7 +85,7 @@ abstract class SyntaxValue
      */
     ResourcePosition getPosition()
     {
-        return mySrcLoc;
+        return myPosition;
     }
 
 

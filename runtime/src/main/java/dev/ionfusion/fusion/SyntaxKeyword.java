@@ -10,7 +10,7 @@ import com.amazon.ion.IonException;
 import com.amazon.ion.IonWriter;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import java.io.IOException;
 
 final class SyntaxKeyword
@@ -20,38 +20,36 @@ final class SyntaxKeyword
     /**
      * @param datum must not be null.
      */
-    private SyntaxKeyword(SyntaxWraps    wraps,
-                          SourceLocation loc,
-                          Object[]       properties,
-                          BaseSymbol     datum)
+    private SyntaxKeyword(SyntaxWraps      wraps,
+                          ResourcePosition pos,
+                          Object[]         properties,
+                          BaseSymbol       datum)
     {
-        super(wraps, loc, properties, datum);
+        super(wraps, pos, properties, datum);
     }
 
     /**
      * @param datum must not be null.
      */
-    private SyntaxKeyword(SourceLocation loc,
-                          Object[]       properties,
-                          BaseSymbol     datum)
+    private SyntaxKeyword(ResourcePosition pos,
+                          Object[]         properties,
+                          BaseSymbol       datum)
     {
-        super(null, loc, properties, datum);
+        super(null, pos, properties, datum);
     }
 
 
-    static SyntaxKeyword makeOriginal(Evaluator      eval,
-                                      SourceLocation loc,
-                                      BaseSymbol     symbol)
+    static SyntaxKeyword makeOriginal(Evaluator        eval,
+                                      ResourcePosition pos,
+                                      BaseSymbol       symbol)
     {
-        return new SyntaxKeyword(loc, ORIGINAL_STX_PROPS, symbol);
+        return new SyntaxKeyword(pos, ORIGINAL_STX_PROPS, symbol);
     }
 
 
-    static SyntaxKeyword make(Evaluator      eval,
-                              SourceLocation loc,
-                              BaseSymbol     symbol)
+    static SyntaxKeyword make(Evaluator eval, ResourcePosition pos, BaseSymbol symbol)
     {
-        return new SyntaxKeyword(loc, EMPTY_OBJECT_ARRAY, symbol);
+        return new SyntaxKeyword(pos, EMPTY_OBJECT_ARRAY, symbol);
     }
 
 

@@ -5,19 +5,19 @@ package dev.ionfusion.fusion;
 
 
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 
 abstract class SyntaxSequence
     extends SyntaxContainer
 {
-    SyntaxSequence(SourceLocation loc, Object[] properties, SyntaxWraps wraps)
+    SyntaxSequence(ResourcePosition pos, Object[] properties, SyntaxWraps wraps)
     {
-        super(loc, properties, wraps);
+        super(pos, properties, wraps);
     }
 
-    SyntaxSequence(SourceLocation loc)
+    SyntaxSequence(ResourcePosition pos)
     {
-        super(loc);
+        super(pos);
     }
 
 

@@ -14,7 +14,7 @@ import static dev.ionfusion.runtime._private.util.Empties.EMPTY_STRING_ARRAY;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import java.util.Collections;
 import java.util.Set;
 
@@ -47,39 +47,37 @@ final class SyntaxSymbol
     private BoundIdentifier myBoundId;
 
     /**
-     * @param wraps may be null.
-     * @param loc may be null.
+     * @param wraps can be null.
+     * @param pos can be null.
      * @param properties must not be null.
      * @param datum must not be null.
      */
     private SyntaxSymbol(SyntaxWraps    wraps,
-                         SourceLocation loc,
+                         ResourcePosition pos,
                          Object[]       properties,
                          BaseSymbol     datum)
     {
-        super(wraps, loc, properties, datum);
+        super(wraps, pos, properties, datum);
     }
 
 
 
     /**
-     * @param loc may be null.
+     * @param pos can be null.
      * @param symbol must not be null.
      */
-    static SyntaxSymbol makeOriginal(SourceLocation loc,
-                                     BaseSymbol     symbol)
+    static SyntaxSymbol makeOriginal(ResourcePosition pos, BaseSymbol symbol)
     {
-        return new SyntaxSymbol(null, loc, ORIGINAL_STX_PROPS, symbol);
+        return new SyntaxSymbol(null, pos, ORIGINAL_STX_PROPS, symbol);
     }
 
     /**
-     * @param loc may be null.
+     * @param pos can be null.
      * @param symbol must not be null.
      */
-    static SyntaxSymbol make(SourceLocation loc,
-                             BaseSymbol     symbol)
+    static SyntaxSymbol make(ResourcePosition pos, BaseSymbol symbol)
     {
-        return new SyntaxSymbol(null, loc, EMPTY_OBJECT_ARRAY, symbol);
+        return new SyntaxSymbol(null, pos, EMPTY_OBJECT_ARRAY, symbol);
     }
 
 

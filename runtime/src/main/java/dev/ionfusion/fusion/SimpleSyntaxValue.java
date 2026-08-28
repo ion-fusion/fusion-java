@@ -8,7 +8,7 @@ import static dev.ionfusion.runtime._private.util.Empties.EMPTY_OBJECT_ARRAY;
 import com.amazon.ion.IonException;
 import com.amazon.ion.IonWriter;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import java.io.IOException;
 
 /**
@@ -22,58 +22,58 @@ class SimpleSyntaxValue
 
 
     /**
-     * @param loc may be null.
+     * @param pos can be null.
      * @param properties must not be null.
      * @param datum must not be null and must not be a {@link SyntaxValue}.
      */
-    SimpleSyntaxValue(SourceLocation loc, Object[] properties, BaseValue datum)
+    SimpleSyntaxValue(ResourcePosition pos, Object[] properties, BaseValue datum)
     {
-        super(loc, properties);
+        super(pos, properties);
         assert ! (datum instanceof SyntaxValue);
         myDatum = datum;
     }
 
     /**
-     * @param loc may be null.
+     * @param pos may be null.
      * @param datum must not be null and must not be a {@link SyntaxValue}.
      */
-    SimpleSyntaxValue(SourceLocation loc, BaseValue datum)
+    SimpleSyntaxValue(ResourcePosition pos, BaseValue datum)
     {
-        this(loc, EMPTY_OBJECT_ARRAY, datum);
+        this(pos, EMPTY_OBJECT_ARRAY, datum);
     }
 
 
     /**
-     * @param loc may be null.
+     * @param pos may be null.
      * @param datum must not be null and must not be a {@link SyntaxValue}.
      */
     static SyntaxValue makeOriginalSyntax(Evaluator      eval,
-                                          SourceLocation loc,
+                                          ResourcePosition pos,
                                           BaseValue      datum)
     {
-        return new SimpleSyntaxValue(loc, ORIGINAL_STX_PROPS, datum);
+        return new SimpleSyntaxValue(pos, ORIGINAL_STX_PROPS, datum);
     }
 
     /**
-     * @param loc may be null.
+     * @param pos may be null.
      * @param datum must not be null and must not be a {@link SyntaxValue}.
      */
     static SyntaxValue makeSyntax(Evaluator      eval,
-                                  SourceLocation loc,
+                                  ResourcePosition pos,
                                   BaseValue      datum)
     {
-        return new SimpleSyntaxValue(loc, datum);
+        return new SimpleSyntaxValue(pos, datum);
     }
 
     /**
-     * @param loc may be null.
+     * @param pos may be null.
      * @param datum must be a Fusion value but not a {@link SyntaxValue}.
      */
     static SyntaxValue makeSyntax(Evaluator      eval,
-                                  SourceLocation loc,
+                                  ResourcePosition pos,
                                   Object         datum)
     {
-        return new SimpleSyntaxValue(loc, (BaseValue) datum);
+        return new SimpleSyntaxValue(pos, (BaseValue) datum);
     }
 
 

@@ -14,7 +14,7 @@ import com.amazon.ion.IonWriter;
 import dev.ionfusion.fusion.FusionList.BaseList;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import java.io.IOException;
 
 final class SyntaxList
@@ -32,12 +32,12 @@ final class SyntaxList
     /**
      * @param datum an immutable list of {@link SyntaxValue}s.
      */
-    private SyntaxList(SourceLocation loc,
-                       Object[]       properties,
-                       SyntaxWraps    wraps,
-                       BaseList       datum)
+    private SyntaxList(ResourcePosition pos,
+                       Object[]         properties,
+                       SyntaxWraps      wraps,
+                       BaseList         datum)
     {
-        super(loc, properties, wraps);
+        super(pos, properties, wraps);
         myImmutableList = datum;
     }
 
@@ -45,10 +45,10 @@ final class SyntaxList
      * @param datum an immutable list of {@link SyntaxValue}s.
      */
     private SyntaxList(Evaluator eval,
-                       SourceLocation loc,
+                       ResourcePosition pos,
                        BaseList datum)
     {
-        super(loc);
+        super(pos);
         assert isImmutableList(eval, datum);
         myImmutableList = datum;
     }
@@ -64,21 +64,17 @@ final class SyntaxList
     /**
      * @param datum an immutable list of {@link SyntaxValue}s.
      */
-    static SyntaxList makeOriginal(Evaluator      eval,
-                                   SourceLocation loc,
-                                   BaseList       datum)
+    static SyntaxList makeOriginal(Evaluator eval, ResourcePosition pos, BaseList datum)
     {
-        return new SyntaxList(loc, ORIGINAL_STX_PROPS, null, datum);
+        return new SyntaxList(pos, ORIGINAL_STX_PROPS, null, datum);
     }
 
     /**
      * @param datum an immutable list of {@link SyntaxValue}s.
      */
-    static SyntaxList make(Evaluator      eval,
-                           SourceLocation loc,
-                           Object         datum)
+    static SyntaxList make(Evaluator eval, ResourcePosition pos, Object datum)
     {
-        return new SyntaxList(eval, loc, (BaseList) datum);
+        return new SyntaxList(eval, pos, (BaseList) datum);
     }
 
 

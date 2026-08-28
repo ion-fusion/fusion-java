@@ -6,7 +6,7 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.runtime._private.util.Empties.EMPTY_OBJECT_ARRAY;
 
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 
 abstract class SyntaxContainer
     extends SyntaxValue
@@ -20,15 +20,15 @@ abstract class SyntaxContainer
      */
     SyntaxWraps myWraps;
 
-    SyntaxContainer(SourceLocation loc, Object[] properties, SyntaxWraps wraps)
+    SyntaxContainer(ResourcePosition pos, Object[] properties, SyntaxWraps wraps)
     {
-        super(loc, properties);
+        super(pos, properties);
         myWraps = wraps;
     }
 
-    SyntaxContainer(SourceLocation loc)
+    SyntaxContainer(ResourcePosition pos)
     {
-        super(loc, EMPTY_OBJECT_ARRAY);
+        super(pos, EMPTY_OBJECT_ARRAY);
         myWraps = null;
     }
 
