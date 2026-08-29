@@ -223,17 +223,17 @@ public class SourceLocation
      * Returns an instance that represents an unknown location in the given
      * source.
      *
-     * @param name may be null.
+     * @param desc can be null.
      *
      * @return null when all parameters are unknown.
      */
-    public static SourceLocation forName(ResourceDescriptor name)
+    public static SourceLocation forName(ResourceDescriptor desc)
     {
-        if (name == null) return null;
+        if (desc == null) return null;
 
         // TODO Can this allocation be eliminated?
         //      We'll probably be creating lots of similar instances.
-        return new SourceLocation(name);
+        return new SourceLocation(desc);
     }
 
 
@@ -241,28 +241,28 @@ public class SourceLocation
      * Returns an instance that represents the given offset.
      *
      * @param offset is zero-based; values less than zero denote an unknown offset.
-     * @param name can be null.
+     * @param desc can be null.
      *
      * @return null when all parameters are unknown.
      */
-    public static SourceLocation forOffset(long offset, SourceName name)
+    public static SourceLocation forOffset(long offset, ResourceDescriptor desc)
     {
         if (offset < 0)
         {
-            return forName(name);
+            return forName(desc);
         }
 
         if (offset <= Short.MAX_VALUE)
         {
-            return new Shorts(name, (short) 0, (short) 0, (short) offset);
+            return new Shorts(desc, (short) 0, (short) 0, (short) offset);
         }
 
         if (offset <= Integer.MAX_VALUE)
         {
-            return new Ints(name, (int) 0, (int) 0, (int) offset);
+            return new Ints(desc, (int) 0, (int) 0, (int) offset);
         }
 
-        return new Longs(name, 0, 0, offset);
+        return new Longs(desc, 0, 0, offset);
     }
 
 
@@ -274,16 +274,16 @@ public class SourceLocation
      * @param column one-based.
      * Values less than 1 indicate that the column is unknown.
      * Ignored if the line is unknown.
-     * @param name may be null.
+     * @param desc can be null.
      *
      * @return null when all parameters are unknown.
      */
     public static SourceLocation forLineColumn(long line, long column,
-                                               SourceName name)
+                                               ResourceDescriptor desc)
     {
         if (line < 1)
         {
-            return forName(name);
+            return forName(desc);
         }
 
         if (column < 0)
@@ -293,15 +293,15 @@ public class SourceLocation
 
         if (line <= Short.MAX_VALUE && column <= Short.MAX_VALUE)
         {
-            return new Shorts(name, (short) line, (short) column, (short) -1);
+            return new Shorts(desc, (short) line, (short) column, (short) -1);
         }
 
         if (line <= Integer.MAX_VALUE && column <= Integer.MAX_VALUE)
         {
-            return new Ints(name, (int) line, (int) column, -1);
+            return new Ints(desc, (int) line, (int) column, -1);
         }
 
-        return new Longs(name, line, column, -1);
+        return new Longs(desc, line, column, -1);
     }
 
 
@@ -324,17 +324,18 @@ public class SourceLocation
 
     /**
      * Returns an instance that represents the current span of the reader.
-     * This currently only supports Ion text sources, and only captures the
+     * This currently only supports Ion text sources and only captures the
      * start position.
      *
      * @param source must not be null.
-     * @param name may be null.
+     * @param desc can be null.
      *
-     * @return null if no name is given and no location could be determined from
+     *
+     * @return null if no descriptor is given and no location could be determined from
      * the source.
      */
     public static SourceLocation forCurrentSpan(IonReader  source,
-                                                ResourceDescriptor name)
+                                                ResourceDescriptor desc)
     {
         // SpanProvider.currentSpan() crashes if not on a value.
         if (source.getType() != null)
@@ -352,7 +353,7 @@ public class SourceLocation
                     column <= Short.MAX_VALUE &&
                     offset <= Short.MAX_VALUE)
                 {
-                    return new Shorts(name, (short) line, (short) column,
+                    return new Shorts(desc, (short) line, (short) column,
                                       (short) offset);
                 }
 
@@ -360,14 +361,14 @@ public class SourceLocation
                     column <= Integer.MAX_VALUE &&
                     offset <= Integer.MAX_VALUE)
                 {
-                    return new Ints(name, (int) line, (int) column, (int) offset);
+                    return new Ints(desc, (int) line, (int) column, (int) offset);
                 }
 
-                return new Longs(name, line, column, offset);
+                return new Longs(desc, line, column, offset);
             }
         }
 
-        return forName(name);
+        return forName(desc);
     }
 
 
