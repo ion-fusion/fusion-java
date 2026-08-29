@@ -399,17 +399,15 @@ public class SourceLocation
     public void display(Appendable out)
         throws IOException
     {
-        SourceName name = getSourceName();
         long line   = getLine();
         long column = getColumn();
 
         if (line < 1)
         {
             out.append("unknown location");
-            if (name != null)
+            if (!myResource.isUnknown())
             {
-                out.append(" in ");
-                out.append(name.display());
+                out.append(" in ").append(myResource.display());
             }
         }
         else
@@ -424,10 +422,21 @@ public class SourceLocation
                 out.append(" column");
             }
 
-            if (name != null)
+            if (!myResource.isUnknown())
             {
                 out.append(" of ");
-                out.append(name.display());
+                ModuleIdentity module = getModuleIdentity();
+                if (module != null)
+                {
+                    out.append(module.absolutePath())
+                       .append(" (at ")
+                       .append(myResource.display())
+                       .append(')');
+                }
+                else
+                {
+                    out.append(myResource.display());
+                }
             }
         }
     }

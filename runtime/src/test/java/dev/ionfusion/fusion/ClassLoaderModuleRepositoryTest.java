@@ -8,6 +8,11 @@ import static dev.ionfusion.fusion.FusionSexp.isPair;
 import static dev.ionfusion.fusion.StandardReader.openIonReader;
 import static dev.ionfusion.testing.ProjectLayout.PROJECT_DIRECTORY;
 import static dev.ionfusion.testing.ProjectLayout.testRepositoryDirectory;
+import static java.nio.file.Files.isRegularFile;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.not;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -17,7 +22,6 @@ import dev.ionfusion.runtime.base.ModuleIdentity;
 import dev.ionfusion.runtime.base.SourceName;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 
@@ -49,7 +53,7 @@ public class ClassLoaderModuleRepositoryTest
         assertNotNull(loc.toString());
 
         SourceName name = loc.sourceName();
-        assertTrue(name.display().contains("/ftst/symbol.fusion"));
+        assertThat(name.display(), endsWith("/ftst/symbol.fusion"));
 
         Evaluator eval       = evaluator();
         IonReader ionReader  = openIonReader(eval, name.getResourceId());
@@ -77,10 +81,10 @@ public class ClassLoaderModuleRepositoryTest
         Path dir = testRepositoryDirectory();
 
         URL url = dir.toUri().toURL();
-        assert url.getProtocol().equals("file");
+        assertEquals("file", url.getProtocol());
 
         // Precondition for URLClassLoader to treat the URL as a directory:
-        assert url.getFile().endsWith("/");
+        assertThat(url.getFile(), endsWith("/"));
 
         checkRepository(url, ".");
     }
@@ -96,12 +100,12 @@ public class ClassLoaderModuleRepositoryTest
         Path jar = PROJECT_DIRECTORY.resolve("build")
                                     .resolve("libs")
                                     .resolve("ftst-repo.jar");
-        assert Files.isRegularFile(jar);
+        assertTrue(isRegularFile(jar), "regular file");
 
         URL url = jar.toUri().toURL();
 
         // Precondition for URLClassLoader to treat the URL as a JAR file:
-        assert ! url.getFile().endsWith("/");
+        assertThat(url.getFile(), not(endsWith("/")));
 
         checkRepository(url, "FUSION-REPO");
     }

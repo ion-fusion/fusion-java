@@ -125,7 +125,7 @@ class SourceNameImpl
 
         ModuleSourceName(ResourceIdentifier rsrc, ModuleIdentity id)
         {
-            super(id + " (at " + rsrc.toString() + ")", rsrc);
+            super(rsrc);
             myId   = id;
         }
 

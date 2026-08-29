@@ -4,8 +4,12 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionStruct.unsafeStructSize;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.amazon.ion.IonReader;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +27,9 @@ public class StandardReaderTest
         Throwable e =
             assertEvalThrows(FusionErrorException.class,
                              "(require '''/malformed/ion_syntax_error''')");
-        assertTrue(e.getMessage().contains("Error reading /malformed/ion_syntax_error"));
+        assertThat(e.getMessage(),
+                   allOf(startsWith("Error reading "),
+                         containsString("/malformed/ion_syntax_error.fusion")));
     }
 
     @Test
