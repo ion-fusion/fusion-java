@@ -58,44 +58,23 @@ public class SourceLocation
         return (myResource instanceof SourceName) ? (SourceName) myResource : null;
     }
 
-    /**
-     * Gets the one-based line number.
-     * @return zero if the line is unknown.
-     */
+
     @Override
     public long getLine()
     {
         return 0;
     }
 
-    /**
-     * Gets the one-based column number.
-     * <p>
-     * Because it doesn't make sense to count columns without counting lines,
-     * this value is zero whenever the line number is zero.
-     * </p>
-     * @return zero if the column is unknown.
-     */
     @Override
     public long getColumn()
     {
         return 0;
     }
 
-
-    /**
-     * Gets the zero-based starting offset.
-     * @return -1 if the offset is unknown.
-     */
-    public long getStartOffset()
-    {
-        return -1;
-    }
-
     @Override
     public long getOffset()
     {
-        return getStartOffset();
+        return -1;
     }
 
 
@@ -115,15 +94,14 @@ public class SourceLocation
     {
         private final short myLine;
         private final short myColumn;
-        private final short myStartOffset;
+        private final short myOffset;
 
-        private Shorts(ResourceDescriptor name, short line, short column,
-                       short startOffset)
+        private Shorts(ResourceDescriptor name, short line, short column, short offset)
         {
             super(name);
             myLine = line;
             myColumn = column;
-            myStartOffset = startOffset;
+            myOffset = offset;
         }
 
         @Override
@@ -139,9 +117,9 @@ public class SourceLocation
         }
 
         @Override
-        public long getStartOffset()
+        public long getOffset()
         {
-            return myStartOffset;
+            return myOffset;
         }
     }
 
@@ -151,14 +129,14 @@ public class SourceLocation
     {
         private final int myLine;
         private final int myColumn;
-        private final int myStartOffset;
+        private final int myOffset;
 
-        private Ints(ResourceDescriptor name, int line, int column, int startOffset)
+        private Ints(ResourceDescriptor name, int line, int column, int offset)
         {
             super(name);
-            myLine = line;
+            myLine   = line;
             myColumn = column;
-            myStartOffset = startOffset;
+            myOffset = offset;
         }
 
         @Override
@@ -174,9 +152,9 @@ public class SourceLocation
         }
 
         @Override
-        public long getStartOffset()
+        public long getOffset()
         {
-            return myStartOffset;
+            return myOffset;
         }
     }
 
@@ -186,14 +164,14 @@ public class SourceLocation
     {
         private final long myLine;
         private final long myColumn;
-        private final long myStartOffset;
+        private final long myOffset;
 
-        private Longs(ResourceDescriptor name, long line, long column, long startOffset)
+        private Longs(ResourceDescriptor name, long line, long column, long offset)
         {
             super(name);
-            myLine = line;
+            myLine   = line;
             myColumn = column;
-            myStartOffset = startOffset;
+            myOffset = offset;
         }
 
         @Override
@@ -209,9 +187,9 @@ public class SourceLocation
         }
 
         @Override
-        public long getStartOffset()
+        public long getOffset()
         {
-            return myStartOffset;
+            return myOffset;
         }
     }
 
@@ -234,35 +212,6 @@ public class SourceLocation
         // TODO Can this allocation be eliminated?
         //      We'll probably be creating lots of similar instances.
         return new SourceLocation(desc);
-    }
-
-
-    /**
-     * Returns an instance that represents the given offset.
-     *
-     * @param offset is zero-based; values less than zero denote an unknown offset.
-     * @param desc can be null.
-     *
-     * @return null when all parameters are unknown.
-     */
-    public static SourceLocation forOffset(long offset, ResourceDescriptor desc)
-    {
-        if (offset < 0)
-        {
-            return forName(desc);
-        }
-
-        if (offset <= Short.MAX_VALUE)
-        {
-            return new Shorts(desc, (short) 0, (short) 0, (short) offset);
-        }
-
-        if (offset <= Integer.MAX_VALUE)
-        {
-            return new Ints(desc, (int) 0, (int) 0, (int) offset);
-        }
-
-        return new Longs(desc, 0, 0, offset);
     }
 
 
@@ -441,22 +390,6 @@ public class SourceLocation
         }
     }
 
-    /**
-     * Displays this location in a human-readable form, in terms of line,
-     * column, and source name.
-     *
-     * @return not null.
-     */
-    public String display()
-    {
-        StringBuilder out = new StringBuilder();
-        try
-        {
-            display(out);
-        }
-        catch (IOException e) { /* shouldn't happen */ }
-        return out.toString();
-    }
 
     /**
      * Returns a view of this object suitable for debugging.
@@ -499,28 +432,8 @@ public class SourceLocation
         result ^= (result << 29) ^ (result >> 3);
         result = prime * result + (int) getColumn();
         result ^= (result << 29) ^ (result >> 3);
-        result = prime * result + (int) getStartOffset();
+        result = prime * result + (int) getOffset();
         result ^= (result << 29) ^ (result >> 3);
-        return result;
-    }
-
-
-    /**
-     * Compares locations by line then column, ignoring the source-name and offset.
-     *
-     * @param o1 the first object to be compared.
-     * @param o2 the second object to be compared.
-     *
-     * @return a negative integer, zero, or a positive integer as the first argument is
-     * less than, equal to, or greater than the second.
-     */
-    public static int compareByLineColumn(SourceLocation o1, SourceLocation o2)
-    {
-        int result = Long.compare(o1.getLine(), o2.getLine());
-        if (result == 0)
-        {
-            result = Long.compare(o1.getColumn(), o2.getColumn());
-        }
         return result;
     }
 }
