@@ -49,6 +49,31 @@ class ResourceDescriptorImpl
     }
 
 
+    static final class IdentifiedResourceDescriptor
+        extends AbstractResourceDescriptor
+    {
+        private final ResourceIdentifier myId;
+
+        IdentifiedResourceDescriptor(ResourceIdentifier id)
+        {
+            assert id != null;
+            myId = id;
+        }
+
+        @Override
+        public String display()
+        {
+            return myId.toString();
+        }
+
+        @Override
+        public ResourceIdentifier getResourceId()
+        {
+            return myId;
+        }
+    }
+
+
     private abstract static class UnidentifiedResourceDescriptor
         extends AbstractResourceDescriptor
     {

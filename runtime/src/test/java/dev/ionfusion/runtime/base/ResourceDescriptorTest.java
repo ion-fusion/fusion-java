@@ -7,6 +7,7 @@ import static dev.ionfusion.testing.Assertions.assertHashEquals;
 import static dev.ionfusion.testing.Assertions.assertNotHashEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -28,6 +29,40 @@ public class ResourceDescriptorTest
         assertHashEquals(d2, d2);
 
         assertNotHashEquals(d1, d2);
+    }
+
+
+    //==================================================================================
+    // Identified descriptors
+
+    void checkIdentified(ResourceIdentifier id)
+    {
+        ResourceDescriptor desc = ResourceDescriptor.identified(id);
+        assertEquals(id.toString(), desc.display());
+        assertFalse(desc.isUnknown());
+        assertEquals(id, desc.getResourceId());
+    }
+
+    @Test
+    void testIdentifiedDescriptor()
+    {
+        checkIdentified(ResourceIdentifier.forFile("/rsrc"));
+        checkIdentified(ResourceIdentifier.forUri("file:///rsrc"));
+        checkIdentified(ResourceIdentifier.forUri("http://example.com/rsrc"));
+    }
+
+    @Test
+    void sameUriMeansEqual()
+    {
+        ResourceIdentifier id1  = ResourceIdentifier.forFile("/rsrc");
+        ResourceIdentifier id2  = ResourceIdentifier.forUri("file:///rsrc");
+        assertNotSame(id1, id2);
+        checkEquality(id1, id2);
+
+        ResourceDescriptor desc1 = ResourceDescriptor.identified(id1);
+        ResourceDescriptor desc2 = ResourceDescriptor.identified(id2);
+        assertNotSame(desc1, desc2);
+        checkEquality(desc1, desc2);
     }
 
 

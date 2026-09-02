@@ -59,6 +59,12 @@ public interface ResourceDescriptor
     //==================================================================================
     // Factories
 
+    static ResourceDescriptor identified(ResourceIdentifier rsrc)
+    {
+        return new ResourceDescriptorImpl.IdentifiedResourceDescriptor(rsrc);
+    }
+
+
     /**
      * Returns a descriptor that displays as the given name and has no
      * {@link ResourceIdentifier}.
