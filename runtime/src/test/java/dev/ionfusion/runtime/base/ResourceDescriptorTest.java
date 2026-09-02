@@ -15,14 +15,14 @@ import org.junit.jupiter.api.Test;
 
 public class ResourceDescriptorTest
 {
-    private static void checkEquality(ResourceDescriptor d1, ResourceDescriptor d2)
+    private static void checkEquality(Object d1, Object d2)
     {
         assertHashEquals(d1, d1);
         assertHashEquals(d2, d2);
         assertHashEquals(d1, d2);
     }
 
-    private static void checkInequality(ResourceDescriptor d1, ResourceDescriptor d2)
+    private static void checkInequality(Object d1, Object d2)
     {
         assertHashEquals(d1, d1);
         assertHashEquals(d2, d2);
@@ -77,9 +77,9 @@ public class ResourceDescriptorTest
     @Test
     void sourceNamesMatchOnDisplay()
     {
-        SourceName foo1 = SourceName.forDisplay("foo");
-        SourceName foo2 = SourceName.forDisplay("foo");
-        SourceName bar  = SourceName.forDisplay("bar");
+        ResourceDescriptor foo1 = SourceName.forDisplay("foo");
+        ResourceDescriptor foo2 = SourceName.forDisplay("foo");
+        ResourceDescriptor bar  = SourceName.forDisplay("bar");
 
         checkEquality(foo1, foo2);
         checkInequality(foo1, bar);
@@ -89,7 +89,7 @@ public class ResourceDescriptorTest
     void sourceNamesDontMatchNewDescriptors()
     {
         ResourceDescriptor desc = ResourceDescriptor.named("name");
-        SourceName name = SourceName.forDisplay("name");
+        ResourceDescriptor name = SourceName.forDisplay("name");
 
         checkInequality(desc, name);
     }

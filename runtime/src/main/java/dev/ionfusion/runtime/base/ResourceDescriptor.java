@@ -20,6 +20,9 @@ import java.nio.file.Path;
  *   string.</li>
  * </ul>
  * <p>
+ * Two descriptors are considered equal if they are the same instance or if they
+ * have equal non-null {@link ResourceIdentifier}s.
+ * <p>
  * Long term, this is intended to surface things like the deployment unit containing the
  * resource, perhaps checksums, etc. This enables passing context from the component
  * providing the resource.

@@ -11,9 +11,63 @@ class ResourceDescriptorImpl
     //==================================================================================
     // Implementations
 
+    /**
+     * Satisfies the equals/hashCode contract for descriptors.
+     */
+    abstract static class AbstractResourceDescriptor
+        implements ResourceDescriptor
+    {
+        public final boolean equals(ResourceDescriptor that)
+        {
+            if (this == that) { return true; }
+            if (that == null) { return false; }
+
+            ResourceIdentifier thisId = this.getResourceId();
+            ResourceIdentifier thatId = that.getResourceId();
+            return thisId != null && thatId != null && thisId.equals(thatId);
+        }
+
+        @Override
+        public final boolean equals(Object that)
+        {
+            return (that instanceof ResourceDescriptor &&
+                    this.equals((ResourceDescriptor) that));
+        }
+
+
+        private static final int HASH_SEED = AbstractResourceDescriptor.class.hashCode();
+
+        @Override
+        public final int hashCode()
+        {
+            ResourceIdentifier id = getResourceId();
+            if (id == null)
+            {
+                return System.identityHashCode(this);
+            }
+            else
+            {
+                int result = HASH_SEED + id.hashCode();
+                result ^= (result << 29) ^ (result >> 3);
+                return result;
+            }
+        }
+    }
+
+
+    private abstract static class UnidentifiedResourceDescriptor
+        extends AbstractResourceDescriptor
+    {
+        @Override
+        public final ResourceIdentifier getResourceId()
+        {
+            return null;
+        }
+    }
+
 
     static final class NamedResourceDescriptor
-        implements ResourceDescriptor
+        extends UnidentifiedResourceDescriptor
     {
         private final String myName;
 
@@ -31,19 +85,11 @@ class ResourceDescriptorImpl
         {
             return myName;
         }
-
-        @Override
-        public ResourceIdentifier getResourceId()
-        {
-            return null;
-        }
-
-        // Default equals/hashCode are correct
     }
 
 
     static final class UnknownResourceDescriptor
-        implements ResourceDescriptor
+        extends UnidentifiedResourceDescriptor
     {
         @Override
         public String display()
@@ -52,17 +98,9 @@ class ResourceDescriptorImpl
         }
 
         @Override
-        public ResourceIdentifier getResourceId()
-        {
-            return null;
-        }
-
-        @Override
         public boolean isUnknown()
         {
             return true;
         }
-
-        // Default equals/hashCode are correct
     }
 }
