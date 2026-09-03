@@ -322,21 +322,6 @@ public class SourceLocation
 
 
     /**
-     * Returns an instance that represents the current span of the reader.
-     * This currently only supports Ion text sources, and only captures the
-     * start position.
-     *
-     * @param source must not be null.
-     *
-     * @return null if no location could be determined from the source.
-     */
-    public static SourceLocation forCurrentSpan(IonReader source)
-    {
-        return forCurrentSpan(source, null);
-    }
-
-
-    /**
      * Displays this location in a human-readable form, in terms of line,
      * column, and source name.
      *
