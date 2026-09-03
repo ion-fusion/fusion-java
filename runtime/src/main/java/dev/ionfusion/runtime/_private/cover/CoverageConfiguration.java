@@ -229,7 +229,7 @@ public final class CoverageConfiguration
         ModuleIdentity id = loc.getModuleIdentity();
         if (moduleIsSelected(id)) return true;
 
-        ResourceIdentifier rsrc = loc.getResourceId();
+        ResourceIdentifier rsrc = loc.getResourceDesc().getResourceId();
         if (rsrc == null) return false;
 
         return fileIsSelected(rsrc.getPath());

@@ -98,7 +98,7 @@ public class CoverageDatabase
     public boolean locationIsRecordable(CodePosition loc)
     {
         // We can record locations within identified resources.
-        return loc.getResourceId() != null;
+        return loc.getResourceDesc().getResourceId() != null;
     }
 
 
@@ -115,7 +115,7 @@ public class CoverageDatabase
     @Override
     public AtomicInteger locationInstrumented(CodePosition loc)
     {
-        URI uri = loc.getResourceId().getUri();
+        URI uri = loc.getResourceDesc().getResourceId().getUri();
         long offset = loc.getOffset();
         ModuleIdentity module = loc.getModuleIdentity();
 

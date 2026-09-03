@@ -21,15 +21,6 @@ public interface ResourcePosition
      */
     ResourceDescriptor getResourceDesc();
 
-    /**
-     * Identifies the resource containing this location if it's known.
-     *
-     * @return can be null.
-     */
-    default ResourceIdentifier getResourceId()
-    {
-        return getResourceDesc().getResourceId();
-    }
 
     /**
      * Gets the one-based line number.

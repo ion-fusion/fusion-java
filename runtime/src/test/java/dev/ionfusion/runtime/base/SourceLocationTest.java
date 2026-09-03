@@ -22,11 +22,11 @@ public class SourceLocationTest
         assertSame(name, loc.getSourceName());
         if (name != null)
         {
-            assertSame(name.getResourceId(), loc.getResourceId());
+            assertSame(name.getResourceId(), loc.getResourceDesc().getResourceId());
         }
         else
         {
-            assertNull(loc.getResourceId());
+            assertNull(loc.getResourceDesc().getResourceId());
         }
     }
 
