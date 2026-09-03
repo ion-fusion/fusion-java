@@ -31,7 +31,7 @@ import dev.ionfusion.fusion.FusionList.BaseList;
 import dev.ionfusion.fusion.FusionSexp.BaseSexp;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ResourceIdentifier;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import dev.ionfusion.runtime.base.SourceName;
 import java.io.IOException;
 import java.io.InputStream;
@@ -139,8 +139,7 @@ class StandardReader
         assert type != null;
 
         String[] anns = source.getTypeAnnotations();
-        SourceLocation loc =
-            (readingSyntax ? forCurrentSpan(source, name) : null);
+        ResourcePosition pos = (readingSyntax ? forCurrentSpan(source, name) : null);
 
         BaseValue datum;
         switch (type)
@@ -266,7 +265,7 @@ class StandardReader
         assert ! isSyntax(eval, datum);
         if (readingSyntax)
         {
-            SyntaxValue stx = datum.makeOriginalSyntax(eval, loc);
+            SyntaxValue stx = datum.makeOriginalSyntax(eval, pos);
             assert stx.findProperty(eval, STX_PROPERTY_ORIGINAL) == TRUE;
             return stx;
         }

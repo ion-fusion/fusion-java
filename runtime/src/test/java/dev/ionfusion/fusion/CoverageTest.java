@@ -11,6 +11,7 @@ import dev.ionfusion.runtime._private.cover.CoverageCollector;
 import dev.ionfusion.runtime.base.CodePosition;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ResourceDescriptor;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import dev.ionfusion.runtime.base.SourceLocation;
 import dev.ionfusion.runtime.base.SourceName;
 import dev.ionfusion.runtime.embed.TopLevel;
@@ -30,7 +31,7 @@ public class CoverageTest
     {
         boolean instrumentOnlyLineOne = false;
 
-        final Map<SourceLocation, AtomicInteger> instrumented = new HashMap<>();
+        final Map<ResourcePosition, AtomicInteger> instrumented = new HashMap<>();
 
         @Override
         public boolean locationIsRecordable(CodePosition loc)
@@ -39,16 +40,13 @@ public class CoverageTest
         }
 
         @Override
-        public AtomicInteger locationInstrumented(CodePosition loc)
+        public AtomicInteger locationInstrumented(CodePosition pos)
         {
-            // Temporary
-            ResourceDescriptor rsrc = loc.getResourceDesc();
-            SourceName name = (rsrc instanceof SourceName ? (SourceName) rsrc : null);
-
             // For simplicity, we'll ignore the offset.
-            SourceLocation loc2 =
-                SourceLocation.forLineColumn(loc.getLine(), loc.getColumn(), name);
-            return instrumented.computeIfAbsent(loc2,l ->new AtomicInteger());
+            pos = SourceLocation.forLineColumn(pos.getLine(),
+                                               pos.getColumn(),
+                                               pos.getResourceDesc());
+            return instrumented.computeIfAbsent(pos, l ->new AtomicInteger());
         }
     }
 
@@ -60,9 +58,9 @@ public class CoverageTest
      * @param line one-based
      * @param column one-based
      */
-    private void checkCovered(SourceName name, long line, long column)
+    private void checkCovered(ResourceDescriptor name, long line, long column)
     {
-        SourceLocation loc = SourceLocation.forLineColumn(line, column, name);
+        ResourcePosition loc = SourceLocation.forLineColumn(line, column, name);
         assertTrue(collector.instrumented.get(loc).get() > 0);
     }
 
@@ -81,9 +79,9 @@ public class CoverageTest
      * @param line one-based
      * @param column one-based
      */
-    private void checkNotCovered(SourceName name, long line, long column)
+    private void checkNotCovered(ResourceDescriptor name, long line, long column)
     {
-        SourceLocation loc = SourceLocation.forLineColumn(line, column, name);
+        ResourcePosition loc = SourceLocation.forLineColumn(line, column, name);
         assertEquals(0, collector.instrumented.get(loc).get());
     }
 
@@ -101,9 +99,9 @@ public class CoverageTest
      * @param line one-based
      * @param column one-based
      */
-    private void checkNotInstrumented(SourceName name, long line, long column)
+    private void checkNotInstrumented(ResourceDescriptor name, long line, long column)
     {
-        SourceLocation loc = SourceLocation.forLineColumn(line, column, name);
+        ResourcePosition loc = SourceLocation.forLineColumn(line, column, name);
         assertNull(collector.instrumented.get(loc));
     }
 

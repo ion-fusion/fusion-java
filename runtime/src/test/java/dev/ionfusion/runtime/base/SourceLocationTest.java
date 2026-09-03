@@ -17,17 +17,19 @@ import org.junit.jupiter.api.Test;
 
 public class SourceLocationTest
 {
-    private void checkConsistency(SourceName name, SourceLocation loc)
+    /**
+     * SourceLocation uses a distinct descriptor when one isn't given.
+     */
+    private static final ResourceDescriptor DEFAULT_DESCRIPTOR =
+        SourceLocation.forLineColumn(1, 1).getResourceDesc();
+
+
+    private void checkConsistency(ResourceDescriptor desc, SourceLocation loc)
     {
+        assertHashEquals(desc, loc.getResourceDesc());
+
+        SourceName name = (desc instanceof SourceName ? (SourceName) desc : null);
         assertSame(name, loc.getSourceName());
-        if (name != null)
-        {
-            assertSame(name.getResourceId(), loc.getResourceDesc().getResourceId());
-        }
-        else
-        {
-            assertNull(loc.getResourceDesc().getResourceId());
-        }
     }
 
 
@@ -42,7 +44,7 @@ public class SourceLocationTest
         SourceLocation loc = SourceLocation.forCurrentSpan(ir, null);
         assertNull(loc, "expected null SourceLocation");
 
-        SourceName name = SourceName.forDisplay("test source");
+        ResourceDescriptor name = SourceName.forDisplay("test source");
         loc = SourceLocation.forCurrentSpan(ir, name);
         checkConsistency(name, loc);
         assertEquals("unknown location in test source", loc.display());
@@ -58,9 +60,9 @@ public class SourceLocationTest
     {
         SourceLocation loc = SourceLocation.forCurrentSpan(ir, null);
         assertEquals(expectedOffsets, loc.display());
-        checkConsistency(null, loc);
+        checkConsistency(DEFAULT_DESCRIPTOR, loc);
 
-        SourceName name = SourceName.forDisplay("test source");
+        ResourceDescriptor name = SourceName.forDisplay("test source");
         loc = SourceLocation.forCurrentSpan(ir, name);
         checkConsistency(name, loc);
         assertEquals(expectedOffsets + " of test source", loc.display());
@@ -116,7 +118,7 @@ public class SourceLocationTest
     }
 
 
-    private void checkLocation(SourceLocation loc, String display,
+    private void checkLocation(ResourcePosition loc, String display,
                                long line, long column, long offset)
     {
         // Normalize sentinels.
@@ -128,7 +130,7 @@ public class SourceLocationTest
         assertEquals(column, loc.getColumn(), "column");
         assertEquals(offset, loc.getOffset(), "offset");
 
-        SourceName name = loc.getSourceName();
+        ResourceDescriptor name = loc.getResourceDesc();
         if (display == null)
         {
             display = "unknown location";
@@ -137,7 +139,7 @@ public class SourceLocationTest
                 display += " in " + name.display();
             }
         }
-        else if (name != null)
+        else if (!name.isUnknown())
         {
             display += " of " + name.display();
         }
@@ -153,7 +155,7 @@ public class SourceLocationTest
         loc = SourceLocation.forLineColumn(line, column, null);
         assertNull(loc, "SourceLocation");
 
-        SourceName name = SourceName.forDisplay("test source");
+        ResourceDescriptor name = SourceName.forDisplay("test source");
         loc = SourceLocation.forLineColumn(line, column, name);
         assertSame(name, loc.getSourceName());
         checkLocation(loc, null, 0, 0, -1);
@@ -169,7 +171,7 @@ public class SourceLocationTest
         assertSame(null, loc.getSourceName());
         checkLocation(loc, display, line, column, -1);
 
-        SourceName name = SourceName.forDisplay("test source");
+        ResourceDescriptor name = SourceName.forDisplay("test source");
         loc = SourceLocation.forLineColumn(line, column, name);
         assertSame(name, loc.getSourceName());
         checkLocation(loc, display, line, column, -1);
