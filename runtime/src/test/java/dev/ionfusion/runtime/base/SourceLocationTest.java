@@ -6,7 +6,6 @@ package dev.ionfusion.runtime.base;
 import static dev.ionfusion.testing.Assertions.assertHashEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
 
 import com.amazon.ion.IonDatagram;
 import com.amazon.ion.IonReader;
@@ -24,15 +23,6 @@ public class SourceLocationTest
         SourceLocation.forLineColumn(1, 1).getResourceDesc();
 
 
-    private void checkConsistency(ResourceDescriptor desc, SourceLocation loc)
-    {
-        assertHashEquals(desc, loc.getResourceDesc());
-
-        SourceName name = (desc instanceof SourceName ? (SourceName) desc : null);
-        assertSame(name, loc.getSourceName());
-    }
-
-
     private void checkPath(String path, ResourcePosition pos)
     {
         assertHashEquals(ResourceIdentifier.forFile(path),
@@ -46,12 +36,12 @@ public class SourceLocationTest
 
         ResourceDescriptor name = SourceName.forDisplay("test source");
         loc = SourceLocation.forCurrentSpan(ir, name);
-        checkConsistency(name, loc);
+        assertHashEquals(name, loc.getResourceDesc());
         assertEquals("unknown location in test source", loc.display());
 
         name = SourceName.forFile("/dummy/path");
         loc = SourceLocation.forCurrentSpan(ir, name);
-        checkConsistency(name, loc);
+        assertHashEquals(name, loc.getResourceDesc());
         checkPath("/dummy/path", loc);
         assertEquals("unknown location in /dummy/path", loc.display());
     }
@@ -60,16 +50,16 @@ public class SourceLocationTest
     {
         SourceLocation loc = SourceLocation.forCurrentSpan(ir, null);
         assertEquals(expectedOffsets, loc.display());
-        checkConsistency(DEFAULT_DESCRIPTOR, loc);
+        assertHashEquals(DEFAULT_DESCRIPTOR, loc.getResourceDesc());
 
         ResourceDescriptor name = SourceName.forDisplay("test source");
         loc = SourceLocation.forCurrentSpan(ir, name);
-        checkConsistency(name, loc);
+        assertHashEquals(name, loc.getResourceDesc());
         assertEquals(expectedOffsets + " of test source", loc.display());
 
         name = SourceName.forFile("/dummy/path");
         loc = SourceLocation.forCurrentSpan(ir, name);
-        checkConsistency(name, loc);
+        assertHashEquals(name, loc.getResourceDesc());
         checkPath("/dummy/path", loc);
         assertEquals(expectedOffsets + " of /dummy/path", loc.display());
     }
@@ -157,23 +147,23 @@ public class SourceLocationTest
 
         ResourceDescriptor name = SourceName.forDisplay("test source");
         loc = SourceLocation.forLineColumn(line, column, name);
-        assertSame(name, loc.getSourceName());
+        assertHashEquals(name, loc.getResourceDesc());
         checkLocation(loc, null, 0, 0, -1);
     }
 
     private void assertLineColumn(String display, long line, long column)
     {
         SourceLocation loc = SourceLocation.forLineColumn(line, column);
-        assertSame(null, loc.getSourceName());
+        assertHashEquals(DEFAULT_DESCRIPTOR, loc.getResourceDesc());
         checkLocation(loc, display, line, column, -1);
 
         loc = SourceLocation.forLineColumn(line, column, null);
-        assertSame(null, loc.getSourceName());
+        assertHashEquals(DEFAULT_DESCRIPTOR, loc.getResourceDesc());
         checkLocation(loc, display, line, column, -1);
 
         ResourceDescriptor name = SourceName.forDisplay("test source");
         loc = SourceLocation.forLineColumn(line, column, name);
-        assertSame(name, loc.getSourceName());
+        assertHashEquals(name, loc.getResourceDesc());
         checkLocation(loc, display, line, column, -1);
     }
 

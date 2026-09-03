@@ -36,8 +36,8 @@ public class StackTraceTest
     {
         SourceLocation loc = myStack.next();
 
-        // Ignore library code, which all has SourceName attached.
-        while (loc.getSourceName() != null)
+        // Ignore library code from known resources; test code has an unknown resource.
+        while (!loc.getResourceDesc().isUnknown())
         {
             loc = myStack.next();
         }

@@ -49,15 +49,6 @@ public class SourceLocation
         return myResource;
     }
 
-    /**
-     * Gets the name of the source of this location.
-     * @return null if the source name isn't known.
-     */
-    public SourceName getSourceName()
-    {
-        return (myResource instanceof SourceName) ? (SourceName) myResource : null;
-    }
-
 
     @Override
     public long getLine()
@@ -81,8 +72,11 @@ public class SourceLocation
     @Override
     public ModuleIdentity getModuleIdentity()
     {
-        SourceName name = getSourceName();
-        return (name == null) ? null : name.getModuleIdentity();
+        if (myResource instanceof SourceName)
+        {
+            return ((SourceName) myResource).getModuleIdentity();
+        }
+        return null;
     }
 
 
