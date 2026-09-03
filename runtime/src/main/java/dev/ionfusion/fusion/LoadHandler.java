@@ -14,6 +14,7 @@ import com.amazon.ion.IonReader;
 import dev.ionfusion.fusion.Evaluator.Thunk;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
+import dev.ionfusion.runtime.base.ResourceIdentifier;
 import dev.ionfusion.runtime.base.SourceLocation;
 import dev.ionfusion.runtime.base.SourceName;
 import java.io.File;
@@ -201,7 +202,8 @@ final class LoadHandler
         //      relative paths won't be able to access sibling resources.
         if (sourceName != null)
         {
-            Path srcPath = sourceName.getPath();
+            ResourceIdentifier rsrcId = sourceName.getResourceId();
+            Path srcPath = (rsrcId == null ? null : rsrcId.getPath());
             if (srcPath != null)
             {
                 String dirPath = srcPath.getParent().toAbsolutePath().toString();

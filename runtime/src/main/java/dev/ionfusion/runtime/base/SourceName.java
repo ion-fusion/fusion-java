@@ -8,9 +8,7 @@ import static java.util.Objects.requireNonNull;
 import dev.ionfusion.runtime.base.SourceNameImpl.ModuleSourceName;
 import dev.ionfusion.runtime.base.SourceNameImpl.ResourceSourceName;
 import java.io.File;
-import java.net.URI;
 import java.net.URL;
-import java.nio.file.Path;
 
 /**
  * Identifies a source of Fusion code or other data: a file, URL, <em>etc.</em>
@@ -25,25 +23,6 @@ public interface SourceName
      * The standard extension for Fusion source code files.
      */
     String FUSION_SOURCE_EXTENSION = ".fusion";
-
-
-    /**
-     * Returns the absolute path of the source file if one is known.
-     * This is the case for instances created by {@link #forFile(File)} or
-     * {@link #forFile(String)}.
-     *
-     * @return null if this source is not an actual file.
-     */
-    Path getPath();
-
-    /**
-     * Returns a URI for the source. The protocol can vary; at least {@code file}
-     * and {@code jar} are possible. In general, {@code toUrl().openStream()} is
-     * expected to work.
-     *
-     * @return null if this source cannot be identified as a URI.
-     */
-    URI getUri();
 
 
     /**

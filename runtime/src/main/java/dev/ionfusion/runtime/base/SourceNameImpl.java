@@ -3,9 +3,6 @@
 
 package dev.ionfusion.runtime.base;
 
-import java.net.URI;
-import java.nio.file.Path;
-
 class SourceNameImpl
     implements SourceName
 {
@@ -26,18 +23,6 @@ class SourceNameImpl
 
     @Override
     public ResourceIdentifier getResourceId()
-    {
-        return null;
-    }
-
-    @Override
-    public Path getPath()
-    {
-        return null;
-    }
-
-    @Override
-    public URI getUri()
     {
         return null;
     }
@@ -102,18 +87,6 @@ class SourceNameImpl
         public ResourceIdentifier getResourceId()
         {
             return myResource;
-        }
-
-        @Override
-        public Path getPath()
-        {
-            return myResource.getPath();
-        }
-
-        @Override
-        public URI getUri()
-        {
-            return myResource.getUri();
         }
     }
 

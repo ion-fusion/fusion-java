@@ -3,6 +3,7 @@
 
 package dev.ionfusion.runtime.base;
 
+import static dev.ionfusion.testing.Assertions.assertHashEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -30,15 +31,10 @@ public class SourceLocationTest
     }
 
 
-    private void checkPath(String path, SourceLocation loc)
+    private void checkPath(String path, ResourcePosition pos)
     {
-        ResourceIdentifier rsrc = loc.getResourceId();
-
-        assertEquals("file://" + path, rsrc.getUri().toString());
-        assertEquals(path, rsrc.getPath().toString());
-
-        assertSame(rsrc.getUri(), loc.getSourceName().getUri());
-        assertSame(rsrc.getPath(), loc.getSourceName().getPath());
+        assertHashEquals(ResourceIdentifier.forFile(path),
+                         pos.getResourceDesc().getResourceId());
     }
 
     private void assertNoLocation(IonReader ir)
