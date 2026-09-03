@@ -21,8 +21,12 @@ public class Assertions
         assertEquals(a, b); // Check symmetry of equals()
         assertEquals(b, a);
 
-        assertEquals(a.hashCode(), b.hashCode(), "hashCode");
+        if (a != null && b != null)
+        {
+            assertEquals(a.hashCode(), b.hashCode(), "hashCode");
+        }
     }
+
 
     /**
      * Asserts that the given objects are not {@link #equals} and have different
@@ -35,6 +39,9 @@ public class Assertions
         assertNotEquals(a, b); // Check symmetry of equals()
         assertNotEquals(b, a);
 
-        assertNotEquals(a.hashCode(), b.hashCode(), "hashCode");
+        if (a != null && b != null)
+        {
+            assertNotEquals(a.hashCode(), b.hashCode(), "hashCode");
+        }
     }
 }
