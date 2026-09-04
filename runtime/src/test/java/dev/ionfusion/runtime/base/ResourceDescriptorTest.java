@@ -70,19 +70,19 @@ public class ResourceDescriptorTest
     //==================================================================================
     // SourceNames
 
-    /**
-     * Retain legacy equality of SourceName instances, for now at least. The design plan
-     * is for ResourceDescriptors to match on their ResourceIdentifier.
-     */
     @Test
-    void sourceNamesMatchOnDisplay()
+    void sourceNamesMatchOnResourceIdentifier()
     {
-        ResourceDescriptor foo1 = SourceName.forDisplay("foo");
-        ResourceDescriptor foo2 = SourceName.forDisplay("foo");
-        ResourceDescriptor bar  = SourceName.forDisplay("bar");
+        ResourceDescriptor foo1 = SourceName.forDisplay("/foo");
+        ResourceDescriptor foo2 = SourceName.forDisplay("/foo");
 
-        checkEquality(foo1, foo2);
-        checkInequality(foo1, bar);
+        checkInequality(foo1, foo2);
+
+        ResourceDescriptor fooFile1 = SourceName.forFile("/foo");
+        ResourceDescriptor fooFile2 = SourceName.forFile("/foo");
+
+        checkEquality(fooFile1, fooFile2);
+        checkInequality(foo1, fooFile1);
     }
 
     @Test

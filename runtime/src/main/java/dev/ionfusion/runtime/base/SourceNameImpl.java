@@ -3,7 +3,10 @@
 
 package dev.ionfusion.runtime.base;
 
+import dev.ionfusion.runtime.base.ResourceDescriptorImpl.AbstractResourceDescriptor;
+
 class SourceNameImpl
+    extends AbstractResourceDescriptor
     implements SourceName
 {
     private final String myDisplay;
@@ -37,29 +40,6 @@ class SourceNameImpl
     public String toString()
     {
         return myDisplay;
-    }
-
-
-    public boolean equals(SourceName other)
-    {
-        return (other != null && myDisplay.equals(other.display()));
-    }
-
-    @Override
-    public boolean equals(Object other)
-    {
-        return (other instanceof SourceName && equals((SourceName) other));
-    }
-
-
-    private static final int HASH_SEED = SourceNameImpl.class.hashCode();
-
-    @Override
-    public int hashCode()
-    {
-        int result = HASH_SEED + myDisplay.hashCode();
-        result ^= (result << 29) ^ (result >> 3);
-        return result;
     }
 
 

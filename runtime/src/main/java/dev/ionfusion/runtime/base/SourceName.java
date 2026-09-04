@@ -54,11 +54,11 @@ public interface SourceName
      *
      * @param path must not be null or empty, and is converted to an absolute path.
      *
-     * @return a new {@link SourceName} instance
+     * @return a new descriptor.
      *
      * @see #forFile(File)
      */
-    static SourceName forFile(String path)
+    static ResourceDescriptor forFile(String path)
     {
         ResourceIdentifier rsrc = ResourceIdentifier.forFile(path);
         return new ResourceSourceName(rsrc);
@@ -70,11 +70,11 @@ public interface SourceName
      *
      * @param path is converted to an absolute path.
      *
-     * @return a new {@link SourceName} instance
+     * @return a new descriptor.
      *
      * @see #forFile(String)
      */
-    static SourceName forFile(File path)
+    static ResourceDescriptor forFile(File path)
     {
         ResourceIdentifier rsrc = ResourceIdentifier.forFile(path);
         return new ResourceSourceName(rsrc);
@@ -115,7 +115,7 @@ public interface SourceName
      *
      * @return a new {@link SourceName}.
      */
-    static SourceName forResource(ResourceIdentifier resource, ModuleIdentity id)
+    static ResourceDescriptor forResource(ResourceIdentifier resource, ModuleIdentity id)
     {
         requireNonNull(resource, "resource must not be null");
         if (id == null) return new ResourceSourceName(resource);
