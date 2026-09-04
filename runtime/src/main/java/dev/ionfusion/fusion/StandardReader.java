@@ -20,6 +20,7 @@ import static dev.ionfusion.fusion.FusionTimestamp.makeTimestamp;
 import static dev.ionfusion.fusion.SyntaxValue.STX_PROPERTY_ORIGINAL;
 import static dev.ionfusion.runtime.base.SourceLocation.forCurrentSpan;
 import static java.lang.Boolean.TRUE;
+import static java.util.Objects.requireNonNull;
 
 import com.amazon.ion.Decimal;
 import com.amazon.ion.IntegerSize;
@@ -77,10 +78,13 @@ class StandardReader
      * Reads a single Ion datum.
      *
      * @param source must be positioned on the value to be read.
+     * @param desc must not be null.
      */
     static Object read(Evaluator eval, IonReader source, ResourceDescriptor desc)
         throws FusionException
     {
+        requireNonNull(desc, "desc");
+
         try
         {
             return read(eval, source, desc, false);
@@ -103,18 +107,18 @@ class StandardReader
                                   ResourceDescriptor desc)
         throws FusionException
     {
+        requireNonNull(desc, "desc");
+
         try
         {
             return (SyntaxValue) read(eval, source, desc, true);
         }
         catch (IonException e)
         {
-            // We don't try to create a SourceLocation from the reader because
+            // We don't try to get a position from the reader because
             // it usually doesn't have a current span when an error is thrown,
             // and since the IonException's message will contain it.
-            String nameStr = (desc != null ? desc.display() : "source");
-            String message =
-                "Error reading " + nameStr + ":\n" + e.getMessage();
+            String message = "Error reading " + desc.display() + ":\n" + e.getMessage();
             throw new FusionErrorException(message, e);
         }
     }
@@ -123,7 +127,7 @@ class StandardReader
     /**
      * Reads a single Ion datum, optionally as syntax objects.
      * @param source must be positioned on the value to be read.
-     * @param desc can be null.
+     * @param desc must not be null.
      *
      * @throws IonException if there's a problem reading the source data.
      */
@@ -276,7 +280,7 @@ class StandardReader
     /**
      * @param source must be positioned on the value to be read, but not
      * stepped-in.  Must not be positioned on a null value.
-     * @param desc can be null.
+     * @param desc must not be null.
      *
      * @throws IonException if there's a problem reading the source data.
      */
@@ -303,6 +307,8 @@ class StandardReader
 
 
     /**
+     * @param desc must not be null.
+     *
      * @return an immutable list of syntax objects.
      *
      * @throws IonException if there's a problem reading the source data.
@@ -325,6 +331,7 @@ class StandardReader
 
 
     /**
+     * @param desc must not be null.
      * @throws IonException if there's a problem reading the source data.
      */
     private static BaseSexp readSexp(Evaluator  eval,
@@ -345,6 +352,7 @@ class StandardReader
 
 
     /**
+     * @param desc must not be null.
      * @throws IonException if there's a problem reading the source data.
      */
     private static BaseValue readStruct(Evaluator  eval,

@@ -10,6 +10,7 @@ import static dev.ionfusion.fusion.FusionStruct.isImmutableStruct;
 import static dev.ionfusion.fusion.FusionStruct.unsafeStructSize;
 import static dev.ionfusion.testing.ProjectLayout.testDataDirectory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.amazon.ion.IonList;
@@ -105,6 +106,28 @@ public class FusionIoTest
     }
 
 
+    //==================================================================================
+    // `read`
+
+    @Test
+    void internalReadRequiresDescriptor()
+        throws Exception
+    {
+        IonReader reader = system().newReader("{}");
+        assertThrows(NullPointerException.class,
+                     () -> FusionIo.read(evaluator(), reader, null));
+    }
+
+    @Test
+    void ffiReadRequiresDescriptor()
+        throws Exception
+    {
+        IonReader reader = system().newReader("{}");
+        assertThrows(NullPointerException.class,
+                     () -> FusionIo.read(topLevel(), reader, null));
+    }
+
+
     @Test
     public void testFfiRead()
         throws Exception
@@ -133,6 +156,9 @@ public class FusionIoTest
         assertTrue(isEof(top, fv));  // EOF "sticks"
     }
 
+
+    //==================================================================================
+    // IonValue injection
 
     /**
      * This attempts to have interesting combinations of data to trigger
