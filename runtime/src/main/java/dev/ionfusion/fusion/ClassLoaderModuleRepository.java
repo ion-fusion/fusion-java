@@ -4,12 +4,12 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.runtime.base.ResourceIdentifier.forUrl;
+import static dev.ionfusion.runtime.base._Private_Attributes.MODULE_IDENTITY_ATTRIBUTE;
 import static dev.ionfusion.runtime.embed.FusionRuntime.FUSION_SOURCE_CODE_FILE_EXTENSION;
 
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import dev.ionfusion.runtime.base.ResourceDescriptor;
-import dev.ionfusion.runtime.base.SourceName;
 import java.net.URL;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -49,7 +49,9 @@ final class ClassLoaderModuleRepository
         URL url = myClassLoader.getResource(resourceName);
         if (url == null) return null;
 
-        return SourceName.forResource(forUrl(url), id);
+        ResourceDescriptor desc = ResourceDescriptor.identified(forUrl(url));
+        desc.addAttribute(MODULE_IDENTITY_ATTRIBUTE, id);
+        return desc;
     }
 
 

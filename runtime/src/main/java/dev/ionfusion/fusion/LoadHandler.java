@@ -17,7 +17,6 @@ import dev.ionfusion.runtime.base.ModuleIdentity;
 import dev.ionfusion.runtime.base.ResourceDescriptor;
 import dev.ionfusion.runtime.base.ResourceIdentifier;
 import dev.ionfusion.runtime.base.SourceLocation;
-import dev.ionfusion.runtime.base.SourceName;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,7 +66,8 @@ final class LoadHandler
 
         try (InputStream in = myFileSystem.openInputFile(eval, "load", file))
         {
-            ResourceDescriptor name = SourceName.forFile(file);
+            ResourceIdentifier rsrc = ResourceIdentifier.forFile(file);
+            ResourceDescriptor desc = ResourceDescriptor.identified(rsrc);
             Object result = null;
 
             try (IonReader reader = eval.getIonReaderBuilder().build(in))
@@ -75,7 +75,7 @@ final class LoadHandler
                 while (reader.next() != null)
                 {
                     result = null;  // Don't hold onto garbage
-                    SyntaxValue fileExpr = readSyntax(eval, reader, name);
+                    SyntaxValue fileExpr = readSyntax(eval, reader, desc);
                     result = FusionEval.eval(eval, fileExpr, namespace);
                     // TODO TAIL
                 }

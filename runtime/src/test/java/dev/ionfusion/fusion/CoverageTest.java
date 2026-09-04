@@ -13,7 +13,6 @@ import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ResourceDescriptor;
 import dev.ionfusion.runtime.base.ResourcePosition;
 import dev.ionfusion.runtime.base.SourceLocation;
-import dev.ionfusion.runtime.base.SourceName;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.util.HashMap;
 import java.util.Map;
@@ -121,7 +120,7 @@ public class CoverageTest
         checkCovered   (desc, 2, 5);
         checkNotCovered(desc, 2, 7);
 
-        SourceName name1 = SourceName.forDisplay("define");
+        ResourceDescriptor name1 = ResourceDescriptor.named("define");
         //        1 3 5 7 9
         top.eval("(define (f t)\n" +
                  "  (if t      \n" +
@@ -140,7 +139,7 @@ public class CoverageTest
         checkCovered   (name1, 3, 7);
         checkNotCovered(name1, 4, 7);
 
-        SourceName name2 = SourceName.forDisplay("invoke");
+        ResourceDescriptor name2 = ResourceDescriptor.named("invoke");
         //        1 3 5 7 9
         top.eval("(f false)",
                  name2);

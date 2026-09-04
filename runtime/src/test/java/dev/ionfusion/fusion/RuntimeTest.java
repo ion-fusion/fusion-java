@@ -28,7 +28,6 @@ import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.JarInfo;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import dev.ionfusion.runtime.base.ResourceDescriptor;
-import dev.ionfusion.runtime.base.SourceName;
 import dev.ionfusion.runtime.embed.FusionRuntime;
 import dev.ionfusion.runtime.embed.ModuleBuilder;
 import java.io.ByteArrayOutputStream;
@@ -220,7 +219,7 @@ public class RuntimeTest
     {
         topLevel().loadModule("/local/manual",
                               system().newReader(GOOD_MODULE),
-                              SourceName.forDisplay("manual source"));
+                              ResourceDescriptor.unknown());
 
         topLevel().requireModule("/local/manual");
         assertEval(1115, "x");
@@ -234,8 +233,7 @@ public class RuntimeTest
         reader.next();
 
         topLevel().loadModule("/local/manual",
-                              reader,
-                              SourceName.forDisplay("manual source"));
+                              reader, ResourceDescriptor.unknown());
 
         topLevel().requireModule("/local/manual");
         assertEval(1115, "x");
@@ -258,7 +256,7 @@ public class RuntimeTest
         assertThrows(IllegalArgumentException.class,
                      () -> topLevel().loadModule(null,
                                                  system().newReader(GOOD_MODULE),
-                                                 SourceName.forDisplay("manual source")));
+                                                 ResourceDescriptor.unknown()));
     }
 
     @Test
@@ -267,7 +265,7 @@ public class RuntimeTest
         assertThrows(IllegalArgumentException.class,
                      () -> topLevel().loadModule("/a bad path",
                                                  system().newReader(GOOD_MODULE),
-                                                 SourceName.forDisplay("manual source")));
+                                                 ResourceDescriptor.unknown()));
     }
 
     @Test
@@ -276,12 +274,12 @@ public class RuntimeTest
     {
         topLevel().loadModule("/local/manual",
                               system().newReader(GOOD_MODULE),
-                              SourceName.forDisplay("manual source"));
+                              ResourceDescriptor.unknown());
         try
         {
             topLevel().loadModule("/local/manual",
                                   system().newReader(GOOD_MODULE),
-                                  SourceName.forDisplay("manual source"));
+                                  ResourceDescriptor.unknown());
             fail("Expected exception");
         }
         catch (FusionException e) { }
@@ -292,18 +290,18 @@ public class RuntimeTest
         throws Exception
     {
         String modulePath = "/local/manual";
-        SourceName source = SourceName.forDisplay("/path/to/blah");
+        ResourceDescriptor desc = ResourceDescriptor.named("/path/to/blah");
         String moduleContent = "/* nothing */";
 
         Exception e =
             assertThrows(SyntaxException.class,
                          () -> topLevel().loadModule(modulePath,
                                                      system().newReader(moduleContent),
-                                                     source));
+                                                     desc));
 
         assertThat(e.getMessage(),
                    allOf(containsString("no top-level forms"),
-                         containsString(source.display())));
+                         containsString(desc.display())));
     }
 
     @Test
@@ -311,18 +309,18 @@ public class RuntimeTest
         throws Exception
     {
         String modulePath = "/local/manual";
-        SourceName source = SourceName.forDisplay("/path/to/blah");
+        ResourceDescriptor desc = ResourceDescriptor.named("/path/to/blah");
         String moduleContent = "(module m '/fusion' true) extra_data";
 
         Exception e =
             assertThrows(SyntaxException.class,
                          () -> topLevel().loadModule(modulePath,
                                                      system().newReader(moduleContent),
-                                                     source));
+                                                     desc));
 
         assertThat(e.getMessage(),
                    allOf(containsString("more than one top-level form"),
-                         containsString(source.display())));
+                         containsString(desc.display())));
     }
 
 
@@ -331,19 +329,19 @@ public class RuntimeTest
         throws Exception
     {
         String modulePath = "/local/manual";
-        SourceName source = SourceName.forDisplay("/path/to/blah");
+        ResourceDescriptor desc = ResourceDescriptor.named("/path/to/blah");
         String moduleContent = " (if true 1 2)";
 
         Exception e =
             assertThrows(SyntaxException.class,
                          () -> topLevel().loadModule(modulePath,
                                                      system().newReader(moduleContent),
-                                                     source));
+                                                     desc));
 
         assertThat(e.getMessage(),
                    allOf(containsString("Top-level form isn't (module ...)"),
                          containsString("1st line, 2nd column"),
-                         containsString(source.display())));
+                         containsString(desc.display())));
     }
 
 

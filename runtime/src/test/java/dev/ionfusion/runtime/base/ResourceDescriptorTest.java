@@ -87,7 +87,7 @@ public class ResourceDescriptorTest
         assertNull(desc.getResourceId());
 
 
-        desc = SourceName.forDisplay("name");
+        desc = ResourceDescriptor.named("name");
         assertEquals("name", desc.display());
         assertFalse(desc.isUnknown());
         assertNull(desc.getResourceId());
@@ -108,13 +108,15 @@ public class ResourceDescriptorTest
     @Test
     void sourceNamesMatchOnResourceIdentifier()
     {
-        ResourceDescriptor foo1 = SourceName.forDisplay("/foo");
-        ResourceDescriptor foo2 = SourceName.forDisplay("/foo");
+        ResourceDescriptor foo1 = ResourceDescriptor.named("/foo");
+        ResourceDescriptor foo2 = ResourceDescriptor.named("/foo");
 
         checkInequality(foo1, foo2);
 
-        ResourceDescriptor fooFile1 = SourceName.forFile("/foo");
-        ResourceDescriptor fooFile2 = SourceName.forFile("/foo");
+        ResourceDescriptor fooFile1 =
+            ResourceDescriptor.identified(ResourceIdentifier.forFile("/foo"));
+        ResourceDescriptor fooFile2 =
+            ResourceDescriptor.identified(ResourceIdentifier.forFile("/foo"));
 
         checkEquality(fooFile1, fooFile2);
         checkInequality(foo1, fooFile1);
@@ -124,7 +126,7 @@ public class ResourceDescriptorTest
     void sourceNamesDontMatchNewDescriptors()
     {
         ResourceDescriptor desc = ResourceDescriptor.named("name");
-        ResourceDescriptor name = SourceName.forDisplay("name");
+        ResourceDescriptor name = ResourceDescriptor.named("name");
 
         checkInequality(desc, name);
     }

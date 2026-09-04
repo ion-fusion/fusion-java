@@ -14,9 +14,9 @@ import com.amazon.ion.system.IonReaderBuilder;
 import com.amazon.ion.system.IonSystemBuilder;
 import com.amazon.ion.system.SimpleCatalog;
 import dev.ionfusion.runtime.base.ResourceDescriptor;
+import dev.ionfusion.runtime.base.ResourceIdentifier;
 import dev.ionfusion.runtime.base.ResourcePosition;
 import dev.ionfusion.runtime.base.SourceLocation;
-import dev.ionfusion.runtime.base.SourceName;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -109,14 +109,15 @@ public final class IonCatalogLoader
     private void loadFile(File file)
         throws IOException
     {
-        ResourceDescriptor name = SourceName.forFile(file.getPath());
+        ResourceIdentifier id = ResourceIdentifier.forFile(file.getPath());
+        ResourceDescriptor desc = ResourceDescriptor.identified(id);
 
         try (FileInputStream stream = new FileInputStream(file);
              IonReader reader = myReaderBuilder.build(stream))
         {
             while (reader.next() != null)
             {
-                loadSymtab(name, reader);
+                loadSymtab(desc, reader);
             }
         }
     }
