@@ -12,11 +12,12 @@ import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.GlobalState.MODULE;
 import static dev.ionfusion.fusion.StandardReader.readSyntax;
 import static dev.ionfusion.fusion.Syntax.datumToSyntax;
+import static java.util.Objects.requireNonNull;
 
 import com.amazon.ion.IonReader;
 import dev.ionfusion.runtime.base.FusionException;
+import dev.ionfusion.runtime.base.ResourceDescriptor;
 import dev.ionfusion.runtime.base.SourceLocation;
-import dev.ionfusion.runtime.base.SourceName;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.util.LinkedList;
 
@@ -247,28 +248,28 @@ final class FusionEval
 
 
     /**
-     * Parses the top-level syntax forms in Fusion source code, passing each
-     * resulting syntax object to a procedure.
-     * After all top-level forms are processed, the {@code receiver} is invoked
-     * one more time with {@linkplain FusionIo#eof(Evaluator) the canonical EOF
-     * value}.
+     * Parses the top-level syntax forms in Fusion source code, passing each resulting
+     * syntax object to a procedure. After all top-level forms are processed, the
+     * {@code receiver} is invoked one more time with
+     * {@linkplain FusionIo#eof(Evaluator) the canonical EOF value}.
      * <p>
-     * See http://docs.racket-lang.org/tools/drracket_eval.html#%28def._%28%28lib._drracket%2Ftool-lib..rkt%29._drracket~3aeval~3atraverse-program%2Fmultiple%29%29
-     * </p>
-     * @param receiver is a 1-argument procedure that accepts a syntax object
-     * or EOF.
+     * See
+     * http://docs.racket-lang.org/tools/drracket_eval.html#%28def._%28%28lib._drracket%2Ftool-lib..rkt%29._drracket~3aeval~3atraverse-program%2Fmultiple%29%29
+     *
+     * @param desc must not be null.
+     * @param receiver is a 1-argument procedure that accepts a syntax object or EOF.
      */
-    static void traverseProgram(Evaluator  eval,
-                                IonReader  source,
-                                SourceName name,
-                                Procedure  receiver)
+    static void traverseProgram(Evaluator eval,
+                                IonReader source,
+                                ResourceDescriptor desc,
+                                Procedure receiver)
         throws FusionException
     {
-        if (source.getType() == null) source.next();
+        if (source.getType() == null) { source.next(); }
 
         while (source.getType() != null)
         {
-            SyntaxValue sourceExpr = readSyntax(eval, source, name);
+            SyntaxValue sourceExpr = readSyntax(eval, source, desc);
 
             eval.callNonTail(receiver, sourceExpr);
 
@@ -280,17 +281,17 @@ final class FusionEval
 
 
     /**
-     * @param receiver is a 1-argument procedure that accepts a syntax object
-     * or EOF.
+     * @param desc must not be null.
+     * @param receiver is a 1-argument procedure that accepts a syntax object or EOF.
      */
-    static void traverseProgram(Evaluator  eval,
-                                String     source,
-                                SourceName name,
-                                Procedure  receiver)
+    static void traverseProgram(Evaluator eval,
+                                String source,
+                                ResourceDescriptor desc,
+                                Procedure receiver)
         throws FusionException
     {
         IonReader i = eval.getIonReaderBuilder().build(source);
-        traverseProgram(eval, i, name, receiver);
+        traverseProgram(eval, i, desc, receiver);
     }
 
 
@@ -336,16 +337,19 @@ final class FusionEval
      * value}.
      * <p>
      * See http://docs.racket-lang.org/tools/drracket_eval.html#%28def._%28%28lib._drracket%2Ftool-lib..rkt%29._drracket~3aeval~3aexpand-program%29%29
-     * </p>
-     * @param receiver is a 1-argument procedure that accepts a fully-expanded
+     *
+     * @param desc must not be null.
+     * @param receiver is a 1-argument procedure that accepts a fully expanded
      *   syntax object or EOF.
      */
     static void expandProgram(TopLevel        top,
                               String          source,
-                              SourceName      name,
-                              final Procedure receiver)
+                              ResourceDescriptor desc,
+                              Procedure receiver)
         throws FusionException
     {
+        requireNonNull(desc, "desc");
+
         final Evaluator eval = StandardTopLevel.toEvaluator(top);
 
         Procedure r2 = new Procedure1()
@@ -367,7 +371,7 @@ final class FusionEval
             }
         };
 
-        traverseProgram(eval, source, name, r2);
+        traverseProgram(eval, source, desc, r2);
     }
 
 

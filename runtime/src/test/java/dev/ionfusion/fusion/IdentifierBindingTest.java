@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.fusion.FusionEval.expandProgram;
 import static dev.ionfusion.fusion.FusionIo.isEof;
 import static dev.ionfusion.fusion.FusionSymbol.unsafeSymbolToJavaString;
 import static dev.ionfusion.fusion.FusionSyntax.isIdentifier;
@@ -16,8 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.ionfusion.runtime.base.FusionException;
+import dev.ionfusion.runtime.base.ResourceDescriptor;
 import dev.ionfusion.runtime.base.ResourcePosition;
-import dev.ionfusion.runtime.base.SourceName;
 import org.junit.jupiter.api.Test;
 
 
@@ -96,8 +97,8 @@ public class IdentifierBindingTest
             "foo";                          // <- moduleReference
 
         eval(topLevel(), module);
-        SourceName sourceName = SourceName.forDisplay("TestFile");
-        FusionEval.expandProgram(topLevel(), source, sourceName, traversal);
+        ResourceDescriptor desc = ResourceDescriptor.unknown();
+        expandProgram(topLevel(), source, desc, traversal);
 
 
         BindingSite topLevelSite =
@@ -106,7 +107,7 @@ public class IdentifierBindingTest
         assertBindingAt(3, 9, topLevelSite);
         assertTrue(topLevelSite.isDefinitionSite());
         assertNull(topLevelSite.nextSite());
-        assertSame(sourceName, topLevelSite.getPosition().getResourceDesc());
+        assertSame(desc, topLevelSite.getPosition().getResourceDesc());
 
 
         // We expect the BindingSite's SourceLocation to be null because
@@ -165,7 +166,7 @@ public class IdentifierBindingTest
 
         eval(topLevel(), onlyInModule);
         eval(topLevel(), enclosingModule);
-        FusionEval.expandProgram(topLevel(), source, null, traversal);
+        expandProgram(topLevel(), source, ResourceDescriptor.unknown(), traversal);
 
 
         BindingSite onlyInBinding =

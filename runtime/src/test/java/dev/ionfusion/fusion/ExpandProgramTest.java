@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.fusion.FusionEval.expandProgram;
 import static dev.ionfusion.fusion.FusionIo.isEof;
 import static dev.ionfusion.fusion.FusionSexp.isSexp;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
@@ -20,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.ionfusion.runtime.base.FusionException;
+import dev.ionfusion.runtime.base.ResourceDescriptor;
 import org.junit.jupiter.api.Test;
 
 
@@ -111,7 +113,7 @@ public class ExpandProgramTest
             "(module M '/fusion' 1) " +
             "(define_values (s t) (values 1 2))";
 
-        FusionEval.expandProgram(topLevel(), source, null, collector);
+        expandProgram(topLevel(), source, ResourceDescriptor.unknown(), collector);
         assertTrue(collector.receivedEof);
 
         assertTrue(unsafeFreeIdentifierEqual(eval,
