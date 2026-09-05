@@ -65,7 +65,7 @@ class SyntaxChecker
     SyntaxException failure(String message, SyntaxValue subform)
     {
         SyntaxException e = makeSyntaxError(myEvaluator, myFormName, message, subform);
-        e.addContext(myForm.getLocation());
+        e.addContext(myForm.getPosition());
         return e;
     }
 
@@ -258,7 +258,7 @@ class SyntaxChecker
         {
             SyntaxException e =
                 makeSyntaxError(myEvaluator, myBaseForm.myFormName, message, myForm);
-            e.addContext(myBaseForm.myForm.getLocation());
+            e.addContext(myBaseForm.myForm.getPosition());
             return e;
         }
 
@@ -267,7 +267,7 @@ class SyntaxChecker
         {
             SyntaxException e =
                 makeSyntaxError(myEvaluator, myBaseForm.myFormName, message, subform);
-            e.addContext(myBaseForm.myForm.getLocation());
+            e.addContext(myBaseForm.myForm.getPosition());
             return e;
         }
 

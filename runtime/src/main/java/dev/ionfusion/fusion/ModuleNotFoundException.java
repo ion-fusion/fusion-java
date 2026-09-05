@@ -24,7 +24,7 @@ public final class ModuleNotFoundException
         this(message);
         if (location != null)
         {
-            addContext(location.getLocation());
+            addContext(location.getPosition());
         }
     }
 }

@@ -6,7 +6,7 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionBool.makeBool;
 
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import dev.ionfusion.runtime.embed.TopLevel;
 
 
@@ -87,9 +87,9 @@ public final class FusionSyntax
         return ((SyntaxValue) stx).unwrap(eval);
     }
 
-    static SourceLocation unsafeSyntaxLocation(Evaluator eval, Object stx)
+    static ResourcePosition unsafeSyntaxPosition(Evaluator eval, Object stx)
     {
-        return ((SyntaxValue) stx).getLocation();
+        return ((SyntaxValue) stx).getPosition();
     }
 
 

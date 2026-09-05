@@ -384,7 +384,7 @@ final class SyntaxSymbol
                         printQuotedSymbol(id.stringValue());
 
                 SyntaxException ex = makeSyntaxError(eval, null, message, id);
-                ex.addContext(formForErrors.getLocation());
+                ex.addContext(formForErrors.getPosition());
                 throw ex;
             }
         }

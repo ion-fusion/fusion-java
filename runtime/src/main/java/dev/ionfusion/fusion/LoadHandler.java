@@ -240,7 +240,7 @@ final class LoadHandler
         ResourceIdentifier rsrcId = desc.getResourceId();
 
         SyntaxSexp decl = readModuleDeclaration(eval, reader, desc, id);
-        assert decl.getLocation().getResourceDesc().getResourceId() == rsrcId;
+        assert decl.getPosition().getResourceDesc().getResourceId() == rsrcId;
         try
         {
             evalModuleDeclaration(eval, rsrcId, decl);
