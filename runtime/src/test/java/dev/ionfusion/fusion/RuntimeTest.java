@@ -25,6 +25,7 @@ import com.amazon.ion.system.IonBinaryWriterBuilder;
 import com.amazon.ion.system.SimpleCatalog;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
+import dev.ionfusion.runtime.base.ResourceDescriptor;
 import dev.ionfusion.runtime.base.SourceName;
 import dev.ionfusion.runtime.embed.ModuleBuilder;
 import java.io.ByteArrayOutputStream;
@@ -243,7 +244,7 @@ public class RuntimeTest
     {
         topLevel().loadModule("/local/manual",
                               system().newReader(GOOD_MODULE),
-                              null);
+                              ResourceDescriptor.unknown());
         topLevel().requireModule("/local/manual");
         assertEval(1115, "x");
     }

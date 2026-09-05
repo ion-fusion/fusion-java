@@ -28,6 +28,7 @@ import com.amazon.ion.IonText;
 import com.amazon.ion.IonValue;
 import com.amazon.ion.system.IonSystemBuilder;
 import dev.ionfusion.runtime.base.FusionException;
+import dev.ionfusion.runtime.base.ResourceDescriptor;
 import dev.ionfusion.runtime.embed.FusionRuntime;
 import dev.ionfusion.runtime.embed.FusionRuntimeBuilder;
 import dev.ionfusion.runtime.embed.TopLevel;
@@ -149,18 +150,37 @@ public class CoreTestCase
     //========================================================================
     // Basic evaluation
 
-
     protected Object eval(TopLevel top, String expressionIon)
         throws FusionException
     {
         return top.eval(expressionIon);
     }
 
+    /**
+     * @param desc must not be null.
+     */
+    protected Object eval(TopLevel top, String expressionIon, ResourceDescriptor desc)
+        throws FusionException
+    {
+        return top.eval(expressionIon, desc);
+    }
+
+
     protected Object eval(String expressionIon)
         throws FusionException
     {
         TopLevel top = topLevel();
         return eval(top, expressionIon);
+    }
+
+    /**
+     * @param desc must not be null.
+     */
+    protected Object eval(String expressionIon, ResourceDescriptor desc)
+        throws FusionException
+    {
+        TopLevel top = topLevel();
+        return eval(top, expressionIon, desc);
     }
 
 

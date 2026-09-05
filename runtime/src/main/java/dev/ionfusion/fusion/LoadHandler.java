@@ -14,6 +14,7 @@ import com.amazon.ion.IonReader;
 import dev.ionfusion.fusion.Evaluator.Thunk;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
+import dev.ionfusion.runtime.base.ResourceDescriptor;
 import dev.ionfusion.runtime.base.ResourceIdentifier;
 import dev.ionfusion.runtime.base.SourceLocation;
 import dev.ionfusion.runtime.base.SourceName;
@@ -66,7 +67,7 @@ final class LoadHandler
 
         try (InputStream in = myFileSystem.openInputFile(eval, "load", file))
         {
-            SourceName name = SourceName.forFile(file);
+            ResourceDescriptor name = SourceName.forFile(file);
             Object result = null;
 
             try (IonReader reader = eval.getIonReaderBuilder().build(in))
@@ -95,31 +96,33 @@ final class LoadHandler
      * If the reader is positioned on a value, it will be read; otherwise the
      * {@linkplain IonReader#next() next} value will be read.
      * <p>
-     * If the reader doesn't provide exactly one top-level value, an exception
-     * is thrown.
+     * If the reader doesn't provide exactly one top-level value, an exception is
+     * thrown.
      *
-     * @param sourceName may be null.
+     * @param desc must not be null.
      */
     private SyntaxSexp readModuleDeclaration(Evaluator eval,
-                                             ModuleIdentity id,
-                                             SourceName sourceName,
-                                             IonReader reader)
+                                             IonReader reader,
+                                             ResourceDescriptor desc,
+                                             ModuleIdentity id)
         throws FusionException
     {
+        assert desc != null;
+
         if (reader.getType() == null && reader.next() == null)
         {
             String message = "Module source has no top-level forms";
             SyntaxException e = makeSyntaxError(message);
-            e.addContext(SourceLocation.forName(sourceName));
+            e.addContext(SourceLocation.forName(desc));
             throw e;
         }
 
-        SyntaxValue firstTopLevel = readSyntax(eval, reader, sourceName);
+        SyntaxValue firstTopLevel = readSyntax(eval, reader, desc);
         if (reader.next() != null)
         {
             String message = "Module source has more than one top-level form";
             SyntaxException e = makeSyntaxError(message);
-            e.addContext(SourceLocation.forCurrentSpan(reader, sourceName));
+            e.addContext(SourceLocation.forCurrentSpan(reader, desc));
             throw e;
         }
 
@@ -144,22 +147,23 @@ final class LoadHandler
 
 
     /**
-     * @param name may be null
+     * @param desc must not be null.
      */
     private SyntaxSexp readModuleDeclaration(Evaluator eval,
                                              Thunk<IonReader> readerMaker,
-                                             SourceName name,
+                                             ResourceDescriptor desc,
                                              ModuleIdentity id)
         throws FusionException
     {
+        assert desc != null;
         try (IonReader reader = readerMaker.eval(eval))
         {
-            return readModuleDeclaration(eval, id, name, reader);
+            return readModuleDeclaration(eval, reader, desc, id);
         }
         catch (IOException | IonException e)
         {
-            String where = (name == null ? id.toString() : name.display());
-            String message = "Error loading " + where + ": " + e.getMessage();
+            String message = "Error loading " + id + " from " + desc.display() + ": " +
+                             e.getMessage();
             throw new FusionException(message, e);
         }
     }
@@ -184,12 +188,14 @@ final class LoadHandler
 
 
     /**
-     * Reads module source and declares it in the current namespace's registry.
-     * The module is not instantiated.
-     * Its identity is determined by the current-module-declare-name parameter.
+     * Declares a module in the current namespace's registry. The
+     * module is not instantiated. Its identity is determined by the
+     * current-module-declare-name parameter.
+     *
+     * @param rsrcId determines {@code current_load_relative_directory}; can be null.
      */
     private void evalModuleDeclaration(Evaluator eval,
-                                       SourceName sourceName,
+                                       ResourceIdentifier rsrcId,
                                        SyntaxSexp moduleDeclaration)
         throws FusionException
     {
@@ -200,10 +206,9 @@ final class LoadHandler
 
         // TODO Jar-bundled modules won't have a directory, so `load` with
         //      relative paths won't be able to access sibling resources.
-        if (sourceName != null)
+        if (rsrcId != null)
         {
-            ResourceIdentifier rsrcId = sourceName.getResourceId();
-            Path srcPath = (rsrcId == null ? null : rsrcId.getPath());
+            Path srcPath = rsrcId.getPath();
             if (srcPath != null)
             {
                 String dirPath = srcPath.getParent().toAbsolutePath().toString();
@@ -221,30 +226,33 @@ final class LoadHandler
 
 
     /**
-     * Reads module source and declares it in the current namespace's registry. The
-     * module is not instantiated.
+     * Reads a {@code module} form and declares it in the current namespace's registry.
+     * The module is not instantiated.
      *
-     * @param name may be null.
+     * @param desc must not be null.
      */
     void loadModule(Evaluator eval,
                     Thunk<IonReader> reader,
-                    SourceName name,
+                    ResourceDescriptor desc,
                     ModuleIdentity id)
         throws FusionException
     {
-        SyntaxSexp decl = readModuleDeclaration(eval, reader, name, id);
+        ResourceIdentifier rsrcId = desc.getResourceId();
 
+        SyntaxSexp decl = readModuleDeclaration(eval, reader, desc, id);
+        assert decl.getLocation().getResourceDesc().getResourceId() == rsrcId;
         try
         {
-            evalModuleDeclaration(eval, name, decl);
+            evalModuleDeclaration(eval, rsrcId, decl);
         }
         catch (AssertionError e)
         {
             // Attempt to make debugging easier.
             // TODO Similarly wrap other unchecked exceptions?
             // TODO this doesn't need to be rewrapped by each module
-            String where = (name == null ? id.toString() : name.display());
-            throw new AssertionError("Assertion failure loading " + where + ": ", e);
+            String message =
+                "Assertion failure loading " + id + " from " + desc.display() + ": ";
+            throw new AssertionError(message, e);
         }
     }
 }

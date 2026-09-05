@@ -69,16 +69,6 @@ public class CoverageTest
      * @param line one-based
      * @param column one-based
      */
-    private void checkCovered(long line, long column)
-    {
-        checkCovered(null, line, column);
-    }
-
-
-    /**
-     * @param line one-based
-     * @param column one-based
-     */
     private void checkNotCovered(ResourceDescriptor name, long line, long column)
     {
         ResourcePosition loc = SourceLocation.forLineColumn(line, column, name);
@@ -90,30 +80,12 @@ public class CoverageTest
      * @param line one-based
      * @param column one-based
      */
-    private void checkNotCovered(long line, long column)
-    {
-        checkNotCovered(null, line, column);
-    }
-
-    /**
-     * @param line one-based
-     * @param column one-based
-     */
     private void checkNotInstrumented(ResourceDescriptor name, long line, long column)
     {
         ResourcePosition loc = SourceLocation.forLineColumn(line, column, name);
         assertNull(collector.instrumented.get(loc));
     }
 
-
-    /**
-     * @param line one-based
-     * @param column one-based
-     */
-    private void checkNotInstrumented(long line, long column)
-    {
-        checkNotInstrumented(null, line, column);
-    }
 
 
     @Override
@@ -135,16 +107,19 @@ public class CoverageTest
     {
         TopLevel top = topLevel();
 
-        eval("0");
-        checkCovered(1, 1);
+        ResourceDescriptor desc = ResourceDescriptor.named("testCollection");
+        eval("0", desc);
+        checkCovered(desc,1, 1);
 
+        desc = ResourceDescriptor.unknown();
         //    1 3 5 7 9
         eval("(if true\n" +
-             "    1 2)");
-        checkCovered   (1, 1);
-        checkCovered   (1, 5);
-        checkCovered   (2, 5);
-        checkNotCovered(2, 7);
+             "    1 2)",
+             desc);
+        checkCovered   (desc, 1, 1);
+        checkCovered   (desc, 1, 5);
+        checkCovered   (desc, 2, 5);
+        checkNotCovered(desc, 2, 7);
 
         SourceName name1 = SourceName.forDisplay("define");
         //        1 3 5 7 9
@@ -181,12 +156,14 @@ public class CoverageTest
     {
         collector.instrumentOnlyLineOne = true;
 
+        ResourceDescriptor desc = ResourceDescriptor.named("partial");
         //    1 3 5 7 9
         eval("(if true\n" +
-             "    1 2)");
-        checkCovered        (1, 1);
-        checkCovered        (1, 5);
-        checkNotInstrumented(2, 5);
-        checkNotInstrumented(2, 7);
+             "    1 2)",
+             desc);
+        checkCovered        (desc, 1, 1);
+        checkCovered        (desc, 1, 5);
+        checkNotInstrumented(desc, 2, 5);
+        checkNotInstrumented(desc, 2, 7);
     }
 }

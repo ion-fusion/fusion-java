@@ -18,8 +18,8 @@ import com.amazon.ion.IonReader;
 import dev.ionfusion.fusion.Evaluator.Thunk;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
+import dev.ionfusion.runtime.base.ResourceDescriptor;
 import dev.ionfusion.runtime.base.ResourceIdentifier;
-import dev.ionfusion.runtime.base.SourceName;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -172,7 +172,7 @@ final class ModuleNameResolver
      * @param eval the evaluation context.
      * @param baseModule the starting point for relative references; not null.
      * @param modulePath must be a module path.
-     * @param load should we load the module, or just determine its identity?
+     * @param load true to load the module, false to just determine its identity.
      * @param stxForErrors is used for error messaging; may be null.
      *
      * @throws ModuleNotFoundException if the module could not be found.
@@ -201,10 +201,10 @@ final class ModuleNameResolver
         {
             if (load)
             {
-                SourceName         name = loc.sourceName();
-                ResourceIdentifier rsrc = name.getResourceId();
+                ResourceDescriptor desc = loc.sourceName();
+                ResourceIdentifier rsrc = desc.getResourceId();
                 Thunk<IonReader> openReader = (e) -> openIonReader(e, rsrc);
-                loadModule(eval, openReader, name, id, false /* don't reload */);
+                loadModule(eval, openReader, desc, id, false /* don't reload */);
             }
             return id;
         }
@@ -268,21 +268,21 @@ final class ModuleNameResolver
      * Loads a module from a known location into the current namespace's registry. The
      * module is not instantiated.
      * <p>
-     * This method is awkwardly placed in this class, and might make more sense in
+     * This method is awkwardly placed in this class and might make more sense in
      * {@link LoadHandler}.  However, Racket gives this component the task of
      * parameterizing current_module_declare_name and performing cycle detection, and
      * I'm loath to change that without good cause.
      * <p>
-     * Also, its unclear how all of this will play out for enclosed submodules like
+     * Also, it's unclear how all of this will play out for enclosed submodules like
      * {@code (module Parent ... (module Child ...))}.
      *
-     * @param name may be null.
+     * @param desc must not be null.
      * @param reload indicates whether the module should be reloaded if it's already in
      * the registry.
      */
     void loadModule(Evaluator      eval,
                     Thunk<IonReader> reader,
-                    SourceName name,
+                    ResourceDescriptor desc,
                     ModuleIdentity id,
                     boolean reload)
         throws FusionException
@@ -302,7 +302,7 @@ final class ModuleNameResolver
                     eval.markedContinuation(new Object[]{ myCurrentModuleDeclareName,
                                                           MODULE_LOADING_MARK },
                                             new Object[]{ id, id });
-                myLoadHandler.loadModule(loadEval, reader, name, id);
+                myLoadHandler.loadModule(loadEval, reader, desc, id);
                 // Evaluation of 'module' declares it, but doesn't instantiate.
                 // It also calls-back to registerDeclaredModule().
             }
