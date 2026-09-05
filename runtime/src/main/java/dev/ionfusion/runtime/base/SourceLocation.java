@@ -3,8 +3,6 @@
 
 package dev.ionfusion.runtime.base;
 
-import static dev.ionfusion.runtime.base._Private_Attributes.MODULE_IDENTITY_ATTRIBUTE;
-
 import com.amazon.ion.IonReader;
 import com.amazon.ion.OffsetSpan;
 import com.amazon.ion.TextSpan;
@@ -20,7 +18,7 @@ import java.util.Objects;
  * {@link com.amazon.ion.OffsetSpan}.
  */
 public class SourceLocation
-    implements CodePosition
+    implements ResourcePosition
 {
     /**
      * This descriptor is used by all instances constructed with a null SourceName,
@@ -65,13 +63,6 @@ public class SourceLocation
     public long getOffset()
     {
         return -1;
-    }
-
-
-    @Override
-    public ModuleIdentity getModuleIdentity()
-    {
-        return myResource.getAttribute(MODULE_IDENTITY_ATTRIBUTE);
     }
 
 
