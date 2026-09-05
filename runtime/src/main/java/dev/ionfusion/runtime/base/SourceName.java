@@ -3,9 +3,9 @@
 
 package dev.ionfusion.runtime.base;
 
+import static dev.ionfusion.runtime.base._Private_Attributes.MODULE_IDENTITY_ATTRIBUTE;
 import static java.util.Objects.requireNonNull;
 
-import dev.ionfusion.runtime.base.SourceNameImpl.ModuleSourceName;
 import dev.ionfusion.runtime.base.SourceNameImpl.ResourceSourceName;
 import java.io.File;
 
@@ -18,17 +18,6 @@ import java.io.File;
 public interface SourceName
     extends ResourceDescriptor
 {
-    /**
-     * It is not guaranteed that the module declaration is the only content of
-     * the file or URL.
-     * The resource could be a script with several modules inside, and module
-     * declarations will eventually nest.
-     *
-     * @return the module associated with this source, if any.
-     */
-    ModuleIdentity getModuleIdentity();
-
-
     //=========================================================================
     // Factory methods
 
@@ -92,6 +81,8 @@ public interface SourceName
     {
         requireNonNull(resource, "resource must not be null");
         if (id == null) return new ResourceSourceName(resource);
-        return new ModuleSourceName(resource, id);
+        SourceName name = new ResourceSourceName(resource);
+        name.addAttribute(MODULE_IDENTITY_ATTRIBUTE, id);
+        return name;
     }
 }

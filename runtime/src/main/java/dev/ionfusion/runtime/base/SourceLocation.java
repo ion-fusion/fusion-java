@@ -4,6 +4,7 @@
 package dev.ionfusion.runtime.base;
 
 import static dev.ionfusion.runtime._private.util.Ordinals.writeFriendlyOrdinal;
+import static dev.ionfusion.runtime.base._Private_Attributes.MODULE_IDENTITY_ATTRIBUTE;
 
 import com.amazon.ion.IonReader;
 import com.amazon.ion.OffsetSpan;
@@ -72,11 +73,7 @@ public class SourceLocation
     @Override
     public ModuleIdentity getModuleIdentity()
     {
-        if (myResource instanceof SourceName)
-        {
-            return ((SourceName) myResource).getModuleIdentity();
-        }
-        return null;
+        return myResource.getAttribute(MODULE_IDENTITY_ATTRIBUTE);
     }
 
 

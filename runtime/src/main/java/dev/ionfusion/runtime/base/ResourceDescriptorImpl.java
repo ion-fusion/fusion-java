@@ -12,9 +12,10 @@ class ResourceDescriptorImpl
     // Implementations
 
     /**
-     * Satisfies the equals/hashCode contract for descriptors.
+     * Satisfies the facet and equals/hashCode contracts for descriptors.
      */
     abstract static class AbstractResourceDescriptor
+        extends AttributeSet
         implements ResourceDescriptor
     {
         @Override

@@ -31,12 +31,6 @@ class SourceNameImpl
     }
 
     @Override
-    public ModuleIdentity getModuleIdentity()
-    {
-        return null;
-    }
-
-    @Override
     public String toString()
     {
         return myDisplay;
@@ -68,21 +62,5 @@ class SourceNameImpl
         {
             return myResource;
         }
-    }
-
-
-    static class ModuleSourceName
-        extends ResourceSourceName
-    {
-        private final ModuleIdentity myId;
-
-        ModuleSourceName(ResourceIdentifier rsrc, ModuleIdentity id)
-        {
-            super(rsrc);
-            myId   = id;
-        }
-
-        @Override
-        public ModuleIdentity getModuleIdentity() { return myId; }
     }
 }
