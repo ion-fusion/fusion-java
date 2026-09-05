@@ -51,7 +51,7 @@ import dev.ionfusion.fusion.TopLevelNamespace.TopLevelDefinedBinding;
 import dev.ionfusion.runtime._private.doc.BindingDoc;
 import dev.ionfusion.runtime._private.doc.BindingDoc.Kind;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 
 /**
  * "Registers" used during compilation.
@@ -275,27 +275,26 @@ class Compiler
                  throw makeSyntaxError(myEval, "procedure application", message, stx);
             }
 
-            SourceLocation[] argLocs = extractArgLocations(stx,
-                                                           argForms.length);
+            ResourcePosition[] argLocs = extractArgPositions(stx, argForms.length);
             return compilePlainLet(argForms, argLocs, lambda.myBody);
         }
 
         // Look for syntax property forcing argument location tracking.
         if (isVoid(myEval, stx.findProperty(myEval, myStxPropRetainArgLocs)))
         {
-            return new CompiledPlainApp(stx.getLocation(), procForm, argForms);
+            return new CompiledPlainApp(stx.getPosition(), procForm, argForms);
         }
 
-        SourceLocation[] argLocs = extractArgLocations(stx, argForms.length);
+        ResourcePosition[] argLocs = extractArgPositions(stx, argForms.length);
 
-        return new CompiledPlainAppWithLocations(stx.getLocation(), procForm,
+        return new CompiledPlainAppWithLocations(stx.getPosition(), procForm,
                                                  argForms, argLocs);
     }
 
-    private SourceLocation[] extractArgLocations(SyntaxSexp stx, int argCount)
+    private ResourcePosition[] extractArgPositions(SyntaxSexp stx, int argCount)
         throws FusionException
     {
-        SourceLocation[] argLocs = new SourceLocation[argCount];
+        ResourcePosition[] argLocs = new ResourcePosition[argCount];
         Object argSexp = stx.unwrap(myEval);
         for (int i = 0; i < argCount; i++)
         {
@@ -303,7 +302,7 @@ class Compiler
             SyntaxValue argExpr = (SyntaxValue)
                 unsafePairHead(myEval, argSexp);
 
-            argLocs[i] = argExpr.getLocation();
+            argLocs[i] = argExpr.getPosition();
         }
         return argLocs;
     }
@@ -480,8 +479,8 @@ class Compiler
                                                                  b.myAddress);
                 }
 
-                SourceLocation locn = identifier.getLocation();
-                return new CompiledModuleVariableReference(b.myAddress, locn);
+                ResourcePosition posn = identifier.getPosition();
+                return new CompiledModuleVariableReference(b.myAddress, posn);
             }
 
             @Override
@@ -758,15 +757,15 @@ class Compiler
     private static class CompiledPlainApp
         implements CompiledForm
     {
-        private final SourceLocation myLocation;
-        private final CompiledForm   myProcForm;
-        private final CompiledForm[] myArgForms;
+        private final ResourcePosition myPosition;
+        private final CompiledForm     myProcForm;
+        private final CompiledForm[]   myArgForms;
 
-        CompiledPlainApp(SourceLocation location,
-                         CompiledForm   procForm,
-                         CompiledForm[] argForms)
+        CompiledPlainApp(ResourcePosition position,
+                         CompiledForm     procForm,
+                         CompiledForm[]   argForms)
         {
-            myLocation = location;
+            myPosition = position;
             myProcForm = procForm;
             myArgForms = argForms;
         }
@@ -774,14 +773,14 @@ class Compiler
         Object evalArg(Evaluator eval, Store store, int i, CompiledForm arg)
             throws FusionException
         {
-            return eval.eval(store, arg, myLocation);
+            return eval.eval(store, arg, myPosition);
         }
 
         @Override
         public Object doEval(Evaluator eval, Store store)
             throws FusionException
         {
-            Object proc = eval.eval(store, myProcForm, myLocation);
+            Object proc = eval.eval(store, myProcForm, myPosition);
 
             int argCount = myArgForms.length;
 
@@ -824,11 +823,11 @@ class Compiler
                 }
 
                 FusionException fe = new FusionException(b.toString());
-                fe.addContext(myLocation);
+                fe.addContext(myPosition);
                 throw fe;
             }
 
-            return eval.bounceTailCall(myLocation, p, args);
+            return eval.bounceTailCall(myPosition, p, args);
         }
     }
 
@@ -836,22 +835,22 @@ class Compiler
     private static final class CompiledPlainAppWithLocations
         extends CompiledPlainApp
     {
-        private final SourceLocation[] myArgLocs;
+        private final ResourcePosition[] myArgPosns;
 
-        CompiledPlainAppWithLocations(SourceLocation   location,
-                                      CompiledForm     procForm,
-                                      CompiledForm[]   argForms,
-                                      SourceLocation[] argLocs)
+        CompiledPlainAppWithLocations(ResourcePosition   callPosn,
+                                      CompiledForm       procForm,
+                                      CompiledForm[]     argForms,
+                                      ResourcePosition[] argPosns)
         {
-            super(location, procForm, argForms);
-            myArgLocs = argLocs;
+            super(callPosn, procForm, argForms);
+            myArgPosns = argPosns;
         }
 
         @Override
         Object evalArg(Evaluator eval, Store store, int i, CompiledForm arg)
             throws FusionException
         {
-            return eval.eval(store, arg, myArgLocs[i]);
+            return eval.eval(store, arg, myArgPosns[i]);
         }
     }
 

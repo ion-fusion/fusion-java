@@ -37,7 +37,7 @@ import com.amazon.ion.IonValue;
 import com.amazon.ion.Timestamp;
 import com.amazon.ion.system.IonReaderBuilder;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import dev.ionfusion.runtime.embed.FusionRuntime;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.math.BigDecimal;
@@ -508,7 +508,7 @@ class Evaluator
                     }
                     catch (FusionException e)
                     {
-                        e.addContext(tail.myLoc);
+                        e.addContext(tail.myPos);
                         throw e;
                     }
 
@@ -527,7 +527,7 @@ class Evaluator
     }
 
 
-    Object eval(Store store, CompiledForm form, SourceLocation loc)
+    Object eval(Store store, CompiledForm form, ResourcePosition pos)
         throws FusionException
     {
         try
@@ -536,7 +536,7 @@ class Evaluator
         }
         catch (FusionException e)
         {
-            e.addContext(loc);
+            e.addContext(pos);
             throw e;
         }
     }
@@ -553,7 +553,7 @@ class Evaluator
     Object callNonTail(Procedure proc, Object... args)
         throws FusionException
     {
-        SourceLocation callLocation = null;
+        ResourcePosition callPosition = null;
 
         calling: while (true) // GOTO target
         {
@@ -565,7 +565,7 @@ class Evaluator
             }
             catch (FusionException e)
             {
-                e.addContext(callLocation);
+                e.addContext(callPosition);
                 throw e;
             }
 
@@ -587,7 +587,7 @@ class Evaluator
                 {
                     // Imitate a tail-recursive call via GOTO
                     TailCall tail = (TailCall) result;
-                    callLocation = tail.myLoc;
+                    callPosition = tail.myPos;
                     proc = tail.myProc;
                     args = tail.myArgs;
                     continue calling;
@@ -682,13 +682,13 @@ class Evaluator
      */
     private static final class TailCall
     {
-        final SourceLocation myLoc;
-        final Procedure myProc;
+        final ResourcePosition myPos;
+        final Procedure        myProc;
         final Object[]  myArgs;
 
-        TailCall(SourceLocation loc, Procedure proc, Object... args)
+        TailCall(ResourcePosition pos, Procedure proc, Object... args)
         {
-            myLoc  = loc;
+            myPos  = pos;
             myProc = proc;
             myArgs = args;
         }
@@ -716,9 +716,9 @@ class Evaluator
      *
      * @return not null
      */
-    Object bounceTailCall(SourceLocation loc, Procedure proc, Object... args)
+    Object bounceTailCall(ResourcePosition pos, Procedure proc, Object... args)
         throws FusionException
     {
-        return new TailCall(loc, proc, args);
+        return new TailCall(pos, proc, args);
     }
 }

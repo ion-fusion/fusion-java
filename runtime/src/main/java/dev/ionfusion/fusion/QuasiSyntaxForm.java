@@ -5,11 +5,12 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionIo.safeWriteToString;
 import static dev.ionfusion.fusion.FusionList.immutableList;
+
 import dev.ionfusion.fusion.FusionList.BaseList;
 import dev.ionfusion.fusion.FusionSexp.BaseSexp;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 
 final class QuasiSyntaxForm
     extends QuasiBaseForm
@@ -38,9 +39,9 @@ final class QuasiSyntaxForm
                          CompiledForm unquotedForm)
         throws FusionException
     {
-        SourceLocation location = unquotedStx.getLocation();
+        ResourcePosition position = unquotedStx.getPosition();
         String expression = safeWriteToString(eval, unquotedStx);
-        return new CompiledUnsyntax(unquotedForm, location, expression);
+        return new CompiledUnsyntax(unquotedForm, position, expression);
     }
 
 
@@ -50,10 +51,10 @@ final class QuasiSyntaxForm
                            CompiledForm[] children)
         throws FusionException
     {
-        SourceLocation location    = originalStx.getLocation();
+        ResourcePosition position    = originalStx.getPosition();
         BaseSexp sexp = (BaseSexp) originalStx.unwrap(eval);
         BaseSymbol[] annotations = sexp.getAnnotations();
-        return new CompiledQuasiSyntaxSexp(location, annotations, children);
+        return new CompiledQuasiSyntaxSexp(position, annotations, children);
     }
 
 
@@ -63,10 +64,10 @@ final class QuasiSyntaxForm
                            CompiledForm[] children)
         throws FusionException
     {
-        SourceLocation location    = originalStx.getLocation();
+        ResourcePosition position    = originalStx.getPosition();
         BaseList list = (BaseList) originalStx.unwrap(eval);
         BaseSymbol[] annotations = list.getAnnotations();
-        return new CompiledQuasiSyntaxList(location, annotations, children);
+        return new CompiledQuasiSyntaxList(position, annotations, children);
     }
 
 
@@ -76,16 +77,16 @@ final class QuasiSyntaxForm
     private static final class CompiledQuasiSyntaxSexp
         implements CompiledForm
     {
-        private final SourceLocation myLocation;
-        private final BaseSymbol[]   myAnnotations;
-        private final CompiledForm[] myChildForms;
+        private final ResourcePosition myPosition;
+        private final BaseSymbol[]     myAnnotations;
+        private final CompiledForm[]   myChildForms;
 
-        CompiledQuasiSyntaxSexp(SourceLocation location,
-                                BaseSymbol[]   annotations,
-                                CompiledForm[] childForms)
+        CompiledQuasiSyntaxSexp(ResourcePosition position,
+                                BaseSymbol[]     annotations,
+                                CompiledForm[]   childForms)
         {
             assert childForms.length != 0;
-            myLocation    = location;
+            myPosition    = position;
             myAnnotations = annotations;
             myChildForms  = childForms;
         }
@@ -107,7 +108,7 @@ final class QuasiSyntaxForm
 
             // We don't use copyReplacingChildren because we don't want the
             // properties to come over.
-            return SyntaxSexp.make(eval, myLocation, myAnnotations, children);
+            return SyntaxSexp.make(eval, myPosition, myAnnotations, children);
         }
     }
 
@@ -115,15 +116,15 @@ final class QuasiSyntaxForm
     private static final class CompiledQuasiSyntaxList
         implements CompiledForm
     {
-        private final SourceLocation myLocation;
-        private final BaseSymbol[]   myAnnotations;
-        private final CompiledForm[] myChildForms;
+        private final ResourcePosition myPosition;
+        private final BaseSymbol[]     myAnnotations;
+        private final CompiledForm[]   myChildForms;
 
-        CompiledQuasiSyntaxList(SourceLocation location,
-                                BaseSymbol[]   annotations,
-                                CompiledForm[] childForms)
+        CompiledQuasiSyntaxList(ResourcePosition position,
+                                BaseSymbol[]     annotations,
+                                CompiledForm[]   childForms)
         {
-            myLocation    = location;
+            myPosition    = position;
             myAnnotations = annotations;
             myChildForms  = childForms;
         }
@@ -142,7 +143,7 @@ final class QuasiSyntaxForm
             // We don't use copyReplacingChildren because we don't want the
             // properties to come over.
             Object list = immutableList(eval, myAnnotations, children);
-            return SyntaxList.make(eval, myLocation, list);
+            return SyntaxList.make(eval, myPosition, list);
         }
     }
 
@@ -150,17 +151,17 @@ final class QuasiSyntaxForm
     private static final class CompiledUnsyntax
         implements CompiledForm
     {
-        private final CompiledForm myUnquotedForm;
-        private final SourceLocation myLocation;
-        private final String         myExpression;
+        private final CompiledForm     myUnquotedForm;
+        private final ResourcePosition myPosition;
+        private final String           myExpression;
 
-        CompiledUnsyntax(CompiledForm unquotedForm,
-                         SourceLocation location,
-                         String expression)
+        CompiledUnsyntax(CompiledForm     unquotedForm,
+                         ResourcePosition position,
+                         String           expression)
         {
-            myUnquotedForm   = unquotedForm;
-            myLocation       = location;
-            myExpression     = expression;
+            myUnquotedForm = unquotedForm;
+            myPosition     = position;
+            myExpression   = expression;
         }
 
         @Override
@@ -178,7 +179,7 @@ final class QuasiSyntaxForm
                 "Result of (unsyntax " + myExpression +
                 ") isn't a syntax value: " +
                 safeWriteToString(eval, unquoted);
-            throw new ContractException(message, myLocation);
+            throw new ContractException(message, myPosition);
         }
     }
 }

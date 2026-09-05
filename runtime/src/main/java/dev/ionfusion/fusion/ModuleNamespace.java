@@ -13,7 +13,6 @@ import dev.ionfusion.runtime._private.doc.BindingDoc;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import dev.ionfusion.runtime.base.ResourcePosition;
-import dev.ionfusion.runtime.base.SourceLocation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -593,13 +592,13 @@ final class ModuleNamespace
     static final class CompiledModuleVariableReference
         implements CompiledForm
     {
-        private final int            myAddress;
-        private final SourceLocation myLocation;
+        private final int              myAddress;
+        private final ResourcePosition myPosition;
 
-        CompiledModuleVariableReference(int address, SourceLocation location)
+        CompiledModuleVariableReference(int address, ResourcePosition position)
         {
             myAddress  = address;
-            myLocation = location;
+            myPosition = position;
         }
 
         @Override
@@ -614,7 +613,7 @@ final class ModuleNamespace
 
             // Synthesize an identifier for stack traces.
             BaseSymbol name = ns.getDefinedName(myAddress);
-            SyntaxSymbol id = SyntaxSymbol.make(myLocation, name);
+            SyntaxSymbol id = SyntaxSymbol.make(myPosition, name);
 
             throw makeUnboundError(id);
         }

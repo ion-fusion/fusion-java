@@ -12,7 +12,6 @@ import static java.lang.Boolean.TRUE;
 import com.amazon.ion.IonValue;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ResourcePosition;
-import dev.ionfusion.runtime.base.SourceLocation;
 import java.util.Arrays;
 
 /**
@@ -67,17 +66,6 @@ abstract class SyntaxValue
         return false;
     }
 
-
-    /**
-     * Gets the location associated with this syntax node, if it exists.
-     * @return can be null.
-     */
-    SourceLocation getLocation()
-    {
-        return (myPosition instanceof SourceLocation
-                ? (SourceLocation) myPosition
-                : null);
-    }
 
     /**
      * Gets the resource and position associated with this syntax node, if it exists.
