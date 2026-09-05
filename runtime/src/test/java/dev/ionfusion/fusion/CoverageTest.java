@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.ionfusion.runtime._private.cover.CoverageCollector;
-import dev.ionfusion.runtime.base.CodePosition;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ResourceDescriptor;
 import dev.ionfusion.runtime.base.ResourcePosition;
@@ -34,13 +33,13 @@ public class CoverageTest
         final Map<ResourcePosition, AtomicInteger> instrumented = new HashMap<>();
 
         @Override
-        public boolean locationIsRecordable(CodePosition loc)
+        public boolean locationIsRecordable(ResourcePosition pos)
         {
-            return (!instrumentOnlyLineOne || loc.getLine() == 1);
+            return (!instrumentOnlyLineOne || pos.getLine() == 1);
         }
 
         @Override
-        public AtomicInteger locationInstrumented(CodePosition pos)
+        public AtomicInteger locationInstrumented(ResourcePosition pos)
         {
             // For simplicity, we'll ignore the offset.
             pos = SourceLocation.forLineColumn(pos.getLine(),

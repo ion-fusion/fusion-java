@@ -7,6 +7,7 @@ import static com.amazon.ion.IonType.LIST;
 import static com.amazon.ion.IonType.SEXP;
 import static com.amazon.ion.IonType.STRING;
 import static com.amazon.ion.IonType.STRUCT;
+import static dev.ionfusion.runtime.base._Private_Attributes.MODULE_IDENTITY_ATTRIBUTE;
 import static java.nio.file.Files.isRegularFile;
 import static java.nio.file.Files.newDirectoryStream;
 
@@ -16,8 +17,9 @@ import com.amazon.ion.IonType;
 import com.amazon.ion.IonWriter;
 import com.amazon.ion.system.IonReaderBuilder;
 import com.amazon.ion.system.IonTextWriterBuilder;
-import dev.ionfusion.runtime.base.CodePosition;
 import dev.ionfusion.runtime.base.ModuleIdentity;
+import dev.ionfusion.runtime.base.ResourceDescriptor;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -95,10 +97,10 @@ public class CoverageDatabase
      * Indicates whether this database can record the given location.
      */
     @Override
-    public boolean locationIsRecordable(CodePosition loc)
+    public boolean locationIsRecordable(ResourcePosition pos)
     {
         // We can record locations within identified resources.
-        return loc.getResourceDesc().getResourceId() != null;
+        return pos.getResourceDesc().getResourceId() != null;
     }
 
 
@@ -110,14 +112,16 @@ public class CoverageDatabase
     /**
      * Records that the code at some location has been instrumented.
      *
-     * @param loc must be {@linkplain #locationIsRecordable recordable}.
+     * @param pos must be
+     * {@linkplain CoverageCollector#locationIsRecordable recordable}.
      */
     @Override
-    public AtomicInteger locationInstrumented(CodePosition loc)
+    public AtomicInteger locationInstrumented(ResourcePosition pos)
     {
-        URI uri = loc.getResourceDesc().getResourceId().getUri();
-        long offset = loc.getOffset();
-        ModuleIdentity module = loc.getModuleIdentity();
+        long               offset = pos.getOffset();
+        ResourceDescriptor desc   = pos.getResourceDesc();
+        URI                uri    = desc.getResourceId().getUri();
+        ModuleIdentity     module = desc.getAttribute(MODULE_IDENTITY_ATTRIBUTE);
 
         return resourceInstrumented(uri).containsModule(module)
                                         .offsetInstrumented(offset);

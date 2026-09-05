@@ -5,12 +5,14 @@ package dev.ionfusion.runtime._private.cover;
 
 import static dev.ionfusion.runtime._private.util.PropertiesFiles.readProperties;
 import static dev.ionfusion.runtime.base.ModuleIdentity.isValidAbsoluteModulePath;
+import static dev.ionfusion.runtime.base._Private_Attributes.MODULE_IDENTITY_ATTRIBUTE;
 import static java.nio.file.Files.exists;
 import static java.util.Collections.emptySet;
 
-import dev.ionfusion.runtime.base.CodePosition;
 import dev.ionfusion.runtime.base.ModuleIdentity;
+import dev.ionfusion.runtime.base.ResourceDescriptor;
 import dev.ionfusion.runtime.base.ResourceIdentifier;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -217,19 +219,21 @@ public final class CoverageConfiguration
 
 
     /**
-     * A {@link CodePosition} is selected for coverage if either its
+     * A position is selected for coverage if either its
      * {@link ModuleIdentity} or its file is selected.
      *
-     * @param loc must not be null.
+     * @param pos must not be null.
      *
      * @return true iff the location should be instrumented.
      */
-    boolean locationIsSelected(CodePosition loc)
+    boolean locationIsSelected(ResourcePosition pos)
     {
-        ModuleIdentity id = loc.getModuleIdentity();
+        ResourceDescriptor desc = pos.getResourceDesc();
+
+        ModuleIdentity id = desc.getAttribute(MODULE_IDENTITY_ATTRIBUTE);
         if (moduleIsSelected(id)) return true;
 
-        ResourceIdentifier rsrc = loc.getResourceDesc().getResourceId();
+        ResourceIdentifier rsrc = desc.getResourceId();
         if (rsrc == null) return false;
 
         return fileIsSelected(rsrc.getPath());
