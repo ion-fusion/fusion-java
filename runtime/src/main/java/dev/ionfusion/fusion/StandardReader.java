@@ -18,7 +18,7 @@ import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionSyntax.isSyntax;
 import static dev.ionfusion.fusion.FusionTimestamp.makeTimestamp;
 import static dev.ionfusion.fusion.SyntaxValue.STX_PROPERTY_ORIGINAL;
-import static dev.ionfusion.runtime.base.SourceLocation.forCurrentSpan;
+import static dev.ionfusion.runtime.base.ResourcePosition.forCurrentSpan;
 import static java.lang.Boolean.TRUE;
 import static java.util.Objects.requireNonNull;
 
@@ -141,7 +141,7 @@ class StandardReader
         assert type != null;
 
         String[] anns = source.getTypeAnnotations();
-        ResourcePosition pos = (readingSyntax ? forCurrentSpan(source, desc) : null);
+        ResourcePosition pos = (readingSyntax ? forCurrentSpan(desc, source) : null);
 
         BaseValue datum;
         switch (type)

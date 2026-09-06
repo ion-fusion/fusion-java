@@ -11,7 +11,6 @@ import dev.ionfusion.runtime._private.cover.CoverageCollector;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ResourceDescriptor;
 import dev.ionfusion.runtime.base.ResourcePosition;
-import dev.ionfusion.runtime.base.SourceLocation;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,9 +40,10 @@ public class CoverageTest
         public AtomicInteger locationInstrumented(ResourcePosition pos)
         {
             // For simplicity, we'll ignore the offset.
-            pos = SourceLocation.forLineColumn(pos.getLine(),
+            pos = ResourcePosition.forPosition(pos.getResourceDesc(),
+                                               pos.getLine(),
                                                pos.getColumn(),
-                                               pos.getResourceDesc());
+                                               -1);
             return instrumented.computeIfAbsent(pos, l ->new AtomicInteger());
         }
     }
@@ -58,7 +58,7 @@ public class CoverageTest
      */
     private void checkCovered(ResourceDescriptor name, long line, long column)
     {
-        ResourcePosition loc = SourceLocation.forLineColumn(line, column, name);
+        ResourcePosition loc = ResourcePosition.forPosition(name, line, column, -1);
         assertTrue(collector.instrumented.get(loc).get() > 0);
     }
 
@@ -69,7 +69,7 @@ public class CoverageTest
      */
     private void checkNotCovered(ResourceDescriptor name, long line, long column)
     {
-        ResourcePosition loc = SourceLocation.forLineColumn(line, column, name);
+        ResourcePosition loc = ResourcePosition.forPosition(name, line, column, -1);
         assertEquals(0, collector.instrumented.get(loc).get());
     }
 
@@ -80,7 +80,7 @@ public class CoverageTest
      */
     private void checkNotInstrumented(ResourceDescriptor name, long line, long column)
     {
-        ResourcePosition loc = SourceLocation.forLineColumn(line, column, name);
+        ResourcePosition loc = ResourcePosition.forPosition(name, line, column, -1);
         assertNull(collector.instrumented.get(loc));
     }
 

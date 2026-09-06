@@ -16,7 +16,6 @@ import com.amazon.ion.system.SimpleCatalog;
 import dev.ionfusion.runtime.base.ResourceDescriptor;
 import dev.ionfusion.runtime.base.ResourceIdentifier;
 import dev.ionfusion.runtime.base.ResourcePosition;
-import dev.ionfusion.runtime.base.SourceLocation;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -68,7 +67,7 @@ public final class IonCatalogLoader
 
     void loadSymtab(ResourceDescriptor rsrc, IonReader reader)
     {
-        ResourcePosition loc = SourceLocation.forCurrentSpan(reader, rsrc);
+        ResourcePosition loc = ResourcePosition.forCurrentSpan(rsrc, reader);
 
         if (reader.getType() != IonType.STRUCT)
         {

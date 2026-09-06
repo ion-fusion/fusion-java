@@ -16,7 +16,7 @@ import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import dev.ionfusion.runtime.base.ResourceDescriptor;
 import dev.ionfusion.runtime.base.ResourceIdentifier;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -113,7 +113,7 @@ final class LoadHandler
         {
             String message = "Module source has no top-level forms";
             SyntaxException e = makeSyntaxError(message);
-            e.addContext(SourceLocation.forName(desc));
+            e.addContext(ResourcePosition.unknown(desc));
             throw e;
         }
 
@@ -122,7 +122,7 @@ final class LoadHandler
         {
             String message = "Module source has more than one top-level form";
             SyntaxException e = makeSyntaxError(message);
-            e.addContext(SourceLocation.forCurrentSpan(reader, desc));
+            e.addContext(ResourcePosition.forCurrentSpan(desc, reader));
             throw e;
         }
 
