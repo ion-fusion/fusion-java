@@ -4,6 +4,8 @@
 package dev.ionfusion.runtime.base;
 
 import static dev.ionfusion.runtime.base.ResourceIdentifier.forFile;
+import static dev.ionfusion.runtime.base.ResourcePosition.forCurrentSpan;
+import static dev.ionfusion.runtime.base.ResourcePosition.forPosition;
 import static dev.ionfusion.testing.Assertions.assertHashEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.matchesPattern;
@@ -19,7 +21,7 @@ import com.amazon.ion.system.IonSystemBuilder;
 import org.junit.jupiter.api.Test;
 
 
-public class SourceLocationTest
+public class ResourcePositionTest
 {
     private void checkPath(String path, ResourcePosition pos)
     {
@@ -30,12 +32,12 @@ public class SourceLocationTest
     private void assertNoLocation(IonReader ir)
     {
         ResourceDescriptor desc = ResourceDescriptor.named("test source");
-        ResourcePosition loc = SourceLocation.forCurrentSpan(ir, desc);
+        ResourcePosition loc = forCurrentSpan(desc, ir);
         assertSame(desc, loc.getResourceDesc());
         assertEquals("unknown position of test source", loc.display());
 
         desc = ResourceDescriptor.identified(forFile("/dummy/path"));
-        loc = SourceLocation.forCurrentSpan(ir, desc);
+        loc = forCurrentSpan(desc, ir);
         assertSame(desc, loc.getResourceDesc());
         checkPath("/dummy/path", loc);
         assertEquals("unknown position of /dummy/path", loc.display());
@@ -44,12 +46,12 @@ public class SourceLocationTest
     private void assertNoLineColumn(IonReader ir)
     {
         ResourceDescriptor desc = ResourceDescriptor.named("test source");
-        ResourcePosition loc = SourceLocation.forCurrentSpan(ir, desc);
+        ResourcePosition loc = forCurrentSpan(desc, ir);
         assertSame(desc, loc.getResourceDesc());
         assertThat(loc.display(), matchesPattern("offset [0-9]+ of test source"));
 
         desc = ResourceDescriptor.identified(forFile("/dummy/path"));
-        loc = SourceLocation.forCurrentSpan(ir, desc);
+        loc = forCurrentSpan(desc, ir);
         assertSame(desc, loc.getResourceDesc());
         checkPath("/dummy/path", loc);
         assertThat(loc.display(), matchesPattern("offset [0-9]+ of /dummy/path"));
@@ -58,17 +60,17 @@ public class SourceLocationTest
     private void assertLocation(String expectedOffsets, IonReader ir)
     {
         ResourceDescriptor desc = ResourceDescriptor.unknown();
-        ResourcePosition loc = SourceLocation.forCurrentSpan(ir, desc);
+        ResourcePosition loc = forCurrentSpan(desc, ir);
         assertSame(desc, loc.getResourceDesc());
         assertEquals(expectedOffsets, loc.display());
 
         desc = ResourceDescriptor.named("test source");
-        loc = SourceLocation.forCurrentSpan(ir, desc);
+        loc = forCurrentSpan(desc, ir);
         assertSame(desc, loc.getResourceDesc());
         assertEquals(expectedOffsets + " of test source", loc.display());
 
         desc = ResourceDescriptor.identified(forFile("/dummy/path"));
-        loc = SourceLocation.forCurrentSpan(ir, desc);
+        loc = forCurrentSpan(desc, ir);
         assertSame(desc, loc.getResourceDesc());
         assertEquals(expectedOffsets + " of /dummy/path", loc.display());
     }
@@ -152,12 +154,12 @@ public class SourceLocationTest
     private void assertNoLineColumn(long line, long column)
     {
         ResourceDescriptor desc = ResourceDescriptor.unknown();
-        ResourcePosition loc = SourceLocation.forLineColumn(line, column, desc);
+        ResourcePosition loc = forPosition(desc, line, column, -1);
         assertSame(desc, loc.getResourceDesc());
         checkLocation(loc, null, 0, 0, -1);
 
         desc = ResourceDescriptor.named("test source");
-        loc = SourceLocation.forLineColumn(line, column, desc);
+        loc = forPosition(desc, line, column, -1);
         assertSame(desc, loc.getResourceDesc());
         checkLocation(loc, null, 0, 0, -1);
     }
@@ -165,12 +167,12 @@ public class SourceLocationTest
     private void assertLineColumn(String display, long line, long column)
     {
         ResourceDescriptor desc = ResourceDescriptor.unknown();
-        ResourcePosition loc = SourceLocation.forLineColumn(line, column, desc);
+        ResourcePosition loc = forPosition(desc, line, column, -1);
         assertSame(desc, loc.getResourceDesc());
         checkLocation(loc, display, line, column, -1);
 
         desc = ResourceDescriptor.named("test source");
-        loc = SourceLocation.forLineColumn(line, column, desc);
+        loc = forPosition(desc, line, column, -1);
         assertSame(desc, loc.getResourceDesc());
         checkLocation(loc, display, line, column, -1);
     }
@@ -199,7 +201,7 @@ public class SourceLocationTest
         throws Exception
     {
         assertThrows(NullPointerException.class,
-                     () -> SourceLocation.forName(null));
+                     () -> ResourcePosition.unknown(null));
     }
 
     @Test
@@ -207,7 +209,7 @@ public class SourceLocationTest
         throws Exception
     {
         assertThrows(NullPointerException.class,
-                     () -> SourceLocation.forLineColumn(1, 2, null));
+                     () -> forPosition(null, 1, 2, -1));
     }
 
     @Test
@@ -218,7 +220,7 @@ public class SourceLocationTest
         try (IonReader reader = builder.build("{}"))
         {
             assertThrows(NullPointerException.class,
-                         () -> SourceLocation.forCurrentSpan(reader, null));
+                         () -> forCurrentSpan(null, reader));
         }
     }
 }
