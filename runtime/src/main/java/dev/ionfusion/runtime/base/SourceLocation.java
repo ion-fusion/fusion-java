@@ -3,6 +3,8 @@
 
 package dev.ionfusion.runtime.base;
 
+import static java.util.Objects.requireNonNull;
+
 import com.amazon.ion.IonReader;
 import com.amazon.ion.OffsetSpan;
 import com.amazon.ion.TextSpan;
@@ -20,23 +22,17 @@ import java.util.Objects;
 public class SourceLocation
     implements ResourcePosition
 {
-    /**
-     * This descriptor is used by all instances constructed with a null SourceName,
-     * preserving the legacy behavior of this class WRT equals and hashCode.
-     */
-    private static final ResourceDescriptor DISTINCT_UNKNOWN_RESOURCE =
-        ResourceDescriptor.unknown();
-
     /** Not null. */
     private final ResourceDescriptor myResource;
 
 
     /**
-     * @param rsrc null will be replaced by {@link #DISTINCT_UNKNOWN_RESOURCE}.
+     * @param rsrc not null.
      */
     private SourceLocation(ResourceDescriptor rsrc)
     {
-        myResource = (rsrc != null ? rsrc : DISTINCT_UNKNOWN_RESOURCE);
+        assert rsrc != null;
+        myResource = rsrc;
     }
 
 
@@ -178,16 +174,15 @@ public class SourceLocation
 
 
     /**
-     * Returns an instance that represents an unknown location in the given
-     * source.
+     * Returns an instance that represents an unknown location in the given resource.
      *
-     * @param desc can be null.
+     * @param desc must not be null.
      *
-     * @return null when all parameters are unknown.
+     * @return a location with no offsets and the given descriptor.
      */
-    public static SourceLocation forName(ResourceDescriptor desc)
+    public static ResourcePosition forName(ResourceDescriptor desc)
     {
-        if (desc == null) return null;
+        requireNonNull(desc);
 
         // TODO Can this allocation be eliminated?
         //      We'll probably be creating lots of similar instances.
@@ -203,13 +198,15 @@ public class SourceLocation
      * @param column one-based.
      * Values less than 1 indicate that the column is unknown.
      * Ignored if the line is unknown.
-     * @param desc can be null.
+     * @param desc must not be null.
      *
-     * @return null when all parameters are unknown.
+     * @return a location with no offsets and the given descriptor.
      */
-    public static SourceLocation forLineColumn(long line, long column,
-                                               ResourceDescriptor desc)
+    public static ResourcePosition forLineColumn(long line, long column,
+                                                 ResourceDescriptor desc)
     {
+        requireNonNull(desc);
+
         if (line < 1)
         {
             return forName(desc);
@@ -235,37 +232,20 @@ public class SourceLocation
 
 
     /**
-     * Returns an instance that represents the given text location.
-     *
-     * @param line one-based.
-     * Values less than 1 indicate that the line is unknown.
-     * @param column one-based.
-     * Values less than 1 indicate that the column is unknown.
-     * Ignored if the line is unknown.
-     *
-     * @return null when all parameters are unknown.
-     */
-    public static SourceLocation forLineColumn(long line, long column)
-    {
-        return forLineColumn(line, column, null);
-    }
-
-
-    /**
      * Returns an instance that represents the current span of the reader.
      * This currently only supports Ion text sources and only captures the
      * start position.
      *
      * @param source must not be null.
-     * @param desc can be null.
+     * @param desc must not be null.
      *
-     *
-     * @return null if no descriptor is given and no location could be determined from
-     * the source.
+     * @return a location with current span's offsets and the given descriptor.
      */
-    public static SourceLocation forCurrentSpan(IonReader  source,
-                                                ResourceDescriptor desc)
+    public static ResourcePosition forCurrentSpan(IonReader  source,
+                                                  ResourceDescriptor desc)
     {
+        requireNonNull(desc);
+
         // SpanProvider.currentSpan() crashes if not on a value.
         if (source.getType() != null)
         {

@@ -6,24 +6,19 @@ package dev.ionfusion.runtime.base;
 import static dev.ionfusion.runtime.base.ResourceIdentifier.forFile;
 import static dev.ionfusion.testing.Assertions.assertHashEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.amazon.ion.IonDatagram;
 import com.amazon.ion.IonReader;
 import com.amazon.ion.IonSystem;
+import com.amazon.ion.system.IonReaderBuilder;
 import com.amazon.ion.system.IonSystemBuilder;
 import org.junit.jupiter.api.Test;
 
 
 public class SourceLocationTest
 {
-    /**
-     * SourceLocation uses a distinct descriptor when one isn't given.
-     */
-    private static final ResourceDescriptor DEFAULT_DESCRIPTOR =
-        SourceLocation.forLineColumn(1, 1).getResourceDesc();
-
-
     private void checkPath(String path, ResourcePosition pos)
     {
         assertHashEquals(ResourceIdentifier.forFile(path),
@@ -32,36 +27,33 @@ public class SourceLocationTest
 
     private void assertNoLocation(IonReader ir)
     {
-        SourceLocation loc = SourceLocation.forCurrentSpan(ir, null);
-        assertNull(loc, "expected null SourceLocation");
-
-        ResourceDescriptor name = ResourceDescriptor.named("test source");
-        loc = SourceLocation.forCurrentSpan(ir, name);
-        assertHashEquals(name, loc.getResourceDesc());
+        ResourceDescriptor desc = ResourceDescriptor.named("test source");
+        ResourcePosition loc = SourceLocation.forCurrentSpan(ir, desc);
+        assertSame(desc, loc.getResourceDesc());
         assertEquals("unknown position of test source", loc.display());
 
-        name = ResourceDescriptor.identified(forFile("/dummy/path"));
-        loc = SourceLocation.forCurrentSpan(ir, name);
-        assertHashEquals(name, loc.getResourceDesc());
+        desc = ResourceDescriptor.identified(forFile("/dummy/path"));
+        loc = SourceLocation.forCurrentSpan(ir, desc);
+        assertSame(desc, loc.getResourceDesc());
         checkPath("/dummy/path", loc);
         assertEquals("unknown position of /dummy/path", loc.display());
     }
 
     private void assertLocation(String expectedOffsets, IonReader ir)
     {
-        SourceLocation loc = SourceLocation.forCurrentSpan(ir, null);
+        ResourceDescriptor desc = ResourceDescriptor.unknown();
+        ResourcePosition loc = SourceLocation.forCurrentSpan(ir, desc);
+        assertSame(desc, loc.getResourceDesc());
         assertEquals(expectedOffsets, loc.display());
-        assertHashEquals(DEFAULT_DESCRIPTOR, loc.getResourceDesc());
 
-        ResourceDescriptor name = ResourceDescriptor.named("test source");
-        loc = SourceLocation.forCurrentSpan(ir, name);
-        assertHashEquals(name, loc.getResourceDesc());
+        desc = ResourceDescriptor.named("test source");
+        loc = SourceLocation.forCurrentSpan(ir, desc);
+        assertSame(desc, loc.getResourceDesc());
         assertEquals(expectedOffsets + " of test source", loc.display());
 
-        name = ResourceDescriptor.identified(forFile("/dummy/path"));
-        loc = SourceLocation.forCurrentSpan(ir, name);
-        assertHashEquals(name, loc.getResourceDesc());
-        checkPath("/dummy/path", loc);
+        desc = ResourceDescriptor.identified(forFile("/dummy/path"));
+        loc = SourceLocation.forCurrentSpan(ir, desc);
+        assertSame(desc, loc.getResourceDesc());
         assertEquals(expectedOffsets + " of /dummy/path", loc.display());
     }
 
@@ -140,31 +132,27 @@ public class SourceLocationTest
 
     private void assertNoLineColumn(long line, long column)
     {
-        SourceLocation loc = SourceLocation.forLineColumn(line, column);
-        assertNull(loc, "SourceLocation");
+        ResourceDescriptor desc = ResourceDescriptor.unknown();
+        ResourcePosition loc = SourceLocation.forLineColumn(line, column, desc);
+        assertSame(desc, loc.getResourceDesc());
+        checkLocation(loc, null, 0, 0, -1);
 
-        loc = SourceLocation.forLineColumn(line, column, null);
-        assertNull(loc, "SourceLocation");
-
-        ResourceDescriptor name = ResourceDescriptor.named("test source");
-        loc = SourceLocation.forLineColumn(line, column, name);
-        assertHashEquals(name, loc.getResourceDesc());
+        desc = ResourceDescriptor.named("test source");
+        loc = SourceLocation.forLineColumn(line, column, desc);
+        assertSame(desc, loc.getResourceDesc());
         checkLocation(loc, null, 0, 0, -1);
     }
 
     private void assertLineColumn(String display, long line, long column)
     {
-        SourceLocation loc = SourceLocation.forLineColumn(line, column);
-        assertHashEquals(DEFAULT_DESCRIPTOR, loc.getResourceDesc());
+        ResourceDescriptor desc = ResourceDescriptor.unknown();
+        ResourcePosition loc = SourceLocation.forLineColumn(line, column, desc);
+        assertSame(desc, loc.getResourceDesc());
         checkLocation(loc, display, line, column, -1);
 
-        loc = SourceLocation.forLineColumn(line, column, null);
-        assertHashEquals(DEFAULT_DESCRIPTOR, loc.getResourceDesc());
-        checkLocation(loc, display, line, column, -1);
-
-        ResourceDescriptor name = ResourceDescriptor.named("test source");
-        loc = SourceLocation.forLineColumn(line, column, name);
-        assertHashEquals(name, loc.getResourceDesc());
+        desc = ResourceDescriptor.named("test source");
+        loc = SourceLocation.forLineColumn(line, column, desc);
+        assertSame(desc, loc.getResourceDesc());
         checkLocation(loc, display, line, column, -1);
     }
 
@@ -184,5 +172,34 @@ public class SourceLocationTest
         assertLineColumn("1st line",  1,  0);
         assertLineColumn("2nd line",  2, -1);
         assertLineColumn("3rd line, 4th column",  3, 4);
+    }
+
+
+    @Test
+    void forNameRequiresDescriptor()
+        throws Exception
+    {
+        assertThrows(NullPointerException.class,
+                     () -> SourceLocation.forName(null));
+    }
+
+    @Test
+    void forLineColumnRequiresDescriptor()
+        throws Exception
+    {
+        assertThrows(NullPointerException.class,
+                     () -> SourceLocation.forLineColumn(1, 2, null));
+    }
+
+    @Test
+    void forCurrentSpanRequiresDescriptor()
+        throws Exception
+    {
+        IonReaderBuilder builder = IonReaderBuilder.standard();
+        try (IonReader reader = builder.build("{}"))
+        {
+            assertThrows(NullPointerException.class,
+                         () -> SourceLocation.forCurrentSpan(reader, null));
+        }
     }
 }
