@@ -24,6 +24,11 @@ tasks.jar {
     enabled = false
 }
 
+// With no jar, there's nothing for build information to describe.
+tasks.generateJarInfo {
+    enabled = false
+}
+
 // We will copy these from the `fusioncli` project.
 tasks.startScripts {
     enabled = false
