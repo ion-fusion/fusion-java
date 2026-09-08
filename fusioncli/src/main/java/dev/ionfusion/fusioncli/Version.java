@@ -7,10 +7,9 @@ import com.amazon.ion.IonException;
 import com.amazon.ion.IonType;
 import com.amazon.ion.IonWriter;
 import com.amazon.ion.system.IonTextWriterBuilder;
-import com.amazon.ion.util.JarInfo;
 import dev.ionfusion.fusioncli.framework.Command;
-import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.FusionJarInfo;
+import dev.ionfusion.runtime.base.JarInfo;
+import dev.ionfusion.runtime.embed.FusionRuntime;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -81,23 +80,24 @@ class Version
         private void emitFusionVersion(IonWriter w)
             throws IOException
         {
-            try
-            {
-                FusionJarInfo fusionInfo = new FusionJarInfo();
+            JarInfo fusionInfo = FusionRuntime.jarInfo();
 
-                w.setFieldName("fusion_version");
-                w.stepIn(IonType.STRUCT);
-                {
-                    w.setFieldName("release_label");
-                    w.writeString(fusionInfo.getReleaseLabel());
-                }
-                w.stepOut();
-            }
-            catch (FusionException e)
+            w.setFieldName("fusion_version");
+            w.stepIn(IonType.STRUCT);
             {
-                w.setFieldName("error");
-                w.writeString(e.toString());
+                w.setFieldName("release_label");
+                w.writeString(fusionInfo.getVersion());
+
+                w.setFieldName("build_time");
+                w.writeTimestamp(fusionInfo.getBuildDate());
+
+                w.setFieldName("commit_hash");
+                w.writeString(fusionInfo.getLongCommitHash());
+
+                w.setFieldName("repo_status");
+                w.writeString(fusionInfo.getRepositoryStatus());
             }
+            w.stepOut();
         }
 
         private void emitIonVersion(IonWriter w)
@@ -105,7 +105,10 @@ class Version
         {
             try
             {
-                JarInfo ionInfo = new JarInfo();
+                // Qualified: ion-java has a `JarInfo` of its own, which is where
+                // ours was originally modeled from.
+                com.amazon.ion.util.JarInfo ionInfo =
+                    new com.amazon.ion.util.JarInfo();
 
                 w.setFieldName("ion_version");
                 w.stepIn(IonType.STRUCT);

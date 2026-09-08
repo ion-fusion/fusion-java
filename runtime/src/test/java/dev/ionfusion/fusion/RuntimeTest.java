@@ -10,6 +10,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -24,9 +25,11 @@ import com.amazon.ion.SymbolTable;
 import com.amazon.ion.system.IonBinaryWriterBuilder;
 import com.amazon.ion.system.SimpleCatalog;
 import dev.ionfusion.runtime.base.FusionException;
+import dev.ionfusion.runtime.base.JarInfo;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import dev.ionfusion.runtime.base.ResourceDescriptor;
 import dev.ionfusion.runtime.base.SourceName;
+import dev.ionfusion.runtime.embed.FusionRuntime;
 import dev.ionfusion.runtime.embed.ModuleBuilder;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -398,5 +401,21 @@ public class RuntimeTest
                                                encodedData,
                                                readProc));
         assertTrue(e.getMessage().contains("$11"));
+    }
+
+
+    /**
+     * Guards the artifact id in {@link FusionRuntime#jarInfo()} against drifting
+     * from the `archivesName` used by our Gradle conventions: if the two disagree,
+     * the lookup misses and everything is reported as unknown.
+     */
+    @Test
+    public void testJarInfo()
+    {
+        JarInfo info = FusionRuntime.jarInfo();
+
+        assertNotEquals(JarInfo.UNKNOWN, info.getVersion(),
+                        "The runtime artifact wasn't identified");
+        assertEquals(info, JarInfo.identify().get(info.getArtifactId()));
     }
 }

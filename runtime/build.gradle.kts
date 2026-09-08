@@ -24,22 +24,6 @@ val mainFusionRepo = layout.projectDirectory.dir("src/main/fusion")
 val testFusionRepo = layout.projectDirectory.dir("src/test/fusion")
 
 
-// Various resources refer to the current version label.
-tasks.processResources {
-    // Read here, not inside `filesMatching`: that action runs during the copy, and
-    // touching `project` at execution time breaks the configuration cache.
-    val projectVersion = project.version.toString()
-
-    // Embed our version in the jar so the CLI can print it.
-    // Only the one file: `expand` applies Groovy templating, which fails on any
-    // resource that happens to contain `$` or `<%`.
-    // TODO Superseded by `buildlogic.jar-info-conventions`; remove with FusionJarInfo.
-    filesMatching("**/FusionJarInfo.properties") {
-        expand("project_version" to projectVersion)
-    }
-}
-
-
 // Bundle the Fusion bootstrap repository in our jar.
 tasks.jar {
     // It might be better if these were modeled as resources in the main

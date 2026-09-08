@@ -7,6 +7,7 @@ import com.amazon.ion.IonCatalog;
 import com.amazon.ion.IonValue;
 import com.amazon.ion.ValueFactory;
 import dev.ionfusion.runtime.base.FusionException;
+import dev.ionfusion.runtime.base.JarInfo;
 
 /**
  * Primary entry point for embedding Fusion within a Java program.
@@ -39,6 +40,19 @@ public interface FusionRuntime
      * The standard extension for Fusion source code files.
      */
     String FUSION_SOURCE_CODE_FILE_EXTENSION = ".fusion";
+
+
+    /**
+     * Gets build information about the Fusion runtime library, as distinct from any
+     * runtime instance: every instance reports the same thing.
+     *
+     * @return not null.
+     */
+    static JarInfo jarInfo()
+    {
+        // Must agree with `archivesName` in our Gradle conventions.
+        return JarInfo.of("ion-fusion-runtime");
+    }
 
 
     /**

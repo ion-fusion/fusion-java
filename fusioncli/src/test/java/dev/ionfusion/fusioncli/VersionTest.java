@@ -13,8 +13,8 @@ import com.amazon.ion.IonTimestamp;
 import com.amazon.ion.IonValue;
 import com.amazon.ion.Timestamp;
 import com.amazon.ion.system.IonSystemBuilder;
-import com.amazon.ion.util.JarInfo;
-import dev.ionfusion.runtime.base.FusionJarInfo;
+import dev.ionfusion.runtime.base.JarInfo;
+import dev.ionfusion.runtime.embed.FusionRuntime;
 import org.junit.jupiter.api.Test;
 
 public class VersionTest
@@ -26,10 +26,16 @@ public class VersionTest
     {
         IonStruct version = getField(loadVersion(), "fusion_version");
 
-        FusionJarInfo info = new FusionJarInfo();
+        JarInfo info = FusionRuntime.jarInfo();
 
-        assertEquals(info.getReleaseLabel(),
+        assertEquals(info.getVersion(),
                      getString(version, "release_label"));
+        assertEquals(info.getBuildDate(),
+                     getTimestamp(version, "build_time"));
+        assertEquals(info.getLongCommitHash(),
+                     getString(version, "commit_hash"));
+        assertEquals(info.getRepositoryStatus(),
+                     getString(version, "repo_status"));
     }
 
 
@@ -39,7 +45,9 @@ public class VersionTest
     {
         IonStruct version = getField(loadVersion(), "ion_version");
 
-        JarInfo info = new JarInfo();
+        // Qualified: ion-java has a `JarInfo` of its own, which is where
+        // ours was originally modeled from.
+        com.amazon.ion.util.JarInfo info = new com.amazon.ion.util.JarInfo();
 
         assertEquals(info.getProjectVersion(),
                      getString(version, "project_version"));
