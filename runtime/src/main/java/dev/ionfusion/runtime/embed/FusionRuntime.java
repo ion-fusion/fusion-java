@@ -4,8 +4,6 @@
 package dev.ionfusion.runtime.embed;
 
 import com.amazon.ion.IonCatalog;
-import com.amazon.ion.IonValue;
-import com.amazon.ion.ValueFactory;
 import dev.ionfusion.runtime.base.FusionException;
 
 /**
@@ -129,41 +127,5 @@ public interface FusionRuntime
      * @throws FusionException if an error occurs during evaluation
      */
     ModuleBuilder makeModuleBuilder(String absoluteModulePath)
-        throws FusionException;
-
-
-    //========================================================================
-
-
-    /**
-     * Creates a fresh {@code IonValue} DOM from a Fusion value, using the
-     * default ionization strategy.
-     *
-     * @param fusionValue the value to transform; must not be null.
-     * @param factory must not be null.
-     *
-     * @return a fresh instance, without a container.
-     *
-     * @throws FusionException if the value is not handled by the default
-     * ionization strategy, or if something else goes wrong during ionization.
-     */
-    IonValue ionize(Object fusionValue, ValueFactory factory)
-        throws FusionException;
-
-
-    /**
-     * Creates a fresh {@code IonValue} DOM from a Fusion value, using the
-     * default ionization strategy, returning null if ionization fails.
-     *
-     * @param fusionValue the value to transform.
-     * @param factory must not be null.
-     *
-     * @return a fresh instance, without a container, or null if the value
-     * (or any part of the value) is not handled by the default ionization
-     * strategy.
-     *
-     * @throws FusionException if something goes wrong during ionization.
-     */
-    IonValue ionizeMaybe(Object fusionValue, ValueFactory factory)
         throws FusionException;
 }

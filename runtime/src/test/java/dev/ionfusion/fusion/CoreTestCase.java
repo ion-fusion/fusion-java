@@ -182,7 +182,7 @@ public class CoreTestCase
         throws FusionException
     {
         Object fv = eval(top, source);
-        IonValue iv = runtime().ionizeMaybe(fv, system());
+        IonValue iv = top.ionizeMaybe(fv, system());
         if (iv == null)
         {
             fail("Result isn't ion: " + fv + "\nSource: " + source);
@@ -245,7 +245,7 @@ public class CoreTestCase
         for (String expr : allTypeExpressions())
         {
             Object v = eval(expr);
-            IonValue dom = runtime().ionizeMaybe(v, system());
+            IonValue dom = topLevel().ionizeMaybe(v, system());
             if (dom == null || ! klass.isInstance(dom))
             {
                 exprs.add(expr);
@@ -372,7 +372,7 @@ public class CoreTestCase
     void checkIon(IonValue expected, Object actual)
         throws FusionException
     {
-        IonValue iv = runtime().ionizeMaybe(actual, system());
+        IonValue iv = topLevel().ionizeMaybe(actual, system());
         if (iv == null)
         {
             fail("Result isn't ion: " + actual);

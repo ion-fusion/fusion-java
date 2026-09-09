@@ -83,14 +83,14 @@ public class RuntimeTest
         throws Exception
     {
         Object fv = eval(expr);
-        return runtime().ionize(fv, system());
+        return topLevel().ionize(fv, system());
     }
 
     IonValue ionizeMaybe(String expr)
         throws Exception
     {
         Object fv = eval(expr);
-        return runtime().ionizeMaybe(fv, system());
+        return topLevel().ionizeMaybe(fv, system());
     }
 
 

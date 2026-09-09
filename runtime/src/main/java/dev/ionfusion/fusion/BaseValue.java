@@ -20,7 +20,7 @@ import dev.ionfusion.fusion.FusionBool.BaseBool;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ResourcePosition;
-import dev.ionfusion.runtime.embed.FusionRuntime;
+import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.IOException;
 
 /**
@@ -324,7 +324,7 @@ abstract class BaseValue
      *
      * @throws FusionException if something goes wrong during ionization.
      *
-     * @see FusionRuntime#ionizeMaybe(Object, ValueFactory)
+     * @see TopLevel#ionizeMaybe(Object, ValueFactory)
      * @see FusionValue#copyToIonValueMaybe(Evaluator, Object, ValueFactory)
      */
     static IonValue copyToIonValueMaybe(Evaluator eval, Object value, ValueFactory factory)
@@ -364,7 +364,7 @@ abstract class BaseValue
      *
      * @throws FusionException if the value cannot be converted to Ion.
      *
-     * @see FusionRuntime#ionize(Object, ValueFactory)
+     * @see TopLevel#ionize(Object, ValueFactory)
      * @see FusionValue#copyToIonValue(Evaluator, Object, ValueFactory, boolean)
      */
     static IonValue copyToIonValue(Evaluator eval, Object value, ValueFactory factory,

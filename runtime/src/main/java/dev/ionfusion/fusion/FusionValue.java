@@ -11,7 +11,6 @@ import com.amazon.ion.IonValue;
 import com.amazon.ion.ValueFactory;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.embed.FusionRuntime;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.IOException;
 
@@ -285,7 +284,7 @@ public final class FusionValue
      *
      * @throws FusionException if something goes wrong during ionization.
      *
-     * @see FusionRuntime#ionizeMaybe(Object, ValueFactory)
+     * @see TopLevel#ionizeMaybe(Object, ValueFactory)
      */
     static IonValue copyToIonValueMaybe(Evaluator eval, Object value, ValueFactory factory)
         throws FusionException
@@ -322,7 +321,7 @@ public final class FusionValue
      *
      * @throws FusionException if the value cannot be converted to Ion.
      *
-     * @see FusionRuntime#ionize(Object, ValueFactory)
+     * @see TopLevel#ionize(Object, ValueFactory)
      */
     static IonValue copyToIonValue(Evaluator    eval,
                                    Object       value,
