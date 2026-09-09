@@ -17,21 +17,15 @@ class ResourceDescriptorImpl
     abstract static class AbstractResourceDescriptor
         implements ResourceDescriptor
     {
-        public final boolean equals(ResourceDescriptor that)
-        {
-            if (this == that) { return true; }
-            if (that == null) { return false; }
-
-            ResourceIdentifier thisId = this.getResourceId();
-            ResourceIdentifier thatId = that.getResourceId();
-            return thisId != null && thatId != null && thisId.equals(thatId);
-        }
-
         @Override
         public final boolean equals(Object that)
         {
-            return (that instanceof ResourceDescriptor &&
-                    this.equals((ResourceDescriptor) that));
+            if (this == that) { return true; }
+            if (!(that instanceof ResourceDescriptor)) { return false; }
+
+            ResourceIdentifier thisId = this.getResourceId();
+            ResourceIdentifier thatId = ((ResourceDescriptor) that).getResourceId();
+            return thisId != null && thisId.equals(thatId);
         }
 
 
