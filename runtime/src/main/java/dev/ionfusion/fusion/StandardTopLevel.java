@@ -17,6 +17,7 @@ import dev.ionfusion.runtime._private.cover.CoverageCollector;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import dev.ionfusion.runtime.base.ResourceDescriptor;
+import dev.ionfusion.runtime.embed.FusionInterruptedException;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.File;
 import java.io.IOException;

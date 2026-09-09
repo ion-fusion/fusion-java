@@ -3,6 +3,5 @@
   <CurrentIssues>
     <ID>ForbiddenImport$FusionJarInfo$dev.ionfusion.runtime.base$dev.ionfusion.fusion._Private_Trampoline</ID>
     <ID>ForbiddenImport$FusionRuntimeBuilder$dev.ionfusion.runtime.embed$dev.ionfusion.fusion._Private_Trampoline</ID>
-    <ID>ForbiddenImport$TopLevel$dev.ionfusion.runtime.embed$dev.ionfusion.fusion.FusionInterruptedException</ID>
   </CurrentIssues>
 </StructuralBaseline>

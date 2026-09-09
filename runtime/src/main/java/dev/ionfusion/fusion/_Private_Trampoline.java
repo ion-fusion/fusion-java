@@ -8,6 +8,7 @@ import dev.ionfusion.runtime._private.doc.BindingDoc;
 import dev.ionfusion.runtime._private.doc.ModuleDocs;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
+import dev.ionfusion.runtime.embed.FusionInterruptedException;
 import dev.ionfusion.runtime.embed.FusionRuntimeBuilder;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.nio.file.Path;

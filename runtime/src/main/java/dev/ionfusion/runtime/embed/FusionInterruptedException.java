@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.fusion;
+package dev.ionfusion.runtime.embed;
 
 import dev.ionfusion.runtime.base.FusionException;
 
@@ -19,7 +19,7 @@ import dev.ionfusion.runtime.base.FusionException;
 public final class FusionInterruptedException
     extends FusionException
 {
-    FusionInterruptedException(FusionInterrupt cause)
+    public FusionInterruptedException(Throwable cause)
     {
         super("The Fusion evaluation thread was interrupted.", cause);
         assert Thread.currentThread().isInterrupted();
