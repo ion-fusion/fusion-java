@@ -35,7 +35,7 @@
  * Object result = topLevel.eval("(compute_something)");
  *
  * // Convert the result to an IonValue.
- * IonValue ionResult = runtime.ionize(result, ionSystem);
+ * IonValue ionResult = topLevel.ionize(result, ionSystem);
  *
  * // We can also invoke a procedure without making source code.
  * result = topLevel.call("our_procedure", 1, "hello");
@@ -104,7 +104,7 @@
  * and {@link dev.ionfusion.fusion.FusionIo}.
  * <p>
  * To convert a Fusion value to an {@link com.amazon.ion.IonValue}, use
- * {@link dev.ionfusion.runtime.embed.FusionRuntime#ionize FusionRuntime.ionize()}.
+ * {@link dev.ionfusion.runtime.embed.TopLevel#ionize TopLevel.ionize()}.
  *
  *
  * <h2 id="inject">Injection and Ejection</h2>
