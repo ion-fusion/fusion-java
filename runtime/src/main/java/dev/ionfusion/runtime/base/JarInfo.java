@@ -42,7 +42,7 @@ public final class JarInfo
 
     private static final String NO_SHORT_HASH = "0";
     private static final String NO_LONG_HASH  = "0000000000000000000000000000000000000000";
-    private static final String NO_DATE       = "1970-01-01T00:00:00Z";
+    private static final String NO_DATE       = "1970-01-01T00:00:00.000Z";
 
 
     /**

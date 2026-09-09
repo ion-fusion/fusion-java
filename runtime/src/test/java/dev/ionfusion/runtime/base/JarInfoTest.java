@@ -5,6 +5,7 @@ package dev.ionfusion.runtime.base;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -21,6 +22,8 @@ import org.junit.jupiter.api.Test;
  */
 public class JarInfoTest
 {
+    public static final Timestamp EPOCH_TIME = Timestamp.forMillis(0, 0);
+
     /**
      * Every artifact we report must be fully described; see `describe`.
      */
@@ -78,18 +81,40 @@ public class JarInfoTest
 
 
     /**
+     * Examine some hard-coded version properties.
+     */
+    @Test
+    public void verifyTestVersions()
+    {
+        JarInfo info = JarInfo.of("good.artifact");
+        assertThat(info, notNullValue());
+        assertThat(info.getVersion(), is("test version"));
+        // This property is present but has malformed value
+        assertEquals(EPOCH_TIME, info.getBuildDate());
+
+        // If any property is absent, the whole artifact becomes unknown.
+        checkUnknownArtifact("missing-version");
+    }
+
+
+    /**
      * An unknown artifact must be reported, not signalled, and never as null.
      */
     @Test
     public void testOfUnknownArtifact()
     {
-        JarInfo info = JarInfo.of("no-such-artifact");
+        checkUnknownArtifact("no-such-artifact");
+    }
 
-        assertEquals("no-such-artifact", info.getArtifactId());
+    private static void checkUnknownArtifact(String artifactId)
+    {
+        JarInfo info = JarInfo.of(artifactId);
+
+        assertEquals(artifactId, info.getArtifactId());
         assertEquals(JarInfo.UNKNOWN, info.getVersion());
         assertEquals(JarInfo.UNKNOWN, info.getRepositoryStatus());
-        assertEquals(Timestamp.valueOf("1970-01-01T00:00:00Z"), info.getBuildDate());
-        assertEquals(Timestamp.valueOf("1970-01-01T00:00:00Z"), info.getCommitDate());
+        assertEquals(EPOCH_TIME, info.getBuildDate());
+        assertEquals(EPOCH_TIME, info.getCommitDate());
         assertThat(info.getShortCommitHash(), notNullValue());
         assertThat(info.getLongCommitHash(),  notNullValue());
         assertThat(info.toString(),           containsString(JarInfo.UNKNOWN));
