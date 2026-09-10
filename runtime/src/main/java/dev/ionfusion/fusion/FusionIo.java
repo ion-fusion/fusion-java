@@ -209,6 +209,9 @@ public final class FusionIo
         return read(eval, reader, desc);
     }
 
+    /**
+     * @param desc must not be null.
+     */
     static Object read(Evaluator eval, IonReader reader, ResourceDescriptor desc)
         throws FusionException
     {

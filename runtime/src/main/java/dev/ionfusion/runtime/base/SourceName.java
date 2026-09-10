@@ -3,12 +3,11 @@
 
 package dev.ionfusion.runtime.base;
 
+import static dev.ionfusion.runtime.base._Private_Attributes.MODULE_IDENTITY_ATTRIBUTE;
 import static java.util.Objects.requireNonNull;
 
-import dev.ionfusion.runtime.base.SourceNameImpl.ModuleSourceName;
 import dev.ionfusion.runtime.base.SourceNameImpl.ResourceSourceName;
 import java.io.File;
-import java.net.URL;
 
 /**
  * Identifies a source of Fusion code or other data: a file, URL, <em>etc.</em>
@@ -19,17 +18,6 @@ import java.net.URL;
 public interface SourceName
     extends ResourceDescriptor
 {
-    /**
-     * It is not guaranteed that the module declaration is the only content of
-     * the file or URL.
-     * The resource could be a script with several modules inside, and module
-     * declarations will eventually nest.
-     *
-     * @return the module associated with this source, if any.
-     */
-    ModuleIdentity getModuleIdentity();
-
-
     //=========================================================================
     // Factory methods
 
@@ -54,11 +42,11 @@ public interface SourceName
      *
      * @param path must not be null or empty, and is converted to an absolute path.
      *
-     * @return a new {@link SourceName} instance
+     * @return a new descriptor.
      *
      * @see #forFile(File)
      */
-    static SourceName forFile(String path)
+    static ResourceDescriptor forFile(String path)
     {
         ResourceIdentifier rsrc = ResourceIdentifier.forFile(path);
         return new ResourceSourceName(rsrc);
@@ -70,40 +58,14 @@ public interface SourceName
      *
      * @param path is converted to an absolute path.
      *
-     * @return a new {@link SourceName} instance
+     * @return a new descriptor.
      *
      * @see #forFile(String)
      */
-    static SourceName forFile(File path)
+    static ResourceDescriptor forFile(File path)
     {
         ResourceIdentifier rsrc = ResourceIdentifier.forFile(path);
         return new ResourceSourceName(rsrc);
-    }
-
-
-    /**
-     * @param id must not be null.
-     * @param sourceFile must not be null.
-     * @return a new {@link SourceName}.
-     */
-    static SourceName forModule(ModuleIdentity id, File sourceFile)
-    {
-        requireNonNull(id, "id must not be null");
-        ResourceIdentifier rsrc = ResourceIdentifier.forFile(sourceFile);
-        return new ModuleSourceName(rsrc, id);
-    }
-
-
-    /**
-     * @param id must not be null.
-     * @param url must not be null.
-     * @return a new {@link SourceName}.
-     */
-    static SourceName forUrl(ModuleIdentity id, URL url)
-    {
-        requireNonNull(id, "id must not be null");
-        ResourceIdentifier rsrc = ResourceIdentifier.forUrl(url);
-        return new ModuleSourceName(rsrc, id);
     }
 
 
@@ -115,10 +77,12 @@ public interface SourceName
      *
      * @return a new {@link SourceName}.
      */
-    static SourceName forResource(ResourceIdentifier resource, ModuleIdentity id)
+    static ResourceDescriptor forResource(ResourceIdentifier resource, ModuleIdentity id)
     {
         requireNonNull(resource, "resource must not be null");
         if (id == null) return new ResourceSourceName(resource);
-        return new ModuleSourceName(resource, id);
+        SourceName name = new ResourceSourceName(resource);
+        name.addAttribute(MODULE_IDENTITY_ATTRIBUTE, id);
+        return name;
     }
 }

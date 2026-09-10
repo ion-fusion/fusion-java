@@ -19,7 +19,7 @@ import dev.ionfusion.fusion.TopLevelNamespace.TopLevelDefinedBinding;
 import dev.ionfusion.runtime._private.doc.BindingDoc;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -103,7 +103,7 @@ abstract class Namespace
         {
             myName      = identifier.getName();
             myDebugName = identifier.debugString();
-            mySite      = makeDefineBindingSite(identifier.getLocation());
+            mySite      = makeDefineBindingSite(identifier.getPosition());
             myAddress   = address;
         }
 
@@ -166,18 +166,18 @@ abstract class Namespace
     abstract static class RequiredBinding
         extends NsBinding
     {
-        private final BaseSymbol      myName;
-        private final String          myDebugName;
-        private final SourceLocation  myLoc;
-        private final ProvidedBinding myProvide;
-        private BindingSite           mySite;
+        private final BaseSymbol       myName;
+        private final String           myDebugName;
+        private final ResourcePosition myPosition;
+        private final ProvidedBinding  myProvide;
+        private BindingSite            mySite;
 
         RequiredBinding(SyntaxSymbol identifier, ProvidedBinding provide)
         {
             assert provide != null;
             myName      = identifier.getName();
             myDebugName = identifier.debugString();
-            myLoc       = identifier.getLocation();
+            myPosition  = identifier.getPosition();
             myProvide   = provide;
         }
 
@@ -192,8 +192,7 @@ abstract class Namespace
         {
             if (mySite == null)
             {
-                mySite = makeImportBindingSite(myLoc,
-                                               myProvide.getBindingSite());
+                mySite = makeImportBindingSite(myPosition, myProvide.getBindingSite());
             }
             return mySite;
         }

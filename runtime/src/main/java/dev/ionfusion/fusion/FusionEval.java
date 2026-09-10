@@ -17,7 +17,7 @@ import static java.util.Objects.requireNonNull;
 import com.amazon.ion.IonReader;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ResourceDescriptor;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.util.LinkedList;
 
@@ -96,7 +96,7 @@ final class FusionEval
     {
         SyntaxValue stx =
             topLevelStx(eval, topLevelForm, false, "default_eval_handler");
-        SourceLocation topLocation = stx.getLocation();
+        ResourcePosition topPosition = stx.getPosition();
 
         Namespace ns = eval.findCurrentNamespace();
 
@@ -142,7 +142,7 @@ final class FusionEval
         }
         catch (FusionException e)
         {
-            e.addContext(topLocation);
+            e.addContext(topPosition);
             throw e;
         }
     }

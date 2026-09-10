@@ -24,13 +24,6 @@ val mainFusionRepo = layout.projectDirectory.dir("src/main/fusion")
 val testFusionRepo = layout.projectDirectory.dir("src/test/fusion")
 
 
-// Various resources refer to the current version label.
-tasks.processResources {
-    // Embed our version in the jar so the CLI can print it.
-    expand("project_version" to project.version.toString())
-}
-
-
 // Bundle the Fusion bootstrap repository in our jar.
 tasks.jar {
     // It might be better if these were modeled as resources in the main

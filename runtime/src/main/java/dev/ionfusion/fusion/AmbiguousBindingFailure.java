@@ -33,7 +33,7 @@ final class AmbiguousBindingFailure
         AmbiguousBindingFailure e = new AmbiguousBindingFailure(message);
         if (location != null)
         {
-            e.addContext(location.getLocation());
+            e.addContext(location.getPosition());
         }
         return e;
     }

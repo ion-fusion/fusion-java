@@ -45,7 +45,7 @@ final class LocalEnvironment
             myIdentifier = identifier;
             myDepth      = depth;
             myAddress    = address;
-            mySite       = makeLocalBindingSite(identifier.getLocation());
+            mySite       = makeLocalBindingSite(identifier.getPosition());
         }
 
         @Override

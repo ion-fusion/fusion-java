@@ -5,6 +5,7 @@ package dev.ionfusion.fusion;
 
 
 import dev.ionfusion.runtime.base.FusionException;
+import dev.ionfusion.runtime.embed.FusionInterruptedException;
 
 /**
  * Internal exception thrown when a Fusion evaluation is interrupted via
@@ -14,10 +15,9 @@ import dev.ionfusion.runtime.base.FusionException;
  * careful to handle the interrupt exception everywhere we catch
  * {@link FusionException}, or else the interrupt could easily be swallowed.
  * <p>
- * Instead, we throw an {@link Error} that
- * is much less likely to be mis-handled. We catch it at entry points to the
- * evaluator and wrap it in the public sibling exception
- * {@link FusionInterruptedException}.
+ * Instead, we throw an {@link Error}, which is much less likely to be mishandled.
+ * We catch it at entry points to the evaluator and throw the public sibling
+ * exception {@link FusionInterruptedException}.
  */
 @SuppressWarnings("serial")
 final class FusionInterrupt

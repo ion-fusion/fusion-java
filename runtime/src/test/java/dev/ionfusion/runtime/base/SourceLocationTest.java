@@ -3,6 +3,7 @@
 
 package dev.ionfusion.runtime.base;
 
+import static dev.ionfusion.runtime.base.ResourceIdentifier.forFile;
 import static dev.ionfusion.testing.Assertions.assertHashEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -34,16 +35,16 @@ public class SourceLocationTest
         SourceLocation loc = SourceLocation.forCurrentSpan(ir, null);
         assertNull(loc, "expected null SourceLocation");
 
-        ResourceDescriptor name = SourceName.forDisplay("test source");
+        ResourceDescriptor name = ResourceDescriptor.named("test source");
         loc = SourceLocation.forCurrentSpan(ir, name);
         assertHashEquals(name, loc.getResourceDesc());
-        assertEquals("unknown location in test source", loc.display());
+        assertEquals("unknown position of test source", loc.display());
 
-        name = SourceName.forFile("/dummy/path");
+        name = ResourceDescriptor.identified(forFile("/dummy/path"));
         loc = SourceLocation.forCurrentSpan(ir, name);
         assertHashEquals(name, loc.getResourceDesc());
         checkPath("/dummy/path", loc);
-        assertEquals("unknown location in /dummy/path", loc.display());
+        assertEquals("unknown position of /dummy/path", loc.display());
     }
 
     private void assertLocation(String expectedOffsets, IonReader ir)
@@ -52,12 +53,12 @@ public class SourceLocationTest
         assertEquals(expectedOffsets, loc.display());
         assertHashEquals(DEFAULT_DESCRIPTOR, loc.getResourceDesc());
 
-        ResourceDescriptor name = SourceName.forDisplay("test source");
+        ResourceDescriptor name = ResourceDescriptor.named("test source");
         loc = SourceLocation.forCurrentSpan(ir, name);
         assertHashEquals(name, loc.getResourceDesc());
         assertEquals(expectedOffsets + " of test source", loc.display());
 
-        name = SourceName.forFile("/dummy/path");
+        name = ResourceDescriptor.identified(forFile("/dummy/path"));
         loc = SourceLocation.forCurrentSpan(ir, name);
         assertHashEquals(name, loc.getResourceDesc());
         checkPath("/dummy/path", loc);
@@ -123,10 +124,10 @@ public class SourceLocationTest
         ResourceDescriptor name = loc.getResourceDesc();
         if (display == null)
         {
-            display = "unknown location";
-            if (name != null)
+            display = "unknown position";
+            if (!name.isUnknown())
             {
-                display += " in " + name.display();
+                display += " of " + name.display();
             }
         }
         else if (!name.isUnknown())
@@ -145,7 +146,7 @@ public class SourceLocationTest
         loc = SourceLocation.forLineColumn(line, column, null);
         assertNull(loc, "SourceLocation");
 
-        ResourceDescriptor name = SourceName.forDisplay("test source");
+        ResourceDescriptor name = ResourceDescriptor.named("test source");
         loc = SourceLocation.forLineColumn(line, column, name);
         assertHashEquals(name, loc.getResourceDesc());
         checkLocation(loc, null, 0, 0, -1);
@@ -161,7 +162,7 @@ public class SourceLocationTest
         assertHashEquals(DEFAULT_DESCRIPTOR, loc.getResourceDesc());
         checkLocation(loc, display, line, column, -1);
 
-        ResourceDescriptor name = SourceName.forDisplay("test source");
+        ResourceDescriptor name = ResourceDescriptor.named("test source");
         loc = SourceLocation.forLineColumn(line, column, name);
         assertHashEquals(name, loc.getResourceDesc());
         checkLocation(loc, display, line, column, -1);

@@ -5,11 +5,11 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionSyntax.isIdentifier;
 import static dev.ionfusion.fusion.FusionSyntax.isSyntax;
-import static dev.ionfusion.fusion.FusionSyntax.unsafeSyntaxLocation;
+import static dev.ionfusion.fusion.FusionSyntax.unsafeSyntaxPosition;
 import static dev.ionfusion.fusion.Syntax.datumToSyntax;
 
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceLocation;
+import dev.ionfusion.runtime.base.ResourcePosition;
 
 
 class DatumToSyntaxProc
@@ -21,9 +21,9 @@ class DatumToSyntaxProc
     {
         checkArityRange(eval, 1, 3, args);
 
-        Object         datum    = args[0];
-        SyntaxSymbol   context  = null;
-        SourceLocation location = null;
+        Object           datum    = args[0];
+        SyntaxSymbol     context  = null;
+        ResourcePosition position = null;
 
         if (args.length > 1)
         {
@@ -41,10 +41,10 @@ class DatumToSyntaxProc
                 {
                     throw argError(eval, "syntax object", 2, args);
                 }
-                location = unsafeSyntaxLocation(eval, args[2]);
+                position = unsafeSyntaxPosition(eval, args[2]);
             }
         }
 
-        return datumToSyntax(eval, datum, context, location);
+        return datumToSyntax(eval, datum, context, position);
     }
 }

@@ -63,17 +63,13 @@ public abstract class ResourceIdentifier
         return getUri().toString();
     }
 
-
-    public boolean equals(ResourceIdentifier that)
-    {
-        return this.getUri().equals(that.getUri());
-    }
-
     @Override
     public boolean equals(Object that)
     {
+        if (this == that) { return true; }
+
         return that instanceof ResourceIdentifier &&
-               this.equals((ResourceIdentifier) that);
+               this.getUri().equals(((ResourceIdentifier) that).getUri());
     }
 
     @Override

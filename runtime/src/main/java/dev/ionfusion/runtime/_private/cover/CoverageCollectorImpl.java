@@ -3,7 +3,7 @@
 
 package dev.ionfusion.runtime._private.cover;
 
-import dev.ionfusion.runtime.base.CodePosition;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import dev.ionfusion.runtime.embed.FusionRuntime;
 import java.io.File;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -52,16 +52,16 @@ public final class CoverageCollectorImpl
 
 
     @Override
-    public boolean locationIsRecordable(CodePosition loc)
+    public boolean locationIsRecordable(ResourcePosition pos)
     {
-       return (mySession.locationIsRecordable(loc) &&
-               myConfig.locationIsSelected(loc));
+       return (mySession.locationIsRecordable(pos) &&
+               myConfig.locationIsSelected(pos));
     }
 
 
     @Override
-    public AtomicInteger locationInstrumented(CodePosition loc)
+    public AtomicInteger locationInstrumented(ResourcePosition pos)
     {
-        return mySession.locationInstrumented(loc);
+        return mySession.locationInstrumented(pos);
     }
 }

@@ -7,6 +7,7 @@ version = project.properties["projectVersion"]!!
 
 plugins {
     java
+    id("buildlogic.jar-info-conventions")
 }
 
 repositories {

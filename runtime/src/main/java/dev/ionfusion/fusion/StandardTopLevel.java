@@ -9,6 +9,7 @@ import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.StandardReader.readSyntax;
 import static dev.ionfusion.runtime._private.util.Ordinals.friendlyIndex;
 import static dev.ionfusion.runtime.base.ModuleIdentity.isValidAbsoluteModulePath;
+import static java.util.Objects.requireNonNull;
 
 import com.amazon.ion.IonValue;
 import com.amazon.ion.ValueFactory;
@@ -18,7 +19,8 @@ import com.amazon.ion.IonWriter;
 import dev.ionfusion.runtime._private.cover.CoverageCollector;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
-import dev.ionfusion.runtime.base.SourceName;
+import dev.ionfusion.runtime.base.ResourceDescriptor;
+import dev.ionfusion.runtime.embed.FusionInterruptedException;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.File;
 import java.io.IOException;
@@ -103,17 +105,18 @@ final class StandardTopLevel
     //========================================================================
 
     @Override
-    public Object eval(String source, SourceName name)
+    public Object eval(String source, ResourceDescriptor desc)
         throws FusionInterruptedException, FusionException
     {
+        requireNonNull(desc, "desc");
+
         try (IonReader i = myEvaluator.getIonReaderBuilder().build(source))
         {
-            return eval(i, name);
+            return eval(i, desc);
         }
         catch (IOException e)
         {
-            String message =
-                "Error closing " + (name == null ? "source" : name.display());
+            String message = "Error closing " + desc.display();
             throw new ContractException(message, e);
         }
     }
@@ -123,21 +126,23 @@ final class StandardTopLevel
     public Object eval(String source)
         throws FusionInterruptedException, FusionException
     {
-        return eval(source, null);
+        return eval(source, ResourceDescriptor.unknown());
     }
 
 
     @Override
-    public Object eval(IonReader source, SourceName name)
+    public Object eval(IonReader source, ResourceDescriptor desc)
         throws FusionInterruptedException, FusionException
     {
+        requireNonNull(desc, "desc");
+
         return withEvaluator(eval -> {
             Object result = voidValue(eval);
 
             if (source.getType() == null) source.next();
             while (source.getType() != null)
             {
-                SyntaxValue sourceExpr = readSyntax(eval, source, name);
+                SyntaxValue sourceExpr = readSyntax(eval, source, desc);
 
                 // This method parameterizes current_namespace for us:
                 result = FusionEval.eval(eval, sourceExpr, myNamespace);
@@ -153,7 +158,7 @@ final class StandardTopLevel
     public Object eval(IonReader source)
         throws FusionInterruptedException, FusionException
     {
-        return eval(source, null);
+        return eval(source, ResourceDescriptor.unknown());
     }
 
 
@@ -171,11 +176,13 @@ final class StandardTopLevel
 
 
     @Override
-    public void loadModule(String     absoluteModulePath,
-                           IonReader  source,
-                           SourceName name)
+    public void loadModule(String absoluteModulePath,
+                           IonReader source,
+                           ResourceDescriptor desc)
         throws FusionInterruptedException, FusionException
     {
+        requireNonNull(desc, "desc");
+
         if (! isValidAbsoluteModulePath(absoluteModulePath))
         {
             String message =
@@ -193,7 +200,7 @@ final class StandardTopLevel
             ModuleIdentity id =
                 ModuleIdentity.forAbsolutePath(absoluteModulePath);
 
-            resolver.loadModule(parameterized, (e) -> source, name, id, true /* reload it */);
+            resolver.loadModule(parameterized, (e) -> source, desc, id, true /* reload it */);
             return null;
         });
     }

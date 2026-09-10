@@ -13,7 +13,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -29,7 +28,7 @@ public class ClassLoaderModuleRepositoryTest
     extends CoreTestCase
 {
 
-    private ModuleLocation locateModule(ModuleRepository repo, String modulePath)
+    private ResourceDescriptor locateModule(ModuleRepository repo, String modulePath)
         throws Exception
     {
         ModuleIdentity id = ModuleIdentity.forAbsolutePath(modulePath);
@@ -48,11 +47,7 @@ public class ClassLoaderModuleRepositoryTest
     private void checkActualModule(ModuleRepository repo)
         throws Exception
     {
-        ModuleLocation loc = locateModule(repo, "/ftst/symbol");
-        assertNotNull(loc);
-        assertNotNull(loc.toString());
-
-        ResourceDescriptor desc = loc.sourceName();
+        ResourceDescriptor desc = locateModule(repo, "/ftst/symbol");
         assertThat(desc.display(), endsWith("/ftst/symbol.fusion"));
 
         Evaluator eval       = evaluator();

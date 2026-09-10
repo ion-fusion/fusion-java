@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import com.amazon.ion.IonReader;
 import com.amazon.ion.system.IonReaderBuilder;
 import dev.ionfusion.runtime.base.FusionException;
+import dev.ionfusion.runtime.base.ResourceDescriptor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -195,7 +196,7 @@ public class NamespaceTest
 
         top1.loadModule("/manual",
                         read("(module M '/tinylang' true)"),
-                        null);
+                        ResourceDescriptor.unknown());
         assertNotLoaded(top0, "/manual");
 
         top1.requireModule("/manual");
@@ -248,7 +249,7 @@ public class NamespaceTest
 
         top0.loadModule("/manual",
                         read("(module M '/tinylang' true)"),
-                        null);
+                        ResourceDescriptor.unknown());
         top0.requireModule("/manual");
 
         top1.attachModule(top0, "/manual");

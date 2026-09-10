@@ -8,12 +8,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.ionfusion.runtime._private.cover.CoverageCollector;
-import dev.ionfusion.runtime.base.CodePosition;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ResourceDescriptor;
 import dev.ionfusion.runtime.base.ResourcePosition;
 import dev.ionfusion.runtime.base.SourceLocation;
-import dev.ionfusion.runtime.base.SourceName;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,13 +32,13 @@ public class CoverageTest
         final Map<ResourcePosition, AtomicInteger> instrumented = new HashMap<>();
 
         @Override
-        public boolean locationIsRecordable(CodePosition loc)
+        public boolean locationIsRecordable(ResourcePosition pos)
         {
-            return (!instrumentOnlyLineOne || loc.getLine() == 1);
+            return (!instrumentOnlyLineOne || pos.getLine() == 1);
         }
 
         @Override
-        public AtomicInteger locationInstrumented(CodePosition pos)
+        public AtomicInteger locationInstrumented(ResourcePosition pos)
         {
             // For simplicity, we'll ignore the offset.
             pos = SourceLocation.forLineColumn(pos.getLine(),
@@ -69,16 +67,6 @@ public class CoverageTest
      * @param line one-based
      * @param column one-based
      */
-    private void checkCovered(long line, long column)
-    {
-        checkCovered(null, line, column);
-    }
-
-
-    /**
-     * @param line one-based
-     * @param column one-based
-     */
     private void checkNotCovered(ResourceDescriptor name, long line, long column)
     {
         ResourcePosition loc = SourceLocation.forLineColumn(line, column, name);
@@ -90,30 +78,12 @@ public class CoverageTest
      * @param line one-based
      * @param column one-based
      */
-    private void checkNotCovered(long line, long column)
-    {
-        checkNotCovered(null, line, column);
-    }
-
-    /**
-     * @param line one-based
-     * @param column one-based
-     */
     private void checkNotInstrumented(ResourceDescriptor name, long line, long column)
     {
         ResourcePosition loc = SourceLocation.forLineColumn(line, column, name);
         assertNull(collector.instrumented.get(loc));
     }
 
-
-    /**
-     * @param line one-based
-     * @param column one-based
-     */
-    private void checkNotInstrumented(long line, long column)
-    {
-        checkNotInstrumented(null, line, column);
-    }
 
 
     @Override
@@ -135,18 +105,21 @@ public class CoverageTest
     {
         TopLevel top = topLevel();
 
-        eval("0");
-        checkCovered(1, 1);
+        ResourceDescriptor desc = ResourceDescriptor.named("testCollection");
+        eval("0", desc);
+        checkCovered(desc,1, 1);
 
+        desc = ResourceDescriptor.unknown();
         //    1 3 5 7 9
         eval("(if true\n" +
-             "    1 2)");
-        checkCovered   (1, 1);
-        checkCovered   (1, 5);
-        checkCovered   (2, 5);
-        checkNotCovered(2, 7);
+             "    1 2)",
+             desc);
+        checkCovered   (desc, 1, 1);
+        checkCovered   (desc, 1, 5);
+        checkCovered   (desc, 2, 5);
+        checkNotCovered(desc, 2, 7);
 
-        SourceName name1 = SourceName.forDisplay("define");
+        ResourceDescriptor name1 = ResourceDescriptor.named("define");
         //        1 3 5 7 9
         top.eval("(define (f t)\n" +
                  "  (if t      \n" +
@@ -165,7 +138,7 @@ public class CoverageTest
         checkCovered   (name1, 3, 7);
         checkNotCovered(name1, 4, 7);
 
-        SourceName name2 = SourceName.forDisplay("invoke");
+        ResourceDescriptor name2 = ResourceDescriptor.named("invoke");
         //        1 3 5 7 9
         top.eval("(f false)",
                  name2);
@@ -181,12 +154,14 @@ public class CoverageTest
     {
         collector.instrumentOnlyLineOne = true;
 
+        ResourceDescriptor desc = ResourceDescriptor.named("partial");
         //    1 3 5 7 9
         eval("(if true\n" +
-             "    1 2)");
-        checkCovered        (1, 1);
-        checkCovered        (1, 5);
-        checkNotInstrumented(2, 5);
-        checkNotInstrumented(2, 7);
+             "    1 2)",
+             desc);
+        checkCovered        (desc, 1, 1);
+        checkCovered        (desc, 1, 5);
+        checkNotInstrumented(desc, 2, 5);
+        checkNotInstrumented(desc, 2, 7);
     }
 }

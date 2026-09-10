@@ -53,7 +53,7 @@ public class ReplTest
         supplyInput("(void]\n");
         runRepl();
 
-        expectError("Error reading source:");
+        expectError("Error reading REPL input:");
     }
 
 

@@ -6,6 +6,8 @@ package dev.ionfusion.fusion;
 
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
+import dev.ionfusion.runtime.base.ResourceDescriptor;
+import dev.ionfusion.runtime.base.ResourceIdentifier;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -24,16 +26,18 @@ abstract class ModuleRepository
     abstract String identify();
 
     /**
-     * Attempts to locate a module within this repository, without forcing its
-     * loading or instantiation.
+     * Attempts to locate the source code for a module within this repository without
+     * loading or instantiating it.
+     * <p>
+     * A non-null result must have a {@link ResourceIdentifier}.
      *
-     * @return the location of a module with the given identity, or null.
+     * @return a descriptor of the resource containing the module's code, or null.
      */
-    abstract ModuleLocation locateModule(Evaluator eval, ModuleIdentity id)
+    abstract ResourceDescriptor locateModule(Evaluator eval, ModuleIdentity id)
         throws FusionException;
 
     /**
-     * Enumerate modules that are visible to this repository.
+     * Collects the identities of the modules visible to this repository.
      * This may not be the entire set of loadable modules! Some repositories
      * may not be able to enumerate their own content, and submodules may not
      * be discovered until their containing module is loaded.

@@ -3,7 +3,7 @@
 
 package dev.ionfusion.runtime._private.cover;
 
-import dev.ionfusion.runtime.base.CodePosition;
+import dev.ionfusion.runtime.base.ResourcePosition;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -27,7 +27,7 @@ public interface CoverageCollector
      * If false, then {@link #locationInstrumented} must not be called with an
      * equivalent location.
      */
-    boolean locationIsRecordable(CodePosition loc);
+    boolean locationIsRecordable(ResourcePosition pos);
 
     /**
      * Records that the code at some location has been instrumented.
@@ -35,9 +35,9 @@ public interface CoverageCollector
      * This method is called during compilation, so the code point hasn't been evaluated
      * yet (and may never be evaluated). Implementations must be idempotent.
      *
-     * @param loc must be {@linkplain #locationIsRecordable recordable}.
+     * @param pos must be {@linkplain #locationIsRecordable recordable}.
      *
      * @return the counter for the location, to be incremented for each evaluation.
      */
-    AtomicInteger locationInstrumented(CodePosition loc);
+    AtomicInteger locationInstrumented(ResourcePosition pos);
 }

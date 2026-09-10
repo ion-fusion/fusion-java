@@ -11,6 +11,7 @@ import dev.ionfusion.fusioncli.repl.cmd.DocCmd;
 import dev.ionfusion.fusioncli.repl.cmd.ExitCmd;
 import dev.ionfusion.fusioncli.repl.cmd.ReplHelpCmd;
 import dev.ionfusion.runtime.base.FusionException;
+import dev.ionfusion.runtime.base.ResourceDescriptor;
 import dev.ionfusion.runtime.embed.FusionRuntime;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.IOException;
@@ -104,7 +105,8 @@ public abstract class RepLoop
 
         try
         {
-            Object result = myTopLevel.eval(line);
+            ResourceDescriptor desc = ResourceDescriptor.named("REPL input");
+            Object result = myTopLevel.eval(line, desc);
             writeResults(myTopLevel, result, myOut);
         }
         catch (FusionException | IonException e)

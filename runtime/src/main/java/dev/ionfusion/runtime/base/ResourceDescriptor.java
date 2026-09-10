@@ -7,7 +7,7 @@ import java.net.URI;
 import java.nio.file.Path;
 
 /**
- * Provides access to metadata about a resource and optionally access to its content.
+ * Describes a resource and optionally provides access to its content.
  * <p>
  * There are three varieties of resource descriptors:
  * <ul>
@@ -20,11 +20,16 @@ import java.nio.file.Path;
  *   string.</li>
  * </ul>
  * <p>
+ * Two descriptors are considered equal if they are the same instance or if they
+ * have equal non-null {@link ResourceIdentifier}s.
+ * <p>
+ * Descriptors are {@link Attributed} to support extensible metadata about the resource.
  * Long term, this is intended to surface things like the deployment unit containing the
  * resource, perhaps checksums, etc. This enables passing context from the component
  * providing the resource.
  */
 public interface ResourceDescriptor
+    extends Attributed
 {
     /**
      * Returns a human-readable description of the resource, for display in messages.
@@ -55,6 +60,12 @@ public interface ResourceDescriptor
 
     //==================================================================================
     // Factories
+
+    static ResourceDescriptor identified(ResourceIdentifier rsrc)
+    {
+        return new ResourceDescriptorImpl.IdentifiedResourceDescriptor(rsrc);
+    }
+
 
     /**
      * Returns a descriptor that displays as the given name and has no

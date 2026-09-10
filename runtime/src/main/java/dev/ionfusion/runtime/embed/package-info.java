@@ -58,7 +58,7 @@
  * can be canceled by calling {@link java.lang.Thread#interrupt()} on the evaluation
  * thread. The evaluator periodically checks the thread interrupt status and cancels the
  * computation when it is set. The evaluation API then throws
- * {@link dev.ionfusion.fusion.FusionInterruptedException}, leaving the thread interrupt
+ * {@link FusionInterruptedException}, leaving the thread interrupt
  * status set. Be aware that some activities, notably reading from an
  * {@link java.io.InputStream}, are uninterruptible and will block until control returns
  * to the evaluator.

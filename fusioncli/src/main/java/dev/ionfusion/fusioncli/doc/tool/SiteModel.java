@@ -4,22 +4,21 @@
 package dev.ionfusion.fusioncli.doc.tool;
 
 import com.amazon.ion.Timestamp;
-import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.FusionJarInfo;
+import dev.ionfusion.runtime.base.JarInfo;
+import dev.ionfusion.runtime.embed.FusionRuntime;
 
 /**
  * Holds site-wide information available to templates.
  */
 public class SiteModel
 {
-    private final Timestamp     myTime;
-    private final FusionJarInfo myJarInfo;
+    private final Timestamp myTime;
+    private final JarInfo   myJarInfo;
 
     public SiteModel()
-        throws FusionException
     {
         myTime = Timestamp.nowZ();
-        myJarInfo = new FusionJarInfo();
+        myJarInfo = FusionRuntime.jarInfo();
     }
 
 
@@ -30,7 +29,7 @@ public class SiteModel
 
     public String getVersion()
     {
-        return myJarInfo.getReleaseLabel();
+        return myJarInfo.getVersion();
     }
 
     public boolean isDevBuild()

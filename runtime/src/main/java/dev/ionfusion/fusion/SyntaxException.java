@@ -72,7 +72,7 @@ public class SyntaxException
         SyntaxException e = new SyntaxException(message);
         if (source != null)
         {
-            e.addContext(source.getLocation());
+            e.addContext(source.getPosition());
         }
         return e;
     }

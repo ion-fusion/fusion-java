@@ -3,6 +3,8 @@
 
 package dev.ionfusion.runtime.base;
 
+import static dev.ionfusion.runtime._private.util.Ordinals.displayFriendlyPosition;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
@@ -56,8 +58,17 @@ public interface ResourcePosition
      *
      * @throws IOException if thrown by the {@link Appendable}.
      */
-    void display(Appendable out)
-        throws IOException;
+    default void display(Appendable out)
+        throws IOException
+    {
+        displayFriendlyPosition(out, getLine(), getColumn(), getOffset());
+
+        ResourceDescriptor rsrc = getResourceDesc();
+        if (!rsrc.isUnknown())
+        {
+            out.append(" of ").append(rsrc.display());
+        }
+    }
 
 
     /**

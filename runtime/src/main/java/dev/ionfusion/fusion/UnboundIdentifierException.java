@@ -34,7 +34,7 @@ public final class UnboundIdentifierException
         String message = composeMessage(details);
 
         UnboundIdentifierException e = new UnboundIdentifierException(message, name);
-        e.addContext(identifier.getLocation());
+        e.addContext(identifier.getPosition());
         return e;
     }
 

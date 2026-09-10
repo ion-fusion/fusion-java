@@ -9,7 +9,7 @@ import com.amazon.ion.IonWriter;
 import com.amazon.ion.ValueFactory;
 import dev.ionfusion.fusion.FusionInterruptedException;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.SourceName;
+import dev.ionfusion.runtime.base.ResourceDescriptor;
 import java.io.File;
 
 /**
@@ -34,7 +34,7 @@ import java.io.File;
  *
  * <h2>Exceptions</h2>
  *
- * Most of the methods on this class can throw subclasses of {@link FusionException}
+ * Most of the methods in this class can throw subclasses of {@link FusionException}
  * that deserve special consideration:
  *
  * <ul>
@@ -60,7 +60,7 @@ public interface TopLevel
      *
      * @param source Fusion source code, in Ion data format. Must not be null.
      *               The caller is responsible for closing this reader.
-     * @param name identifies the source for error reporting. May be null.
+     * @param name identifies the source for error reporting. Must not be null.
      *
      * @return the resulting Fusion value; typically the value of the last
      * expression in the source. May be null (if no value results) or an
@@ -68,7 +68,7 @@ public interface TopLevel
      *
      * @throws FusionException if an error occurs during evaluation
      */
-    Object eval(IonReader source, SourceName name)
+    Object eval(IonReader source, ResourceDescriptor name)
         throws FusionException;
 
 
@@ -77,7 +77,7 @@ public interface TopLevel
      * Top-level {@code define} forms will alter the environment and will be
      * visible to later calls.
      * <p>
-     * {@link #eval(IonReader,SourceName)} should be preferred to this method,
+     * {@link #eval(IonReader,ResourceDescriptor)} should be preferred to this method
      * since it can provide better error reporting.
      *
      * @param source Fusion source code, in Ion data format. Must not be null.
@@ -89,7 +89,7 @@ public interface TopLevel
      *
      * @throws FusionException if an error occurs during evaluation
      *
-     * @see #eval(IonReader,SourceName)
+     * @see #eval(IonReader,ResourceDescriptor)
      */
     Object eval(IonReader source)
         throws FusionException;
@@ -101,7 +101,7 @@ public interface TopLevel
      * visible to later calls.
      *
      * @param source Fusion source code, in Ion data format. Must not be null.
-     * @param name identifies the source for error reporting. May be null.
+     * @param desc identifies the source for error reporting. Must not be null.
      *
      * @return the resulting Fusion value; typically the value of the last
      * expression in the source. May be null (if no value results) or an
@@ -109,7 +109,7 @@ public interface TopLevel
      *
      * @throws FusionException if an error occurs during evaluation
      */
-    Object eval(String source, SourceName name)
+    Object eval(String source, ResourceDescriptor desc)
         throws FusionException;
 
 
@@ -118,7 +118,7 @@ public interface TopLevel
      * Top-level {@code define} forms will alter the environment and will be
      * visible to later calls.
      * <p>
-     * {@link #eval(String,SourceName)} should be preferred to this method,
+     * {@link #eval(String,ResourceDescriptor)} should be preferred to this method
      * since it can provide better error reporting.
      *
      * @param source Fusion source code, in Ion data format. Must not be null.
@@ -129,7 +129,7 @@ public interface TopLevel
      *
      * @throws FusionException if an error occurs during evaluation
      *
-     * @see #eval(String,SourceName)
+     * @see #eval(String,ResourceDescriptor)
      */
     Object eval(String source)
         throws FusionException;
@@ -316,7 +316,7 @@ public interface TopLevel
 
 
     /**
-     * Loads a module declaration from source code. This compiles the module,
+     * Loads a module declaration from source code. This compiles the module
      * but does not instantiate it (evaluate the module's body); that happens
      * when the module is first {@code require}d.
      * <p>
@@ -329,7 +329,7 @@ public interface TopLevel
      * @param absoluteModulePath identifies the module to be loaded.
      * Must be an absolute module path, starting with {@code '/'}.
      * @param source Fusion source code, in Ion data format. Must not be null.
-     * @param name identifies the source for error reporting. May be null.
+     * @param desc describes the source for error reporting. Must not be null.
      *
      * @throws FusionException if the reader doesn't provide exactly one
      * top-level value, if a module with the given identity has already been
@@ -337,6 +337,6 @@ public interface TopLevel
      */
     void loadModule(String absoluteModulePath,
                     IonReader source,
-                    SourceName name)
+                    ResourceDescriptor desc)
         throws FusionException;
 }
