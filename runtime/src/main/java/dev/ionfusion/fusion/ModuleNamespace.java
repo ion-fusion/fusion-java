@@ -8,11 +8,11 @@ import static dev.ionfusion.fusion.BindingSite.makeExportBindingSite;
 import static dev.ionfusion.fusion.GlobalState.REQUIRE;
 import static dev.ionfusion.fusion.UnboundIdentifierException.makeUnboundError;
 
+import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime._private.doc.BindingDoc;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
-import dev.ionfusion.runtime.base.ResourcePosition;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;

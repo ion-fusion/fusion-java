@@ -12,6 +12,7 @@ import static dev.ionfusion.fusion.NamedValue.inferObjectName;
 import static dev.ionfusion.fusion.ResultFailure.makeResultError;
 import static dev.ionfusion.fusion.UnboundIdentifierException.makeUnboundError;
 
+import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.ModuleNamespace.ModuleDefinedBinding;
 import dev.ionfusion.fusion.ModuleNamespace.ProvidedBinding;
@@ -19,7 +20,6 @@ import dev.ionfusion.fusion.TopLevelNamespace.TopLevelDefinedBinding;
 import dev.ionfusion.runtime._private.doc.BindingDoc;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
-import dev.ionfusion.runtime.base.ResourcePosition;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;

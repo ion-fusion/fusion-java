@@ -11,12 +11,12 @@ import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 
 import com.amazon.ion.IonException;
 import com.amazon.ion.IonReader;
+import dev.ionfusion.commons.resources.ResourceDescriptor;
+import dev.ionfusion.commons.resources.ResourceIdentifier;
+import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.Evaluator.Thunk;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
-import dev.ionfusion.runtime.base.ResourceDescriptor;
-import dev.ionfusion.runtime.base.ResourceIdentifier;
-import dev.ionfusion.runtime.base.ResourcePosition;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

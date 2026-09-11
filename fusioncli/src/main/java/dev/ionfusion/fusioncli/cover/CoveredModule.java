@@ -3,9 +3,9 @@
 
 package dev.ionfusion.fusioncli.cover;
 
+import dev.ionfusion.commons.resources.ResourceIdentifier;
 import dev.ionfusion.runtime._private.cover.CoverageDatabase;
 import dev.ionfusion.runtime.base.ModuleIdentity;
-import dev.ionfusion.runtime.base.ResourceIdentifier;
 import java.net.URI;
 import java.nio.file.Path;
 

@@ -6,11 +6,11 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionIo.safeWriteToString;
 import static dev.ionfusion.fusion.FusionList.immutableList;
 
+import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionList.BaseList;
 import dev.ionfusion.fusion.FusionSexp.BaseSexp;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.ResourcePosition;
 
 final class QuasiSyntaxForm
     extends QuasiBaseForm

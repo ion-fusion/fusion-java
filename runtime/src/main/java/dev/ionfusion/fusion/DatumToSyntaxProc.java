@@ -8,8 +8,8 @@ import static dev.ionfusion.fusion.FusionSyntax.isSyntax;
 import static dev.ionfusion.fusion.FusionSyntax.unsafeSyntaxPosition;
 import static dev.ionfusion.fusion.Syntax.datumToSyntax;
 
+import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.ResourcePosition;
 
 
 class DatumToSyntaxProc

@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.runtime.base;
+package dev.ionfusion.commons.resources;
 
 import static dev.ionfusion.runtime._private.util.Ordinals.displayFriendlyPosition;
 import static java.util.Objects.requireNonNull;

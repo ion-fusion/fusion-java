@@ -12,7 +12,7 @@ import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.amazon.ion.IonReader;
-import dev.ionfusion.runtime.base.ResourceDescriptor;
+import dev.ionfusion.commons.resources.ResourceDescriptor;
 import org.junit.jupiter.api.Test;
 
 public class StandardReaderTest

@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 import static com.amazon.ion.IntegerSize.BIG_INTEGER;
+import static dev.ionfusion.commons.resources.ResourcePosition.forCurrentSpan;
 import static dev.ionfusion.fusion.FusionBool.makeBool;
 import static dev.ionfusion.fusion.FusionList.immutableList;
 import static dev.ionfusion.fusion.FusionList.nullList;
@@ -18,7 +19,6 @@ import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionSyntax.isSyntax;
 import static dev.ionfusion.fusion.FusionTimestamp.makeTimestamp;
 import static dev.ionfusion.fusion.SyntaxValue.STX_PROPERTY_ORIGINAL;
-import static dev.ionfusion.runtime.base.ResourcePosition.forCurrentSpan;
 import static java.lang.Boolean.TRUE;
 import static java.util.Objects.requireNonNull;
 
@@ -28,12 +28,12 @@ import com.amazon.ion.IonException;
 import com.amazon.ion.IonReader;
 import com.amazon.ion.IonType;
 import com.amazon.ion.Timestamp;
+import dev.ionfusion.commons.resources.ResourceDescriptor;
+import dev.ionfusion.commons.resources.ResourceIdentifier;
+import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionList.BaseList;
 import dev.ionfusion.fusion.FusionSexp.BaseSexp;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.ResourceDescriptor;
-import dev.ionfusion.runtime.base.ResourceIdentifier;
-import dev.ionfusion.runtime.base.ResourcePosition;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;

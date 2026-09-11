@@ -17,8 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.amazon.ion.IonReader;
+import dev.ionfusion.commons.resources.ResourceDescriptor;
 import dev.ionfusion.runtime.base.ModuleIdentity;
-import dev.ionfusion.runtime.base.ResourceDescriptor;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;

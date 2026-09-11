@@ -6,8 +6,8 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionValue.UNDEF;
 import static dev.ionfusion.fusion.SyntaxSymbol.ensureUniqueIdentifiers;
 
+import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.ResourcePosition;
 import java.util.Arrays;
 
 final class LetrecForm

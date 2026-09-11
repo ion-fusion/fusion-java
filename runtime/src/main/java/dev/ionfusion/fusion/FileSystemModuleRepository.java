@@ -3,15 +3,15 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.commons.resources.ResourceIdentifier.forFile;
 import static dev.ionfusion.runtime.base.ModuleIdentity.isValidModuleName;
-import static dev.ionfusion.runtime.base.ResourceIdentifier.forFile;
 import static dev.ionfusion.runtime.base._Private_Attributes.MODULE_IDENTITY_ATTRIBUTE;
 import static dev.ionfusion.runtime.embed.FusionRuntime.FUSION_SOURCE_CODE_FILE_EXTENSION;
 import static java.nio.file.Files.isDirectory;
 
+import dev.ionfusion.commons.resources.ResourceDescriptor;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
-import dev.ionfusion.runtime.base.ResourceDescriptor;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.function.Consumer;

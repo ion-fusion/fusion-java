@@ -11,10 +11,10 @@ import static dev.ionfusion.runtime._private.util.Empties.EMPTY_STRING_ARRAY;
 import static java.lang.System.arraycopy;
 
 import com.amazon.ion.IonWriter;
+import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionList.BaseList;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.ResourcePosition;
 import java.io.IOException;
 
 final class SyntaxList

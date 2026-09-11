@@ -3,7 +3,7 @@
 
 package dev.ionfusion.runtime._private.cover;
 
-import dev.ionfusion.runtime.base.ResourcePosition;
+import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.runtime.embed.FusionRuntime;
 import java.io.File;
 import java.util.concurrent.atomic.AtomicInteger;

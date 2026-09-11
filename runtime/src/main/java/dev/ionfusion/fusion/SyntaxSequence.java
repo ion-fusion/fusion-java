@@ -4,8 +4,8 @@
 package dev.ionfusion.fusion;
 
 
+import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.ResourcePosition;
 
 abstract class SyntaxSequence
     extends SyntaxContainer

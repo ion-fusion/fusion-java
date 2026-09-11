@@ -13,7 +13,7 @@ import com.amazon.ion.IonTimestamp;
 import com.amazon.ion.IonValue;
 import com.amazon.ion.Timestamp;
 import com.amazon.ion.system.IonSystemBuilder;
-import dev.ionfusion.runtime.base.JarInfo;
+import dev.ionfusion.commons.util.JarInfo;
 import dev.ionfusion.runtime.embed.FusionRuntime;
 import org.junit.jupiter.api.Test;
 

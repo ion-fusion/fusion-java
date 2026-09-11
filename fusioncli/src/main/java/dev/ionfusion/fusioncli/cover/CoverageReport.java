@@ -8,11 +8,11 @@ import static dev.ionfusion.runtime.embed.FusionRuntime.FUSION_SOURCE_CODE_FILE_
 import static java.nio.file.Files.walkFileTree;
 import static java.util.stream.Collectors.toList;
 
+import dev.ionfusion.commons.resources.ResourceIdentifier;
 import dev.ionfusion.runtime._private.cover.CoverageConfiguration;
 import dev.ionfusion.runtime._private.cover.CoverageDatabase;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
-import dev.ionfusion.runtime.base.ResourceIdentifier;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;

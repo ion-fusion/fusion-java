@@ -6,12 +6,12 @@ package dev.ionfusion.fusioncli.repl;
 import static dev.ionfusion.fusioncli.FusionExecutor.writeResults;
 
 import com.amazon.ion.IonException;
+import dev.ionfusion.commons.resources.ResourceDescriptor;
 import dev.ionfusion.fusioncli.framework.CommandSuite;
 import dev.ionfusion.fusioncli.repl.cmd.DocCmd;
 import dev.ionfusion.fusioncli.repl.cmd.ExitCmd;
 import dev.ionfusion.fusioncli.repl.cmd.ReplHelpCmd;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.ResourceDescriptor;
 import dev.ionfusion.runtime.embed.FusionRuntime;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.IOException;

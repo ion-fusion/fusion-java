@@ -4,8 +4,8 @@
 package dev.ionfusion.runtime.embed;
 
 import com.amazon.ion.IonCatalog;
+import dev.ionfusion.commons.util.JarInfo;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.JarInfo;
 
 /**
  * Primary entry point for embedding Fusion within a Java program.

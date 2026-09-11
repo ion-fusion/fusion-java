@@ -4,9 +4,26 @@
 # Configuration for the Structural plugin.
 # https://github.com/adrianczuczka/structural
 
+# For each package, declare other packages it can depend on.
 rules:
-    # For each package, declare other packages it can depend on.
+
+    # High-level structure; this breaks finer-grained rules below.
+#    "dev.ionfusion.runtime":
+#        - "dev.ionfusion.commons"
+#        - "dev.ionfusion.commons.attributes"
+#        - "dev.ionfusion.commons.resources"
+#        - "dev.ionfusion.fusion"
+#    "dev.ionfusion.fusion":
+#        - "dev.ionfusion.commons"
+
+    "dev.ionfusion.commons.resources":
+        - "dev.ionfusion.commons.attributes"
+        - "dev.ionfusion.runtime._private.util"
+
     "dev.ionfusion.fusion!":
+#        - "dev.ionfusion.commons.**"                    # XXX Does not work
+        - "dev.ionfusion.commons.attributes"
+        - "dev.ionfusion.commons.resources"
         - "dev.ionfusion.runtime._private.cover"
         - "dev.ionfusion.runtime._private.doc"
         - "dev.ionfusion.runtime._private.util"
@@ -14,6 +31,7 @@ rules:
         - "dev.ionfusion.runtime.embed"
 
     "dev.ionfusion.runtime._private.cover":
+        - "dev.ionfusion.commons.resources"
         - "dev.ionfusion.runtime._private.util"
         - "dev.ionfusion.runtime.base"
         - "dev.ionfusion.runtime.embed"
@@ -24,9 +42,12 @@ rules:
         - "dev.ionfusion.runtime.embed"
 
     "dev.ionfusion.runtime.base":
+        - "dev.ionfusion.commons.attributes"
+        - "dev.ionfusion.commons.resources"
         - "dev.ionfusion.runtime._private.util"
 
     "dev.ionfusion.runtime.embed":
+        - "dev.ionfusion.commons.resources"
         - "dev.ionfusion.runtime.base"
 
 # Declare class-import-class rules, generally for exceptions to the package rules above.
@@ -34,4 +55,4 @@ classAllowlist:
     "dev.ionfusion.**":
         - "dev.ionfusion.fusion._Private_*"
     "dev.ionfusion.runtime._private.util.IonCatalogLoader":
-        - "dev.ionfusion.runtime.base"
+        - "dev.ionfusion.commons.resources"

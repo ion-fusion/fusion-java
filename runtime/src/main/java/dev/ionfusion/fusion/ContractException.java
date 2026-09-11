@@ -4,7 +4,7 @@
 package dev.ionfusion.fusion;
 
 
-import dev.ionfusion.runtime.base.ResourcePosition;
+import dev.ionfusion.commons.resources.ResourcePosition;
 
 /**
  * Indicates inappropriate run-time use of a procedure or syntactic form;

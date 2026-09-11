@@ -3,7 +3,7 @@
 
 package dev.ionfusion.fusion;
 
-import dev.ionfusion.runtime.base.ResourcePosition;
+import dev.ionfusion.commons.resources.ResourcePosition;
 
 /**
  * Exposes binding metadata about an identifier in Fusion source code.

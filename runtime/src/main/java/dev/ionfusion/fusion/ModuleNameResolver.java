@@ -15,11 +15,11 @@ import static dev.ionfusion.runtime.base.ModuleIdentity.isValidAbsoluteModulePat
 import static dev.ionfusion.runtime.base.ModuleIdentity.isValidModulePath;
 
 import com.amazon.ion.IonReader;
+import dev.ionfusion.commons.resources.ResourceDescriptor;
+import dev.ionfusion.commons.resources.ResourceIdentifier;
 import dev.ionfusion.fusion.Evaluator.Thunk;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
-import dev.ionfusion.runtime.base.ResourceDescriptor;
-import dev.ionfusion.runtime.base.ResourceIdentifier;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

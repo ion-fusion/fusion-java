@@ -3,8 +3,8 @@
 
 package dev.ionfusion.fusioncli.cover;
 
+import dev.ionfusion.commons.resources.ResourceIdentifier;
 import dev.ionfusion.runtime.base.ModuleIdentity;
-import dev.ionfusion.runtime.base.ResourceIdentifier;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;

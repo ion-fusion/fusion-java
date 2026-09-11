@@ -7,9 +7,9 @@ import static dev.ionfusion.fusion.FusionString.makeString;
 import static dev.ionfusion.fusion.FusionSyntax.checkSyntaxArg;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 
+import dev.ionfusion.commons.resources.ResourceDescriptor;
+import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.ResourceDescriptor;
-import dev.ionfusion.runtime.base.ResourcePosition;
 
 
 class SyntaxSourceProc

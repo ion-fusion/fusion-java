@@ -1,16 +1,19 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.runtime.base;
+package dev.ionfusion.commons.resources;
 
-final class LongResourcePosition
+final class ShortResourcePosition
     extends BaseResourcePosition
 {
-    private final long myLine;
-    private final long myColumn;
-    private final long myOffset;
+    private final short myLine;
+    private final short myColumn;
+    private final short myOffset;
 
-    LongResourcePosition(ResourceDescriptor desc, long line, long column, long offset)
+    ShortResourcePosition(ResourceDescriptor desc,
+                          short line,
+                          short column,
+                          short offset)
     {
         super(desc);
         myLine   = line;

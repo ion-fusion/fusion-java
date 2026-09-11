@@ -6,8 +6,8 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.ResultFailure.makeResultError;
 import static dev.ionfusion.fusion.SyntaxSymbol.ensureUniqueIdentifiers;
 
+import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.ResourcePosition;
 import java.util.ArrayList;
 
 final class LetValuesForm

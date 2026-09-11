@@ -3,9 +3,9 @@
 
 package dev.ionfusion.fusion;
 
+import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionText.BaseText;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.ResourcePosition;
 
 abstract class SyntaxText<Sub extends SyntaxText>
     extends SimpleSyntaxValue

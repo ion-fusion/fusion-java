@@ -5,10 +5,10 @@ package dev.ionfusion.fusion;
 
 import com.amazon.ion.IonException;
 import com.amazon.ion.IonWriter;
+import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionStruct.ImmutableStruct;
 import dev.ionfusion.fusion.FusionStruct.StructFieldVisitor;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.ResourcePosition;
 import java.io.IOException;
 
 final class SyntaxStruct

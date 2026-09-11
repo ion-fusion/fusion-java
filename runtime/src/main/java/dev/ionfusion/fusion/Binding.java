@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion;
 
+import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.LocalEnvironment.LocalBinding;
 import dev.ionfusion.fusion.ModuleNamespace.ModuleDefinedBinding;
@@ -11,7 +12,6 @@ import dev.ionfusion.fusion.Namespace.NsDefinedBinding;
 import dev.ionfusion.fusion.Namespace.RequiredBinding;
 import dev.ionfusion.fusion.TopLevelNamespace.TopLevelDefinedBinding;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.ResourcePosition;
 
 /**
  * Bindings are used during expansion and compilation to identify a specific

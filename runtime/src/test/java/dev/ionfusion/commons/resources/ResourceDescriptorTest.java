@@ -1,9 +1,9 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.ionfusion.runtime.base;
+package dev.ionfusion.commons.resources;
 
-import static dev.ionfusion.runtime.base.ResourceIdentifier.forFile;
+import static dev.ionfusion.commons.resources.ResourceIdentifier.forFile;
 import static dev.ionfusion.testing.Assertions.assertHashEquals;
 import static dev.ionfusion.testing.Assertions.assertNotHashEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -19,8 +19,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import com.amazon.ion.IonReader;
 import com.amazon.ion.system.IonReaderBuilder;
+import dev.ionfusion.commons.resources.ResourceDescriptor;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.ResourceDescriptor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

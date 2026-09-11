@@ -4,10 +4,10 @@
 package dev.ionfusion.fusion;
 
 
+import dev.ionfusion.commons.resources.ResourceDescriptor;
+import dev.ionfusion.commons.resources.ResourceIdentifier;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
-import dev.ionfusion.runtime.base.ResourceDescriptor;
-import dev.ionfusion.runtime.base.ResourceIdentifier;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 

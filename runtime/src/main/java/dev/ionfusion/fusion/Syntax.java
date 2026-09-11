@@ -6,8 +6,8 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.ArgumentException.makeArgumentError;
 
+import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.ResourcePosition;
 
 /**
  * Utilities for working with {@link SyntaxValue}s.

@@ -20,8 +20,8 @@ import static dev.ionfusion.fusion.GlobalState.MODULE;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import dev.ionfusion.commons.resources.ResourceDescriptor;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.ResourceDescriptor;
 import org.junit.jupiter.api.Test;
 
 

@@ -3,6 +3,9 @@
 
 package dev.ionfusion.runtime.base;
 
+import dev.ionfusion.commons.attributes.Attribute;
+import dev.ionfusion.commons.resources.ResourceDescriptor;
+
 public final class _Private_Attributes
 {
     private _Private_Attributes() {}

@@ -9,10 +9,10 @@ import static dev.ionfusion.runtime.base._Private_Attributes.MODULE_IDENTITY_ATT
 import static java.nio.file.Files.exists;
 import static java.util.Collections.emptySet;
 
+import dev.ionfusion.commons.resources.ResourceDescriptor;
+import dev.ionfusion.commons.resources.ResourceIdentifier;
+import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.runtime.base.ModuleIdentity;
-import dev.ionfusion.runtime.base.ResourceDescriptor;
-import dev.ionfusion.runtime.base.ResourceIdentifier;
-import dev.ionfusion.runtime.base.ResourcePosition;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

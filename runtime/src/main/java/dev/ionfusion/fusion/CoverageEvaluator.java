@@ -3,9 +3,9 @@
 
 package dev.ionfusion.fusion;
 
+import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.runtime._private.cover.CoverageCollector;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.ResourcePosition;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**

@@ -16,10 +16,10 @@ import com.amazon.ion.IonWriter;
 import com.amazon.ion.ValueFactory;
 import com.amazon.ion.system.IonTextWriterBuilder;
 import com.amazon.ion.util.IonTextUtils;
+import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionBool.BaseBool;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.ResourcePosition;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.IOException;
 

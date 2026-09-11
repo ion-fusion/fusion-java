@@ -7,8 +7,8 @@ import static dev.ionfusion.runtime._private.util.Empties.EMPTY_OBJECT_ARRAY;
 
 import com.amazon.ion.IonException;
 import com.amazon.ion.IonWriter;
+import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.ResourcePosition;
 import java.io.IOException;
 
 /**

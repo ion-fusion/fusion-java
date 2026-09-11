@@ -15,9 +15,9 @@ import static dev.ionfusion.fusion.Syntax.datumToSyntax;
 import static java.util.Objects.requireNonNull;
 
 import com.amazon.ion.IonReader;
+import dev.ionfusion.commons.resources.ResourceDescriptor;
+import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.ResourceDescriptor;
-import dev.ionfusion.runtime.base.ResourcePosition;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.util.LinkedList;
 

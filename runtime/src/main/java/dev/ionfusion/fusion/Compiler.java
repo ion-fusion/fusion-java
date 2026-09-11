@@ -24,6 +24,7 @@ import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 import static dev.ionfusion.fusion.UnboundIdentifierException.makeUnboundError;
 import static dev.ionfusion.runtime._private.util.Empties.EMPTY_OBJECT_ARRAY;
 
+import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionSexp.BaseSexp;
 import dev.ionfusion.fusion.FusionStruct.StructFieldVisitor;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
@@ -51,7 +52,6 @@ import dev.ionfusion.fusion.TopLevelNamespace.TopLevelDefinedBinding;
 import dev.ionfusion.runtime._private.doc.BindingDoc;
 import dev.ionfusion.runtime._private.doc.BindingDoc.Kind;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.ResourcePosition;
 
 /**
  * "Registers" used during compilation.

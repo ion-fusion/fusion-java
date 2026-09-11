@@ -10,8 +10,8 @@ import static dev.ionfusion.runtime._private.util.Empties.EMPTY_OBJECT_ARRAY;
 import static java.lang.Boolean.TRUE;
 
 import com.amazon.ion.IonValue;
+import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.ResourcePosition;
 import java.util.Arrays;
 
 /**

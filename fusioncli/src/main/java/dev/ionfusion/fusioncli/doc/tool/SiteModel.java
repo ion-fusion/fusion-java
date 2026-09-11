@@ -4,7 +4,7 @@
 package dev.ionfusion.fusioncli.doc.tool;
 
 import com.amazon.ion.Timestamp;
-import dev.ionfusion.runtime.base.JarInfo;
+import dev.ionfusion.commons.util.JarInfo;
 import dev.ionfusion.runtime.embed.FusionRuntime;
 
 /**

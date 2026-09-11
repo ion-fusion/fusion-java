@@ -8,6 +8,8 @@ import static dev.ionfusion.runtime.base._Private_Attributes.MODULE_IDENTITY_ATT
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 
+import dev.ionfusion.commons.resources.ResourceDescriptor;
+import dev.ionfusion.commons.resources.ResourcePosition;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

@@ -6,8 +6,8 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionNumber.makeInt;
 import static dev.ionfusion.fusion.FusionSyntax.checkSyntaxArg;
 
+import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.ResourcePosition;
 
 
 class SyntaxColumnProc

@@ -9,9 +9,9 @@ import static dev.ionfusion.fusion.FusionString.checkRequiredStringArg;
 import static dev.ionfusion.fusion.FusionString.makeString;
 import static dev.ionfusion.fusion.SimpleSyntaxValue.makeSyntax;
 
+import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionBool.BaseBool;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.ResourcePosition;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

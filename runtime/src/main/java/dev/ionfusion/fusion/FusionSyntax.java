@@ -5,8 +5,8 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionBool.makeBool;
 
+import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.runtime.base.FusionException;
-import dev.ionfusion.runtime.base.ResourcePosition;
 import dev.ionfusion.runtime.embed.TopLevel;
 
 
