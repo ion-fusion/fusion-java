@@ -3,13 +3,7 @@
 
 package dev.ionfusion.runtime.base;
 
-import static java.util.Objects.requireNonNull;
-
 import com.amazon.ion.IonReader;
-import com.amazon.ion.OffsetSpan;
-import com.amazon.ion.TextSpan;
-import com.amazon.ion.util.Spans;
-import java.util.Objects;
 
 
 /**
@@ -20,157 +14,8 @@ import java.util.Objects;
  * {@link com.amazon.ion.OffsetSpan}.
  */
 public class SourceLocation
-    implements ResourcePosition
 {
-    /** Not null. */
-    private final ResourceDescriptor myResource;
-
-
-    /**
-     * @param rsrc not null.
-     */
-    private SourceLocation(ResourceDescriptor rsrc)
-    {
-        assert rsrc != null;
-        myResource = rsrc;
-    }
-
-
-    @Override
-    public ResourceDescriptor getResourceDesc()
-    {
-        return myResource;
-    }
-
-
-    @Override
-    public long getLine()
-    {
-        return 0;
-    }
-
-    @Override
-    public long getColumn()
-    {
-        return 0;
-    }
-
-    @Override
-    public long getOffset()
-    {
-        return -1;
-    }
-
-
-    //==================================================================================
-    // Concrete implementations
-
-    private static final class Shorts
-        extends SourceLocation
-    {
-        private final short myLine;
-        private final short myColumn;
-        private final short myOffset;
-
-        private Shorts(ResourceDescriptor name, short line, short column, short offset)
-        {
-            super(name);
-            myLine = line;
-            myColumn = column;
-            myOffset = offset;
-        }
-
-        @Override
-        public long getLine()
-        {
-            return myLine;
-        }
-
-        @Override
-        public long getColumn()
-        {
-            return myColumn;
-        }
-
-        @Override
-        public long getOffset()
-        {
-            return myOffset;
-        }
-    }
-
-
-    private static final class Ints
-        extends SourceLocation
-    {
-        private final int myLine;
-        private final int myColumn;
-        private final int myOffset;
-
-        private Ints(ResourceDescriptor name, int line, int column, int offset)
-        {
-            super(name);
-            myLine   = line;
-            myColumn = column;
-            myOffset = offset;
-        }
-
-        @Override
-        public long getLine()
-        {
-            return myLine;
-        }
-
-        @Override
-        public long getColumn()
-        {
-            return myColumn;
-        }
-
-        @Override
-        public long getOffset()
-        {
-            return myOffset;
-        }
-    }
-
-
-    private static final class Longs
-        extends SourceLocation
-    {
-        private final long myLine;
-        private final long myColumn;
-        private final long myOffset;
-
-        private Longs(ResourceDescriptor name, long line, long column, long offset)
-        {
-            super(name);
-            myLine   = line;
-            myColumn = column;
-            myOffset = offset;
-        }
-
-        @Override
-        public long getLine()
-        {
-            return myLine;
-        }
-
-        @Override
-        public long getColumn()
-        {
-            return myColumn;
-        }
-
-        @Override
-        public long getOffset()
-        {
-            return myOffset;
-        }
-    }
-
-
-    //==================================================================================
+    private SourceLocation() {}
 
 
     /**
@@ -182,11 +27,7 @@ public class SourceLocation
      */
     public static ResourcePosition forName(ResourceDescriptor desc)
     {
-        requireNonNull(desc);
-
-        // TODO Can this allocation be eliminated?
-        //      We'll probably be creating lots of similar instances.
-        return new SourceLocation(desc);
+        return ResourcePosition.unknown(desc);
     }
 
 
@@ -205,29 +46,7 @@ public class SourceLocation
     public static ResourcePosition forLineColumn(long line, long column,
                                                  ResourceDescriptor desc)
     {
-        requireNonNull(desc);
-
-        if (line < 1)
-        {
-            return forName(desc);
-        }
-
-        if (column < 0)
-        {
-            column = 0;
-        }
-
-        if (line <= Short.MAX_VALUE && column <= Short.MAX_VALUE)
-        {
-            return new Shorts(desc, (short) line, (short) column, (short) -1);
-        }
-
-        if (line <= Integer.MAX_VALUE && column <= Integer.MAX_VALUE)
-        {
-            return new Ints(desc, (int) line, (int) column, -1);
-        }
-
-        return new Longs(desc, line, column, -1);
+        return ResourcePosition.forPosition(desc, line, column, -1);
     }
 
 
@@ -244,86 +63,6 @@ public class SourceLocation
     public static ResourcePosition forCurrentSpan(IonReader  source,
                                                   ResourceDescriptor desc)
     {
-        requireNonNull(desc);
-
-        // SpanProvider.currentSpan() crashes if not on a value.
-        if (source.getType() != null)
-        {
-            TextSpan   ts = Spans.currentSpan(TextSpan.class, source);
-            OffsetSpan os = Spans.currentSpan(OffsetSpan.class, source);
-
-            if (ts != null)
-            {
-                long line   = ts.getStartLine();
-                long column = ts.getStartColumn();
-                long offset = os.getStartOffset();
-
-                if (line <= Short.MAX_VALUE &&
-                    column <= Short.MAX_VALUE &&
-                    offset <= Short.MAX_VALUE)
-                {
-                    return new Shorts(desc, (short) line, (short) column,
-                                      (short) offset);
-                }
-
-                if (line <= Integer.MAX_VALUE &&
-                    column <= Integer.MAX_VALUE &&
-                    offset <= Integer.MAX_VALUE)
-                {
-                    return new Ints(desc, (int) line, (int) column, (int) offset);
-                }
-
-                return new Longs(desc, line, column, offset);
-            }
-        }
-
-        return forName(desc);
-    }
-
-
-    /**
-     * Returns a view of this object suitable for debugging.
-     * For displaying messages to users, use {@link #display()} instead.
-     */
-    @Override
-    public String toString()
-    {
-        return display();
-    }
-
-
-    public boolean equals(ResourcePosition that)
-    {
-        return (this == that
-                || (that != null
-                    && this.myResource.equals(that.getResourceDesc())
-                    && this.getLine()   == that.getLine()
-                    && this.getColumn() == that.getColumn()
-                    && this.getOffset() == that.getOffset()));
-    }
-
-    @Override
-    public boolean equals(Object that)
-    {
-        return that instanceof ResourcePosition &&
-               this.equals((ResourcePosition) that);
-    }
-
-
-    private static final int HASH_SEED = SourceLocation.class.hashCode();
-
-    @Override
-    public int hashCode()
-    {
-        final int prime = 8191;
-        int result = HASH_SEED + Objects.hashCode(myResource);
-        result ^= (result << 29) ^ (result >> 3);
-        result = prime * result + (int) getLine();
-        result ^= (result << 29) ^ (result >> 3);
-        result = prime * result + (int) getColumn();
-        result ^= (result << 29) ^ (result >> 3);
-        result = prime * result + (int) getOffset();
-        result ^= (result << 29) ^ (result >> 3);
-        return result;
+        return ResourcePosition.forCurrentSpan(desc, source);
     }
 }

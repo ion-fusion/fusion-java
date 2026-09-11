@@ -5,6 +5,8 @@ package dev.ionfusion.runtime.base;
 
 import static dev.ionfusion.runtime.base.ResourceIdentifier.forFile;
 import static dev.ionfusion.testing.Assertions.assertHashEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.matchesPattern;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -37,6 +39,20 @@ public class SourceLocationTest
         assertSame(desc, loc.getResourceDesc());
         checkPath("/dummy/path", loc);
         assertEquals("unknown position of /dummy/path", loc.display());
+    }
+
+    private void assertNoLineColumn(IonReader ir)
+    {
+        ResourceDescriptor desc = ResourceDescriptor.named("test source");
+        ResourcePosition loc = SourceLocation.forCurrentSpan(ir, desc);
+        assertSame(desc, loc.getResourceDesc());
+        assertThat(loc.display(), matchesPattern("offset [0-9]+ of test source"));
+
+        desc = ResourceDescriptor.identified(forFile("/dummy/path"));
+        loc = SourceLocation.forCurrentSpan(ir, desc);
+        assertSame(desc, loc.getResourceDesc());
+        checkPath("/dummy/path", loc);
+        assertThat(loc.display(), matchesPattern("offset [0-9]+ of /dummy/path"));
     }
 
     private void assertLocation(String expectedOffsets, IonReader ir)
@@ -72,10 +88,13 @@ public class SourceLocationTest
         assertNoLocation(ir);  // Before first value
 
         ir.next();
-        assertNoLocation(ir);
+        assertNoLineColumn(ir); // On sexp
 
         ir.stepIn();
         assertNoLocation(ir);  // Before first child
+
+        ir.next();
+        assertNoLineColumn(ir); // On symbol
 
 
         // Text reader gives line/column locations
