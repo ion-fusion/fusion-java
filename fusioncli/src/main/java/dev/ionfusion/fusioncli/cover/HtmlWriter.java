@@ -3,7 +3,7 @@
 
 package dev.ionfusion.fusioncli.cover;
 
-import dev.ionfusion.runtime._private.io.StreamWriter;
+import dev.ionfusion.commons._private.io.StreamWriter;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.io.IOException;
 

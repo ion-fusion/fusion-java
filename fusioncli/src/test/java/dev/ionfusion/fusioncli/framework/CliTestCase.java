@@ -3,7 +3,7 @@
 
 package dev.ionfusion.fusioncli.framework;
 
-import static dev.ionfusion.runtime._private.util.Empties.EMPTY_STRING_ARRAY;
+import static dev.ionfusion.commons.util.Empties.EMPTY_STRING_ARRAY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import dev.ionfusion.testing.StdioTestCase;

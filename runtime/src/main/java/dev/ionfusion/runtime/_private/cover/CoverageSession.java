@@ -7,8 +7,8 @@ import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.createTempFile;
 
 import dev.ionfusion.commons.resources.ResourcePosition;
-import dev.ionfusion.runtime._private.util.Flusher;
-import dev.ionfusion.runtime._private.util.InternMap;
+import dev.ionfusion.commons.util.Flusher;
+import dev.ionfusion.commons.util.InternMap;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;

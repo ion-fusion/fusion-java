@@ -34,7 +34,7 @@ import dev.ionfusion.fusion.FusionCollection.BaseCollection;
 import dev.ionfusion.fusion.FusionCompare.EqualityTier;
 import dev.ionfusion.fusion.FusionIterator.AbstractIterator;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
-import dev.ionfusion.runtime._private.util.hamt.MultiHashTrie;
+import dev.ionfusion.commons._private.hamt.MultiHashTrie;
 import dev.ionfusion.runtime.base.FusionException;
 import java.io.IOException;
 import java.util.Collections;

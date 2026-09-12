@@ -3,7 +3,7 @@
 
 package dev.ionfusion.runtime._private.cover;
 
-import static dev.ionfusion.runtime._private.util.PropertiesFiles.readProperties;
+import static dev.ionfusion.commons._private.io.PropertiesFiles.readProperties;
 import static dev.ionfusion.runtime.base.ModuleIdentity.isValidAbsoluteModulePath;
 import static dev.ionfusion.runtime.base._Private_Attributes.MODULE_IDENTITY_ATTRIBUTE;
 import static java.nio.file.Files.exists;

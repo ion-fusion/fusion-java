@@ -14,7 +14,7 @@ import com.amazon.ion.SpanProvider;
 import com.amazon.ion.Timestamp;
 import com.amazon.ion.system.IonReaderBuilder;
 import com.amazon.ion.util.Spans;
-import dev.ionfusion.runtime._private.io.StreamWriter;
+import dev.ionfusion.commons._private.io.StreamWriter;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.io.IOException;
 import java.io.InputStream;

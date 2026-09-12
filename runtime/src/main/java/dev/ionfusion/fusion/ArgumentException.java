@@ -3,8 +3,8 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.commons._private.io.Ordinals.writeFriendlyIndex;
 import static dev.ionfusion.fusion.FusionIo.safeWrite;
-import static dev.ionfusion.runtime._private.util.Ordinals.writeFriendlyIndex;
 
 import java.io.IOException;
 import java.util.Arrays;

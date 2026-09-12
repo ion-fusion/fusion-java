@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.commons._private.io.Ordinals.friendlyIndex;
 import static dev.ionfusion.fusion.FusionBool.makeBool;
 import static dev.ionfusion.fusion.FusionList.listFromIonSequence;
 import static dev.ionfusion.fusion.FusionNull.makeNullNull;
@@ -18,7 +19,6 @@ import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionTimestamp.makeTimestamp;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.ResultFailure.makeResultError;
-import static dev.ionfusion.runtime._private.util.Ordinals.friendlyIndex;
 
 import com.amazon.ion.IonBool;
 import com.amazon.ion.IonDatagram;

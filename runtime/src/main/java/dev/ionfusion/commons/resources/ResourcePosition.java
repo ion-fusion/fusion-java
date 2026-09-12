@@ -3,7 +3,7 @@
 
 package dev.ionfusion.commons.resources;
 
-import static dev.ionfusion.runtime._private.util.Ordinals.displayFriendlyPosition;
+import static dev.ionfusion.commons._private.io.Ordinals.displayFriendlyPosition;
 import static java.util.Objects.requireNonNull;
 
 import com.amazon.ion.IonReader;

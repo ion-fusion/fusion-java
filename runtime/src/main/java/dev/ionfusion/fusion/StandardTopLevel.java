@@ -4,10 +4,10 @@
 package dev.ionfusion.fusion;
 
 import static com.amazon.ion.util.IonTextUtils.printQuotedSymbol;
+import static dev.ionfusion.commons._private.io.Ordinals.friendlyIndex;
 import static dev.ionfusion.fusion.FusionIo.safeWriteToString;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.StandardReader.readSyntax;
-import static dev.ionfusion.runtime._private.util.Ordinals.friendlyIndex;
 import static dev.ionfusion.runtime.base.ModuleIdentity.isValidAbsoluteModulePath;
 import static java.util.Objects.requireNonNull;
 

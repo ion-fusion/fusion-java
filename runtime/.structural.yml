@@ -18,41 +18,45 @@ rules:
 
     "dev.ionfusion.commons.resources":
         - "dev.ionfusion.commons.attributes"
-        - "dev.ionfusion.runtime._private.util"
+        - "dev.ionfusion.commons.util"
+
+    "dev.ionfusion.commons._private.hamt":  // Should not depend on anything
+    "dev.ionfusion.commons._private.io":    // Should not depend on anything
+
+    "dev.ionfusion.commons._private.ion":
+        - "dev.ionfusion.commons.resources"
 
     "dev.ionfusion.fusion!":
 #        - "dev.ionfusion.commons.**"                    # XXX Does not work
         - "dev.ionfusion.commons.attributes"
         - "dev.ionfusion.commons.resources"
+        - "dev.ionfusion.commons.util"
         - "dev.ionfusion.runtime._private.cover"
         - "dev.ionfusion.runtime._private.doc"
-        - "dev.ionfusion.runtime._private.util"
         - "dev.ionfusion.runtime.base"
         - "dev.ionfusion.runtime.embed"
 
     "dev.ionfusion.runtime._private.cover":
         - "dev.ionfusion.commons.resources"
-        - "dev.ionfusion.runtime._private.util"
+        - "dev.ionfusion.commons.util"
         - "dev.ionfusion.runtime.base"
         - "dev.ionfusion.runtime.embed"
 
     "dev.ionfusion.runtime._private.doc":
-        - "dev.ionfusion.runtime._private.util"
         - "dev.ionfusion.runtime.base"
         - "dev.ionfusion.runtime.embed"
 
     "dev.ionfusion.runtime.base":
         - "dev.ionfusion.commons.attributes"
         - "dev.ionfusion.commons.resources"
-        - "dev.ionfusion.runtime._private.util"
+        - "dev.ionfusion.commons.util"
 
     "dev.ionfusion.runtime.embed":
         - "dev.ionfusion.commons.resources"
+        - "dev.ionfusion.commons.util"
         - "dev.ionfusion.runtime.base"
 
 # Declare class-import-class rules, generally for exceptions to the package rules above.
 classAllowlist:
-    "dev.ionfusion.**":
-        - "dev.ionfusion.fusion._Private_*"
-    "dev.ionfusion.runtime._private.util.IonCatalogLoader":
-        - "dev.ionfusion.commons.resources"
+    "dev.ionfusion.runtime.embed":
+        - "dev.ionfusion.fusion._Private_Trampoline"

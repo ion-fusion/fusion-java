@@ -3,7 +3,7 @@
 
 package dev.ionfusion.runtime.base;
 
-import static dev.ionfusion.runtime._private.util.Ordinals.displayFriendlyPosition;
+import static dev.ionfusion.commons._private.io.Ordinals.displayFriendlyPosition;
 import static dev.ionfusion.runtime.base._Private_Attributes.MODULE_IDENTITY_ATTRIBUTE;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
