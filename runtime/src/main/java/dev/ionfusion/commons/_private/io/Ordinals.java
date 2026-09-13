@@ -35,6 +35,8 @@ public class Ordinals
      * Renders a zero-based index as a one-based ordinal like "1st", "12th, or "23rd".
      *
      * @param i the zero-based index to display.
+     *
+     * @return the rendered ordinal form of the index.
      */
     public static String friendlyIndex(long i)
     {
@@ -91,6 +93,13 @@ public class Ordinals
      * Displays the line and column, if known, otherwise the offset.
      *
      * @param out the stream to write into.
+     * @param line one-based.
+     * Values less than 1 indicate that the line is unknown.
+     * @param column one-based.
+     * Values less than 1 indicate that the column is unknown.
+     * Ignored if the line is unknown.
+     * @param offset zero-based.
+     * Values less than 0 indicate that the offset is unknown.
      *
      * @throws IOException if thrown by the {@link Appendable}.
      */

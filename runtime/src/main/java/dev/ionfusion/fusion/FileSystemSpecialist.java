@@ -11,10 +11,13 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 /**
- * NOT FOR APPLICATION USE!
- *
  * Centralizes access to security-checked file system operations.
  * These exist 1:1 with {@link FusionRuntime}s.
+ * <p>
+ * Runtime checks use parameters holding the thread-local working directory and
+ * {@link SecurityGuard}.
+ * <p>
+ * NOT FOR APPLICATION USE.
  */
 final class FileSystemSpecialist
 {

@@ -38,6 +38,10 @@ public class InternMap <K, V>
      * <p>
      * If the key has no associated value, one is produced using the factory
      * provided to this map's constructor.
+     *
+     * @param key the key for the interned value.
+     *
+     * @return the interned value.
      */
     public V intern(K key)
     {
@@ -72,6 +76,8 @@ public class InternMap <K, V>
     /**
      * Returns the number of entries in the map.
      * This may not reflect unreachable values.
+     *
+     * @return the number of entries in the map.
      */
     public int size()
     {

@@ -11,14 +11,15 @@ import java.util.Map;
 
 /**
  * Tracks loaded and instantiated modules available for use by namespaces.
- *
+ * <p>
  * "Each namespace has a module registry that maps module names to module
  * declarations. This registry is shared by all phase levels, and it applies
  * both to parsing and to running compiled code."
- *
+ * <p>
  * This class must be thread-safe.
- *
- * See https://docs.racket-lang.org/reference/syntax-model.html#%28part._namespace-model%29
+ * <p>
+ * See <a href="https://docs.racket-lang.org/reference/syntax-model.html#%28part._namespace-model%29">
+ *     Racket's namespace model</a>
  */
 final class ModuleRegistry
 {
