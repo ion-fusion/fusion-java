@@ -43,7 +43,7 @@ final class TopForm
                 // There's no top-level definition with the same marks, so just
                 // lookup by name.
 
-                SyntaxSymbol stripped = id.stripWraps(eval);
+                SyntaxSymbol stripped = id.stripLexicalInfo();
                 binding = ns.resolveDefinition(stripped);
                 // This may still be free, but don't fail until eval-time.
                 // We'd like things like (expand (#%top foo)) to succeed.

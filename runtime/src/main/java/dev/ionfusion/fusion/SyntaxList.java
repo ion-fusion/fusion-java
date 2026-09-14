@@ -3,11 +3,11 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.commons.util.Empties.EMPTY_STRING_ARRAY;
 import static dev.ionfusion.fusion.FusionList.immutableList;
 import static dev.ionfusion.fusion.FusionList.isImmutableList;
 import static dev.ionfusion.fusion.FusionList.nullList;
 import static dev.ionfusion.fusion.FusionList.unsafeListElement;
-import static dev.ionfusion.commons.util.Empties.EMPTY_STRING_ARRAY;
 import static java.lang.System.arraycopy;
 
 import com.amazon.ion.IonWriter;
@@ -134,34 +134,6 @@ final class SyntaxList
 
             myWraps = null;
         }
-    }
-
-
-    @Override
-    SyntaxSequence stripWraps(Evaluator eval)
-        throws FusionException
-    {
-        int len = myImmutableList.size();
-
-        if (len == 0) return this;  // No children, no marks, all okay!
-
-        // Even if we have no marks, some children may have them.
-        boolean mustCopy = (myWraps != null);
-
-        Object[] children = new Object[len];
-        for (int i = 0; i < len; i++)
-        {
-            SyntaxValue child = (SyntaxValue) myImmutableList.elt(eval, i);
-            SyntaxValue stripped = child.stripWraps(eval);
-            children[i] = stripped;
-            mustCopy |= stripped != child;
-        }
-
-        if (! mustCopy) return this;
-
-        BaseSymbol[] annotations = myImmutableList.getAnnotations();
-        BaseList newList = immutableList(eval, annotations, children);
-        return new SyntaxList(getPosition(), getProperties(), null, newList);
     }
 
 

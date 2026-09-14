@@ -86,28 +86,6 @@ final class SyntaxStruct
     }
 
 
-    @Override
-    SyntaxStruct stripWraps(final Evaluator eval)
-        throws FusionException
-    {
-        if (hasNoChildren()) return this;  // No children, no marks, all okay!
-
-        StructFieldVisitor visitor = new StructFieldVisitor() {
-            @Override
-            public Object visit(String name, Object value)
-                    throws FusionException
-            {
-                return ((SyntaxValue) value).stripWraps(eval);
-            }
-        };
-
-        ImmutableStruct s = myStruct.transformFields(eval, visitor);
-        if (s == myStruct) return this;
-
-        return new SyntaxStruct(getPosition(), getProperties(), null, s);
-    }
-
-
     SyntaxValue get(Evaluator eval, String fieldName)
         throws FusionException
     {

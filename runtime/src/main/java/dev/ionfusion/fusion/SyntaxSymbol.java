@@ -4,13 +4,13 @@
 package dev.ionfusion.fusion;
 
 import static com.amazon.ion.util.IonTextUtils.printQuotedSymbol;
+import static dev.ionfusion.commons.util.Empties.EMPTY_OBJECT_ARRAY;
+import static dev.ionfusion.commons.util.Empties.EMPTY_STRING_ARRAY;
 import static dev.ionfusion.fusion.FusionBool.makeBool;
 import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionSyntax.checkIdentifierArg;
 import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 import static dev.ionfusion.fusion.UnboundIdentifierException.makeUnboundError;
-import static dev.ionfusion.commons.util.Empties.EMPTY_OBJECT_ARRAY;
-import static dev.ionfusion.commons.util.Empties.EMPTY_STRING_ARRAY;
 
 import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
@@ -98,6 +98,12 @@ final class SyntaxSymbol
     Object visit(Visitor v) throws FusionException
     {
         return v.accept(this);
+    }
+
+
+    SyntaxSymbol stripLexicalInfo()
+    {
+        return myWraps == null ? this : copyReplacingWraps(null);
     }
 
 

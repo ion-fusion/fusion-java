@@ -78,17 +78,9 @@ abstract class SyntaxText<Sub extends SyntaxText>
     }
 
 
-    @Override
-    final Sub stripWraps(Evaluator eval)
-    {
-        if (myWraps == null) return (Sub) this;
-        return copyReplacingWraps(null);
-    }
-
-
     /**
      * Adds the wraps on this value onto those already on another value.
-     * @return syntax matching the source, after adding the wraps from this
+     * @return syntax matching the source after adding the wraps from this
      * symbol.
      */
     final SyntaxValue copyWrapsTo(SyntaxValue source)

@@ -251,48 +251,6 @@ final class SyntaxSexp
     }
 
 
-    private static ImmutablePair stripWraps(Evaluator eval,
-                                            ImmutablePair pair)
-        throws FusionException
-    {
-        Object head = unsafePairHead(eval, pair);
-        Object tail = unsafePairTail(eval, pair);
-
-        Object newHead = head;
-        if (head instanceof SyntaxValue)
-        {
-            newHead = ((SyntaxValue) head).stripWraps(eval);
-        }
-
-        Object newTail = tail;
-        if (isPair(eval, tail))
-        {
-            newTail = stripWraps(eval, (ImmutablePair) tail);
-        }
-        else if (tail instanceof SyntaxValue)
-        {
-            newTail = ((SyntaxValue) tail).stripWraps(eval);
-        }
-
-        if (head != newHead || tail != newTail)
-        {
-            pair = pair(eval, pair.myAnnotations, newHead, newTail);
-        }
-
-        return pair;
-    }
-
-    @Override
-    SyntaxSequence stripWraps(Evaluator eval)
-        throws FusionException
-    {
-        if (hasNoChildren()) return this;  // No children, no marks, all okay!
-
-        BaseSexp newSexp = stripWraps(eval, (ImmutablePair) mySexp);
-        return new SyntaxSexp(getPosition(), getProperties(), null, newSexp);
-    }
-
-
     @Override
     boolean hasNoChildren()
         throws FusionException
