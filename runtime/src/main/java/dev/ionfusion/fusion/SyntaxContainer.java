@@ -34,13 +34,6 @@ abstract class SyntaxContainer
 
 
     /**
-     * Equivalent to size() == 0.  Computing size of sexp is
-     * expensive so we do this instead.
-     */
-    abstract boolean hasNoChildren()
-        throws FusionException;
-
-    /**
      * Only called when this container has children.
      * @param wraps is not null.
      */
@@ -52,8 +45,7 @@ abstract class SyntaxContainer
     final SyntaxValue addWrap(SyntaxWrap wrap)
         throws FusionException
     {
-        // Don't bother if this is an empty container.
-        if (hasNoChildren()) return this;
+        assert wrap != null;
 
         SyntaxWraps newWraps;
         if (myWraps == null)
@@ -74,8 +66,7 @@ abstract class SyntaxContainer
     final SyntaxValue addWraps(SyntaxWraps wraps)
         throws FusionException
     {
-        // Don't bother if this is an empty container.
-        if (hasNoChildren()) return this;
+        assert wraps != null;
 
         SyntaxWraps newWraps;
         if (myWraps == null)

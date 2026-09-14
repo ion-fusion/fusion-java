@@ -113,10 +113,10 @@ final class SyntaxList
     private synchronized void pushWraps(Evaluator eval)
         throws FusionException
     {
-        if (myWraps != null)  // We only have wraps when we have children.
+        int len = myImmutableList.size();
+        if (myWraps != null && len > 0)
         {
             boolean changed = false;
-            int len = myImmutableList.size();
             SyntaxValue[] children = new SyntaxValue[len];
             for (int i = 0; i < len; i++)
             {
@@ -134,13 +134,6 @@ final class SyntaxList
 
             myWraps = null;
         }
-    }
-
-
-    @Override
-    final boolean hasNoChildren()
-    {
-        return myImmutableList.size() == 0;
     }
 
 

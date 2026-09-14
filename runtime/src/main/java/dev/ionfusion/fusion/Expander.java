@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.fusion.FusionSexp.isPair;
 import static dev.ionfusion.fusion.FusionValue.isAnnotated;
 import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 
@@ -95,16 +96,14 @@ final class Expander
     SyntaxValue expandOnce(Environment env, SyntaxValue stx)
         throws FusionException
     {
+        if (!isPair(myEval, stx.unwrap(myEval))) return stx;
+
         // Handle other cases as per Racket spec. In particular:
         // TODO https://github.com/ion-fusion/fusion-java/issues/72 identifier macros
         // TODO https://github.com/ion-fusion/fusion-java/issues/73 rename transformers
         // TODO https://github.com/ion-fusion/fusion-java/issues/74 #%app
 
-        if (! (stx instanceof SyntaxSexp)) return stx;
-
         SyntaxSexp sexp = (SyntaxSexp) stx;
-        if (sexp.hasNoChildren()) return stx;
-
         SyntaxSymbol maybeMacro = sexp.firstIdentifier(myEval);
         if (maybeMacro == null) return stx;
 

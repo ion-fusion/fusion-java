@@ -67,13 +67,6 @@ final class SyntaxStruct
 
 
     @Override
-    boolean hasNoChildren()
-    {
-        return myStruct.size() == 0;
-    }
-
-
-    @Override
     SyntaxStruct copyReplacingProperties(Object[] properties)
     {
         return new SyntaxStruct(getPosition(), properties, myWraps, myStruct);
@@ -100,23 +93,13 @@ final class SyntaxStruct
     Object unwrap(Evaluator eval)
         throws FusionException
     {
-        if (myWraps == null)
+        if (myWraps == null || myStruct.size() == 0)
         {
             return myStruct;
         }
 
-        // We have wraps to propagate (and therefore children).
-        // Idea: keep track of when there are symbols contained (recursively),
-        // when there's not, maybe we can skip all this.
-
-        StructFieldVisitor visitor = new StructFieldVisitor() {
-            @Override
-            public Object visit(String name, Object value)
-                throws FusionException
-            {
-                return ((SyntaxValue) value).addWraps(myWraps);
-            }
-        };
+        StructFieldVisitor visitor =
+            (name, value) -> ((SyntaxValue) value).addWraps(myWraps);
 
         myStruct = myStruct.transformFields(eval, visitor);
         myWraps = null;
@@ -134,16 +117,8 @@ final class SyntaxStruct
             return myStruct;
         }
 
-        // We have children, and wraps to propagate (when not recursing)
-
-        StructFieldVisitor visitor = new StructFieldVisitor() {
-            @Override
-            public Object visit(String name, Object value)
-                    throws FusionException
-            {
-                return ((SyntaxValue) value).syntaxToDatum(eval);
-            }
-        };
+        StructFieldVisitor visitor =
+            (name, value) -> ((SyntaxValue) value).syntaxToDatum(eval);
 
         return myStruct.transformFields(eval, visitor);
     }
@@ -159,18 +134,13 @@ final class SyntaxStruct
             return this;
         }
 
-        StructFieldVisitor visitor = new StructFieldVisitor() {
-            @Override
-            public Object visit(String name, Object value)
-                throws FusionException
+        StructFieldVisitor visitor = (name, value) -> {
+            SyntaxValue subform = (SyntaxValue) value;
+            if (myWraps != null)
             {
-                SyntaxValue subform = (SyntaxValue) value;
-                if (myWraps != null)
-                {
-                    subform = subform.addWraps(myWraps);
-                }
-                return expander.expandExpression(env, subform);
+                subform = subform.addWraps(myWraps);
             }
+            return expander.expandExpression(env, subform);
         };
 
         ImmutableStruct s = myStruct.transformFields(eval, visitor);

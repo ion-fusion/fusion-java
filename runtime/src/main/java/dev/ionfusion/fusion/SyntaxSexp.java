@@ -150,7 +150,7 @@ final class SyntaxSexp
     SyntaxSexp copyReplacingWraps(SyntaxWraps wraps)
         throws FusionException
     {
-        assert ! hasNoChildren() && wraps != null;
+        assert wraps != null;
         return new SyntaxSexp(getPosition(), getProperties(), wraps, mySexp);
     }
 
@@ -197,7 +197,7 @@ final class SyntaxSexp
     private void pushWraps(Evaluator eval)
         throws FusionException
     {
-        if (myWraps != null)  // We only have wraps when we have children.
+        if (myWraps != null && mySexp instanceof ImmutablePair)
         {
             mySexp = pushWraps(eval, (ImmutablePair) mySexp, myWraps);
             myWraps = null;
@@ -248,14 +248,6 @@ final class SyntaxSexp
             }
             i++;
         }
-    }
-
-
-    @Override
-    boolean hasNoChildren()
-        throws FusionException
-    {
-        return ! (mySexp instanceof ImmutablePair);
     }
 
 
@@ -478,7 +470,7 @@ final class SyntaxSexp
             throw makeSyntaxError(eval, null, message, this);
         }
 
-        SyntacticForm form = syntaxForm(eval, env);
+        SyntacticForm form = syntaxForm(eval, env);       // propagates lexical context
         if (form != null)
         {
             // We found a static top-level binding to a built-in form or a
