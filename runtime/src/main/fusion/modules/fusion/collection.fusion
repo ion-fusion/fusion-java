@@ -287,7 +287,7 @@ application of `pred` to the final element of the sequence is in tail position.
                    (loop t))
                (pred h))))))   // The last predicate call is in tail position
       (true
-       (raise_argument_error "any" "collection" 0 collection))))
+       (raise_argument_error "any" "collection" 1 collection))))
 
 
   (defpub (none pred collection)
@@ -341,7 +341,7 @@ application of `pred` to the final element of the sequence is in tail position.
                (pred h))))     // The last predicate call is in tail position
          true))
       (true
-       (raise_argument_error "every" "collection" 0 collection))))
+       (raise_argument_error "every" "collection" 1 collection))))
 
 
   (defpub (is_empty collection)
@@ -393,7 +393,7 @@ each value, and the result is either one of those values or void.
                (loop (unsafe_pair_tail s))))
            (void))))
       (true
-       (raise_argument_error "find" "collection" 0 collection))))
+       (raise_argument_error "find" "collection" 1 collection))))
 
   // Name per Dylan.  Equivalent to SRFI-1 `for_each` but I don't want this to
   // be confused with the `for` syntax from Racket.
@@ -433,7 +433,7 @@ See also: [`struct_do`](fusion/struct.html#struct_do)
              (loop (unsafe_pair_tail s)))
            (void))))
       (true
-       (raise_argument_error "do" "collection" 0 collection))))
+       (raise_argument_error "do" "collection" 1 collection))))
 
 
   (defpub (same_size collection1 collection2)
