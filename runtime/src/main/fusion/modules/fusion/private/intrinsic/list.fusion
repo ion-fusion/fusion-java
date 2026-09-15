@@ -93,10 +93,10 @@ given value, and the result is the `list` argument.
 
   (define_values (unsafe_list_element)
     '''
-    (unsafe_list_element list pos)
+    (unsafe_list_element list i)
 
-Returns the element of `list` at (zero-based) position `pos`. The `pos` must be
-a non-null int with a valid value.
+Returns the element of `list` at (zero-based) index `i`.
+This assumes that the `list` is not null and that the index is valid.
     '''
     (java_new "dev.ionfusion.fusion.FusionList$UnsafeListElementProc"))
 
@@ -112,10 +112,10 @@ Returns an iterator over the content of `list`.
 
   (define_values (unsafe_list_set)
     '''
-    (unsafe_list_set list pos value)
+    (unsafe_list_set list i value)
 
-Changes the element of `list` at (zero-based) position `pos`. This assumes that
-the `list` is mutable and that the `pos` is valid.
+Changes the element of a mutable `list` at zero-based index `i` to hold the `value`.
+This assumes that the `list` is mutable and that the index is valid.
     '''
     (java_new "dev.ionfusion.fusion.FusionList$UnsafeListSetProc"))
 

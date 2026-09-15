@@ -238,28 +238,52 @@
 //==========================================================================
 // list_element
 
-(define_check (check_ref vec2)
-  (check === 0   (list_element vec2 0))
-  (check === 0   (unsafe_list_element vec2 0))
-  (check === [1] (list_element vec2 1))
-  (check === [1] (list_element vec2 1))
-  (check === [1] (unsafe_list_element vec2 1)))
+(define_check (check_good_key list key val)
+  (check same val (unsafe_list_element list key))
+  (check same val (list_element        list key))
+)
 
-(check_ref imm2)
-(check_ref mut2)
-(check_ref str2)
+(define_check (check_bad_key list key)
+  // result from unsafe ops are undefined
+  (expect_argument_error (list_element list key))
+)
+
+(define_check (check_refs list_ctor)
+  (let [(seq (list_ctor 0 +))]
+    (check_good_key seq 0 0)
+    (check_good_key seq 1 +)
+
+    // out of bounds
+    (check_bad_key seq -1)
+    (check_bad_key seq 2)
+
+    // bad type
+    (check_bad_key seq null.int)
+    (check_bad_key seq [0])
+    (check_bad_key seq "0")
+    (check_bad_key seq (void))
+))
+
+(check_refs list)
+(check_refs mutable_list)
+(check_refs stretchy_list)
 
 
-// Lists can hold any type!
+// Handling of null.list
+(expect_argument_error (list_element null.list 0))
 
-(check_true ((list_element [F, T] 1)))
-(check_true ((list_element (mutable_list F T) 1)))
-(check_true ((list_element (stretchy_list F T) 1)))
 
-// Bad arguments
-(expect_argument_error (list_element (sexp 1) 0))
-(expect_argument_error (list_element [1,2] null.int))
-(expect_argument_error (list_element [1,2] 3))
+(define_check (check_non_list list)
+  // result from unsafe ops are undefined
+  (expect_argument_error (list_element list 0))
+)
+
+(check_non_list null)
+(check_non_list null.null)
+(check_non_list (sexp))
+(check_non_list (sexp 0))
+(check_non_list {"0":0})
+(check_non_list "0")
 
 
 //==========================================================================

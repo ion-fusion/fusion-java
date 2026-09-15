@@ -8,6 +8,7 @@
     "/fusion/iterator"
     "/fusion/private/bind"
     "/fusion/private/define"
+    "/fusion/private/list"
   )
 
 
@@ -107,13 +108,7 @@ an element within the collection.
     '''
     (cond
       ((is_list collection)
-       (if (is_int key)
-         (if (and key  // null check
-                  (<= 0 key)
-                  (< key (unsafe_list_size collection)))
-           (unsafe_list_element collection key)
-           (raise_argument_error "element" "valid position" 1 collection key))
-         (raise_argument_error "element" "int" 1 collection key)))
+       (list_element collection key))
       //-
       ((is_struct collection)
        (if (is_struct_field_name key)

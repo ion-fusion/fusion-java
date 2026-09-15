@@ -4,8 +4,8 @@
 (module private_list "/fusion/private/layer08"
 
   (require
-    "/fusion/private/bind"
     "/fusion/private/define"
+    "/fusion/private/layer08/actual"
   )
 
   (provide
@@ -32,32 +32,33 @@
   //==========================================================================
   // Basic element access
 
-  (define (list_element list pos)
+  (define (list_element list i)
     '''
-Returns the element of `list` at (zero-based) position `pos`.  An exception is
-thrown if the position is out of bounds.
+Returns the element of `list` at zero-based index `i`.
+The `list` must be non-null.
+If `i` is out of bounds or not an int, a exception is raised.
     '''
-    (unless (is_list list)
-      (raise_argument_error "list_element" "list" 0 list pos))
-    (unless (and (is_int pos) (not (is_null pos)))
-      (raise_argument_error "list_element" "non-null int" 1 list pos))
-    (when (or (< pos 0) (<= (unsafe_list_size list) pos))
-      (raise_argument_error "list_element" "valid position" 1 list pos))
-    (unsafe_list_element list pos))
+    (unless (is_actual_list list)
+      (raise_argument_error "list_element" "actual list" 0 list i))
+    (unless (is_actual_int i)
+      (raise_argument_error "list_element" "non-null int" 1 list i))
+    (when (or (< i 0) (<= (unsafe_list_size list) i))
+      (raise_argument_error "list_element" "valid index" 1 list i))
+    (unsafe_list_element list i))
 
 
-  (define (list_set list pos value)
+  (define (list_set list i value)
     '''
-Changes the slot of a mutable `list` at (zero-based) position `pos` so it
-holds `value`.  An exception is thrown if the position is out of bounds.
+Changes the element of a mutable `list` at zero-based index `i` to hold the `value`.
+If `i` is out of bounds or not an int, a exception is raised.
     '''
     (unless (is_mutable_list list)
-      (raise_argument_error "list_set" "mutable list" 0 list pos value))
-    (unless (and (is_int pos) (not (is_null pos)))
-      (raise_argument_error "list_set" "non-null int" 1 list pos value))
-    (when (or (< pos 0) (<= (unsafe_list_size list) pos))
-      (raise_argument_error "list_set" "valid position" 1 list pos value))
-    (unsafe_list_set list pos value))
+      (raise_argument_error "list_set" "mutable list" 0 list i value))
+    (unless (is_actual_int i)
+      (raise_argument_error "list_set" "non-null int" 1 list i value))
+    (when (or (< i 0) (<= (unsafe_list_size list) i))
+      (raise_argument_error "list_set" "valid index" 1 list i value))
+    (unsafe_list_set list i value))
 
 
   //==========================================================================
