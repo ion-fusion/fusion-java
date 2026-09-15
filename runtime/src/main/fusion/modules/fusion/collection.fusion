@@ -19,6 +19,7 @@ The built-in collection types are [list](fusion/list.html),
     "/fusion/equality"
     "/fusion/exception"
     "/fusion/experimental/defines"
+    "/fusion/experimental/syntax"
     "/fusion/iterator"
     "/fusion/number"
     "/fusion/private/bind"
@@ -90,6 +91,11 @@ the collection: an int for lists or sexps, a string or symbol for structs.
     (element {f:2} "f")        =>  2
     (element {f:3} (quote f))  =>  3
 
+If the `collection` is a syntax object, it is unwrapped and the `key` is used
+with the result.  In most cases, the result will also be a syntax object.
+
+    (element (quote_syntax [1]) 0) => stx::{{{1}}} // a syntax object
+
 Since `element` is a procedure, field names must be quoted or else they will
 be evaluated as a variable reference:
 
@@ -123,6 +129,7 @@ an element within the collection.
                1 collection key)))
          (raise_argument_error "element" "non-null string or symbol"
            1 collection key)))
+      //-
       ((is_sexp collection)
        (if (is_int key)
          (if (and key  // null check
@@ -136,6 +143,9 @@ an element within the collection.
                  1 collection key)))
            (raise_argument_error "element" "valid position" 1 collection key))
          (raise_argument_error "element" "int" 1 collection key)))
+      //-
+      ((is_syntax collection)
+       (element (syntax_unwrap collection) key))
       (true
        (raise_argument_error "element" "collection" 0 collection key))))
 
@@ -159,6 +169,11 @@ element within the collection, the result is void.
     (elt [0, 1] 2)       =>  void
     (elt [0, 1] "2")     =>  void
     (elt {f:2} "g")      =>  void
+
+If the `collection` is a syntax object, it is unwrapped and the `key` is used
+with the result.  In most cases, the result will also be a syntax object.
+
+    (elt (quote_syntax [1]) 0) => stx::{{{1}}} // a syntax object
 
 Since `elt` is a procedure, field names must be quoted or else they will
 be evaluated as a variable reference:
@@ -191,6 +206,9 @@ An exception is raised if the `collection` has an unsupported type.
                (unsafe_pair_head s)
                (loop (- key 1) (unsafe_pair_tail s)))
              (void)))))
+      //-
+      ((is_syntax collection)
+       (elt (syntax_unwrap collection) key))
       //-
       ((is_void collection)
        (void))

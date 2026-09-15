@@ -3,6 +3,7 @@
 
 (require
   "/fusion/experimental/check"
+  "/fusion/experimental/syntax"
   "/testutils"
 )
 
@@ -19,6 +20,16 @@
 (check === 1 (element (sexp 0 1) 1))
 
 (check === 0 (element {f:0,g:1} "f"))
+
+
+(check === 0 (syntax_unwrap (element (quote_syntax [0,1]) 0)))
+(check === 1 (syntax_unwrap (element (quote_syntax [0,1]) 1)))
+
+(check === 0 (syntax_unwrap (element (quote_syntax (0 1)) 0)))
+(check === 1 (syntax_unwrap (element (quote_syntax (0 1)) 1)))
+
+(check === 0 (syntax_unwrap (element (quote_syntax {f:0,g:1}) "f")))
+(check === 1 (syntax_unwrap (element (quote_syntax {f:0,g:1}) "g")))
 
 
 // Check key out-of-bounds
@@ -68,6 +79,19 @@
 (check === 1 (elt (sexp 0 1) 1))
 
 (check === 0 (elt {f:0,g:1} "f"))
+
+
+
+(check === 0 (syntax_unwrap (elt (quote_syntax [0,1]) 0)))
+(check === 1 (syntax_unwrap (elt (quote_syntax [0,1]) 1)))
+
+(check === 0 (syntax_unwrap (elt (quote_syntax (0 1)) 0)))
+(check === 1 (syntax_unwrap (elt (quote_syntax (0 1)) 1)))
+
+(check === 0 (syntax_unwrap (elt (quote_syntax {f:0,g:1}) "f")))
+(check === 1 (syntax_unwrap (elt (quote_syntax {f:0,g:1}) "g")))
+
+
 
 // elt accepts a void "collection"
 (check_void (elt (void) 1))
@@ -130,6 +154,8 @@
 
 (check === "oy" (. {f:{g:"oy"}, h:true} "f" (quote g)))
 (check === 1    (. {f:1,g:[2]} (quote f)))
+
+(check === 1 (syntax_unwrap (. {f: (quote_syntax {g:[0, 1]})} "f" "g" 1)))
 
 
 // Check procedure parts
