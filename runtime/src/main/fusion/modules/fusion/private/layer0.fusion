@@ -211,7 +211,6 @@ layers will shift over time, as intrinsic features are added or ported up to Fus
     quote_syntax
     syntax_append
     syntax_column
-    syntax_get
     syntax_is_original
     syntax_line
     syntax_property

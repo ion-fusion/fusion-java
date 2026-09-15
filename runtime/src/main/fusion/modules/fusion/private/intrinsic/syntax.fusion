@@ -99,18 +99,6 @@ The result is zero if there's no column number available.
     (java_new "dev.ionfusion.fusion.SyntaxColumnProc"))
 
 
-  (define_values (syntax_get)
-    '''
-    (syntax_get container key ...)
-
-Traverses down through syntax objects.
-`container` must be syntax container (struct, list, or sexp).
-Each `key` must be a string, symbol, or int, to denote either a struct's
-field-name or a sequence's index.
-    '''
-    (java_new "dev.ionfusion.fusion.SyntaxGetProc"))
-
-
   (define_values (syntax_is_original)
     (java_new "dev.ionfusion.fusion.FusionSyntax$IsOriginalProc"))
 

@@ -28,7 +28,7 @@
     (if (is_sexp v) true (is_list v)))
 
   (define (let_loop_name stx)
-    (let_values [((first) (syntax_get stx 1))]
+    (let_values [((first) (syntax_element stx 1))]
       (if (is_symbol (syntax_unwrap first))
         first
         false)))
@@ -68,8 +68,8 @@ Checks the syntax of a binding initializer form `(ids expr)`; returns
                (= 2 (syntax_size binding))
                false))
       (wrong_syntax stx "bad binding form: " binding)
-      (let_values [((name) (syntax_get binding 0)),
-                   ((expr) (syntax_get binding 1))]
+      (let_values [((name) (syntax_element binding 0)),
+                   ((expr) (syntax_element binding 1))]
         (check_ids stx name)
         (values name expr))))
 

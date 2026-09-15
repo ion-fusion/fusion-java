@@ -93,6 +93,7 @@ significantly simpler to implement and easier to understand.
     quote_syntax
     syntax_append
     syntax_column
+    syntax_element
     syntax_get
     syntax_is_original
     syntax_line
@@ -105,6 +106,12 @@ significantly simpler to implement and easier to understand.
     syntax_unwrap
     unsyntax
     wrong_syntax)
+
+
+  (define_values (syntax_get)
+    "DEPRECATED: Use `syntax_element` instead."
+    (lambda (stx key)
+      (syntax_element stx key)))
 
 
   (define (check_duplicate_identifier ids)

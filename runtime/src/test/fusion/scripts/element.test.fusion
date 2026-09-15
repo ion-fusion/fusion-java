@@ -177,3 +177,17 @@
 (check_void (. {f:1,g:[2]} "g" 1 1))
 (check_void (. [1] 1))
 (check_void (. [1, {f:2}] 1 "g" 1))
+
+
+
+//==========================================================================
+// syntax_element
+
+(check === 0 (syntax_unwrap (syntax_element (quote_syntax [0,1]) 0)))
+(check === 1 (syntax_unwrap (syntax_element (quote_syntax [0,1]) 1)))
+
+(check === 0 (syntax_unwrap (syntax_element (quote_syntax (0 1)) 0)))
+(check === 1 (syntax_unwrap (syntax_element (quote_syntax (0 1)) 1)))
+
+(check === 0 (syntax_unwrap (syntax_element (quote_syntax {f:0,g:1}) "f")))
+(check === 1 (syntax_unwrap (syntax_element (quote_syntax {f:0,g:1}) "g")))

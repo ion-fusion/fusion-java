@@ -16,6 +16,7 @@
     .
     element
     elt
+    syntax_element
   )
   (provide_signature 'sig:layer08:element')
 
@@ -147,4 +148,14 @@ be evaluated as a variable reference:
                                (unsafe_pair_tail rest))))))]
           (loop (unsafe_pair_head args) (unsafe_pair_tail args)))
         (apply raise_arity_error "." 1 args))))
+
+
+  (define_values (syntax_element)
+    '''
+    (syntax_element stx i)
+
+Unwraps the given `stx` then applies `element` to it.
+    '''
+    (lambda (stx i)
+      (element (syntax_unwrap stx) i)))
 )

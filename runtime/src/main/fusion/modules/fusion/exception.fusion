@@ -136,7 +136,9 @@ See the [Racket Guide on Exceptions][racket-exn] for more details.
                  (quote ())
                  (let [(ph (head phs))]
                    (if (=== 2 (syntax_size ph))
-                     (pair (sexp (quote_syntax pair) (syntax_get ph 0) (syntax_get ph 1))
+                     (pair (sexp (quote_syntax pair)
+                                 (syntax_element ph 0)
+                                 (syntax_element ph 1))
                        (loop (tail phs)))
                      (wrong_syntax ph
                        '''Bad syntax. Handler must be a pair of predicate and handler expressions.'''))
@@ -171,9 +173,9 @@ Returns `true` or `false`.
     (lambda (stx)
       (lets
         [(orig_args (syntax_subseq stx 1)),
-         (pred_name (syntax_get orig_args 0)),
-         (exn_name  (syntax_get orig_args 1)),
-         (exn_class (syntax_get orig_args 2)),
+         (pred_name (syntax_element orig_args 0)),
+         (exn_name  (syntax_element orig_args 1)),
+         (exn_class (syntax_element orig_args 2)),
          (docs (string_append
                  "\n    (" (syntax_unwrap pred_name) " v)\n\n"
                  "Determines whether a value is an exception of type `"

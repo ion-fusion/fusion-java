@@ -31,7 +31,7 @@ Defines and provides a procedure named ID with the BODY.
           (let_values [((name_or_args) (unsafe_pair_head content))]
             (let_values [((name) (if (is_identifier name_or_args)
                                    name_or_args
-                                   (syntax_get name_or_args 0)))]
+                                   (syntax_element name_or_args 0)))]
               (datum_to_syntax
                 (sexp (quote_syntax begin)              // (begin
                   (pair (quote_syntax define) content)  //   (define ...)
@@ -50,20 +50,20 @@ fully-qualified class name string FQCN.
     '''
     (lambda (stx)
       (if (= 4 (syntax_size stx))
-        (if (is_string (syntax_to_datum (syntax_get stx 2)))
+        (if (is_string (syntax_to_datum (syntax_element stx 2)))
           // We have docs
           (datum_to_syntax
-            (sexp (quote_syntax defpub) (syntax_get stx 1)  // (defpub ID
-              (syntax_get stx 2)                            //   DOC
-              (sexp (quote_syntax java_new)                 //   (java_new
-                    (syntax_get stx 3)))                    //     FQCN))
+            (sexp (quote_syntax defpub) (syntax_element stx 1)  // (defpub ID
+              (syntax_element stx 2)                            //   DOC
+              (sexp (quote_syntax java_new)                     //   (java_new
+                    (syntax_element stx 3)))                    //     FQCN))
               ctx
               stx)
-          (wrong_syntax (syntax_get stx 2) "Expected documentation string"))
+          (wrong_syntax (syntax_element stx 2) "Expected documentation string"))
         (datum_to_syntax
-          (sexp (quote_syntax defpub) (syntax_get stx 1)    // (defpub ID
-            (sexp (quote_syntax java_new)                   //   (java_new
-                  (syntax_get stx 2)))                      //     FQCN))
+          (sexp (quote_syntax defpub) (syntax_element stx 1)    // (defpub ID
+            (sexp (quote_syntax java_new)                       //   (java_new
+                  (syntax_element stx 2)))                      //     FQCN))
           ctx
           stx))))
 
@@ -97,9 +97,9 @@ given fully-qualified class name string FQCN.
     (lambda (stx)                             // (defpub_j_syntax ID FQCN)  -->
       (datum_to_syntax
         (sexp (quote_syntax defpub_syntax)              // (defpub_syntax
-          (syntax_get stx 1)                            //    ID
+          (syntax_element stx 1)                        //    ID
           (sexp (quote_syntax java_new)                 //    (java_new
-                (syntax_get stx 2)))                    //      FQCN))
+                (syntax_element stx 2)))                //      FQCN))
         ctx
         stx)))
 )
