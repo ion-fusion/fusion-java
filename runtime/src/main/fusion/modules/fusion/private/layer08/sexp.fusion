@@ -3,6 +3,11 @@
 
 (module sexp_08 "/fusion/private/layer0"
 
+  (require
+    "/fusion/private/layer08/actual"
+    "/fusion/private/layer08/control"
+  )
+
   (define_signature 'sig:layer08:sexp' ()
     head
     is_pair
@@ -11,12 +16,17 @@
     reverse
     sexp
     sexp_append
+    sexp_element
+    sexp_elt
     tail
     unsafe_pair_head
     unsafe_pair_tail
   )
   (provide_signature 'sig:layer08:sexp')
 
+
+  //==========================================================================
+  // Element access
 
   (define_values (head)
     '''
@@ -48,6 +58,51 @@ zero-length or `null.sexp`), the result is void.
         (if (is_sexp sexp)
           (void)
           (raise_argument_error "tail" "sexp" 0 sexp)))))
+
+
+  (define_values (sexp_element)
+    '''
+    (sexp_element sexp i)
+
+Returns the element of `sexp` at zero-based index `i`.
+The `sexp` must be non-null.
+If `i` is out of bounds or not an int, a exception is raised.
+    '''
+    (lambda (sexp index)
+      (unless (is_actual_sexp sexp)
+        (raise_argument_error "sexp_element" "actual sexp" 1 sexp index))
+      (unless (and (is_actual_int index) (<= 0 index))
+        (raise_argument_error "sexp_element" "valid index" 1 sexp index))
+      (letrec [(loop (lambda (s i)
+                       (if (is_pair s)
+                         (if (== 0 i)
+                           (unsafe_pair_head s)
+                           (loop (unsafe_pair_tail s) (- i 1)))
+                         (raise_argument_error "sexp_element" "valid index" 1 sexp index))))]
+        (loop sexp index))))
+
+
+  (define_values (sexp_elt)
+    '''
+    (sexp_elt sexp i)
+
+Returns the element of `sexp` at zero-based index `i`, being lenient.
+If `i` is out of bounds or not an int, the result is void.
+    '''
+    (lambda (sexp index)
+      (unless (is_sexp sexp)
+        (raise_argument_error "sexp_elt" "sexp" 0 sexp index))
+      (when (and sexp (is_actual_int index) (<= 0 index))
+        (letrec [(loop (lambda (s i)
+                         (if (is_pair s)
+                           (if (== 0 i)
+                             (unsafe_pair_head s)
+                             (loop (unsafe_pair_tail s) (- i 1)))
+                           (void))))]
+          (loop sexp index)))))
+
+
+  //==========================================================================
 
 
   (define_values (sexp_append)

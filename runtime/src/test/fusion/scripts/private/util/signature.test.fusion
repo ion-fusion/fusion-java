@@ -2,11 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 (require
+  "/ftst/check_more"
   "/fusion/experimental/check"
 )
-
-(define_check (check_msg_contains exn substring)
-  (check string_contains (exn_message exn) substring))
 
 
 //====================================================================================

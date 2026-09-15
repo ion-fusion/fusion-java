@@ -57,6 +57,10 @@ module.  The module is `require`d to ensure it runs.
                              (require (unquote modname))))))))
 
 
+(define_check (check_msg_contains exn substring)
+  (check string_contains (exn_message exn) substring))
+
+
   (define_syntax expect_syntax_errors_top_and_module
     '''
     (expect_syntax_errors_top_and_module expr ...)

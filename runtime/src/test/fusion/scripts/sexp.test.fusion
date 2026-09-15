@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 (require
+  "/ftst/check_more"
   "/fusion/experimental/check"
   "/fusion/list"
   "/fusion/private/sexp"
@@ -194,6 +195,63 @@
 
 (expect_arity_error (has_key))
 (expect_arity_error (has_key []))
+
+
+//==========================================================================
+// sexp_element
+
+(define_check (check_good_key sexp key val)
+  (check same val (sexp_element        sexp key))
+  (check same val (sexp_elt            sexp key))
+)
+
+(define_check (check_bad_key sexp key)
+  (check_msg_contains
+    (expect_argument_error (sexp_element sexp key))
+    "valid index")
+  (check_void (sexp_elt sexp key))
+)
+
+(define_check (check_refs ctor)
+  (let [(seq (ctor 0 +))]
+    (check_good_key seq 0 0)
+    (check_good_key seq 1 +)
+
+    // out of bounds
+    (check_bad_key seq -1)
+    (check_bad_key seq 2)
+
+    // bad type
+    (check_bad_key seq null.int)
+    (check_bad_key seq [0])
+    (check_bad_key seq "0")
+    (check_bad_key seq (void))
+))
+
+(check_refs sexp)
+
+
+// Handling of null.sexp
+(check_msg_contains
+  (expect_argument_error (sexp_element (quote null.sexp) 0))
+  "actual sexp")
+
+(check_void (sexp_elt (quote null.sexp) 0))
+
+
+(define_check (check_non_sexp sexp)
+  (check_msg_contains (expect_argument_error (sexp_element sexp 0))
+    "actual sexp")
+  (check_msg_contains (expect_argument_error (sexp_elt     sexp 0))
+    "sexp")
+)
+
+(check_non_sexp null)
+(check_non_sexp null.null)
+(check_non_sexp [])
+(check_non_sexp [0])
+(check_non_sexp {"0":0})
+(check_non_sexp "0")
 
 
 //==========================================================================

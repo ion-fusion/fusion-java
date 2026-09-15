@@ -38,6 +38,8 @@ sexps.
     pair
     reverse
     sexp
+    sexp_element
+    sexp_elt
     tail
   )
 )

@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module unsafe_sexp "/fusion/private/kernel"
+(module unsafe_sexp "/fusion/private/layer0"
 
   '''
 Unsafe (but fast) operations on sexps.
