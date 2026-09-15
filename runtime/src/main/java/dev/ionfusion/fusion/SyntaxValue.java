@@ -68,6 +68,14 @@ abstract class SyntaxValue
         myProperties = properties;
     }
 
+    /**
+     * @param pos can be null.
+     */
+    SyntaxValue(SyntaxWraps wraps, ResourcePosition pos)
+    {
+        this(wraps, pos, EMPTY_OBJECT_ARRAY);
+    }
+
     abstract SyntaxValue copyReplacing(SyntaxWraps wraps, Object[] properties);
 
 
@@ -315,7 +323,8 @@ abstract class SyntaxValue
      */
     final SyntaxValue initLexicalContext(SyntaxValue context)
     {
-        assert !(context instanceof SyntaxContainer)
+        assert !(context instanceof SyntaxStruct) &&
+               !(context instanceof SyntaxSequence)
             : "Can't use container as lexical context; see #68";
         assert myWraps == null : "Already initialized";
 

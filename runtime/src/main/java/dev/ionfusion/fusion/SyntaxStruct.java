@@ -9,7 +9,7 @@ import dev.ionfusion.fusion.FusionStruct.StructFieldVisitor;
 import dev.ionfusion.runtime.base.FusionException;
 
 final class SyntaxStruct
-    extends SyntaxContainer
+    extends SyntaxValue
 {
     private ImmutableStruct myStruct;
 
@@ -22,7 +22,7 @@ final class SyntaxStruct
                          SyntaxWraps wraps,
                          ImmutableStruct struct)
     {
-        super(pos, properties, wraps);
+        super(wraps, pos, properties);
         myStruct = struct;
     }
 
@@ -31,7 +31,7 @@ final class SyntaxStruct
      */
     private SyntaxStruct(ResourcePosition pos, ImmutableStruct struct)
     {
-        super(pos);
+        super(null, pos);
         myStruct = struct;
     }
 

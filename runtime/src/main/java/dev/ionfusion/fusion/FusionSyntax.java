@@ -234,27 +234,6 @@ public final class FusionSyntax
     }
 
 
-
-    /**
-     * Accepts syntax values wrapping containers, including {@code null.list},
-     * {@code null.sexp}, and {@code null.struct}.
-     */
-    static SyntaxContainer checkSyntaxContainerArg(Evaluator eval,
-                                                   Procedure who,
-                                                   int       argNum,
-                                                   Object... args)
-        throws FusionException
-    {
-        Object arg = args[argNum];
-        if (arg instanceof SyntaxContainer)
-        {
-            return (SyntaxContainer) arg;
-        }
-
-        throw who.argError(eval, "syntax list, sexp, or struct", argNum, args);
-    }
-
-
     /**
      * Accepts syntax values wrapping sequences, including {@code null.list} and
      * {@code null.sexp}.

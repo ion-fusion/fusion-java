@@ -8,16 +8,16 @@ import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.runtime.base.FusionException;
 
 abstract class SyntaxSequence
-    extends SyntaxContainer
+    extends SyntaxValue
 {
     SyntaxSequence(ResourcePosition pos, Object[] properties, SyntaxWraps wraps)
     {
-        super(pos, properties, wraps);
+        super(wraps, pos, properties);
     }
 
     SyntaxSequence(ResourcePosition pos)
     {
-        super(pos);
+        super(null, pos);
     }
 
 
