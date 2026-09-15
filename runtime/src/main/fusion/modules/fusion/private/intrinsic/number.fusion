@@ -1,0 +1,161 @@
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(module intrinsic_number "/fusion/private/kernel"
+  '''
+Intrinsic operators for working with numbers.
+  '''
+
+  (provide (all_defined_out))
+
+
+  (define_values (+)
+    '''
+    (+ num ...)
+
+Returns the sum of the `num`bers, which must be int or decimal.  With no
+arguments, returns integer 0.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionNumber$SumProc"))
+
+
+  (define_values (-)
+    '''
+    (- num ...+)
+
+With two or more int or decimal `num`bers, returns their difference,
+associating to the left.  With one int or decimal argument, returns its
+negation.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionNumber$DifferenceProc"))
+
+
+  (define_values (*)
+    '''
+    (* num ...)
+
+Returns the product of the `num`bers, which must be int or decimal.  With no
+arguments, returns integer 1.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionNumber$ProductProc"))
+
+
+  (define_values (/)
+    '''
+    (/ dividend divisor)
+
+Returns a decimal whose numeric value is `(dividend / divisor)`.  Both
+arguments must be decimals.  An exception is thrown if the result cannot be
+represented exactly.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionNumber$DivideProc"))
+
+
+  (define_values (ceiling)
+    '''
+    (ceiling number)
+
+Returns the smallest int greater than or equal to `number` (that is, truncate
+toward positive infinity). The input must be a non-null int or decimal, and
+the result is an int.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionNumber$CeilingProc"))
+
+
+  (define_values (decimal)
+    '''
+    (decimal coefficient)
+    (decimal coefficient exponent)
+
+Returns the decimal value from the coefficient and optional exponent.
+The coefficient must be a number.
+The exponent, if supplied, must be a non-null int.
+Returns `null.decimal` when coefficient is null.
+
+Examples:
+
+    (decimal null.float) // null.decimal
+    (decimal 1234e-2)    // 12.34
+    (decimal 1.21e1 0)   // 12.1
+    (decimal 4.2 1)      // 42.
+    (decimal 1234 -2)    // 12.34
+    '''
+    (java_new "dev.ionfusion.fusion.FusionNumber$DecimalProc"))
+
+
+  (define_values (floor)
+    '''
+    (floor number)
+
+Returns the largest int less than or equal to `number` (that is, truncate
+toward negative infinity). The input must be a non-null int or decimal, and the
+result is an int.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionNumber$FloorProc"))
+
+
+  (define_values (int_to_string)
+    '''
+    (int_to_string int)
+
+Converts an int to a string.  Returns `null.string` when given `null.int`.
+    '''
+    (java_new "dev.ionfusion.fusion.IntToStringProc"))
+
+
+  (define_values (is_decimal)
+    '''
+    (is_decimal value)
+
+Determines whether a `value` is of type `decimal`, returning `true` or `false`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionNumber$IsDecimalProc"))
+
+
+  (define_values (is_float)
+    '''
+    (is_float value)
+
+Determines whether a `value` is of type `float`, returning `true` or `false`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionNumber$IsFloatProc"))
+
+
+  (define_values (is_int)
+    '''
+    (is_int value)
+
+Determines whether a `value` is of type `int`, returning `true` or `false`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionNumber$IsIntProc"))
+
+
+  (define_values (random)
+    '''
+    (random)
+    (random max)
+
+Returns a random float value between 0.0 (inclusive) and 1.0 (exclusive) when
+no additional arguments are provided.  When `max` is provided, it must be a
+positive integer, and the result is a random number between 0 (inclusive)
+and `max` (exclusive).
+
+Examples:
+
+    (random)    // Returns a decimal value: 0.0 <= value < 1.0
+    (random 45) // Returns an int value:    0   <= value < 45
+    '''
+    (java_new "dev.ionfusion.fusion.FusionNumber$RandomProc"))
+
+
+  (define_values (string_to_int)
+    '''
+    (string_to_int string)
+
+Converts a string to an int.  The string must contain an optional minus sign
+(`\"-\"` aka `\"\\x2D\"`) followed by one or more ASCII digits.  Returns
+`null.int` when given `null.string`.  An exception is raised if the string is
+of invalid format.
+    '''
+    (java_new "dev.ionfusion.fusion.StringToIntProc"))
+)

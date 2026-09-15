@@ -90,6 +90,20 @@ layers will shift over time, as intrinsic features are added or ported up to Fus
     unsafe_list_to_immutable_list
   )
 
+  (require "/fusion/private/intrinsic/number")
+  (provide
+    + - * /
+    ceiling
+    decimal
+    floor
+    int_to_string
+    is_int
+    is_decimal
+    is_float
+    random
+    string_to_int
+  )
+
   (require "/fusion/private/intrinsic/parameter")
   (provide
     make_parameter
