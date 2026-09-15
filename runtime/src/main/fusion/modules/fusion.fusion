@@ -147,14 +147,14 @@ contact us for clarification.
   (provide add append choose first fold_left is_sequence last map subseq)
 
   (require "/fusion/list")
-  (provide is_list list list_element list_iterator list_from_iterator)
+  (provide is_list list list_element)
 
   (require "/fusion/sexp")
-  (provide head is_pair is_sexp pair reverse sexp sexp_iterator tail)
+  (provide head is_pair is_sexp pair reverse sexp tail)
 
   (require "/fusion/struct")
   (provide is_struct put remove_keys retain_keys struct struct_do
-    struct_iterator struct_merge struct_unzip struct_zip)
+    struct_merge struct_unzip struct_zip)
 
 
   //=========================================================================
@@ -173,11 +173,6 @@ contact us for clarification.
   // Control Forms
 
   (provide and cond if or unless when)
-
-  (require "/fusion/iterator")
-  (provide empty_iterator is_iterator iterator_append iterator_choose
-    iterator_find iterator_has_next iterator_map iterator_map_splicing
-    iterator_next make_iterator value_iterator)
 
   (require "/fusion/for")
   (provide

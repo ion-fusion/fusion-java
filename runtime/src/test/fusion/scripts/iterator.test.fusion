@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 (require
-  "/fusion/exception"
   "/fusion/experimental/check"
+  "/fusion/iterator"
 )
 
 
@@ -39,11 +39,22 @@
 (check_iter ["a", true]     (list_iterator ["a", true]))
 (check_iter [["a"], [true]] (list_iterator [["a"], [true]]) )
 
+(expect_arity_error (list_iterator))
+(expect_arity_error (list_iterator [] 1))
+
+(expect_argument_error (list_iterator 3))
+(expect_argument_error (list_from_iterator 3))
+(expect_argument_error (list_from_iterator [2,3]))
+
+
 (define plus1 (lambda (n) (+ 1 n)))
 
 (check === []    (list_from_iterator empty_iterator))
 (check === [1]   (list_from_iterator (list_iterator [1])))
 (check === [1,2] (list_from_iterator (list_iterator [1,2])))
+
+(expect_arity_error (list_from_iterator))
+(expect_arity_error (list_from_iterator empty_iterator 1))
 
 
 //==========================================================================

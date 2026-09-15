@@ -3,12 +3,21 @@
 
 package dev.ionfusion.fusion;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
 public class IteratorTest
     extends CoreTestCase
 {
+    @BeforeEach
+    void requireIteratorModule()
+        throws Exception
+    {
+        topLevel().requireModule("/fusion/iterator");
+    }
+
+
     @Test
     public void testIterateValueFailures()
         throws Exception

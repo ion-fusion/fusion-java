@@ -73,16 +73,20 @@ modify the input when possible.  `struct_merge` and `struct_merge_m` combine
 the fields from two structs.
 
 
-## Iterating Struct Fields
+## Traversing Structs
 
-`struct_iterator` creates a multi-valued [iterator](fusion/iterator.html) over
-a struct's key-value pairs.
 The procedure `struct_do` iterates the name/value pairs within a struct,
 but since the input isn't modified one must use side effects.
 
-More general [collection](fusion/collection.html) operations like `any` and
+More general [collection][] operations like `any` and
 `find` can be applied to structs, in which case the field names are ignored
 while the field values are iterated.
+
+Other traversal forms include [iterators][] and [comprehensions][].
+
+  [collection]:     fusion/collection.html
+  [comprehensions]: fusion/for.html
+  [iterators]:      fusion/iterator.html
   '''
 
   (require
@@ -110,7 +114,6 @@ while the field values are iterated.
     retain_keys_m
     struct
     struct_do
-    struct_iterator
     struct_merge
     struct_merge_m
     struct_unzip
@@ -170,34 +173,6 @@ When given a mutable struct, the struct is mutated:
     (unsafe_struct_put_m struct key value))
 
 
-  (define (struct_iterator struct)
-    '''
-Returns an [iterator][] over the content of `struct`. Calls to `iterator_next`
-will return two results representing a single field: the field's name (as a
-symbol) and the field's value.
-
-[iterator]: fusion/iterator.html
-
-    (define (show struct)
-      (let [(iter (struct_iterator struct))]
-        (let loop []
-          (when (iterator_has_next iter)
-            (let_values [((k v) (iterator_next iter))]
-              (displayln k " --> " v)
-              (loop))))))
-    (show {foo:"bar", hello:"goodbye", yes:false})
-
-This code displays:
-
-    yes --> false
-    hello --> goodbye
-    foo --> bar
-    '''
-    (unless (is_struct struct)
-      (raise_argument_error "struct_iterator" "struct" 0 struct))
-    (unsafe_struct_iterator struct))
-
-
   // Name per Dylan.  Equivalent to SRFI-1 `for_each` but I don't want this to
   // be confused with the `for` syntax from Racket (which I intend to provide).
   (define (struct_do proc struct)
@@ -241,8 +216,7 @@ identifiers.
     (unless (is_struct struct)
       (raise_argument_error "struct_unzip" "struct" 0 struct))
     (let [(iter (unsafe_struct_iterator struct))]
-      // TODO Allocate these lists with the correct size
-      //  https://github.com/ion-fusion/fusion-java/issues/92
+      // TODO #92 Allocate these lists with the correct size
       (let loop [(keys (stretchy_list)),
                  (vals (stretchy_list))]
         (if (iterator_has_next iter)

@@ -16,11 +16,9 @@
     reverse
     sexp
     sexp_append
-    sexp_iterator
     tail
     unsafe_pair_head
     unsafe_pair_tail
-    unsafe_sexp_iterator
   )
 
 
@@ -103,14 +101,4 @@ elements) are lost.
           (quote null.sexp)  // Intentionally drops annotations, for uniformity.
           (reverse_onto sexp (quote ())))
         (bad_arg))))
-
-
-  //==========================================================================
-  // Iteration
-
-  (define (sexp_iterator sexp)
-    "Returns an iterator over the elements of `sexp`."
-    (if (is_sexp sexp)
-      (unsafe_sexp_iterator sexp)
-      (raise_argument_error "sexp" "sexp" 0 sexp)))
 )

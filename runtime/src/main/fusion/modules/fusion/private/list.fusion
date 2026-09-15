@@ -4,7 +4,6 @@
 (module private_list "/fusion/private/layer0"
 
   (require
-    "/fusion/iterator"
     "/fusion/private/bind"
     "/fusion/private/control"
     "/fusion/private/define"
@@ -18,15 +17,12 @@
     is_list
     list
     list_element
-    list_from_iterator
-    list_iterator
     list_set
     mutable_list
     stretchy_list
     unsafe_list_add
     unsafe_list_add_m
     unsafe_list_element
-    unsafe_list_iterator
     unsafe_list_set
     unsafe_list_size
     unsafe_list_subseq
@@ -83,31 +79,4 @@ particular sequence types may do so.
     (if (is_list list)
       (unsafe_list_add_m list element)
       (raise_argument_error "add_m" "list" 0 list element)))
-
-
-  //==========================================================================
-  // Iteration
-
-  (define (list_iterator list)
-    "Returns an iterator over the elements of `list`."
-    (if (is_list list)
-      (unsafe_list_iterator list)
-      (raise_argument_error "list_iterator" "list" 0 list)))
-
-
-  // TODO This should be usable with iterators that return multiple results.
-  // That requires a variant of `let_values` that can accept an arbitrary
-  // number of results.
-  (define (list_from_iterator iterator)
-    '''
-Creates a stretchy list with the elements of `iterator`, in the same order.
-
-At present, this procedure will fail if the iterator returns multiple results.
-    '''
-    (unless (is_iterator iterator)
-      (raise_argument_error "list_from_iterator" "iterator" 0 iterator))
-    (let loop ((result (stretchy_list)))
-      (if (iterator_has_next iterator)
-        (loop (unsafe_list_add_m result (iterator_next iterator)))
-        result)))
 )

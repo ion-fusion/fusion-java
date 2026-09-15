@@ -17,9 +17,12 @@ based on two procedures:
 
   (require
     "/fusion/exception"
-    "/fusion/ffi/java"
     "/fusion/private/bind"
     "/fusion/private/control"
+    "/fusion/private/intrinsic/iterator"
+    "/fusion/private/intrinsic/list"
+    "/fusion/private/intrinsic/sexp"
+    "/fusion/private/intrinsic/struct"
     "/fusion/void")
 
   (provide
@@ -32,7 +35,11 @@ based on two procedures:
     iterator_map
     iterator_map_splicing
     iterator_next
+    list_from_iterator
+    list_iterator
     make_iterator
+    sexp_iterator
+    struct_iterator
     value_iterator
   )
 
@@ -43,48 +50,6 @@ based on two procedures:
   (define BAD_NEXT
     (lambda ()
       (raise_contract_error "iterator_next" "no such element")))
-
-
-  (define is_iterator
-    '''
-    (is_iterator value)
-
-Checks if the `value` is an iterator.  Returns `true` or `false`.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionIterator$IsIteratorProc"))
-
-
-  (define iterator_has_next
-    '''
-    (iterator_has_next iterator)
-
-Checks if the `iterator` will provide another value when `iterator_next` is
-called.  Returns `true` or `false`.
-
-After this procedure returns `false` for some iterator instance, all
-subsequent calls of `iterator_has_next` on the same instance are expected to
-return `false`, and all subsequent calls of `iterator_next` are expected to
-throw an exception.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionIterator$HasNextProc"))
-
-
-  (define iterator_next
-    '''
-    (iterator_next iterator)
-
-Returns the next element of the `iterator`.  When the iterator has no more
-elements, an exception is thrown.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionIterator$NextProc"))
-
-
-  (define (make_iterator has_next_proc next_proc)
-    '''
-Returns an iterator that delegates `iterator_has_next` and `iterator_next` to
-the given procedures, which are usually closures with shared state.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionIterator" has_next_proc next_proc))
 
 
   (define empty_iterator
@@ -244,4 +209,65 @@ elements of `iter2`.
         (lambda () (has_next))
         (lambda () (next)))))
 
+
+  //==========================================================================
+  // Collection iteration
+
+  (define (sexp_iterator sexp)
+    "Returns an iterator over the elements of `sexp`."
+    (if (is_sexp sexp)
+      (unsafe_sexp_iterator sexp)
+      (raise_argument_error "sexp" "sexp" 0 sexp)))
+
+
+  (define (list_iterator list)
+    "Returns an iterator over the elements of `list`."
+    (if (is_list list)
+      (unsafe_list_iterator list)
+      (raise_argument_error "list_iterator" "list" 0 list)))
+
+
+  // TODO This should be usable with iterators that return multiple results.
+  // That requires a variant of `let_values` that can accept an arbitrary
+  // number of results.
+  (define (list_from_iterator iterator)
+    '''
+Creates a stretchy list with the elements of `iterator`, in the same order.
+
+At present, this procedure will fail if the iterator returns multiple results.
+    '''
+    (unless (is_iterator iterator)
+      (raise_argument_error "list_from_iterator" "iterator" 0 iterator))
+    (let loop ((result (stretchy_list)))
+      (if (iterator_has_next iterator)
+        (loop (unsafe_list_add_m result (iterator_next iterator)))
+        result)))
+
+
+  (define (struct_iterator struct)
+    '''
+Returns an [iterator][] over the content of `struct`. Calls to `iterator_next`
+will return two results representing a single field: the field's name (as a
+symbol) and the field's value.
+
+[iterator]: fusion/iterator.html
+
+    (define (show struct)
+      (let [(iter (struct_iterator struct))]
+        (let loop []
+          (when (iterator_has_next iter)
+            (let_values [((k v) (iterator_next iter))]
+              (displayln k " --> " v)
+              (loop))))))
+    (show {foo:"bar", hello:"goodbye", yes:false})
+
+This code displays:
+
+    yes --> false
+    hello --> goodbye
+    foo --> bar
+    '''
+    (unless (is_struct struct)
+      (raise_argument_error "struct_iterator" "struct" 0 struct))
+    (unsafe_struct_iterator struct))
 )

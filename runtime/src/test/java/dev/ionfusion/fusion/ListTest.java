@@ -304,32 +304,6 @@ public class ListTest
 
 
     //========================================================================
-    // List iteration
-
-    @Test
-    public void testInvalidIteration()
-        throws Exception
-    {
-        expectContractExn("(list_iterator 3)");
-        expectContractExn("(list_from_iterator 3)");
-        expectContractExn("(list_from_iterator [2,3])");
-    }
-
-
-    @Test
-    public void testIterationArityCheck()
-        throws Exception
-    {
-        expectArityExn("(list_iterator)");
-        expectArityExn("(list_iterator [] 1)");
-
-        expectArityExn("(list_from_iterator)");
-        expectArityExn("(list_from_iterator empty_iterator 1)");
-    }
-
-
-
-    //========================================================================
     // Procedure Helpers
 
     @Test

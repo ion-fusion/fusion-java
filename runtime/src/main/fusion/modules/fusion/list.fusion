@@ -159,8 +159,6 @@ Other alternative traversal forms include [iterators][] and [comprehensions][].
     is_list
     list
     list_element
-    list_from_iterator
-    list_iterator
     list_set
     mutable_list
     stretchy_list

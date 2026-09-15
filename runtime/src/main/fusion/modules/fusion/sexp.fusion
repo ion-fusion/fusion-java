@@ -37,7 +37,6 @@ sexps.
     pair
     reverse
     sexp
-    sexp_iterator
     tail
   )
 )

@@ -3,7 +3,7 @@
 
 (require
   "/fusion/experimental/check"
-  "/fusion/for"
+  "/fusion/iterator"
   "/fusion/list"
   "/testutils")
 

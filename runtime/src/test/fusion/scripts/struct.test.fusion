@@ -3,6 +3,7 @@
 
 (require
   "/fusion/experimental/check"
+  "/fusion/iterator"
   "/fusion/list"
   "/fusion/private/struct"
   "/fusion/struct"

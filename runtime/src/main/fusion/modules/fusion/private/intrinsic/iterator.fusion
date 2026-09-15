@@ -1,0 +1,52 @@
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(module intrinsic_iterator "/fusion/private/kernel"
+
+  (provide (all_defined_out))
+
+
+  (define_values (make_iterator)
+    '''
+    (make_iterator has_next_proc next_proc)
+
+Returns an iterator that delegates `iterator_has_next` and `iterator_next` to
+the given procedures, which are usually closures with shared state.
+    '''
+    (lambda (has_next_proc next_proc)
+      (java_new "dev.ionfusion.fusion.FusionIterator" has_next_proc next_proc)))
+
+
+  (define_values (is_iterator)
+    '''
+    (is_iterator value)
+
+Checks if the `value` is an iterator.  Returns `true` or `false`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionIterator$IsIteratorProc"))
+
+
+  (define_values (iterator_has_next)
+    '''
+    (iterator_has_next iterator)
+
+Checks if the `iterator` will provide another value when `iterator_next` is
+called.  Returns `true` or `false`.
+
+After this procedure returns `false` for some iterator instance, all
+subsequent calls of `iterator_has_next` on the same instance are expected to
+return `false`, and all subsequent calls of `iterator_next` are expected to
+throw an exception.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionIterator$HasNextProc"))
+
+
+  (define_values (iterator_next)
+    '''
+    (iterator_next iterator)
+
+Returns the next element of the `iterator`.  When the iterator has no more
+elements, an exception is thrown.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionIterator$NextProc"))
+)
