@@ -236,16 +236,18 @@
 
 
 //==========================================================================
-// list_element
+// list_element, list_elt
 
 (define_check (check_good_key list key val)
   (check same val (unsafe_list_element list key))
   (check same val (list_element        list key))
+  (check same val (list_elt            list key))
 )
 
 (define_check (check_bad_key list key)
   // result from unsafe ops are undefined
   (expect_argument_error (list_element list key))
+  (check_void            (list_elt     list key))
 )
 
 (define_check (check_refs list_ctor)
@@ -271,11 +273,13 @@
 
 // Handling of null.list
 (expect_argument_error (list_element null.list 0))
+(check_void            (list_elt     null.list 0))
 
 
 (define_check (check_non_list list)
   // result from unsafe ops are undefined
   (expect_argument_error (list_element list 0))
+  (expect_argument_error (list_elt     list 0))
 )
 
 (check_non_list null)

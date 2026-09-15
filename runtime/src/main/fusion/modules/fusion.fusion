@@ -151,7 +151,7 @@ contact us for clarification.
   (provide add append choose first fold_left is_sequence last map subseq)
 
   (require "/fusion/list")
-  (provide is_list list list_element)
+  (provide is_list list list_element list_elt)
 
   (require "/fusion/sexp")
   (provide head is_pair is_sexp pair reverse sexp tail)

@@ -11,6 +11,7 @@
 
   (define_signature 'sig:layer08:list' ()
     list_element
+    list_elt
   )
   (provide_signature 'sig:layer08:list')
 
@@ -30,7 +31,7 @@
 
 Returns the element of `list` at zero-based index `i`.
 The `list` must be non-null.
-If `i` is out of bounds or not an int, a exception is raised.
+If `i` is out of bounds or not an int, an exception is raised.
     '''
     (lambda (list i)
       (unless (is_actual_list list)
@@ -40,6 +41,23 @@ If `i` is out of bounds or not an int, a exception is raised.
       (when (or (< i 0) (<= (unsafe_list_size list) i))
         (raise_argument_error "list_element" "valid index" 1 list i))
       (unsafe_list_element list i)))
+
+
+  (define_values (list_elt)
+    '''
+    (list_elt list i)
+
+Returns the element of `list` at zero-based index `i`, being lenient.
+The result is void if `list` is null, or if `i` is out of bounds or not an int.
+    '''
+    (lambda (list i)
+      (unless (is_list list)
+        (raise_argument_error "list_elt" "list" 0 list i))
+      (when (and list
+                 (is_actual_int i)
+                 (<= 0 i)
+                 (< i (unsafe_list_size list)))
+        (unsafe_list_element list i))))
 
 
   //==========================================================================
