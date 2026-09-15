@@ -267,13 +267,6 @@ final class SyntaxSexp
         mySexp.ionize(eval, out);
     }
 
-    @Override
-    final void write(Evaluator eval, Appendable out)
-        throws IOException, FusionException
-    {
-        mySexp.write(eval, out);
-    }
-
 
     //========================================================================
     // Helpers for quote, syntax_to_datum, and syntax_unwrap

@@ -3,6 +3,7 @@
 
 (require
   "/fusion/experimental/check"
+  "/fusion/experimental/syntax"
   "/testutils"
 )
 
@@ -246,3 +247,10 @@
 (check === "(a {.} 'with spaces')"
   (with_output_to_string
     (write (pair (quote a) (quote 'with spaces')))))
+
+
+// write: syntax
+
+(check === "stx::{{{(foo 12)}}}"
+  (with_output_to_string
+    (write (quote_syntax (foo 12)))))

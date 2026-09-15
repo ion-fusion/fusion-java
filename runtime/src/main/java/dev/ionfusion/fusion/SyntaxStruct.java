@@ -151,11 +151,4 @@ final class SyntaxStruct
     {
         myStruct.ionize(eval, writer);
     }
-
-    @Override
-    final void write(Evaluator eval, Appendable out)
-        throws IOException, FusionException
-    {
-        myStruct.write(eval, out);
-    }
 }

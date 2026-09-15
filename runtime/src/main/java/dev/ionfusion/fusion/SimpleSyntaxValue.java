@@ -128,11 +128,4 @@ class SimpleSyntaxValue
     {
         myDatum.ionize(eval, writer);
     }
-
-    @Override
-    final void write(Evaluator eval, Appendable out)
-        throws IOException, FusionException
-    {
-        myDatum.write(eval, out);
-    }
 }

@@ -410,6 +410,11 @@ class Evaluator
         return e;
     }
 
+    final Evaluator parameterize(Object param, Object value)
+    {
+        return markedContinuation(param, value);
+    }
+
 
     //========================================================================
 

@@ -395,7 +395,7 @@ final class SyntaxSymbol
      */
     String debugString()
     {
-        String base = toString();
+        String base = getName().toString();
         Set<MarkWrap> marks = this.computeMarks();
         if (! marks.isEmpty())
         {

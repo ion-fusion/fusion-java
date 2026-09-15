@@ -12,6 +12,7 @@ import static java.lang.Boolean.TRUE;
 import com.amazon.ion.IonValue;
 import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.runtime.base.FusionException;
+import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -87,6 +88,30 @@ abstract class SyntaxValue
     final boolean isAnyNull()
     {
         return false;
+    }
+
+
+    private static final DynamicParameter WRITE_EXPLICIT_SYNTAX =
+        new DynamicParameter(true);
+
+    @Override
+    final void write(Evaluator eval, Appendable out)
+        throws IOException, FusionException
+    {
+        Object content = unwrap(eval);
+
+        // When possible, only write the explicit wrapper on the outside edge.
+        if (eval != null && (boolean) WRITE_EXPLICIT_SYNTAX.currentValue(eval))
+        {
+            eval = eval.parameterize(WRITE_EXPLICIT_SYNTAX, false);
+            out.append("stx::{{{");
+            FusionIo.write(eval, out, content);
+            out.append("}}}");
+        }
+        else
+        {
+            FusionIo.write(eval, out, content);
+        }
     }
 
 

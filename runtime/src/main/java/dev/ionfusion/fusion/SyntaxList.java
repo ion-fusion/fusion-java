@@ -255,13 +255,6 @@ final class SyntaxList
         myImmutableList.ionize(eval, out);
     }
 
-    @Override
-    final void write(Evaluator eval, Appendable out)
-        throws IOException, FusionException
-    {
-        myImmutableList.write(eval, out);
-    }
-
 
     @Override
     Object unwrap(Evaluator eval)
