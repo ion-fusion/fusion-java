@@ -5,7 +5,7 @@
 
   (require
     "/fusion/private/control"
-    "/fusion/private/syntax"
+    "/fusion/private/intrinsic/syntax"
     "/fusion/io"
     "/fusion/string"
     "/fusion/unsafe/sexp"

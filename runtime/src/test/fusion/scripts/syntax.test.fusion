@@ -4,7 +4,7 @@
 (require
   "/fusion/experimental/check"
   "/fusion/experimental/syntax"
-  "/fusion/private/syntax"
+  "/fusion/private/intrinsic/syntax"  // syntax_source is not yet public
   "/fusion/list"
   "/testutils"
   )

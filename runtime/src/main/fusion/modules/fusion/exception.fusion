@@ -45,13 +45,13 @@ with handlers.
 
   (require
     "/fusion/equality"
-    "/fusion/experimental/syntax"
     "/fusion/ffi/java"
     "/fusion/io"
     "/fusion/private/bind"
     "/fusion/private/builtins"
     "/fusion/private/compare"
     "/fusion/private/control"
+    "/fusion/private/intrinsic/syntax"
     "/fusion/private/raise"
     "/fusion/private/sexp"
     "/fusion/string"

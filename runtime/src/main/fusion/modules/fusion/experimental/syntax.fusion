@@ -78,9 +78,9 @@ significantly simpler to implement and easier to understand.
 
   (require
     "/fusion/private/define"
+    "/fusion/private/intrinsic/syntax"
     "/fusion/private/raise"
     "/fusion/private/sexp"
-    "/fusion/private/syntax"
     "/fusion/void"
   )
 

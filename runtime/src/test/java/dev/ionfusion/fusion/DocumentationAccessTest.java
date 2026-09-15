@@ -30,7 +30,8 @@ public class DocumentationAccessTest
         setDocumenting(runtimeBuilder(), true);
         useTstRepo();
 
-        topLevel().requireModule("/fusion/private/syntax");
+        // We need quote_syntax to mint bindings from which to pull documentation.
+        topLevel().requireModule("/fusion/experimental/syntax");
         topLevel().requireModule("/documentation");
     }
 

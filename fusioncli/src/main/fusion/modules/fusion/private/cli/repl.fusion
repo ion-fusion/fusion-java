@@ -8,7 +8,7 @@ Helper forms for the REPL.
   '''
 
   (require
-    "/fusion/private/syntax")
+    "/fusion/experimental/syntax")
 
   (provide
     quote_syntax   // Needed by ,doc

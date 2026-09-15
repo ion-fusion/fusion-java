@@ -1,34 +1,12 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module syntax "/fusion/private/kernel2"
+(module intrinsic_syntax "/fusion/private/kernel"
   '''
-Intrinsic operators for working with syntax objects.
+Intrinsic procedures for working with syntax objects.
   '''
 
-  (provide
-    bound_identifier_equal
-    datum_to_syntax
-    define_syntax
-    expand_once
-    free_identifier_equal
-    is_identifier
-    is_syntax
-    quote_syntax
-    syntax_append
-    syntax_column
-    syntax_get
-    syntax_is_original
-    syntax_line
-    syntax_property
-    syntax_size
-    syntax_source
-    syntax_subseq
-    syntax_to_datum
-    syntax_track_origin
-    syntax_unwrap
-    wrong_syntax
-  )
+  (provide (all_defined_out))
 
 
   (define_values (bound_identifier_equal)

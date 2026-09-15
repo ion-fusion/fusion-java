@@ -4,7 +4,7 @@
 (module documentation "/fusion"
   "This is the module body doc."
 
-  (require "/fusion/private/syntax")
+  (require "/fusion/experimental/syntax")
 
   (provide const proc macro)
 
