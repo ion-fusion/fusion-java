@@ -47,7 +47,6 @@ with handlers.
     "/fusion/ffi/java"
     "/fusion/io"
     "/fusion/private/bind"
-    "/fusion/private/builtins"
     "/fusion/private/control"
     "/fusion/private/intrinsic/exception"  // for _make_assertion_error
     "/fusion/private/sexp"
@@ -69,24 +68,26 @@ with handlers.
   )
 
 
-  (define (exn_message exn)
+  (define_values (exn_message)
     '''
 Returns the message from the exception `exn`.
     '''
-    (if (is_exn exn)
-      (unsafe_exn_message exn)
-      (raise_argument_error "exn_message" "exn" 0 exn)))
+    (lambda (exn)
+      (if (is_exn exn)
+        (unsafe_exn_message exn)
+        (raise_argument_error "exn_message" "exn" 0 exn))))
 
 
-  (define (sequence_handler preds_and_handlers)  // Argument is a sexp of pairs.
-    (lambda (raised)
-      (let loop [(phs preds_and_handlers)]
-        (if (not (is_pair phs))
-          (raise raised)            // Re-raise the same exception.
-          (let [(ph (head phs))]
-            (if ((head ph) raised)
-              ((tail ph) raised)
-              (loop (tail phs))))))))
+  (define_values (sequence_handler)
+    (lambda (preds_and_handlers) // Argument is a sexp of pairs.
+      (lambda (raised)
+        (let loop [(phs preds_and_handlers)]
+          (if (not (is_pair phs))
+            (raise raised)            // Re-raise the same exception.
+            (let [(ph (head phs))]
+              (if ((head ph) raised)
+                ((tail ph) raised)
+                (loop (tail phs)))))))))
 
 
   (define_syntax with_handlers
@@ -154,18 +155,19 @@ See the [Racket Guide on Exceptions][racket-exn] for more details.
             stx)))))
 
 
-  (define FusionExn     (java_class "dev.ionfusion.runtime.base.FusionException"))
-  (define FusionUserExn (java_class "dev.ionfusion.fusion.FusionUserException"))
+  (define_values (FusionExn)     (java_class "dev.ionfusion.runtime.base.FusionException"))
+  (define_values (FusionUserExn) (java_class "dev.ionfusion.fusion.FusionUserException"))
 
-  (define (is_exn v)
+  (define_values (is_exn)
     '''
 Determines whether a value is an exception of type `exn`.
 Returns `true` or `false`.
     '''
-    // This is special-case because we have to filter out non-exception values
-    // that may have been raised.
-    (and   (java_instance_of FusionExn     v)
-      (not (java_instance_of FusionUserExn v))))
+    (lambda (v)
+      // This is special-case because we have to filter out non-exception values
+      // that may have been raised.
+      (and   (java_instance_of FusionExn     v)
+        (not (java_instance_of FusionUserExn v)))))
 
 
   (define_syntax generate_predicate
@@ -183,7 +185,7 @@ Returns `true` or `false`.
         (datum_to_syntax
           (sexp (quote_syntax begin)                            // (begin
             (sexp (quote_syntax provide) pred_name)             //   (provide NAME)
-            (sexp (quote_syntax define) pred_name               //   (define NAME
+            (sexp (quote_syntax define_values) (sexp pred_name) //   (define_values (NAME)
               docs                                              //     docs
               (quasisyntax
                 (let [(Exn (java_class (unsyntax exn_class)))]  //     (let [(Exn (java_class exn_class))]
@@ -205,7 +207,7 @@ Returns `true` or `false`.
   //===========================================================================
   // assert
 
-  (define ctx
+  (define_values (ctx)
     // Private lexical context for macros.
     (quote_syntax context))
 
@@ -247,7 +249,7 @@ The exception `display`s the `message`s, which are only evaluated on failure.
             stx)))))
 
 
-  (define safe_display_to_string
+  (define_values (safe_display_to_string)
     (lambda args
       (with_handlers
         [(is_error_exn (lambda (e) "(Unable to render the message)"))]
