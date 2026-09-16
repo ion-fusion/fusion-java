@@ -45,9 +45,16 @@ are `raise`d by some code under test.  Unlike the `check_*` forms, these do not
 act like procedures: evaluation of the expression is implicitly delayed via
 `thunk` to allow an exception handler to be installed.
 
-The expect forms observe the hierarchy of exception types.
+The `expect` forms observe the hierarchy of exception types.
 For example, `expect_contract_error` will succeed whenever `expect_arity_error`
 would succeed.
+
+The `expect` forms return the raised value to allow further validation, like checking
+the exception message:
+
+  (check string_starts_with
+    (exn_message (expect_check_error (fail)))
+    "Check failure:")
 
 
 ## Defining New Checks
@@ -528,15 +535,17 @@ order:
 
   (define (_expect_raise pred expected thunk)
     (let [(meta (with_handlers
-                  [(pred void), // If predicate matches, handler returns void.
+                  [(pred (|e| { success: e })),
                    ((|e| true)  // For anything else, describe what was raised.
                     (|e| { actual: (describe_raised e) }))]
                   (thunk)
                   // The thunk was expected to raise, so the check has failed.
                   { actual: "no exception raised" }))]
-      (when meta (_fail_check (if expected
-                                (put meta "expected" expected)
-                                meta)))))
+      // TODO This doesn't work properly if void was raised
+      (or (. meta "success")
+          (_fail_check (if expected
+                         (put meta "expected" expected)
+                         meta)))))
 
 
   // This should really be a procedure, but it doesn't work.
@@ -556,9 +565,9 @@ Defines a exception-expecting form used like `(name EXPR)`.
                      (string_append '''
     (''' (syntax_unwrap name_stx) ''' expr [message])
 
-Evaluates `expr` and checks that it throws ''' type_name '''.
-If no exception is thrown, or if
-another kind of exception is thrown, then the check fails.''')))]
+Evaluates `expr` and checks that it raises ''' type_name '''.
+If nothing is raised, or if another kind of value is thrown, then the check fails.
+Otherwise, the check returns the raised value''')))]
         (datum_to_syntax
           (quasiquote
             (define_syntax (unquote name_stx)  // (name EXPR [message])

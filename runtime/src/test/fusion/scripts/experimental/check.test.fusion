@@ -4,6 +4,7 @@
 (require
   "/fusion/exception"
   "/fusion/experimental/check"
+  "/fusion/experimental/syntax"
 )
 
 (define (bad_argument)
@@ -171,11 +172,15 @@
 //==========================================================================
 // expect_check_error
 
-(expect_check_error (fail))
+(check string_starts_with
+  (exn_message (expect_check_error (fail)))
+  "Check failure:")
+
 (expect_check_error (fail "message"))
 (expect_check_error (fail_check))
 (expect_check_error (check = 1 2))
 (expect_check_error (expect_check_error (check = 1 1)))
+
 
 // Inheritance
 (expect_any_raise      (fail))
@@ -284,7 +289,10 @@
 //==========================================================================
 // expect_syntax_error
 
-(expect_syntax_error (wrong_syntax (quote_syntax foo) "you are wrong"))
+(check string_starts_with
+  (exn_message
+    (expect_syntax_error (wrong_syntax (quote_syntax foo) "you are wrong")))
+  "Bad syntax: you are wrong")
 
 (expect_syntax_error (lambda))
 
@@ -305,6 +313,10 @@
 // expect_any_raise
 
 (expect_any_raise (/ 1. 0.))
+
+// expect_* returns the raised value for validation
+(check_pred is_contract_error (expect_any_raise (/ 1. 0.)))
+
 
 // Check subtypes
 (expect_any_raise (bad_argument))
