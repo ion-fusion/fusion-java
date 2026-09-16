@@ -11,7 +11,16 @@
     raise_arity_error
     raise_contract_error
     raise_result_error
+    unsafe_exn_message
   )
+
+  (define_values (unsafe_exn_message)
+    '''
+    (unsafe_exn_message exn)
+
+Returns the message from the exception `exn`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionExn$UnsafeExnMessageProc"))
 
 
   (define_values (raise)

@@ -60,12 +60,23 @@ with handlers.
 
   (provide // from /fusion/private/raise
     assert
+    exn_message
     raise
     raise_argument_error
     raise_arity_error
     raise_contract_error
     raise_result_error
   )
+
+
+  (provide exn_message)
+  (define (exn_message exn)
+    '''
+Returns the message from the exception `exn`.
+    '''
+    (if (is_exn exn)
+      (unsafe_exn_message exn)
+      (raise_argument_error "exn_message" "exn" 0 exn)))
 
 
   (provide call_with_handler)
@@ -84,15 +95,16 @@ which is prone to error by using a non-thunk body expression.
     '''
     (java_new "dev.ionfusion.fusion.CallWithHandlerProc"))
 
- (define (sequence_handler preds_and_handlers)  // Argument is a sexp of pairs.
-   (lambda (raised)
-     (let loop [(phs preds_and_handlers)]
-       (if (not (is_pair phs))
-         (raise raised)            // Re-raise the same exception.
-         (let [(ph (head phs))]
-           (if ((head ph) raised)
-             ((tail ph) raised)
-             (loop (tail phs))))))))
+
+  (define (sequence_handler preds_and_handlers)  // Argument is a sexp of pairs.
+    (lambda (raised)
+      (let loop [(phs preds_and_handlers)]
+        (if (not (is_pair phs))
+          (raise raised)            // Re-raise the same exception.
+          (let [(ph (head phs))]
+            (if ((head ph) raised)
+              ((tail ph) raised)
+              (loop (tail phs))))))))
 
 
   (provide with_handlers)

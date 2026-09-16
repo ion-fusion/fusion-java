@@ -11,6 +11,19 @@
 (define myExn { field: "field in myExn", exn_type:"myExn" })
 
 
+(define (capture raising_thunk)
+  '''
+Invokes `raising_thunk` expecting a raise, and returns the raised value.
+`check_error`s are propagated.
+  '''
+  (call_with_handler
+    (|e| (if (is_check_error e) (raise e) e))
+    (|| (raising_thunk)
+        (fail "raising_thunk did not raise"))))
+
+(expect_check_error (capture (|| 3)))
+
+
 // Test raise
 (expect_any_raise (raise "foo"))   // Obsolete name for this form.
 (expect_any_raise (raise "foo"))
@@ -255,6 +268,15 @@
               "body before raise",
               "in pred1", "in pred2", "in hand2"]
     evaluation_order))
+
+
+//=============================================================================
+// exn_message
+
+(check === "messages: at last"
+  (exn_message (capture (|| (raise_contract_error "messages" "at last")))))
+
+(expect_argument_error (exn_message "not an exn"))
 
 
 //=============================================================================
