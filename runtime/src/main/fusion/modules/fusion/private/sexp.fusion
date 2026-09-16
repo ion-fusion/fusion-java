@@ -1,22 +1,27 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module sexp "/fusion/private/layer0"
+(module private_sexp "/fusion/private/layer0"
 
   (require
     "/fusion/private/define"
-    "/fusion/unsafe/sexp"
-    "/fusion/void")
+    "/fusion/private/intrinsic/sexp"
+  )
 
   (provide
     head
     is_pair
     is_sexp
     pair
+    reverse
     sexp
     sexp_append
-    reverse
-    tail)
+    sexp_iterator
+    tail
+    unsafe_pair_head
+    unsafe_pair_tail
+    unsafe_sexp_iterator
+  )
 
 
   (define (head sexp)
@@ -98,4 +103,14 @@ elements) are lost.
           (quote null.sexp)  // Intentionally drops annotations, for uniformity.
           (reverse_onto sexp (quote ())))
         (bad_arg))))
+
+
+  //==========================================================================
+  // Iteration
+
+  (define (sexp_iterator sexp)
+    "Returns an iterator over the elements of `sexp`."
+    (if (is_sexp sexp)
+      (unsafe_sexp_iterator sexp)
+      (raise_argument_error "sexp" "sexp" 0 sexp)))
 )

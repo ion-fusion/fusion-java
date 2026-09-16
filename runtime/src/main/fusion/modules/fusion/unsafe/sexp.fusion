@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module unsafe_sexp '/fusion/private/kernel'
+(module unsafe_sexp "/fusion/private/kernel"
 
   '''
 Unsafe (but fast) operations on sexps.
@@ -15,31 +15,11 @@ See the module [`/fusion/sexp`](fusion/sexp.html) for more information and
 related operations on sexps.
   '''
 
+  (require "/fusion/private/intrinsic/sexp")
 
-  (provide unsafe_pair_head)
-  (define_values (unsafe_pair_head)
-    '''
-    (unsafe_pair_head pair)
-
-Returns the head of `pair`.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionSexp$UnsafePairHeadProc"))
-
-  (provide unsafe_pair_tail)
-  (define_values (unsafe_pair_tail)
-    '''
-    (unsafe_pair_tail pair)
-
-Returns the tail of `pair`.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionSexp$UnsafePairTailProc"))
-
-  (provide unsafe_sexp_iterator)
-  (define_values (unsafe_sexp_iterator)
-    '''
-    (unsafe_sexp_iterator sexp)
-
-Returns an iterator over the elements of `sexp`.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionSexp$UnsafeSexpIteratorProc"))
+  (provide
+    unsafe_pair_head
+    unsafe_pair_tail
+    unsafe_sexp_iterator
+  )
 )

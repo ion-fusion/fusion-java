@@ -56,6 +56,25 @@ layers will shift over time, as intrinsic features are added or ported up to Fus
     unsafe_exn_message
   )
 
+  (require "/fusion/private/intrinsic/list")
+  (provide
+    is_immutable_list
+    is_list
+    is_mutable_list
+    is_stretchy_list
+    list
+    mutable_list
+    stretchy_list
+    unsafe_list_add
+    unsafe_list_add_m
+    unsafe_list_element
+    unsafe_list_iterator
+    unsafe_list_set
+    unsafe_list_size
+    unsafe_list_subseq
+    unsafe_list_to_immutable_list
+  )
+
   (require "/fusion/private/intrinsic/sequence")
   (provide
     add
@@ -79,6 +98,16 @@ layers will shift over time, as intrinsic features are added or ported up to Fus
     string_to_upper
     string_to_symbol
     symbol_to_string
+  )
+
+  (require "/fusion/private/intrinsic/sexp")
+  (provide
+    is_pair
+    is_sexp
+    pair
+    sexp
+    unsafe_pair_head
+    unsafe_pair_tail
   )
 
   (require "/fusion/private/intrinsic/struct")
@@ -219,33 +248,6 @@ Determines whether a `value` is of type `clob`, returning `true` or `false`.
     (java_new "dev.ionfusion.fusion.FusionClob$IsClobProc"))
 
 
-  (define_values (is_immutable_list)
-    '''
-    (is_immutable_list value)
-
-Determines whether `value` is an immutable list, returning `true` or `false`.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionList$IsImmutableListProc"))
-
-
-  (define_values (is_list)
-    '''
-    (is_list value)
-
-Determines whether `value` is a list, returning `true` or `false`.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionList$IsListProc"))
-
-
-  (define_values (is_mutable_list)
-    '''
-    (is_mutable_list value)
-
-Determines whether `value` is a mutable list, returning `true` or `false`.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionList$IsMutableListProc"))
-
-
   (define_values (is_null)
      '''
      (is_null value)
@@ -264,15 +266,6 @@ Determines whether a `value` is `null.null`, returning `true` or `false`.
     (java_new "dev.ionfusion.fusion.FusionNull$IsNullNullProc"))
 
 
-  (define_values (is_pair)
-    '''
-    (is_pair value)
-
-Determines whether `value` is a pair, returning `true` or `false`.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionSexp$IsPairProc"))
-
-
   (define_values (is_procedure)
     '''
     (is_procedure value)
@@ -280,24 +273,6 @@ Determines whether `value` is a pair, returning `true` or `false`.
 Returns `true` when `value` is a procedure, `false` otherwise.
     '''
     (java_new "dev.ionfusion.fusion.FusionProcedure$IsProcedureProc"))
-
-
-  (define_values (is_sexp)
-    '''
-    (is_sexp value)
-
-Determines whether a `value` is a sexp, returning `true` or `false`.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionSexp$IsSexpProc"))
-
-
-  (define_values (is_stretchy_list)
-    '''
-    (is_stretchy_list value)
-
-Determines whether `value` is a stretchy list, returning `true` or `false`.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionList$IsStretchyListProc"))
 
 
   (define_values (is_symbol)
@@ -309,24 +284,6 @@ Determines whether a `value` is of type `symbol`, returning `true` or `false`.
     (java_new "dev.ionfusion.fusion.FusionSymbol$IsSymbolProc"))
 
 
-  (define_values (list)
-    '''
-    (list value ...)
-
-Makes a fresh, immutable list containing the given `value`s.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionList$ImmutableListProc"))
-
-
-  (define_values (mutable_list)
-    '''
-    (mutable_list value ...)
-
-Makes a fresh, mutable list containing the given `value`s.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionList$MutableListProc"))
-
-
   (define_values (not)
     '''
     (not value)
@@ -335,24 +292,6 @@ Returns `true` if `value` is untruthy, `false` if `value` is truthy. Truthiness
 is as defined by [`if`](fusion/bool.html#if).
     '''
     (java_new "dev.ionfusion.fusion.NotProc"))
-
-
-  (define_values (pair)
-    '''
-    (pair head tail)
-
-Makes a fresh, immutable pair containing the given `head` and `tail`.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionSexp$PairProc"))
-
-
-  (define_values (sexp)
-    '''
-    (sexp value ...)
-
-Makes a fresh, immutable sexp containing the given `value`s.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionSexp$SexpProc"))
 
 
   (define_values (size)
@@ -367,15 +306,6 @@ an exception is thrown.
 traverse the linked list of pairs to count elements.
     '''
     (java_new "dev.ionfusion.fusion.FusionCollection$SizeProc"))
-
-
-  (define_values (stretchy_list)
-    '''
-    (stretchy_list value ...)
-
-Makes a fresh, stretchy list containing the given `value`s.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionList$StretchyListProc"))
 
 
   (define_values (values)

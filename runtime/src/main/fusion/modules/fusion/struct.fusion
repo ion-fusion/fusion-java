@@ -88,8 +88,8 @@ while the field values are iterated.
   (require
     "/fusion/exception"
     "/fusion/iterator"
-    "/fusion/list"
     "/fusion/private/collection"
+    "/fusion/private/list"
     "/fusion/private/struct")
 
   (provide_public_collection)

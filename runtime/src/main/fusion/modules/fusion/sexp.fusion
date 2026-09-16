@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module sexp '/fusion/base'
+(module sexp "/fusion/private/layer0"
 
   '''
 Operations for sexps (_a.k.a._ S-expressions) and pairs.
@@ -24,10 +24,8 @@ sexps.
   '''
 
   (require
-    "/fusion/exception"
     "/fusion/private/sequence"
     "/fusion/private/sexp"
-    "/fusion/unsafe/sexp"
   )
 
   (provide_public_sequence)
@@ -42,11 +40,4 @@ sexps.
     sexp_iterator
     tail
   )
-
-
-  (define (sexp_iterator sexp)
-    "Returns an iterator over the elements of `sexp`."
-    (if (is_sexp sexp)
-      (unsafe_sexp_iterator sexp)
-      (raise_argument_error "sexp" "sexp" 0 sexp)))
 )

@@ -1,0 +1,154 @@
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(module intrinsic_list "/fusion/private/kernel"
+
+  (provide (all_defined_out))
+
+
+  (define_values (is_immutable_list)
+    '''
+    (is_immutable_list value)
+
+Determines whether `value` is an immutable list, returning `true` or `false`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionList$IsImmutableListProc"))
+
+
+  (define_values (is_list)
+    '''
+    (is_list value)
+
+Determines whether `value` is a list, returning `true` or `false`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionList$IsListProc"))
+
+
+  (define_values (is_mutable_list)
+    '''
+    (is_mutable_list value)
+
+Determines whether `value` is a mutable list, returning `true` or `false`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionList$IsMutableListProc"))
+
+
+  (define_values (is_stretchy_list)
+    '''
+    (is_stretchy_list value)
+
+Determines whether `value` is a stretchy list, returning `true` or `false`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionList$IsStretchyListProc"))
+
+
+  (define_values (list)
+    '''
+    (list value ...)
+
+Makes a fresh, immutable list containing the given `value`s.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionList$ImmutableListProc"))
+
+
+  (define_values (mutable_list)
+    '''
+    (mutable_list value ...)
+
+Makes a fresh, mutable list containing the given `value`s.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionList$MutableListProc"))
+
+
+  (define_values (stretchy_list)
+    '''
+    (stretchy_list value ...)
+
+Makes a fresh, stretchy list containing the given `value`s.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionList$StretchyListProc"))
+
+
+  (define_values (unsafe_list_add)
+    '''
+    (unsafe_list_add list value)
+
+Returns a list similar to `list` with the `value` added to the end.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionList$UnsafeListAddProc"))
+
+
+  (define_values (unsafe_list_add_m)
+    '''
+    (unsafe_list_add_m list value)
+
+Returns a list similar to `list` with the `value` added to the end.  The result
+may share structure with the list, which may also be mutated.
+
+In particular, when given a stretchy list, the input is expanded to contain the
+given value, and the result is the `list` argument.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionList$UnsafeListAddMProc"))
+
+
+  (define_values (unsafe_list_element)
+    '''
+    (unsafe_list_element list pos)
+
+Returns the element of `list` at (zero-based) position `pos`. The `pos` must be
+a non-null int with a valid value.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionList$UnsafeListElementProc"))
+
+
+  (define_values (unsafe_list_iterator)
+    '''
+    (unsafe_list_iterator list)
+
+Returns an iterator over the content of `list`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionList$UnsafeListIterateProc"))
+
+
+  (define_values (unsafe_list_set)
+    '''
+    (unsafe_list_set list pos value)
+
+Changes the element of `list` at (zero-based) position `pos`. This assumes that
+the `list` is mutable and that the `pos` is valid.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionList$UnsafeListSetProc"))
+
+
+  (define_values (unsafe_list_size)
+    '''
+    (unsafe_list_size list)
+
+Returns the number of elements in `list`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionList$UnsafeListSizeProc"))
+
+
+  (define_values (unsafe_list_subseq)
+    '''
+    (unsafe_list_subseq list from to)
+
+Returns a list holding the elements from `list` between positions `from` and
+`to`.  The following precondition applies:
+
+    0 <= from <= to <= (size list)
+
+The result may share structure with `list`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionList$UnsafeListSubseqProc"))
+
+
+  (define_values (unsafe_list_to_immutable_list)
+    '''
+    (unsafe_list_to_immutable_list list)
+
+Returns an immutable list with the same content as `list`.
+If `list` is immutable, then it is returned.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionList$UnsafeListToImmutableListProc"))
+)

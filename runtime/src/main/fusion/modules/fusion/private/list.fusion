@@ -1,0 +1,113 @@
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(module private_list "/fusion/base"
+
+  (require
+    "/fusion/exception"
+    "/fusion/iterator"
+    "/fusion/private/intrinsic/list"
+    "/fusion/sequence"
+  )
+
+  (provide
+    add_m
+    is_immutable_list
+    is_mutable_list
+    is_stretchy_list
+    is_list
+    list
+    list_element
+    list_from_iterator
+    list_iterator
+    list_set
+    mutable_list
+    stretchy_list
+    unsafe_list_add
+    unsafe_list_add_m
+    unsafe_list_element
+    unsafe_list_iterator
+    unsafe_list_set
+    unsafe_list_size
+    unsafe_list_subseq
+    unsafe_list_to_immutable_list
+  )
+
+
+  //==========================================================================
+  // Basic element access
+
+  (define (list_element list pos)
+    '''
+Returns the element of `list` at (zero-based) position `pos`.  An exception is
+thrown if the position is out of bounds.
+    '''
+    (unless (is_list list)
+      (raise_argument_error "list_element" "list" 0 list pos))
+    (unless (and (is_int pos) (not (is_null pos)))
+      (raise_argument_error "list_element" "non-null int" 1 list pos))
+    (when (or (< pos 0) (<= (unsafe_list_size list) pos))
+      (raise_argument_error "list_element" "valid position" 1 list pos))
+    (unsafe_list_element list pos))
+
+
+  (define (list_set list pos value)
+    '''
+Changes the slot of a mutable `list` at (zero-based) position `pos` so it
+holds `value`.  An exception is thrown if the position is out of bounds.
+    '''
+    (unless (is_mutable_list list)
+      (raise_argument_error "list_set" "mutable list" 0 list pos value))
+    (unless (and (is_int pos) (not (is_null pos)))
+      (raise_argument_error "list_set" "non-null int" 1 list pos value))
+    (when (or (< pos 0) (<= (unsafe_list_size list) pos))
+      (raise_argument_error "list_set" "valid position" 1 list pos value))
+    (unsafe_list_set list pos value))
+
+
+  //==========================================================================
+  // Modification
+
+  (define (add_m list element)
+    '''
+Returns a sequence with all the elements of `list` and the `element`.  The
+result sequence is similar to the input, its size is one greater, and it may
+share structure with other sequences.  The input sequence may be mutated.
+
+In general, the position of `element` within the result is not specified, but
+particular sequence types may do so.
+
+* For stretchy lists, the `element` is added to the end of the input sequence,
+  which is then returned.
+    '''
+    (if (is_list list)
+      (unsafe_list_add_m list element)
+      (raise_argument_error "add_m" "list" 0 list element)))
+
+
+  //==========================================================================
+  // Iteration
+
+  (define (list_iterator list)
+    "Returns an iterator over the elements of `list`."
+    (if (is_list list)
+      (unsafe_list_iterator list)
+      (raise_argument_error "list_iterator" "list" 0 list)))
+
+
+  // TODO This should be usable with iterators that return multiple results.
+  // That requires a variant of `let_values` that can accept an arbitrary
+  // number of results.
+  (define (list_from_iterator iterator)
+    '''
+Creates a stretchy list with the elements of `iterator`, in the same order.
+
+At present, this procedure will fail if the iterator returns multiple results.
+    '''
+    (unless (is_iterator iterator)
+      (raise_argument_error "list_from_iterator" "iterator" 0 iterator))
+    (let loop ((result (stretchy_list)))
+      (if (iterator_has_next iterator)
+        (loop (unsafe_list_add_m result (iterator_next iterator)))
+        result)))
+)

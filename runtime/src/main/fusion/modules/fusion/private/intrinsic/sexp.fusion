@@ -1,0 +1,70 @@
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(module intrinsic_sexp "/fusion/private/kernel"
+
+  (provide (all_defined_out))
+
+
+  (define_values (is_pair)
+    '''
+    (is_pair value)
+
+Determines whether `value` is a pair, returning `true` or `false`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionSexp$IsPairProc"))
+
+
+  (define_values (is_sexp)
+    '''
+    (is_sexp value)
+
+Determines whether a `value` is a sexp, returning `true` or `false`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionSexp$IsSexpProc"))
+
+
+  (define_values (pair)
+    '''
+    (pair head tail)
+
+Makes a fresh, immutable pair containing the given `head` and `tail`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionSexp$PairProc"))
+
+
+  (define_values (sexp)
+    '''
+    (sexp value ...)
+
+Makes a fresh, immutable sexp containing the given `value`s.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionSexp$SexpProc"))
+
+
+  (define_values (unsafe_pair_head)
+    '''
+    (unsafe_pair_head pair)
+
+Returns the head of `pair`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionSexp$UnsafePairHeadProc"))
+
+
+  (define_values (unsafe_pair_tail)
+    '''
+    (unsafe_pair_tail pair)
+
+Returns the tail of `pair`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionSexp$UnsafePairTailProc"))
+
+
+  (define_values (unsafe_sexp_iterator)
+    '''
+    (unsafe_sexp_iterator sexp)
+
+Returns an iterator over the elements of `sexp`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionSexp$UnsafeSexpIteratorProc"))
+)
