@@ -89,32 +89,23 @@ while the field values are iterated.
     "/fusion/exception"
     "/fusion/iterator"
     "/fusion/list"
+    "/fusion/private/collection"
     "/fusion/private/struct")
 
+  (provide_public_collection)
+
   (provide
-    .
-    any
-    do
-    element
-    elt
-    every
-    find
-    has_key
-    is_collection
-    is_empty
     is_immutable_struct
     is_mutable_struct
     is_struct
     mutable_struct
     mutable_struct_zip
-    none
     put
     put_m
     remove_keys
     remove_keys_m
     retain_keys
     retain_keys_m
-    size
     struct
     struct_do
     struct_iterator
