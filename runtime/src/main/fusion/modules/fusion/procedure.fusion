@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module procedure "/fusion/private/builtins"
+(module procedure "/fusion/private/layer0"
 
   // WARNING: Doc syntax isn't supported yet.
   '''
@@ -84,13 +84,12 @@ of bound identifiers:
   '''
 
   (require
-    "/fusion/equality"
     "/fusion/exception"
     "/fusion/experimental/defines"
     "/fusion/experimental/syntax"
     "/fusion/private/bind"
-    "/fusion/private/compare"
     "/fusion/private/control"
+    "/fusion/private/define"
     "/fusion/private/procedure"
     "/fusion/private/sexp"
     "/fusion/unsafe/list"

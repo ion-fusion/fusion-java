@@ -4,8 +4,6 @@
 (module control "/fusion/private/layer0"
 
   (require
-    "/fusion/private/compare"
-    "/fusion/unsafe/sexp"
     "/fusion/void")
 
   (provide not)

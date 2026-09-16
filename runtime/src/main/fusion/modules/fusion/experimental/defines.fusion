@@ -4,11 +4,10 @@
 (module defines "/fusion/private/layer0"
 
   (require
-    "/fusion/equality"
     "/fusion/experimental/syntax"
-    "/fusion/private/compare"
     "/fusion/private/control"
     "/fusion/private/define"
+    "/fusion/private/intrinsic/compare"
     "/fusion/private/sexp"
     "/fusion/unsafe/sexp"
   )

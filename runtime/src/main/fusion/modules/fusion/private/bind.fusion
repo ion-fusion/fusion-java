@@ -6,7 +6,7 @@
 
   (require
     "/fusion/experimental/syntax"
-    "/fusion/private/compare"
+    "/fusion/private/intrinsic/compare"
     "/fusion/private/sexp"
     "/fusion/unsafe/list"
     "/fusion/unsafe/sexp"

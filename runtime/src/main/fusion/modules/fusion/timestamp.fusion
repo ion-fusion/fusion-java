@@ -20,7 +20,6 @@ The semantics of Fusion timestamp values are identical to [Ion timestamps][ts].
     "/fusion/void")
 
 
-  (require "/fusion/private/compare")
   (provide < <= = >= >)
 
   (defpub_j is_timestamp

@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module bool '/fusion/private/builtins'
+(module bool "/fusion/private/layer0"
 
   '''
 Boolean operations and related conditional forms.
@@ -104,7 +104,6 @@ forms return the result of the last expression evaluated rather than always
 
 
   (require
-    "/fusion/equality"
     "/fusion/experimental/defines"
   )
 

@@ -9,7 +9,7 @@ Operations on numbers (int, decimal, and float).
 
   (require
     "/fusion/ffi/java"
-    "/fusion/private/compare"
+    "/fusion/private/intrinsic/compare"
   )
 
   (provide < <= = >= >)   // from compare

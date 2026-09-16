@@ -10,7 +10,7 @@
     "/fusion/iterator"
     "/fusion/number"
     "/fusion/private/bind"
-    "/fusion/private/compare"
+    "/fusion/private/intrinsic/compare"
     "/fusion/private/control"
     "/fusion/private/sexp"
     "/fusion/private/struct"

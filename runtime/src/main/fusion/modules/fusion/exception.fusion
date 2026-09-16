@@ -44,12 +44,10 @@ with handlers.
   '''
 
   (require
-    "/fusion/equality"
     "/fusion/ffi/java"
     "/fusion/io"
     "/fusion/private/bind"
     "/fusion/private/builtins"
-    "/fusion/private/compare"
     "/fusion/private/control"
     "/fusion/private/intrinsic/exception"  // for _make_assertion_error
     "/fusion/private/sexp"

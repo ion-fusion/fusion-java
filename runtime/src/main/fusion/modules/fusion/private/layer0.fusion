@@ -45,6 +45,12 @@ layers will shift over time, as intrinsic features are added or ported up to Fus
     unsyntax
     '#%top')
 
+  (require "/fusion/private/intrinsic/compare")
+  (provide
+    = == === same ident
+    < <= >= >
+  )
+
   (require "/fusion/private/intrinsic/exception")
   (provide
     call_with_handler
