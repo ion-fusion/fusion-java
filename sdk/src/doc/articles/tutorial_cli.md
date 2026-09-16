@@ -5,9 +5,9 @@
 
 Here we'll walk through some basic use cases with Ion Fusion's command-line interface.
 
-> **Prerequisites:** 
+> **Prerequisites:**
 >
-> * Install a Java runtime, version 8 or later. We recommend [Amazon Corretto][].
+> * Install a Java runtime, version 11 or later. We recommend [Amazon Corretto][].
 > * Ensure that `java` is on your shell's `PATH`.
 > * Download the [Ion Fusion SDK][SDK], unpack it somewhere, and add its
 >   `bin` directory to your `PATH`.
@@ -53,7 +53,7 @@ First, copy this content into a file named `authors.fusion`:
     current input stream.
       '''
       (series_to_sexp (in_port)))
-    
+
     (define (deduplicate s)
       '''
     Remove duplicate values from sexp `s`, keeping the _last_
@@ -69,7 +69,7 @@ First, copy this content into a file named `authors.fusion`:
             // The name is not in the tail, so keep it and
             // dedup the tail.
             (pair name (deduplicate others))))))
-    
+
     // Print the deduplicated names in chrono order, one per line.
     (for [(name (reverse (deduplicate all_names)))]
       (displayln name))
@@ -87,7 +87,7 @@ ad-hoc data processing.
 ## What's Next?
 
 With these basic examples at hand, we recommend browsing the
-[Ion Fusion Language Reference](fusion.html) to learn more about the operators used in the 
+[Ion Fusion Language Reference](fusion.html) to learn more about the operators used in the
 preceding examples.
 
 [About the `fusion` CLI](about_cli.html) explains the interface in more detail.

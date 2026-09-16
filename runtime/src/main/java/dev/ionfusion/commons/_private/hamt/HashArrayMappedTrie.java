@@ -212,7 +212,7 @@ public final class HashArrayMappedTrie
 
     /**
      * Abstract class interface for Nodes.
-     * TODO: Convert to interface with default methods in Java 8+
+     * TODO Java8: Convert to interface with default methods
      */
     public static abstract class TrieNode<K, V>
         implements Iterable<Entry<K, V>>

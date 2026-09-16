@@ -31,7 +31,7 @@ dependencies {
 java {
     toolchain {
         // Keep in sync with `.readthedocs.yaml`
-        languageVersion = JavaLanguageVersion.of(8)
+        languageVersion = JavaLanguageVersion.of(11)
     }
 }
 

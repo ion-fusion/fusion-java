@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 public class TailCallTest
     extends CoreTestCase
 {
-    public static final int STACK_OVERFLOW_DEPTH = 10000;
+    public static final int STACK_OVERFLOW_DEPTH = 13_000;
 
     /**
      * Test that {@link #STACK_OVERFLOW_DEPTH} is large enough to cause a

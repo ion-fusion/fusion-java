@@ -18,7 +18,7 @@ may be implemented in the future.) Here's a quick sample:
 ```
 
 See [Fusion Basics](/basics.html) for a more thorough introduction to the language. At present,
-Fusion is implemented in **Java SE 8**. It has an interactive command console (for experimentation)
+Fusion is implemented in **Java 11**. It has an interactive command console (for experimentation)
 and a "batch" mode (for running programs and pipelining data). It can also be embedded into Java
 applications by using the `fusion-java` package.
 

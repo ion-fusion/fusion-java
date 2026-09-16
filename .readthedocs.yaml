@@ -11,7 +11,7 @@ build:
         python: "3.10"
 
     apt_packages:
-        - openjdk-8-jdk-headless   # For our code
+        - openjdk-11-jdk-headless  # For our code
         - openjdk-17-jdk-headless  # For Gradle 9.x
 
     jobs:
