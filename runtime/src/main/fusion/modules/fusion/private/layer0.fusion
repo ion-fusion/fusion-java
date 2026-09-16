@@ -131,6 +131,13 @@ layers will shift over time, as intrinsic features are added or ported up to Fus
     wrong_syntax
   )
 
+  (require "/fusion/private/intrinsic/void")
+  (provide
+    is_void
+    void
+  )
+
+
   (provide (all_defined_out))
 
 

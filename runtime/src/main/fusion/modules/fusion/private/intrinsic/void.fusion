@@ -1,0 +1,26 @@
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(module intrinsic_void "/fusion/private/kernel"
+
+
+  (provide (all_defined_out))
+
+
+  (define_values (is_void)
+    '''
+    (is_void value)
+
+Determines whether a `value` is the Fusion void value.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionVoid$IsVoidProc"))
+
+
+  (define_values (void)
+    '''
+    (void arg ...)
+
+Returns the singular void value, ignoring all `arg`s.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionVoid$VoidProc"))
+)

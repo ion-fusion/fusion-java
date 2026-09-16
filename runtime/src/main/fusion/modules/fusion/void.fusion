@@ -67,27 +67,9 @@ Along with all nulls and `false`, the void value is [untruthy][]:
   [untruthy]: fusion/bool.html#truthiness
   '''
 
+  (require "/fusion/private/intrinsic/void")
   (provide
     is_void
     void
   )
-
-
-  (define_values (is_void)
-    '''
-    (is_void value)
-
-Determines whether a `value` is the Fusion void value.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionVoid$IsVoidProc"))
-
-
-  (define_values (void)
-    '''
-    (void arg ...)
-
-Returns the singular void value, ignoring all `arg`s.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionVoid$VoidProc"))
-
 )
