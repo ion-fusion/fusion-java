@@ -27,6 +27,21 @@
     rename_out
     require)
 
+  (require "/fusion/private/intrinsic/core_syntax")
+  (provide
+    if
+    let_values
+    letrec
+    quasiquote
+    quasisyntax
+    quote
+    quote_syntax
+    set
+    unquote
+    unsyntax
+    '#%top')
+
+
   (provide (all_defined_out))
 
 
@@ -79,25 +94,6 @@ to the elements of `sequence`.  The `proc` is called in tail position.
     (apply + 10 11 (sexp 1 2))   =>  24
     '''
     (java_new "dev.ionfusion.fusion.ApplyProc"))
-
-
-  (define_syntax if
-    '''
-    (if test then else)
-
-Evaluates the `test` expression first.  If the result is truthy, evaluates the
-`then` expression and returns its value.  Otherwise, evaluates the `else`
-expression and returns its value.
-
-All values are \"truthy\" except for `false`, void, and any variant of `null`.
-
-Note that only one of `then` or `else` expressions is evaluated, and both are
-in tail position.
-
-For cases that need only one outcome, use [`when`](fusion/bool.html#when) or
-[`unless`](fusion/bool.html#unless).
-    '''
-    (java_new "dev.ionfusion.fusion.IfForm"))
 
 
   (define_values (is_blob)
@@ -235,32 +231,6 @@ Determines whether a `value` is of type `symbol`, returning `true` or `false`.
     (java_new "dev.ionfusion.fusion.FusionSymbol$IsSymbolProc"))
 
 
-  (define_values (let_values)
-    '''
-    (let_values (((ident ...) expr) ...) body ...+)
-
-Captures [multiple results](fusion/procedure.html#results), creating local
-bindings for the `ident`s, with the `body` in scope.  The `expr`s are evaluated
-left-to-right, and must return as many values as there are corresponding
-`ident`s, which are then bound to those results.  After the bindings are
-installed the `body` is evaluated.  `body` may be one or more forms; the last
-form is in tail position and its result is the result of the entire expression.
-    '''
-    (java_new "dev.ionfusion.fusion.LetValuesForm"))
-
-
-  (define_values (letrec)
-    '''
-    (letrec ((ident expr) ...) body ...+)
-
-Creates new binding locations for each `ident`, binds them to their `expr`s,
-then evaluates `body`. The `expr`s are evaluated left-to-right, and the
-`ident`s are bound in all `expr`s and `body`s. `body` may be one or more forms;
-the result of the last form is the result of the entire expression.
-    '''
-    (java_new "dev.ionfusion.fusion.LetrecForm"))
-
-
   (define_values (list)
     '''
     (list value ...)
@@ -296,33 +266,6 @@ is as defined by [`if`](fusion/bool.html#if).
 Makes a fresh, immutable pair containing the given `head` and `tail`.
     '''
     (java_new "dev.ionfusion.fusion.FusionSexp$PairProc"))
-
-
-  (define_values (quote)
-    '''
-    (quote datum)
-
-Returns the Ion `datum` as-is, without evaluation.
-    '''
-    (java_new "dev.ionfusion.fusion.QuoteForm"))
-
-
-  (define_values (quote_syntax)
-    '''
-    (quote_syntax datum)
-
-Returns a syntax object retaining the lexical information of `datum`.
-    '''
-    (java_new "dev.ionfusion.fusion.QuoteSyntaxForm"))
-
-
-  (define_syntax set
-    '''
-    (set var value)
-
-Mutates the given `var`iable, assigning it the `value`.
-    '''
-    (java_new "dev.ionfusion.fusion.SetForm"))
 
 
   (define_values (sexp)
@@ -366,18 +309,4 @@ or more `value`s. Usually used in conjuction with `let_values` to bind the
 results to names.
     '''
     (java_new "dev.ionfusion.fusion.ValuesProc"))
-
-
-  (define_syntax '#%top'
-    '''
-    ('#%top' id)
-
-References a top-level definition for symbol `id`, skipping over any
-surrounding local bindings.  Within a module, `id` must be defined within the
-module and not locally.
-
-As suggested by the awkward name, this form is rarely needed by application
-code and is primarily an artifact of the macro-expansion process.
-    '''
-    (java_new "dev.ionfusion.fusion.TopForm"))
 )

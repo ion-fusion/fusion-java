@@ -76,14 +76,8 @@ significantly simpler to implement and easier to understand.
   '''
 
 
-  // This is split into two files because the compiler requires that built-in
-  // syntactic forms must be imported from another module.
-  // That's true everywhere except for these low-level modules.
-  // TODO I think that only quasisyntax is relevant?
-
   (require
     "/fusion/private/define"
-    "/fusion/private/metasyntax"
     "/fusion/private/raise"
     "/fusion/private/sexp"
     "/fusion/private/syntax"

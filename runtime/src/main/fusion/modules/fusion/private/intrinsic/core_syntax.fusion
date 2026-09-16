@@ -1,0 +1,152 @@
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(module core_syntax "/fusion/private/kernel"
+  '''
+Fusion's core syntax forms, the allowed syntax forms after macro expansion.
+  '''
+
+  // This works around a crash in binding resolution, probably due to improper
+  // handling of phases.
+  (require "/fusion/private/intrinsic/quote_syntax")
+
+
+  (provide (all_defined_out)
+    quote_syntax)
+
+
+  (define_values (if)
+    '''
+    (if test then else)
+
+Evaluates the `test` expression first.  If the result is truthy, evaluates the
+`then` expression and returns its value.  Otherwise, evaluates the `else`
+expression and returns its value.
+
+All values are \"truthy\" except for `false`, void, and any variant of `null`.
+
+Note that only one of `then` or `else` expressions is evaluated, and both are
+in tail position.
+
+For cases that need only one outcome, use [`when`](fusion/bool.html#when) or
+[`unless`](fusion/bool.html#unless).
+    '''
+    (java_new "dev.ionfusion.fusion.IfForm"))
+
+
+  (define_values (let_values)
+    '''
+    (let_values (((ident ...) expr) ...) body ...+)
+
+Captures [multiple results](fusion/procedure.html#results), creating local
+bindings for the `ident`s, with the `body` in scope.  The `expr`s are evaluated
+left-to-right, and must return as many values as there are corresponding
+`ident`s, which are then bound to those results.  After the bindings are
+installed the `body` is evaluated.  `body` may be one or more forms; the last
+form is in tail position and its result is the result of the entire expression.
+    '''
+    (java_new "dev.ionfusion.fusion.LetValuesForm"))
+
+
+  (define_values (letrec)
+    '''
+    (letrec ((ident expr) ...) body ...+)
+
+Creates new binding locations for each `ident`, binds them to their `expr`s,
+then evaluates `body`. The `expr`s are evaluated left-to-right, and the
+`ident`s are bound in all `expr`s and `body`s. `body` may be one or more forms;
+the result of the last form is the result of the entire expression.
+    '''
+    (java_new "dev.ionfusion.fusion.LetrecForm"))
+
+
+  (define_values (quasiquote)
+    '''
+    (quasiquote template)
+
+Like `quote`, but the `template` datum may contain nested `unquote`
+forms that act as escapes.  The `unquote`d expression is evaluated when the
+containing `quasiquote` is evaluated, and its result is inserted into the
+containing quoted datum.
+
+    (quasiquote [(+ 1 2), (unquote (+ 1 2))])
+
+    ==> [(+ 1 2), 3]
+
+`unquote` forms only escape one "level" of quasiquotation:
+
+    (let [(v 1)]
+      (quasiquote (a (quasiquote (b (unquote v) (unquote (unquote v)))))))
+
+    ==> (a (quasiquote (b (unquote v) (unquote 1))))
+    '''
+    (java_new "dev.ionfusion.fusion.QuasiQuoteForm"
+              (quote_syntax quasiquote)
+              (quote_syntax unquote)))
+
+
+  (define_values (quasisyntax)
+    '''
+    (quasisyntax template)
+
+Like `quote_syntax`, but the `template` datum may contain nested `unsyntax`
+forms that act as escapes.  The `unsyntax`ed expression is evaluated when the
+containing `quasisyntax` is evaluated, and its result is inserted into the
+containing quoted datum.
+
+As with `unquote`, `unsyntax` forms only escape one "level" of quasiquotation.
+    '''
+    (java_new "dev.ionfusion.fusion.QuasiSyntaxForm"
+              (quote_syntax quasisyntax)
+              (quote_syntax unsyntax)))
+
+
+  (define_values (quote)
+    '''
+    (quote datum)
+
+Returns the Ion `datum` as-is, without evaluation.
+    '''
+    (java_new "dev.ionfusion.fusion.QuoteForm"))
+
+
+  (define_values (set)
+    '''
+    (set var value)
+
+Mutates the given `var`iable, assigning it the `value`.
+    '''
+    (java_new "dev.ionfusion.fusion.SetForm"))
+
+
+  (define_values (unquote)
+    '''
+    (unquote expr)
+
+Used as an escape within a `quasiquote` form; not valid in any other context.
+    '''
+    (java_new "dev.ionfusion.fusion.QuasiBaseForm$UnquoteForm" "quote"))
+
+
+  (define_values (unsyntax)
+    '''
+    (unsyntax expr)
+
+Used as an escape within a `quasisyntax` form; not valid in any other context.
+    '''
+    (java_new "dev.ionfusion.fusion.QuasiBaseForm$UnquoteForm" "syntax"))
+
+
+  (define_values ('#%top')
+    '''
+    ('#%top' id)
+
+References a top-level definition for symbol `id`, skipping over any
+surrounding local bindings.  Within a module, `id` must be defined within the
+module and not locally.
+
+As suggested by the awkward name, this form is rarely needed by application
+code and is primarily an artifact of the macro-expansion process.
+    '''
+    (java_new "dev.ionfusion.fusion.TopForm"))
+)

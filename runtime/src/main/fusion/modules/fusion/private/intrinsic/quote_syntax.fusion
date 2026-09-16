@@ -1,0 +1,20 @@
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(module quote_syntax "/fusion/private/kernel"
+
+  '''
+Provide `quote_syntax` separately to work-around expansion phase limitations.
+  '''
+
+  (provide (all_defined_out))
+
+
+  (define_syntax quote_syntax
+    '''
+    (quote_syntax datum)
+
+Returns a syntax object retaining the lexical information of `datum`.
+    '''
+    (java_new "dev.ionfusion.fusion.QuoteSyntaxForm"))
+)

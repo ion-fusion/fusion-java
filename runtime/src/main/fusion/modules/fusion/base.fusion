@@ -25,7 +25,6 @@ To use this dialect for your module, declare it as follows:
     annotations
     apply
     begin
-    define
     if
     is_bool
     is_blob
@@ -48,18 +47,17 @@ To use this dialect for your module, declare it as follows:
     only_in
     prefix_in
     provide
+    quasiquote
     rename_in
     rename_out
     require
     let
     let_values
     quote
+    unquote
     values
     '#%top')
 
-
-  (require "/fusion/private/builtins")
-  (provide quasiquote unquote)
 
   (require "/fusion/collection")
   (provide element elt is_empty size)
@@ -72,6 +70,9 @@ To use this dialect for your module, declare it as follows:
 
   (require "/fusion/private/control")
   (provide and or when unless cond)
+
+  (require "/fusion/private/define")
+  (provide define)
 
   (require "/fusion/equality")
   (provide = == === same ident)
