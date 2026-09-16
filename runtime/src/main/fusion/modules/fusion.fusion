@@ -202,6 +202,7 @@ contact us for clarification.
   (provide
     assert
     call_with_handler
+    exn_message
     is_argument_error
     is_arity_error
     is_contract_error
