@@ -197,6 +197,10 @@
 //==========================================================================
 // quasisyntax
 
+(check string_starts_with
+  (exn_message (expect_syntax_error (unsyntax true)))
+  "Bad syntax: `unsyntax` must be used inside quasisyntax.")
+
 (define outside (quote_syntax im_out))
 (check ===
   (quote (im_out mid (quasisyntax ((unsyntax im_out) (unsyntax mid) inner))))

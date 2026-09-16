@@ -4,6 +4,8 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionList.unsafeListElement;
+import static dev.ionfusion.fusion.FusionString.unsafeStringToJavaString;
+import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 
 import dev.ionfusion.runtime.base.FusionException;
 
@@ -281,5 +283,39 @@ abstract class QuasiBaseForm
         }
 
         return quasiList(eval, stx, children);
+    }
+
+
+    static final class UnquoteForm
+        extends SyntacticForm
+    {
+        private final Object myBaseFormString;
+
+        UnquoteForm(Object baseFormString)
+        {
+            myBaseFormString = baseFormString;
+        }
+
+        @Override
+        SyntaxValue expand(Expander expander, Environment env, SyntaxSexp stx)
+            throws FusionException
+        {
+            Evaluator eval = expander.getEvaluator();
+
+            String base = unsafeStringToJavaString(eval, myBaseFormString);
+
+            String message =
+                "`un" + base + "` must be used inside quasi" + base +
+                ". Sorry, but it currently doesn't work inside a struct; see issue #62.";
+
+            throw makeSyntaxError(eval, null, message, stx);
+        }
+
+        @Override
+        CompiledForm compile(Compiler comp, Environment env, SyntaxSexp stx)
+            throws FusionException
+        {
+            throw new IllegalStateException();
+        }
     }
 }

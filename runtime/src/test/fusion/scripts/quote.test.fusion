@@ -39,5 +39,6 @@
                             inner))])
   (quote [im_out, mid, (quasiquote ((unquote im_out) (unquote mid) inner))]))
 
-
-(expect_syntax_error (unquote true))
+(check string_starts_with
+  (exn_message (expect_syntax_error (unquote true)))
+  "Bad syntax: `unquote` must be used inside quasiquote.")

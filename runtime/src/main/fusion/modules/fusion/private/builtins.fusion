@@ -3,10 +3,6 @@
 
 (module builtins '/fusion/private/kernel2'
 
-  (require
-    "/fusion/private/metasyntax"
-  )
-
 
   // Pass-through bindings from kernel
   (provide all_defined_out begin define_values lambda load module
@@ -56,9 +52,8 @@
 
 Used as an escape within a `quasiquote` form; not valid in any other context.
     '''
-    (lambda (stx)
-      (wrong_syntax stx "must be used inside quasiquote.  Sorry, but it "
-        "currently doesn't work inside a struct; see issue #62.")))
+    (java_new "dev.ionfusion.fusion.QuasiBaseForm$UnquoteForm" "quote"))
+
 
   (define_syntax quasiquote
     '''
