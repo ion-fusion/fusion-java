@@ -1,0 +1,229 @@
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(module intrinsic_struct "/fusion/private/kernel"
+
+  (provide (all_defined_out))
+
+
+  (define_values (is_immutable_struct)
+    '''
+    (is_immutable_struct value)
+
+Determines whether `value` is an immutable struct, returning `true` or `false`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionStruct$IsImmutableStructProc"))
+
+
+  (define_values (is_mutable_struct)
+    '''
+    (is_mutable_struct value)
+
+Determines whether `value` is a mutable struct, returning `true` or `false`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionStruct$IsMutableStructProc"))
+
+
+  (define_values (is_struct)
+    '''
+    (is_struct value)
+
+Determines whether `value` is a struct, returning `true` or `false`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionStruct$IsStructProc"))
+
+
+  (define_values (mutable_struct)
+    '''
+    (mutable_struct name value ... ...)
+
+Constructs a mutable, non-null struct from alternating strings and values.
+Each `name` is a non-empty string or symbol denoting a field name, and the
+following `value` is the field's value.  Names may be repeated to produce
+repeated (multi-mapped) fields.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionStruct$MutableStructProc"))
+
+  (define_values (mutable_struct_zip)
+    '''
+    (mutable_struct_zip names values)
+
+Constructs a mutable struct from a list of field names and a list of values.
+If the lists have unequal lengths, only the first _n_ elements will be used
+where _n_ is the shorter length.
+
+The names must be non-empty strings or symbols.
+
+    (struct_zip ["f", "g"] [1, 2])  => {f:1,g:2}
+    (struct_zip ["f", "f"] [1, 2])  => {f:1,f:2}
+    (struct_zip ["f"] [1, 2])       => {f:1}
+    '''
+    (java_new "dev.ionfusion.fusion.FusionStruct$MutableStructZipProc"))
+
+
+  (define_values (remove_keys)
+    '''
+    (remove_keys struct name ...)
+
+Returns a struct derived from `struct` without fields with the given `name`s.
+If the input is `null.struct` then the result is `null.struct`.  The result
+will have the same annotations as `struct`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionStruct$RemoveKeysProc"))
+
+
+  (define_values (remove_keys_m)
+    '''
+    (remove_keys_m struct name ...)
+
+Returns a struct similar to `struct` without fields with the given `name`s.
+The result may share structure with the input, which may be mutated.
+If the input is `null.struct` then the result is `null.struct`.  The result
+will have the same annotations as `struct`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionStruct$RemoveKeysMProc"))
+
+
+  (define_values (retain_keys)
+    '''
+    (retain_keys struct name ...)
+
+Returns a struct derived from `struct` with _only_ fields with the given
+`name`s.  If the input is `null.struct` then the result is `null.struct`.  The
+result will have the same annotations as `struct`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionStruct$RetainKeysProc"))
+
+
+  (define_values (retain_keys_m)
+    '''
+    (retain_keys_m struct name ...)
+
+Returns a struct similar to `struct` with _only_ fields with the given
+`name`s. The result may share structure with the input, which may be mutated.
+If the input is `null.struct` then the result is `null.struct`. The result
+will have the same annotations as `struct`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionStruct$RetainKeysMProc"))
+
+
+  (define_values (struct)
+    '''
+    (struct name value ... ...)
+
+Constructs an immutable, non-null struct from alternating strings and values.
+Each `name` is a non-empty string or symbol denoting a field name, and the
+following `value` is the field's value.  Names may be repeated to produce
+repeated (multi-mapped) fields.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionStruct$StructProc"))
+
+
+  (define_values (struct_merge)
+    '''
+    (struct_merge struct1 struct2)
+
+Returns a struct that has all the name-value elements of both arguments.  This
+will result in repeated fields if the names overlap or if one of the arguments
+has repeats. The result has the same type as the first argument.
+
+    (struct_merge {a:1} {a:1}) ==> {a:1, a:1}
+    (struct_merge {a:1} {b:2}) ==> {a:1, b:2}
+    '''
+    (java_new "dev.ionfusion.fusion.FusionStruct$StructMergeProc"))
+
+
+  (define_values (struct_merge_m)
+    '''
+    (struct_merge_m struct1 struct2)
+
+Returns a struct that has all the name-value elements of both arguments,
+mutating the first argument when possible. This will result in repeated fields
+if the names overlap or if one of the arguments has repeats.  The result has
+the same type as the first argument.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionStruct$StructMergeMProc"))
+
+
+  (define_values (struct_zip)
+    '''
+    (struct_zip names values)
+
+Constructs an immutable struct from a list of field names and a list of values.
+If the lists have unequal lengths, only the first _n_ elements will be used
+where _n_ is the shorter length.
+
+The names must be non-empty strings or symbols.
+
+    (struct_zip ["f", "g"] [1, 2])  => {f:1,g:2}
+    (struct_zip ["f", "f"] [1, 2])  => {f:1,f:2}
+    (struct_zip ["f"] [1, 2])       => {f:1}
+    '''
+    (java_new "dev.ionfusion.fusion.FusionStruct$StructZipProc"))
+
+
+  (define_values (unsafe_struct_has_key)
+    '''
+    (unsafe_struct_has_key struct name)
+
+UNSUPPORTED.  `name` must be text.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionStruct$UnsafeStructHasKeyProc"))
+
+
+  (define_values (unsafe_struct_ref)
+    '''
+    (unsafe_struct_ref struct name default)
+
+Returns the value associated with `name` in `struct`. The `name` must be a
+non-null string or symbol.  If no field exists with the name, the `default` is
+used: if it is a procedure, it's applied to no arguments and the result is
+returned, otherwise the `default` is returned as-is.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionStruct$UnsafeStructRefProc"))
+
+
+  (define_values (unsafe_struct_put)
+    '''
+    (unsafe_struct_put struct key value)
+    '''
+    (java_new "dev.ionfusion.fusion.FusionStruct$UnsafeStructPutProc"))
+
+
+  (define_values (unsafe_struct_put_m)
+    '''
+    (unsafe_struct_put_m struct key value)
+    '''
+    (java_new "dev.ionfusion.fusion.FusionStruct$UnsafeStructPutMProc"))
+
+
+  (define_values (unsafe_struct_puts)  // TODO Should this be called `add`?
+    '''
+    (unsafe_struct_puts struct key value)
+
+Like `unsafe_struct_put`, but if any fields named `key` already exist, they
+will not be replaced, resulting in repeated fields.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionStruct$UnsafeStructPutsProc"))
+
+
+  (define_values (unsafe_struct_puts_m)  // TODO Should this be called `add_m`?
+    '''
+    (unsafe_struct_puts_m struct key value)
+
+Like `unsafe_struct_put_m`, but if any fields named `key` already exist, they
+will not be replaced, resulting in repeated fields.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionStruct$UnsafeStructPutsMProc"))
+
+
+  (define_values (unsafe_struct_iterator)
+    '''
+    (unsafe_struct_iterator struct)
+
+Returns an iterator over the content of `struct`. Calls to `iterator_next` will
+return two results representing a single field: the field's name (as a symbol)
+and the field's value.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionStruct$UnsafeStructIteratorProc"))
+)

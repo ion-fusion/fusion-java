@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module struct '/fusion/base'
+(module struct "/fusion/base"
 
   '''
 Operations for structs.
@@ -86,159 +86,46 @@ while the field values are iterated.
   '''
 
   (require
-    "/fusion/collection"
     "/fusion/exception"
-    "/fusion/experimental/defines"
-    "/fusion/ffi/java"
     "/fusion/iterator"
     "/fusion/list"
     "/fusion/private/struct")
 
-  // Pass-through bindings from /fusion/private/kernel
-  (provide is_struct)
-
-  // Pass-through bindings from /fusion/collection
-  (provide . any do element elt every find has_key is_collection is_empty none size)
-
-  (defpub_j struct
-    '''
-    (struct name value ... ...)
-
-Constructs an immutable, non-null struct from alternating strings and values.
-Each `name` is a non-empty string or symbol denoting a field name, and the
-following `value` is the field's value.  Names may be repeated to produce
-repeated (multi-mapped) fields.
-    '''
-    "dev.ionfusion.fusion.FusionStruct$StructProc")
-
-  (defpub_j mutable_struct
-    '''
-    (mutable_struct name value ... ...)
-
-Constructs a mutable, non-null struct from alternating strings and values.
-Each `name` is a non-empty string or symbol denoting a field name, and the
-following `value` is the field's value.  Names may be repeated to produce
-repeated (multi-mapped) fields.
-    '''
-    "dev.ionfusion.fusion.FusionStruct$MutableStructProc")
-
-  (defpub_j struct_zip
-    '''
-    (struct_zip names values)
-
-Constructs an immutable struct from a list of field names and a list of values.
-If the lists have unequal lengths, only the first _n_ elements will be used
-where _n_ is the shorter length.
-
-The names must be non-empty strings or symbols.
-
-    (struct_zip ["f", "g"] [1, 2])  => {f:1,g:2}
-    (struct_zip ["f", "f"] [1, 2])  => {f:1,f:2}
-    (struct_zip ["f"] [1, 2])       => {f:1}
-    '''
-    "dev.ionfusion.fusion.FusionStruct$StructZipProc")
-
-  (defpub_j mutable_struct_zip
-    '''
-    (mutable_struct_zip names values)
-
-Constructs a mutable struct from a list of field names and a list of values.
-If the lists have unequal lengths, only the first _n_ elements will be used
-where _n_ is the shorter length.
-
-The names must be non-empty strings or symbols.
-
-    (struct_zip ["f", "g"] [1, 2])  => {f:1,g:2}
-    (struct_zip ["f", "f"] [1, 2])  => {f:1,f:2}
-    (struct_zip ["f"] [1, 2])       => {f:1}
-    '''
-    "dev.ionfusion.fusion.FusionStruct$MutableStructZipProc")
-
-  (defpub_j is_immutable_struct
-    '''
-    (is_immutable_struct value)
-
-Determines whether `value` is an immutable struct, returning `true` or `false`.
-    '''
-    "dev.ionfusion.fusion.FusionStruct$IsImmutableStructProc")
-
-  (defpub_j is_mutable_struct
-    '''
-    (is_mutable_struct value)
-
-Determines whether `value` is a mutable struct, returning `true` or `false`.
-    '''
-    "dev.ionfusion.fusion.FusionStruct$IsMutableStructProc")
-
-  (defpub_j remove_keys
-    '''
-    (remove_keys struct name ...)
-
-Returns a struct derived from `struct` without fields with the given `name`s.
-If the input is `null.struct` then the result is `null.struct`.  The result
-will have the same annotations as `struct`.
-    '''
-    "dev.ionfusion.fusion.FusionStruct$RemoveKeysProc")
-
-  (defpub_j remove_keys_m
-    '''
-    (remove_keys_m struct name ...)
-
-Returns a struct similar to `struct` without fields with the given `name`s.
-The result may share structure with the input, which may be mutated.
-If the input is `null.struct` then the result is `null.struct`.  The result
-will have the same annotations as `struct`.
-    '''
-    "dev.ionfusion.fusion.FusionStruct$RemoveKeysMProc")
-
-  (defpub_j retain_keys
-    '''
-    (retain_keys struct name ...)
-
-Returns a struct derived from `struct` with _only_ fields with the given
-`name`s.  If the input is `null.struct` then the result is `null.struct`.  The
-result will have the same annotations as `struct`.
-    '''
-    "dev.ionfusion.fusion.FusionStruct$RetainKeysProc")
-
-  (defpub_j retain_keys_m
-    '''
-    (retain_keys_m struct name ...)
-
-Returns a struct similar to `struct` with _only_ fields with the given
-`name`s. The result may share structure with the input, which may be mutated.
-If the input is `null.struct` then the result is `null.struct`. The result
-will have the same annotations as `struct`.
-    '''
-    "dev.ionfusion.fusion.FusionStruct$RetainKeysMProc")
-
-  (defpub_j struct_merge
-    '''
-    (struct_merge struct1 struct2)
-
-Returns a struct that has all the name-value elements of both arguments.  This
-will result in repeated fields if the names overlap or if one of the arguments
-has repeats. The result has the same type as the first argument.
-
-    (struct_merge {a:1} {a:1}) ==> {a:1, a:1}
-    (struct_merge {a:1} {b:2}) ==> {a:1, b:2}
-    '''
-    "dev.ionfusion.fusion.FusionStruct$StructMergeProc")
-
-  (defpub_j struct_merge_m
-    '''
-    (struct_merge_m struct1 struct2)
-
-Returns a struct that has all the name-value elements of both arguments,
-mutating the first argument when possible. This will result in repeated fields
-if the names overlap or if one of the arguments has repeats.  The result has
-the same type as the first argument.
-    '''
-    "dev.ionfusion.fusion.FusionStruct$StructMergeMProc")
+  (provide
+    .
+    any
+    do
+    element
+    elt
+    every
+    find
+    has_key
+    is_collection
+    is_empty
+    is_immutable_struct
+    is_mutable_struct
+    is_struct
+    mutable_struct
+    mutable_struct_zip
+    none
+    put
+    put_m
+    remove_keys
+    remove_keys_m
+    retain_keys
+    retain_keys_m
+    size
+    struct
+    struct_do
+    struct_iterator
+    struct_merge
+    struct_merge_m
+    struct_unzip
+    struct_zip
+  )
 
 
-
-  (defpub (put struct key value)
+  (define (put struct key value)
     '''
 Functionally modifies a field of a `struct`, returning a new struct of the same
 type. Any existing fields (including repeats) named by the `key` are replaced
@@ -258,7 +145,7 @@ by a single field with the `value`.
     (unsafe_struct_put struct key value))
 
 
-  (defpub (put_m struct key value)
+  (define (put_m struct key value)
     '''
 Modifies a field of a `struct`, mutating the `struct` when possible and
 returning a struct of the same type. Any existing fields (including repeats)
@@ -290,7 +177,7 @@ When given a mutable struct, the struct is mutated:
     (unsafe_struct_put_m struct key value))
 
 
-  (defpub (struct_iterator struct)
+  (define (struct_iterator struct)
     '''
 Returns an [iterator][] over the content of `struct`. Calls to `iterator_next`
 will return two results representing a single field: the field's name (as a
@@ -320,7 +207,7 @@ This code displays:
 
   // Name per Dylan.  Equivalent to SRFI-1 `for_each` but I don't want this to
   // be confused with the `for` syntax from Racket (which I intend to provide).
-  (defpub (struct_do proc struct)
+  (define (struct_do proc struct)
     '''
 Iterates the fields of `struct` for side-effects, applying `proc` to each
 name/value field.  Returns `struct`.  The `proc` must accept two arguments, a
@@ -342,7 +229,7 @@ See also: [`do`](fusion/collection.html#do)
           struct))))
 
 
-  (defpub (struct_unzip struct)
+  (define (struct_unzip struct)
     '''
 Deconstructs a `struct` and returns two values: a list of field names (as
 symbols) and a list of associated values. This is the inverse of

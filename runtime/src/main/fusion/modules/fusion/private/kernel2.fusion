@@ -41,6 +41,10 @@
     unsyntax
     '#%top')
 
+  (require "/fusion/private/intrinsic/struct")
+  (provide
+    is_struct)
+
 
   (provide (all_defined_out))
 
@@ -211,15 +215,6 @@ Determines whether `value` is a stretchy list, returning `true` or `false`.
 Determines whether a `value` is of type `string`, returning `true` or `false`.
     '''
     (java_new "dev.ionfusion.fusion.FusionString$IsStringProc"))
-
-
-  (define_values (is_struct)
-    '''
-    (is_struct value)
-
-Determines whether `value` is a struct, returning `true` or `false`.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionStruct$IsStructProc"))
 
 
   (define_values (is_symbol)

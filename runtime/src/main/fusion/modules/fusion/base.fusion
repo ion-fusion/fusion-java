@@ -25,6 +25,7 @@ To use this dialect for your module, declare it as follows:
     annotations
     apply
     begin
+    define_values
     if
     is_bool
     is_blob

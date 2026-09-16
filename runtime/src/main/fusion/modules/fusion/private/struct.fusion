@@ -4,11 +4,24 @@
 (module struct "/fusion/private/builtins"
 
   (require
-    "/fusion/ffi/java"
-    "/fusion/private/control")
+    "/fusion/private/control"
+    "/fusion/private/intrinsic/struct")
 
   (provide
+    is_immutable_struct
+    is_mutable_struct
+    is_struct
     is_struct_field_name
+    mutable_struct
+    mutable_struct_zip
+    remove_keys
+    remove_keys_m
+    retain_keys
+    retain_keys_m
+    struct
+    struct_merge
+    struct_merge_m
+    struct_zip
     unsafe_struct_has_key
     unsafe_struct_iterator
     unsafe_struct_put
@@ -17,66 +30,6 @@
     unsafe_struct_puts_m
     unsafe_struct_ref
   )
-
-
-  (define unsafe_struct_has_key
-    '''
-    (unsafe_struct_has_key struct name)
-
-UNSUPPORTED.  `name` must be text.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionStruct$UnsafeStructHasKeyProc"))
-
-  (define unsafe_struct_ref
-    '''
-    (unsafe_struct_ref struct name default)
-
-Returns the value associated with `name` in `struct`. The `name` must be a
-non-null string or symbol.  If no field exists with the name, the `default` is
-used: if it is a procedure, it's applied to no arguments and the result is
-returned, otherwise the `default` is returned as-is.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionStruct$UnsafeStructRefProc"))
-
-  (define unsafe_struct_put
-    '''
-    (unsafe_struct_put struct key value)
-    '''
-    (java_new "dev.ionfusion.fusion.FusionStruct$UnsafeStructPutProc"))
-
-  (define unsafe_struct_put_m
-    '''
-    (unsafe_struct_put_m struct key value)
-    '''
-    (java_new "dev.ionfusion.fusion.FusionStruct$UnsafeStructPutMProc"))
-
-  (define unsafe_struct_puts  // TODO Should this be called `add`?
-    '''
-    (unsafe_struct_puts struct key value)
-
-Like `unsafe_struct_put`, but if any fields named `key` already exist, they
-will not be replaced, resulting in repeated fields.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionStruct$UnsafeStructPutsProc"))
-
-  (define unsafe_struct_puts_m  // TODO Should this be called `add_m`?
-    '''
-    (unsafe_struct_puts_m struct key value)
-
-Like `unsafe_struct_put_m`, but if any fields named `key` already exist, they
-will not be replaced, resulting in repeated fields.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionStruct$UnsafeStructPutsMProc"))
-
-  (define unsafe_struct_iterator
-    '''
-    (unsafe_struct_iterator struct)
-
-Returns an iterator over the content of `struct`. Calls to `iterator_next` will
-return two results representing a single field: the field's name (as a symbol)
-and the field's value.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionStruct$UnsafeStructIteratorProc"))
 
 
   (define is_struct_field_name
