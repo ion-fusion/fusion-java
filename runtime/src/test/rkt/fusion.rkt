@@ -40,7 +40,7 @@
 (define syntax_track_origin  syntax-track-origin)
 (define syntax_unwrap        syntax-e)
 
-;; Deprecated as of R23
+;; No longer provided by Fusion, but used in some tests.
 (define (syntax_origin stx)
   (syntax-property stx 'origin))
 

@@ -51,7 +51,6 @@ To use this dialect for your module, declare it as follows:
     rename_in
     rename_out
     require
-    type_annotations
     let
     let_values
     quote

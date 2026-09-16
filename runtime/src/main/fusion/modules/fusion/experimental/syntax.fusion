@@ -107,7 +107,6 @@ significantly simpler to implement and easier to understand.
     syntax_get
     syntax_is_original
     syntax_line
-    syntax_origin
     syntax_property
     syntax_size
     syntax_subseq
@@ -116,12 +115,6 @@ significantly simpler to implement and easier to understand.
     syntax_unwrap
     unsyntax
     wrong_syntax)
-
-
-  // TODO Should probably remove; it's unnecessary.  Racket doesn't have it.
-  (define (syntax_origin stx)
-    "DEPRECATED as of FusionJava R23"
-    (syntax_property stx (quote origin)))
 
 
   // '_q' suffix intended to denote that the car is quoted by the syntax form.

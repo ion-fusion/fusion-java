@@ -357,16 +357,6 @@ Makes a fresh, stretchy list containing the given `value`s.
     (java_new "dev.ionfusion.fusion.FusionList$StretchyListProc"))
 
 
-  (define_values (type_annotations)
-    '''
-    (type_annotations value)
-
-*DEPRECATED* as of Fusion R20; renamed to
-[`annotations`](fusion.html#annotations).
-    '''
-    (java_new "dev.ionfusion.fusion.TypeAnnotationsProc"))
-
-
   (define_values (values)
     '''
     (values value ...)

@@ -36,7 +36,7 @@ contact us for clarification.
 
   // Misc core forms
   (provide annotate annotations quasiquote quote
-    set type_annotations unquote '#%top')
+    set unquote '#%top')
 
 
   //=========================================================================

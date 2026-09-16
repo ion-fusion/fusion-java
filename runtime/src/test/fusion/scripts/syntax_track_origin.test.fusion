@@ -9,6 +9,10 @@
   )
 
 
+(define (syntax_origin stx)
+  (syntax_property stx (quote origin)))
+
+
 (expect_arity_error (syntax_track_origin))
 (expect_arity_error (syntax_track_origin (quote_syntax sym)))
 (expect_arity_error (syntax_track_origin (quote_syntax sym) (quote_syntax sym)))
