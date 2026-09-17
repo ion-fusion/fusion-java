@@ -52,9 +52,9 @@ would succeed.
 The `expect` forms return the raised value to allow further validation, like checking
 the exception message:
 
-  (check string_starts_with
-    (exn_message (expect_check_error (fail)))
-    "Check failure:")
+    (check string_starts_with
+      (exn_message (expect_check_error (fail)))
+      "Check failure:")
 
 
 ## Defining New Checks
