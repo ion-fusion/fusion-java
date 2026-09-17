@@ -14,14 +14,12 @@ import static dev.ionfusion.fusion.FusionSyntax.isSyntax;
 import static dev.ionfusion.fusion.FusionSyntax.unsafeFreeIdentifierEqual;
 import static dev.ionfusion.fusion.FusionSyntax.unsafeSyntaxUnwrap;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
-import static dev.ionfusion.fusion.GlobalState.DEFINE_VALUES;
-import static dev.ionfusion.fusion.GlobalState.LAMBDA;
-import static dev.ionfusion.fusion.GlobalState.MODULE;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import dev.ionfusion.commons.resources.ResourceDescriptor;
 import dev.ionfusion.runtime.base.FusionException;
+import dev.ionfusion.runtime.embed.TopLevel;
 import org.junit.jupiter.api.Test;
 
 
@@ -99,12 +97,11 @@ public class ExpandProgramTest
     public void testFindingCoreForms()
         throws Exception
     {
-        Evaluator eval = evaluator();
-        GlobalState globals = eval.getGlobalState();
+        TopLevel kernel = runtime().makeTopLevel("/fusion/private/kernel2");
 
-        Object kernelLambdaId = globals.kernelBoundIdentifier(LAMBDA);
-        Object kernelModuleId = globals.kernelBoundIdentifier(MODULE);
-        Object kernelDefValuesId = globals.kernelBoundIdentifier(DEFINE_VALUES);
+        Object kernelLambdaId = kernel.eval("(quote_syntax lambda)");
+        Object kernelModuleId = kernel.eval("(quote_syntax module)");
+        Object kernelDefValuesId = kernel.eval("(quote_syntax define_values)");
 
         CoreFormCollector collector = new CoreFormCollector();
 
@@ -116,6 +113,8 @@ public class ExpandProgramTest
         expandProgram(topLevel(), source, ResourceDescriptor.unknown(), collector);
         assertTrue(collector.receivedEof);
 
+
+        Evaluator eval = evaluator();
         assertTrue(unsafeFreeIdentifierEqual(eval,
                                              collector.lambdaId,
                                              kernelLambdaId));

@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module quote_syntax "/fusion/private/kernel"
+(module quote_syntax "/fusion/private/intrinsic/microkernel"
 
   '''
 Provide `quote_syntax` separately to work-around expansion phase limitations.

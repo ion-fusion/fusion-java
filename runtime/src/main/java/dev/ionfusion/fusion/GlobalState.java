@@ -23,11 +23,20 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
- * The core set of objects from that are needed by other parts of the
- * implementation.
+ * The core set of objects from that are needed by other parts of the implementation.
+ * <p>
+ * This class defines the microkernel, just enough to bootstrap the runtime and load the
+ * kernel module, which adds the remaining core syntax forms.
+ * <p>
+ * TODO This class has too much going on.
+ * Some things are in the microkernel purely so that there are constants here, but the
+ * runtime shouldn't care what's in the microkernel versus the full kernel.
  */
 final class GlobalState
 {
+    private static final String MICROKERNEL_NAME =
+        "/fusion/private/intrinsic/microkernel";
+
     static final String KERNEL_MODULE_NAME = "/fusion/private/kernel";
     static final ModuleIdentity KERNEL_MODULE_IDENTITY =
         ModuleIdentity.forAbsolutePath(KERNEL_MODULE_NAME);
@@ -130,7 +139,7 @@ final class GlobalState
                             .withCatalog(system.getCatalog())
                             .immutable();
 
-        // WARNING: We pass null evaluator because we know its not used.
+        // WARNING: We pass null evaluator because we know it's not used.
         //          That is NOT SUPPORTED for user code!
         Object userDir =
             makeString(null, builder.getInitialCurrentDirectory().toString());
@@ -161,7 +170,8 @@ final class GlobalState
                                    makeRepositories(builder));
 
         ModuleBuilderImpl ns =
-            new ModuleBuilderImpl(resolver, registry, KERNEL_MODULE_IDENTITY,
+            new ModuleBuilderImpl(resolver, registry,
+                                  ModuleIdentity.forAbsolutePath(MICROKERNEL_NAME),
                                   kernelDocs(system));
 
         ns.define(ALL_DEFINED_OUT, new ProvideForm.AllDefinedOutForm());
@@ -191,11 +201,15 @@ final class GlobalState
 
         ns.instantiate();
 
-        ModuleInstance kernel = registry.lookup(KERNEL_MODULE_IDENTITY);
+        ModuleInstance kernel = registry.lookup(MICROKERNEL_NAME);
 
-        GlobalState globals =
-            new GlobalState(system, builder, readerBuilder, fs, kernel, resolver, loadHandler);
-        return globals;
+        return new GlobalState(system,
+                               builder,
+                               readerBuilder,
+                               fs,
+                               kernel,
+                               resolver,
+                               loadHandler);
     }
 
 

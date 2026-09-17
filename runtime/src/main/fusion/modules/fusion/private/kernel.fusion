@@ -1,0 +1,43 @@
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(module kernel "/fusion/private/intrinsic/microkernel"
+
+  // Pass-through bindings from microkernel
+  (provide
+    all_defined_out
+    begin
+    closed_security_guard
+    current_directory
+    current_ion_reader
+    current_namespace
+    current_output_port
+    current_security_guard
+    define_syntax
+    define_values
+    eof
+    java_new
+    lambda
+    load
+    module
+    only_in
+    prefix_in
+    provide
+    rename_in
+    rename_out
+    require)
+
+  (require "/fusion/private/intrinsic/core_syntax")
+  (provide
+    if
+    let_values
+    letrec
+    quasiquote
+    quasisyntax
+    quote
+    quote_syntax
+    set
+    unquote
+    unsyntax
+    '#%top')
+)
