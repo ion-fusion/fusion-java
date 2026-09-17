@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module decimal "/fusion/base"
+(module decimal "/fusion/private/layer0"
 
   '''
 Experimental operators for decimal arithmetic.

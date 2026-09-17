@@ -120,8 +120,8 @@ public class NamespaceTest
     {
         ModuleInstance inst0 = top0.getRegistry().lookup(module);
         ModuleInstance inst1 = top1.getRegistry().lookup(module);
-        assertNotNull(inst0);
-        assertNotNull(inst1);
+        assertNotNull(inst0, "module from first TopLevel");
+        assertNotNull(inst1, "module from second TopLevel");
         assertNotSame(inst0, inst1);
     }
 
@@ -142,7 +142,7 @@ public class NamespaceTest
 
         assertSameInstances(top0, top1, KERNEL_MODULE_NAME);
         assertNotLoaded(top1, "/fusion");
-        assertNotLoaded(top1, "/fusion/base");
+        assertNotLoaded(top1, "/fusion/bool");
     }
 
 
@@ -157,8 +157,8 @@ public class NamespaceTest
 
         // Since top1's registry is empty modulo the kernel, we should get a
         // separate copy of any module we require.
-        top1.requireModule("/fusion/base");
-        assertDifferentInstances(top0, top1, "/fusion/base");
+        top1.requireModule("/fusion/bool");
+        assertDifferentInstances(top0, top1, "/fusion/bool");
     }
 
 

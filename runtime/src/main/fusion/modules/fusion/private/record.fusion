@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module structure "/fusion"
+(module private_record "/fusion/private/layer0"
   '''
 A _record type_ is a datatype holding a number of fields.
 
@@ -22,12 +22,16 @@ TODO
 
   (require
     "/fusion/experimental/syntax"
-    "/fusion/ffi/java"
+    "/fusion/private/bind"
+    "/fusion/private/collection"
+    "/fusion/private/control"
+    "/fusion/private/define"
+    "/fusion/private/sequence"
+    "/fusion/private/string"
+    "/fusion/for"
     "/fusion/private/record_type"
-    (rename_in "/fusion/experimental/syntax"
-      (quote_syntax QS))
-    (rename_in "/fusion/base"
-      (quote Q) (quasiquote QQ) (unquote UQ))
+    (rename_in "/fusion/private/layer0"
+      (quote Q) (quasiquote QQ) (unquote UQ) (quote_syntax QS))
   )
 
   (provide

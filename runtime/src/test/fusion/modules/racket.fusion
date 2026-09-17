@@ -1,12 +1,16 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module racket "/fusion/base"
+(module racket "/fusion/private/layer0"
 
-  (require "/fusion/experimental/defines")
+  (provide
+    RACKET
+    UNSET_STX_PROP_VALUE
+  )
 
-  (defpub RACKET false)
+  (define_values (RACKET)
+    false)
 
-  (defpub UNSET_STX_PROP_VALUE (void)) // Racket uses #f for unset properties.
-
+  (define_values (UNSET_STX_PROP_VALUE) // Racket uses #f for unset properties.
+    (void))
 )

@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module interrupt "/fusion/base"
+(module interrupt "/fusion"
   (require "/interrupt")
 
   (ready_for_interrupt)

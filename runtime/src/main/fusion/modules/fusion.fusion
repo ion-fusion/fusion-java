@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module fusion "/fusion/base"
+(module fusion "/fusion/private/layer0"
 
   // WARNING: Doc syntax isn't supported yet.
   '''
@@ -24,10 +24,9 @@ change at any time.  If you have any questions about supported behavior,
 contact us for clarification.
   '''
 
-  (require "/fusion/private/builtins")  // For `set`
-
 
   // Top-Level Forms
+  (require "/fusion/private/define")
   (provide begin define define_values)
 
   // Module Forms
@@ -161,6 +160,7 @@ contact us for clarification.
   //=========================================================================
   // Binding Forms
 
+  (require "/fusion/private/bind")
   (provide let let_values letrec lets values)
 
   (require "/fusion/parameter")

@@ -5,7 +5,7 @@
   "/fusion/experimental/check"
   "/fusion/private/record"
 
-  (rename_in "/fusion/base"
+  (rename_in "/fusion"
     (quote Q))
 )
 

@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module unsafe '/fusion/base'
+(module unsafe "/fusion/private/kernel"
 
   // WARNING: Doc syntax isn't supported yet.
   '''

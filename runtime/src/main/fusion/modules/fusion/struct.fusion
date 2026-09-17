@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module struct "/fusion/base"
+(module struct "/fusion/private/builtins"
 
   '''
 Operations for structs.
@@ -88,7 +88,9 @@ while the field values are iterated.
   (require
     "/fusion/exception"
     "/fusion/iterator"
+    "/fusion/private/bind"
     "/fusion/private/collection"
+    "/fusion/private/control"
     "/fusion/private/list"
     "/fusion/private/struct")
 

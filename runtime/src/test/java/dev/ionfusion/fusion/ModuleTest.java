@@ -73,10 +73,9 @@ public class ModuleTest
     public void testTopLevelLanguageInTopLevelModule()
         throws Exception
     {
-        eval("(module lang '/fusion/base' true)");
+        eval("(module lang '/fusion/private/layer0' true)");
 
-        // TODO Allow relative path to dialect?
-        //  https://github.com/ion-fusion/fusion-java/issues/88
+        // TODO #88 Allow relative path to dialect?
         assertEvalThrows(ModuleNotFoundException.class,
                         "(module m \"lang\" (define x 1))");
     }

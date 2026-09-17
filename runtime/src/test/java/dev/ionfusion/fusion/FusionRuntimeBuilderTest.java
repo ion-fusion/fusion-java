@@ -169,7 +169,7 @@ public class FusionRuntimeBuilderTest
     public void testSetDefaultLanguage()
     {
         changeProperty(standard(), "DefaultLanguage", String.class,
-                       "/fusion/base", "/fusion/base");
+                       "/fusion/other", "/fusion/other");
     }
 
     @Test
@@ -198,7 +198,7 @@ public class FusionRuntimeBuilderTest
     {
         assertThrows(UnsupportedOperationException.class,
                      () -> standard().immutable()
-                                     .setDefaultLanguage("/fusion/base"));
+                                     .setDefaultLanguage("/fusion/other"));
     }
 
 
@@ -211,11 +211,13 @@ public class FusionRuntimeBuilderTest
         assertEquals("/fusion", r.getDefaultLanguage());
 
         // Change the default
-        b.setDefaultLanguage("/fusion/base");
-        r = build(b);
-        assertEquals("/fusion/base", r.getDefaultLanguage());
 
-        // Test effect by looking for something in /fusion but not /fusion/base
+        var lang = "/fusion/private/layer0";
+        b.setDefaultLanguage(lang);
+        r = build(b);
+        assertEquals(lang, r.getDefaultLanguage());
+
+        // Test effect by looking for something in /fusion but not in our default
         TopLevel top = r.getDefaultTopLevel();
         assertThrows(UnboundIdentifierException.class,
                      () -> top.eval("always"));

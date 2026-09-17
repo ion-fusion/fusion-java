@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module tinylang "/fusion/base"
+(module tinylang "/fusion"
   (provide define
            provide
            require)

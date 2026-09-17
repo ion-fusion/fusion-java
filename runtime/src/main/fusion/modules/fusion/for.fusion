@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module for '/fusion/private/kernel'
+(module for "/fusion/private/layer0"
 
   '''
 The `for`-family of syntax forms enables concise, consistent iteration
@@ -128,22 +128,21 @@ to apply optimizations to the generated code.
 */
 
 
-  (require "/fusion/base"
-           "/fusion/exception"
-           "/fusion/experimental/defines"
-           "/fusion/experimental/syntax"
-           "/fusion/iterator"
-           "/fusion/list"
-           "/fusion/number"
-           "/fusion/private/bind"
-           "/fusion/private/series"
-           "/fusion/private/struct"
-           "/fusion/procedure"
-           "/fusion/sexp"
-           "/fusion/string"
-           "/fusion/unsafe/list"
-           "/fusion/unsafe/sexp"
-    (rename_in "/fusion/base" (quote Q) (quasiquote QQ) (unquote UQ)))
+  (require
+    "/fusion/exception"
+    "/fusion/experimental/syntax"
+    "/fusion/iterator"
+    "/fusion/list"
+    "/fusion/number"
+    "/fusion/private/bind"
+    "/fusion/private/control"
+    "/fusion/private/define"
+    "/fusion/private/series"
+    "/fusion/procedure"
+    "/fusion/sexp"
+    "/fusion/unsafe/sexp"
+    (rename_in "/fusion/private/layer0"
+      (quote Q) (quasiquote QQ) (unquote UQ)))
 
   (provide
     for           fors

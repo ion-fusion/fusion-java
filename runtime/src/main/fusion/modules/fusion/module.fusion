@@ -77,7 +77,7 @@ To illustrate, the bootstrap repository is structured like this:
                    src/
                        fusion.fusion
                        fusion/
-                              base.fusion
+                              bool.fusion
                               collection.fusion
                               experimental/
                                            syntax.fusion
@@ -85,7 +85,7 @@ To illustrate, the bootstrap repository is structured like this:
                               ...
 
 The `.fusion` files above contain the source for the modules `/fusion`,
-`/fusion/base`, `/fusion/collection`, `/fusion/experimental/syntax`, and
+`/fusion/bool`, `/fusion/collection`, `/fusion/experimental/syntax`, and
 `/fusion/sexp`.
 
 
