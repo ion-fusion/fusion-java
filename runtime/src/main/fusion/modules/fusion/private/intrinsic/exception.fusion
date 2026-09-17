@@ -1,11 +1,13 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module raise '/fusion/private/kernel'
+(module raise "/fusion/private/kernel"
 
   (require "/fusion/ffi/java")
 
   (provide
+    _make_assertion_error  // Don't make public
+    call_with_handler
     raise
     raise_argument_error
     raise_arity_error
@@ -14,13 +16,33 @@
     unsafe_exn_message
   )
 
-  (define_values (unsafe_exn_message)
-    '''
-    (unsafe_exn_message exn)
 
-Returns the message from the exception `exn`.
+  // Before making this public, consider whether it's a good idea to hold onto the expr
+  // code, even as a string.  Alternative: preserve just the location?
+  (define_values (_make_assertion_error)
     '''
-    (java_new "dev.ionfusion.fusion.FusionExn$UnsafeExnMessageProc"))
+    (_make_assertion_error message result expr_string)
+    '''
+    (java_new "dev.ionfusion.fusion.MakeAssertionErrorProc"))
+    // The call does further message assembly while keeping the `message` distinct for
+    // later inspection. To fully port this and call the exception constructor directly,
+    // we need to `safe_write_to_string` the result, which needs `write_to_string`.
+
+
+  (define_values (call_with_handler)
+    '''
+    (call_with_handler handler thunk)
+
+Installs the `handler` then calls the `thunk`.  If `raise` is called while
+the thunk is evaluated, the handler is called with the raised value.
+This happens in tail position with respect to `call_with_handler`.
+
+The handler must be a procedure that accepts one argument: the raised value.
+
+Most code should use the `with_handlers` syntax form instead of this procedure,
+which is prone to error by using a non-thunk body expression.
+    '''
+    (java_new "dev.ionfusion.fusion.CallWithHandlerProc"))
 
 
   (define_values (raise)
@@ -88,4 +110,12 @@ Note that a `result_error` IS-A `contract_error`.
     '''
     (java_new "dev.ionfusion.fusion.RaiseResultErrorProc"))
 
+
+  (define_values (unsafe_exn_message)
+    '''
+    (unsafe_exn_message exn)
+
+Returns the message from the exception `exn`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionExn$UnsafeExnMessageProc"))
 )

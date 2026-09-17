@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module exception '/fusion/private/kernel2'
+(module exception "/fusion/private/kernel2"
 
   '''
 Operations for working with exceptions.
@@ -52,15 +52,14 @@ with handlers.
     "/fusion/private/compare"
     "/fusion/private/control"
     "/fusion/private/intrinsic/syntax"
-    "/fusion/private/raise"
     "/fusion/private/sexp"
     "/fusion/string"
     "/fusion/unsafe/sexp"
   )
 
-  (provide // from /fusion/private/raise
-    assert
-    exn_message
+  (require "/fusion/private/intrinsic/exception")
+  (provide
+    call_with_handler
     raise
     raise_argument_error
     raise_arity_error
@@ -68,8 +67,14 @@ with handlers.
     raise_result_error
   )
 
+  (provide  // from this module
+    assert
+    exn_message
+    is_exn          // plus is_*_exn predicates generated below
+    with_handlers
+  )
 
-  (provide exn_message)
+
   (define (exn_message exn)
     '''
 Returns the message from the exception `exn`.
@@ -77,23 +82,6 @@ Returns the message from the exception `exn`.
     (if (is_exn exn)
       (unsafe_exn_message exn)
       (raise_argument_error "exn_message" "exn" 0 exn)))
-
-
-  (provide call_with_handler)
-  (define call_with_handler
-    '''
-    (call_with_handler handler thunk)
-
-Installs the `handler` then calls the `thunk`.  If `raise` is called while
-the thunk is evaluated, the handler is called with the raised value.
-This happens in tail position with respect to `call_with_handler`.
-
-The handler must be a procedure that accepts one argument: the raised value.
-
-Most code should use the `with_handlers` syntax form instead of this procedure,
-which is prone to error by using a non-thunk body expression.
-    '''
-    (java_new "dev.ionfusion.fusion.CallWithHandlerProc"))
 
 
   (define (sequence_handler preds_and_handlers)  // Argument is a sexp of pairs.
@@ -107,7 +95,6 @@ which is prone to error by using a non-thunk body expression.
               (loop (tail phs))))))))
 
 
-  (provide with_handlers)
   (define_syntax with_handlers
     '''
     (with_handlers ((pred_expr handler_expr) ...) body ...+)
@@ -176,7 +163,6 @@ See the [Racket Guide on Exceptions][racket-exn] for more details.
   (define FusionExn     (java_class "dev.ionfusion.runtime.base.FusionException"))
   (define FusionUserExn (java_class "dev.ionfusion.fusion.FusionUserException"))
 
-  (provide is_exn)
   (define (is_exn v)
     '''
 Determines whether a value is an exception of type `exn`.
@@ -230,7 +216,6 @@ Returns `true` or `false`.
     (quote_syntax context))
 
 
-  (provide assert)
   (define_syntax assert
     '''
     (assert expr message ...)
@@ -266,18 +251,6 @@ The exception `display`s the `message`s, which are only evaluated on failure.
                            (unquote expr_str))))))
             ctx
             stx)))))
-
-
-  // Before making this public, consider whether it's a good idea to hold onto the expr
-  // code, even as a string.  Alternative: preserve just the location?
-  (define _make_assertion_error
-    '''
-    (_make_assertion_error message result expr_string)
-    '''
-    (java_new "dev.ionfusion.fusion.MakeAssertionErrorProc"))
-    // The call does further message assembly while keeping the `message` distinct for
-    // later inspection. To fully port this and call the exception constructor directly,
-    // we need to `safe_write_to_string` the result, which needs `write_to_string`.
 
 
   (define safe_display_to_string
