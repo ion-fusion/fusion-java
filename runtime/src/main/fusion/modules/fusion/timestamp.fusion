@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module timestamp '/fusion/private/kernel2'
+(module timestamp "/fusion/private/layer0"
 
   '''
 Immutable point-in-time values with local offset.

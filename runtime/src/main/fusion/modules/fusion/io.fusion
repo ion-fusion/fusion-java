@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module io '/fusion/private/kernel2'
+(module io "/fusion/private/layer0"
 
   '''
 Basic input/output features.  At present these are generally Ion-oriented.

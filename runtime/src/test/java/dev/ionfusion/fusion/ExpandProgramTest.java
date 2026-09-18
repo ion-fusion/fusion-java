@@ -97,7 +97,7 @@ public class ExpandProgramTest
     public void testFindingCoreForms()
         throws Exception
     {
-        TopLevel kernel = runtime().makeTopLevel("/fusion/private/kernel2");
+        TopLevel kernel = runtime().makeTopLevel("/fusion/private/kernel");
 
         Object kernelLambdaId = kernel.eval("(quote_syntax lambda)");
         Object kernelModuleId = kernel.eval("(quote_syntax module)");

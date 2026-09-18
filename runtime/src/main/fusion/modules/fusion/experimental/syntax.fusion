@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module syntax '/fusion/private/kernel2'
+(module syntax "/fusion/private/layer0"
 
   '''
 Experimental operators for macros and syntax manipulation.

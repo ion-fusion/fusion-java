@@ -1,14 +1,14 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module builtins '/fusion/private/kernel2'
+(module builtins "/fusion/private/layer0"
 
 
   // Pass-through bindings from kernel
-  (provide all_defined_out begin define_values lambda load module
+  (provide all_defined_out begin define_values lambda module
     only_in prefix_in provide rename_in rename_out require)
 
-  // Pass-through bindings from kernel2
+  // Pass-through bindings from layer0
   (provide
     '#%top'
     apply

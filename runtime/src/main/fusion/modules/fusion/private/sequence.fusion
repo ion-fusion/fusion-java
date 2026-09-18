@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module private_sequence "/fusion/private/kernel2"
+(module private_sequence "/fusion/private/layer0"
 
   (require
     "/fusion/equality"

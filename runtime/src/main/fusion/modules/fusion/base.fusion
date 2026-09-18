@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module base "/fusion/private/kernel2"
+(module base "/fusion/private/layer0"
 
   // WARNING: Doc syntax isn't supported yet.
   '''
@@ -18,7 +18,7 @@ To use this dialect for your module, declare it as follows:
   '''
 
 
-  // Pass-through selected bindings from kernel2
+  // Pass-through selected bindings from layer0
   (provide
     all_defined_out
     annotate

@@ -1,11 +1,19 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module kernel2 "/fusion/private/kernel"
+(module layer0 "/fusion/private/kernel"
+  '''
+Internal dialect that only provides intrinsic forms.
+
+This set is lightly curated to stay general purpose and to avoid features that
+we should expect to become non-intrinsic.
+
+We plan to add layers over time, building up from intrinsics in reasonable steps so
+that library features can be coded at a high level.  We expect that the content of
+layers will shift over time, as intrinsic features are added or ported up to Fusion.
+  '''
 
   // Pass-through most bindings from kernel
-  // TODO (provide (all_from_out "/fusion/private/kernel"))
-  //  https://github.com/ion-fusion/fusion-java/issues/84
   (provide
     all_defined_out
     begin
@@ -16,30 +24,27 @@
     define_syntax
     define_values
     eof
-    java_new
+    if
+    java_new  // TODO remove after migrating intrinsics
     lambda
-    load
+    let_values
+    letrec
     module
     only_in
     prefix_in
     provide
-    rename_in
-    rename_out
-    require)
-
-  (require "/fusion/private/intrinsic/core_syntax")
-  (provide
-    if
-    let_values
-    letrec
     quasiquote
     quasisyntax
     quote
     quote_syntax
+    rename_in
+    rename_out
+    require
     set
     unquote
     unsyntax
     '#%top')
+
 
   (require "/fusion/private/intrinsic/struct")
   (provide
