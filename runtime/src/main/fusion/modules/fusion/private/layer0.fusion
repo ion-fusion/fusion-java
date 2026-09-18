@@ -45,11 +45,73 @@ layers will shift over time, as intrinsic features are added or ported up to Fus
     unsyntax
     '#%top')
 
+  (require "/fusion/private/intrinsic/exception")
+  (provide
+    call_with_handler
+    raise
+    raise_argument_error
+    raise_arity_error
+    raise_contract_error
+    raise_result_error
+    unsafe_exn_message
+  )
+
+  (require "/fusion/private/intrinsic/sequence")
+  (provide
+    add
+    append
+    append_m
+  )
 
   (require "/fusion/private/intrinsic/struct")
   (provide
-    is_struct)
+    is_immutable_struct
+    is_mutable_struct
+    is_struct
+    mutable_struct
+    mutable_struct_zip
+    remove_keys
+    remove_keys_m
+    retain_keys
+    retain_keys_m
+    struct
+    struct_merge
+    struct_merge_m
+    struct_zip
+    unsafe_struct_has_key
+    unsafe_struct_iterator
+    unsafe_struct_put
+    unsafe_struct_put_m
+    unsafe_struct_puts
+    unsafe_struct_puts_m
+    unsafe_struct_ref
+  )
 
+  (require "/fusion/private/intrinsic/syntax")
+  (provide
+    bound_identifier_equal
+    datum_to_syntax
+    define_syntax
+    expand_once
+    free_identifier_equal
+    is_identifier
+    is_syntax
+    quasisyntax
+    quote_syntax
+    syntax_append
+    syntax_column
+    syntax_get
+    syntax_is_original
+    syntax_line
+    syntax_property
+    syntax_size
+    syntax_subseq
+    syntax_to_datum
+    syntax_track_origin
+    syntax_unwrap
+    unsyntax
+    wrong_syntax
+  )
 
   (provide (all_defined_out))
 

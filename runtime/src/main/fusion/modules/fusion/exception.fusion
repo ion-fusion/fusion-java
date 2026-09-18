@@ -51,26 +51,22 @@ with handlers.
     "/fusion/private/builtins"
     "/fusion/private/compare"
     "/fusion/private/control"
-    "/fusion/private/intrinsic/syntax"
+    "/fusion/private/intrinsic/exception"  // for _make_assertion_error
     "/fusion/private/sexp"
     "/fusion/string"
     "/fusion/unsafe/sexp"
   )
 
-  (require "/fusion/private/intrinsic/exception")
   (provide
+    assert
     call_with_handler
+    exn_message
+    is_exn          // plus is_*_exn predicates generated below
     raise
     raise_argument_error
     raise_arity_error
     raise_contract_error
     raise_result_error
-  )
-
-  (provide  // from this module
-    assert
-    exn_message
-    is_exn          // plus is_*_exn predicates generated below
     with_handlers
   )
 

@@ -78,8 +78,6 @@ significantly simpler to implement and easier to understand.
 
   (require
     "/fusion/private/define"
-    "/fusion/private/intrinsic/syntax"
-    "/fusion/private/intrinsic/exception"
     "/fusion/private/sexp"
     "/fusion/void"
   )

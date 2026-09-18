@@ -5,15 +5,12 @@
 
   (require
     "/fusion/equality"
-    "/fusion/exception"
     "/fusion/iterator"
     "/fusion/number"
     "/fusion/private/bind"
-    "/fusion/private/builtins"   // Some basic list ops
     "/fusion/private/collection"
     "/fusion/private/control"
-    "/fusion/private/intrinsic/sequence"
-    "/fusion/private/intrinsic/syntax"
+    "/fusion/private/define"
     "/fusion/private/sexp"
     "/fusion/procedure"
     "/fusion/unsafe/list"

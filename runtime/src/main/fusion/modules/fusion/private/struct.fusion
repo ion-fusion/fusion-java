@@ -1,11 +1,11 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module struct "/fusion/private/builtins"
+(module struct "/fusion/private/layer0"
 
   (require
     "/fusion/private/control"
-    "/fusion/private/intrinsic/struct")
+  )
 
   (provide
     is_immutable_struct
@@ -32,7 +32,7 @@
   )
 
 
-  (define is_struct_field_name
+  (define_values (is_struct_field_name)
     (lambda (v)
       (and (or (is_string v) (is_symbol v))
            (not (is_null v)))))

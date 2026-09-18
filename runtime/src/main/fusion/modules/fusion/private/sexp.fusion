@@ -5,7 +5,6 @@
 
   (require
     "/fusion/private/define"
-    "/fusion/private/intrinsic/exception"
     "/fusion/unsafe/sexp"
     "/fusion/void")
 

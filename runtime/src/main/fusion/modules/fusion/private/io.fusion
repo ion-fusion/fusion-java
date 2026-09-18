@@ -4,7 +4,6 @@
 (module io "/fusion/private/layer0"
 
   (require
-    "/fusion/experimental/syntax"
     "/fusion/parameter"
     "/fusion/private/builtins"
     "/fusion/private/sexp"
