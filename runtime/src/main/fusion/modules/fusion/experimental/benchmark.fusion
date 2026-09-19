@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module benchmark '/fusion'
+(module benchmark "/fusion"
 
   '''
 Experimental operators for micro-benchmarking.
@@ -24,7 +24,8 @@ Runs the body expressions, returning the approximate number of milliseconds
 taken to do so, as a decimal.
     '''
     (lambda (stx)
-      (let [(body (syntax_cons_q begin (syntax_subseq stx 1)))]
+      (let [(body (datum_to_syntax (pair (quote_syntax begin)
+                                         (tail (syntax_unwrap stx)))))]
         (quasisyntax
           // Sandwich the body as tightly as possible with time capture calls.
           // We don't want to touch the body's return value(s).
@@ -33,5 +34,4 @@ taken to do so, as a decimal.
                                                       (timestamp_now))))]
               (- (timestamp_to_epoch_millis start)
                  (timestamp_to_epoch_millis finish)))))))
-
 )

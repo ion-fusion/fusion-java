@@ -97,7 +97,6 @@ significantly simpler to implement and easier to understand.
     quote_syntax
     syntax_append
     syntax_column
-    syntax_cons_q
     syntax_get
     syntax_is_original
     syntax_line
@@ -109,15 +108,6 @@ significantly simpler to implement and easier to understand.
     syntax_unwrap
     unsyntax
     wrong_syntax)
-
-
-  // '_q' suffix intended to denote that the car is quoted by the syntax form.
-  // Otherwise this would be a procedure.
-  (define_syntax syntax_cons_q
-    (lambda (stx)
-      (quasisyntax
-        (syntax_append (quote_syntax ((unsyntax (syntax_get stx 1))))
-                       (unsyntax (syntax_get stx 2))))))
 
 
   (define (check_duplicate_identifier ids)
