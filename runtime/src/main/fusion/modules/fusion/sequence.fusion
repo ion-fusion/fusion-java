@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module sequence "/fusion/private/kernel"
+(module sequence "/fusion/private/layer0"
 
   '''
 Ordered collections of values.
@@ -15,5 +15,5 @@ The built-in sequence types are [list](fusion/list.html) and
 
   (require "/fusion/private/sequence")
 
-  (provide_public_sequence)
+  (provide_signature_elements sequence_sig)
 )

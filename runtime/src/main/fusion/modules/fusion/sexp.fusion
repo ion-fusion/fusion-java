@@ -28,7 +28,7 @@ sexps.
     "/fusion/private/sexp"
   )
 
-  (provide_public_sequence)
+  (provide_signature_elements sequence_sig)
 
   (provide
     head

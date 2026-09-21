@@ -13,6 +13,15 @@ that library features can be coded at a high level.  We expect that the content 
 layers will shift over time, as intrinsic features are added or ported up to Fusion.
   '''
 
+  (require "/fusion/private/util/signature")
+  (provide
+    define_signature
+    provide_signature
+    provide_signature_elements
+    require_signature
+  )
+
+
   // Pass-through most bindings from kernel
   (provide
     all_defined_out

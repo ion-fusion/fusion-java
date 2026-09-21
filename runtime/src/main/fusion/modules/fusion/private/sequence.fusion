@@ -17,20 +17,18 @@
     "/fusion/unsafe/sexp")
 
 
-  (define_syntax provide_public_sequence
-    '''
-Helper to keep inheriting modules in sync. This is a workaround to not having
-`all_from_out` per [#84](https://github.com/ion-fusion/fusion-java/issues/84).
-    '''
-    (lambda (stx)
-      (quote_syntax
-        (begin
-          (provide_public_collection)
-          (provide add append append_m choose is_sequence first fold_left last map
-                   subseq)))))
-
-  (provide_public_sequence)
-  (provide provide_public_sequence)
+  (define_signature sequence_sig (collection_sig)
+    add
+    append
+    append_m
+    choose
+    is_sequence
+    first
+    fold_left
+    last map
+    subseq
+  )
+  (provide_signature sequence_sig)
 
 
   (define is_sequence
