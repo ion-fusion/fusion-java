@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module string '/fusion/private/kernel'
+(module experimental_string "/fusion/private/layer0"
 
   '''
 Experimental string operators.
@@ -14,84 +14,14 @@ This module contains unstable, experimental features.
 There is **NO SUPPORT** for this module.
   '''
 
-  (require
-    "/fusion/experimental/defines")
+  (require "/fusion/private/intrinsic/string")
 
-
-  (defpub_j string_size_codepoints
-    '''
-    (string_size_codepoints string)
-
-Returns the number of code points in `string`.
-
-Since Fusion doesn't define a specific implementation of strings, this procedure
-is not guaranteed to have better than O(_n_) time.
-    '''
-    "dev.ionfusion.fusion.FusionString$SizeCodePointsProc")
-
-  (defpub_j string_size_utf8
-    '''
-    (string_size_utf8 string)
-
-Returns the size of a string in UTF-8 bytes. Throws an exception if the
-argument contains invalid Unicode data (such as mismatched surrogates).
-Given `null.string` the result is zero.
-
-Since Fusion doesn't define a specific implementation of strings, this procedure
-is not guaranteed to have better than O(_n_) time.
-    '''
-    "dev.ionfusion.fusion.FusionString$SizeUtf8Proc")
-
-
-  // TODO See TODOs in the implementation before finalizing these procedures.
-  (defpub_j string_explode
-    '''
-    (string_explode string)
-
-Returns a stretchy list of the Unicode scalar values (code points) in the given
-non-null string.
-    '''
-    "dev.ionfusion.fusion.FusionString$ExplodeProc")
-
-  (defpub_j string_implode
-    '''
-    (string_implode list)
-
-Returns a string filled by the given list of Unicode scalar values.
-    '''
-    "dev.ionfusion.fusion.FusionString$ImplodeProc")
-
-  (defpub_j string_index_codepoints
-    '''
-    (string_index_codepoints string substring)
-
-Returns the number of code points within `string` of the first occurrence
-of `substring`.
-
-Returns void if the substring doesn't occur within the string.
-
-Since Fusion doesn't define a specific implementation of strings, this procedure
-is not guaranteed to have better than O(_n_) time.
-    '''
-    "dev.ionfusion.fusion.FusionString$IndexCodePointsProc")
-
-
-  (defpub_j string_split_noregexp
-    '''
-    (string_split_noregexp string separator)
-
-Splits `string` into an immutable list of strings using `separator`.
-Both arguments must be actual strings.
-
-Returns an empty list when `string` is an empty string.
-
-The `separator` is _not_ a regular expression; callers needing that feature
-should use `regexp_split` from the [FusionJavaRegexp][] package, being careful
-to adapt code to that method's different argument order, result type (sexp
-instead of immutable list), and edge cases around leading matches. Test your
-code thoroughly.
-
-[FusionJavaRegexp]: wiki:FusionJavaRegexp
-    '''
-    "dev.ionfusion.fusion.FusionString$SplitNoRegexpProc")
+  (provide
+    string_explode
+    string_implode
+    string_index_codepoints
+    string_size_codepoints
+    string_size_utf8
+    string_split_noregexp
+  )
 )

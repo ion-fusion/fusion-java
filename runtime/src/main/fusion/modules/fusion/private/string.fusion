@@ -1,0 +1,37 @@
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(module private_string "/fusion/private/layer0"
+
+  (provide
+    symbol_append
+    text_to_string
+  )
+
+
+  (define_values (symbol_append)
+    '''
+    (symbol_append text ...)
+
+Concatenates the `text` values (strings or symbols), returning a symbol.
+All arguments must be actual strings or symbols, not null.
+
+If no arguments are supplied, the result is `""`.
+    '''
+    (lambda texts
+      (string_to_symbol (apply string_append texts))))
+
+
+  (define_values (text_to_string)
+    '''
+    (text_to_string t)
+
+Normalizes a text value (string or symbol) to a string.
+Annotations are preserved and `null.symbol` is converted to `null.string`.
+    '''
+    (lambda (v)
+      (if (is_string v)
+        v
+        // TODO There should be a helper to copy annotations
+        (apply annotate (symbol_to_string v) (annotations v)))))
+)

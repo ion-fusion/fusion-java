@@ -63,6 +63,24 @@ layers will shift over time, as intrinsic features are added or ported up to Fus
     append_m
   )
 
+  (require "/fusion/private/intrinsic/string")
+  (provide
+    is_string
+    string_append
+    string_contains
+    string_ends_with
+    string_is_lower
+    string_is_upper
+    string_join
+    string_replace
+    string_split
+    string_starts_with
+    string_to_lower
+    string_to_upper
+    string_to_symbol
+    symbol_to_string
+  )
+
   (require "/fusion/private/intrinsic/struct")
   (provide
     is_immutable_struct
@@ -273,15 +291,6 @@ Determines whether a `value` is a sexp, returning `true` or `false`.
 Determines whether `value` is a stretchy list, returning `true` or `false`.
     '''
     (java_new "dev.ionfusion.fusion.FusionList$IsStretchyListProc"))
-
-
-  (define_values (is_string)
-    '''
-    (is_string value)
-
-Determines whether a `value` is of type `string`, returning `true` or `false`.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionString$IsStringProc"))
 
 
   (define_values (is_symbol)
