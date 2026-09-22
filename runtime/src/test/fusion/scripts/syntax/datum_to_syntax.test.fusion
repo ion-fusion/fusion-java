@@ -13,6 +13,7 @@
   (check === (syntax_line     expected) (syntax_line     actual))
   (check === (syntax_column   expected) (syntax_column   actual))
 //(check === (syntax-position expected) (syntax-position actual))
+  (check === (syntax_source   expected) (syntax_source   actual))
   )
 
 // When given a location, datum->syntax uses it for all new syntax objects

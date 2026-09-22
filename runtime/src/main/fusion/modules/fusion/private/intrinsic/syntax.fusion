@@ -141,6 +141,9 @@ The size of `null.list` and `null.sexp` is zero.
     (syntax_source stx)
 
 Returns a description of the source of a syntax object.
+
+**UNSTABLE:** The return type is currently undefined, and may not be usable other than
+for identity comparison.
     '''
     (java_new "dev.ionfusion.fusion.SyntaxSourceProc"))
 
