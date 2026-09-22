@@ -311,6 +311,6 @@
 //==========================================================================
 // syntax_source
 
-(check_pred
-  (|s| (string_ends_with s "/runtime/src/test/fusion/scripts/syntax.test.fusion"))
+(check_pred // TODO #633 use current_load_relative_directory
+  (|s| (string_ends_with s "/runtime/src/test/fusion/scripts/syntax/syntax.test.fusion"))
   (syntax_source (quote_syntax here)))

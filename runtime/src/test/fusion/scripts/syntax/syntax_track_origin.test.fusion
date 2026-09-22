@@ -20,5 +20,5 @@
 (expect_argument_error
   (syntax_track_origin "sym" (quote_syntax sym) (quote_syntax sym)))
 
-// TODO Should implement and use load_relative
-(load "src/test/fusion/scripts/syntax_track_origin.rkt.fusion")
+// TODO #633 use load_relative
+(load "src/test/fusion/scripts/syntax/syntax_track_origin.rkt.fusion")
