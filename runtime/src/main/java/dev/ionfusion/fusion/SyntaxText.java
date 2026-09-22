@@ -5,7 +5,6 @@ package dev.ionfusion.fusion;
 
 import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionText.BaseText;
-import dev.ionfusion.runtime.base.FusionException;
 
 abstract class SyntaxText<Sub extends SyntaxText>
     extends SimpleSyntaxValue
@@ -28,18 +27,5 @@ abstract class SyntaxText<Sub extends SyntaxText>
     final String stringValue()
     {
         return ((BaseText) getContent()).stringValue();
-    }
-
-
-    /**
-     * Adds the wraps on this value onto those already on another value.
-     * @return syntax matching the source after adding the wraps from this
-     * symbol.
-     */
-    final SyntaxValue copyWrapsTo(SyntaxValue source)
-        throws FusionException
-    {
-        if (myWraps == null) return source;
-        return source.addWraps(myWraps);
     }
 }

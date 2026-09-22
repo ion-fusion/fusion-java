@@ -170,6 +170,18 @@ abstract class SyntaxValue
     }
 
 
+
+
+    //========================================================================
+    // Original syntax tracking
+
+    @Override
+    final SyntaxValue makeOriginalSyntax(Evaluator eval, ResourcePosition pos)
+    {
+        throw new IllegalStateException("Cannot wrap syntax as syntax");
+    }
+
+
     final SyntaxValue trackOrigin(Evaluator    eval,
                                   SyntaxValue  origStx,
                                   SyntaxSymbol origin)
@@ -295,6 +307,26 @@ abstract class SyntaxValue
     }
 
 
+    //========================================================================
+    // Lexical Context
+
+    /**
+     * @param context can be null.
+     */
+    final SyntaxValue initLexicalContext(SyntaxValue context)
+    {
+        assert !(context instanceof SyntaxContainer)
+            : "Can't use container as lexical context; see #68";
+        assert myWraps == null : "Already initialized";
+
+        if (context != null)
+        {
+            myWraps = context.myWraps;  // Could still be null
+        }
+        return this;
+    }
+
+
     final SyntaxWraps getWraps()
     {
         return myWraps;
@@ -358,6 +390,8 @@ abstract class SyntaxValue
     }
 
 
+    //========================================================================
+
     /** Don't call directly! Go through the evaluator. */
     SyntaxValue doExpand(Expander expander, Environment env)
         throws FusionException
@@ -389,13 +423,6 @@ abstract class SyntaxValue
         throws FusionException
     {
         return this;
-    }
-
-
-    @Override
-    final SyntaxValue makeOriginalSyntax(Evaluator eval, ResourcePosition pos)
-    {
-        throw new IllegalStateException("Cannot wrap syntax as syntax");
     }
 
 

@@ -551,8 +551,7 @@ public final class FusionSexp
         {
             assert size(eval) == 0;  // else this method is overridden
 
-            SyntaxValue stx = SyntaxSexp.make(eval, pos, this);
-            return Syntax.applyContext(eval, context, stx);
+            return SyntaxSexp.make(eval, pos, this).initLexicalContext(context);
         }
 
         @Override

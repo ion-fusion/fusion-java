@@ -36,13 +36,8 @@ final class Syntax
     static SyntaxValue applyContext(Evaluator   eval,
                                     SyntaxText  context,
                                     SyntaxValue datum)
-        throws FusionException
     {
-        if (context != null)
-        {
-            datum = context.copyWrapsTo(datum);
-        }
-        return datum;
+        return datum.initLexicalContext(context);
     }
 
 

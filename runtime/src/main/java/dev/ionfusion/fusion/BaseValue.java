@@ -102,10 +102,7 @@ abstract class BaseValue
         assert !(this instanceof SyntaxValue) && !(this instanceof BaseCollection);
         // else this method is overridden
 
-        var stx = scalarDatumToSyntax(eval, pos);
-        assert stx != null;
-
-        return Syntax.applyContext(eval, context, stx);
+        return scalarDatumToSyntax(eval, pos).initLexicalContext(context);
     }
 
     /**
