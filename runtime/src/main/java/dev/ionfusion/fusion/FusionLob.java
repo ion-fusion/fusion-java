@@ -7,9 +7,7 @@ import static dev.ionfusion.fusion.FusionBool.falseBool;
 import static dev.ionfusion.fusion.FusionBool.makeBool;
 import static dev.ionfusion.fusion.FusionString.checkRequiredStringArg;
 import static dev.ionfusion.fusion.FusionString.makeString;
-import static dev.ionfusion.fusion.SimpleSyntaxValue.makeSyntax;
 
-import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionBool.BaseBool;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.embed.TopLevel;
@@ -67,12 +65,6 @@ public final class FusionLob
                 return actualLobEquals(eval, leftBytes, right);
             }
             return falseBool(eval);
-        }
-
-        @Override
-        SyntaxValue datumToSyntaxMaybe(Evaluator eval, ResourcePosition pos)
-        {
-            return makeSyntax(eval, pos, this);
         }
     }
 

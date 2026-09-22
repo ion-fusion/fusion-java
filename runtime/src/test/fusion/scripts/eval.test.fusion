@@ -36,8 +36,10 @@
 (check === 2
   (eval (quote (. {f:2} "f")) ns))
 
-(expect_argument_error
-  (eval (void)))
+// Constants pass through eval's implicit datum_to_syntax
+(check ident (void) (eval (void)))
+(check ident + (eval +))
+(check === 7 (eval (quasiquote ((unquote +) 3 4))))
 
 (eval (quote (define top 17220)) ns)
 

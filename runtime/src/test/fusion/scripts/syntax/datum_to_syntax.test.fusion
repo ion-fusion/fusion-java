@@ -28,6 +28,12 @@
   (check_loc ctx (. (syntax_unwrap s) 1))  // (b)
   (check_loc ctx (. (syntax_unwrap (. (syntax_unwrap s) 1)) 0)))  // b
 
+
+// Non-code constants can be wrapped by syntax objects
+(check ident + (syntax_unwrap (datum_to_syntax + ctx)))
+(check ident (void) (syntax_unwrap (datum_to_syntax (void) ctx)))
+
+
 // Exiting syntax objects keep their locations.
 
 (define inner1 (quote_syntax inner1))

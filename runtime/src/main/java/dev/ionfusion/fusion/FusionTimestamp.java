@@ -22,7 +22,6 @@ import static dev.ionfusion.fusion.FusionString.checkNullableStringArg;
 import static dev.ionfusion.fusion.FusionString.makeString;
 import static dev.ionfusion.fusion.FusionVoid.isVoid;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
-import static dev.ionfusion.fusion.SimpleSyntaxValue.makeSyntax;
 
 import com.amazon.ion.IonException;
 import com.amazon.ion.IonType;
@@ -31,7 +30,6 @@ import com.amazon.ion.IonWriter;
 import com.amazon.ion.Timestamp;
 import com.amazon.ion.Timestamp.Precision;
 import com.amazon.ion.ValueFactory;
-import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionBool.BaseBool;
 import dev.ionfusion.fusion.FusionNumber.BaseDecimal;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
@@ -64,12 +62,6 @@ final class FusionTimestamp
         {
             if (annotations.length == 0) return this;
             return new AnnotatedTimestamp(annotations, this);
-        }
-
-        @Override
-        SyntaxValue datumToSyntaxMaybe(Evaluator eval, ResourcePosition pos)
-        {
-            return makeSyntax(eval, pos, this);
         }
     }
 

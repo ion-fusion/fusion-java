@@ -9,7 +9,6 @@ import static dev.ionfusion.fusion.FusionBool.trueBool;
 import static dev.ionfusion.fusion.FusionIo.safeWriteToString;
 import static dev.ionfusion.fusion.FusionString.checkNullableStringArg;
 import static dev.ionfusion.fusion.FusionString.makeString;
-import static dev.ionfusion.fusion.SimpleSyntaxValue.makeSyntax;
 import static java.math.RoundingMode.CEILING;
 import static java.math.RoundingMode.FLOOR;
 import static java.math.RoundingMode.HALF_EVEN;
@@ -21,7 +20,6 @@ import com.amazon.ion.IonValue;
 import com.amazon.ion.IonWriter;
 import com.amazon.ion.ValueFactory;
 import com.amazon.ion.util.IonTextUtils;
-import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionBool.BaseBool;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
@@ -111,12 +109,6 @@ public final class FusionNumber
             throws FusionException
         {
             return falseBool(eval);
-        }
-
-        @Override
-        SyntaxValue datumToSyntaxMaybe(Evaluator eval, ResourcePosition pos)
-        {
-            return makeSyntax(eval, pos, this);
         }
     }
 

@@ -9,6 +9,7 @@ import static dev.ionfusion.fusion.FusionBool.trueBool;
 import static dev.ionfusion.fusion.FusionIo.makeIonizeError;
 import static dev.ionfusion.fusion.FusionIo.safeWriteToString;
 import static dev.ionfusion.fusion.FusionValue.sameAnnotations;
+import static dev.ionfusion.fusion.SimpleSyntaxValue.makeSyntax;
 
 import com.amazon.ion.IonException;
 import com.amazon.ion.IonValue;
@@ -18,6 +19,7 @@ import com.amazon.ion.system.IonTextWriterBuilder;
 import com.amazon.ion.util.IonTextUtils;
 import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionBool.BaseBool;
+import dev.ionfusion.fusion.FusionCollection.BaseCollection;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.embed.TopLevel;
@@ -98,6 +100,9 @@ abstract class BaseValue
                                    ResourcePosition pos)
         throws FusionException
     {
+        assert !(this instanceof SyntaxValue) && !(this instanceof BaseCollection);
+        // else this method is overridden
+
         SyntaxValue stx = datumToSyntaxMaybe(eval, pos);
         if (stx == null) return null;
 
@@ -110,7 +115,9 @@ abstract class BaseValue
     SyntaxValue datumToSyntaxMaybe(Evaluator eval, ResourcePosition pos)
         throws FusionException
     {
-        return null;
+        // This default implementation is used for most values when we don't need to
+        // perform context propagation.
+        return makeSyntax(eval, pos, this);
     }
 
 

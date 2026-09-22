@@ -3,7 +3,6 @@
 
 package dev.ionfusion.fusion;
 
-import static dev.ionfusion.fusion.SimpleSyntaxValue.makeSyntax;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
@@ -12,7 +11,6 @@ import com.amazon.ion.IonType;
 import com.amazon.ion.IonValue;
 import com.amazon.ion.IonWriter;
 import com.amazon.ion.ValueFactory;
-import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.embed.TopLevel;
@@ -50,12 +48,6 @@ public final class FusionBool
         {
             if (annotations.length == 0) return this;
             return new AnnotatedBool(annotations, this);
-        }
-
-        @Override
-        SyntaxValue datumToSyntaxMaybe(Evaluator eval, ResourcePosition pos)
-        {
-            return makeSyntax(eval, pos, this);
         }
     }
 
