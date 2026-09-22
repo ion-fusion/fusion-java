@@ -10,6 +10,7 @@ import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.NamedValue.inferObjectName;
 import static dev.ionfusion.fusion.ResultFailure.makeResultError;
+import static dev.ionfusion.fusion.Syntax.datumToSyntax;
 import static dev.ionfusion.fusion.UnboundIdentifierException.makeUnboundError;
 
 import dev.ionfusion.commons.resources.ResourcePosition;
@@ -736,8 +737,8 @@ abstract class Namespace
 
         for (ProvidedBinding provided : module.providedBindings())
         {
-            SyntaxSymbol id = SyntaxSymbol.make(null, provided.getName());
-            id = (SyntaxSymbol) Syntax.applyContext(eval, context, id);
+            SyntaxSymbol id =
+                (SyntaxSymbol) datumToSyntax(eval, provided.getName(), context, null);
             installRequiredBinding(eval, id, provided);
         }
     }

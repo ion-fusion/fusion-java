@@ -13,7 +13,9 @@ import static dev.ionfusion.fusion.FusionSyntax.syntaxTrackOrigin;
 import static dev.ionfusion.fusion.FusionText.isText;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.GlobalState.REQUIRE;
+import static dev.ionfusion.fusion.Syntax.datumToSyntax;
 
+import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.Namespace.RequireRenameMapping;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
@@ -316,12 +318,13 @@ final class RequireForm
                         new RequireRenameMapping[idCount];
                     for (int i = 0; i < idCount; i++)
                     {
-                        SyntaxSymbol id = (SyntaxSymbol) sexp.get(eval, i + 2);
-                        FusionSymbol.BaseSymbol name = id.getName();
+                        var id = (SyntaxSymbol) sexp.get(eval, i + 2);
+                        var name = id.getName();
+                        var position = id.getPosition();
 
-                        // Mint a fresh identifier with only the context from the module path.
-                        SyntaxSymbol localId = SyntaxSymbol.make(id.getPosition(), name);
-                        localId = (SyntaxSymbol) Syntax.applyContext(eval, context, localId);
+                        // Local identifier uses the context from the module path.
+                        var localId =
+                            (SyntaxSymbol) datumToSyntax(eval, name, context, position);
 
                         mappings[i] = new RequireRenameMapping(localId, name);
                     }
@@ -330,8 +333,9 @@ final class RequireForm
                 }
                 case "prefix":
                 {
-                    SyntaxSymbol prefixId = (SyntaxSymbol) sexp.get(eval, 1);
-                    SyntaxValue pathStx = sexp.get(eval, 2);
+                    var prefixId = (SyntaxSymbol) sexp.get(eval, 1);
+                    var prefix   = prefixId.stringValue();
+                    var pathStx  = sexp.get(eval, 2);
 
                     ModuleIdentity moduleId =
                             myModuleNameResolver.resolve(eval,
@@ -348,12 +352,13 @@ final class RequireForm
                     int idCount = moduleInstance.providedBindings().size();
                     RequireRenameMapping[] mappings = new RequireRenameMapping[idCount];
                     int i = 0;
-                    for (FusionSymbol.BaseSymbol providedName : moduleInstance.providedNames())
+                    for (BaseSymbol providedName : moduleInstance.providedNames())
                     {
-                        // Mint a fresh identifier with only the context from the module path.
-                        String newBindingName = prefixId.stringValue() + providedName.stringValue();
-                        SyntaxSymbol localId = SyntaxSymbol.make(eval, newBindingName);
-                        localId = (SyntaxSymbol) Syntax.applyContext(eval, context, localId);
+                        // Local identifier uses the context from the module path.
+                        var localName = prefix + providedName.stringValue();
+                        var localSym = makeSymbol(eval, localName);
+                        var localId =
+                            (SyntaxSymbol) datumToSyntax(eval, localSym, context, null);
 
                         mappings[i] = new RequireRenameMapping(localId, providedName);
                         i++;

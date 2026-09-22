@@ -27,20 +27,6 @@ final class Syntax
     }
 
 
-
-    /**
-     * Applies (additional) syntactic context to a syntax object.
-     *
-     * @param context may be null, in which case nothing happens.
-     */
-    static SyntaxValue applyContext(Evaluator   eval,
-                                    SyntaxValue context,
-                                    SyntaxValue datum)
-    {
-        return datum.initLexicalContext(context);
-    }
-
-
     /**
      * @param context can be null, in which case no lexical information is
      * applied to converted objects.
