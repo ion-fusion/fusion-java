@@ -59,7 +59,7 @@ final class SyntaxKeyword
         return new SyntaxKeyword(wraps,
                                  getPosition(),
                                  properties,
-                                 (BaseSymbol) myDatum);
+                                 (BaseSymbol) getContent());
     }
 
 

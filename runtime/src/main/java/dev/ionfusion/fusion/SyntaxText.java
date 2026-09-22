@@ -27,7 +27,7 @@ abstract class SyntaxText<Sub extends SyntaxText>
 
     final String stringValue()
     {
-        return ((BaseText) myDatum).stringValue();
+        return ((BaseText) getContent()).stringValue();
     }
 
 

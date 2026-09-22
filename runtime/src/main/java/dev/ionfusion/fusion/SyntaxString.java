@@ -43,6 +43,6 @@ final class SyntaxString
         return new SyntaxString(wraps,
                                 getPosition(),
                                 properties,
-                                (BaseString) myDatum);
+                                (BaseString) getContent());
     }
 }

@@ -136,7 +136,7 @@ final class SyntaxSymbol
      */
     BaseSymbol getName()
     {
-        return (BaseSymbol) myDatum;
+        return (BaseSymbol) getContent();
     }
 
 
@@ -325,7 +325,7 @@ final class SyntaxSymbol
                     throw makeUnboundError(this);
                 }
 
-                assert ! FusionValue.isAnnotated(eval, myDatum);
+                assert ! FusionValue.isAnnotated(eval, getContent());
                 SyntaxSexp topExpr = SyntaxSexp.make(eval, top, this);
 
                 // TODO Eliminate this tail-call.

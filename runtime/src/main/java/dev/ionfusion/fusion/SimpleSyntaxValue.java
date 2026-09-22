@@ -15,7 +15,7 @@ import dev.ionfusion.runtime.base.FusionException;
 class SimpleSyntaxValue
     extends SyntaxValue
 {
-    final BaseValue myDatum;
+    private final Object myDatum;
 
 
     /**
@@ -27,7 +27,7 @@ class SimpleSyntaxValue
     SimpleSyntaxValue(SyntaxWraps wraps,
                       ResourcePosition pos,
                       Object[] properties,
-                      BaseValue datum)
+                      Object datum)
     {
         super(wraps, pos, properties);
         assert !(datum instanceof SyntaxValue);
@@ -39,18 +39,9 @@ class SimpleSyntaxValue
      * @param properties must not be null.
      * @param datum must not be null and must not be a {@link SyntaxValue}.
      */
-    SimpleSyntaxValue(ResourcePosition pos, Object[] properties, BaseValue datum)
+    private SimpleSyntaxValue(ResourcePosition pos, Object[] properties, Object datum)
     {
         this(null, pos, properties, datum);
-    }
-
-    /**
-     * @param pos may be null.
-     * @param datum must not be null and must not be a {@link SyntaxValue}.
-     */
-    SimpleSyntaxValue(ResourcePosition pos, BaseValue datum)
-    {
-        this(null, pos, EMPTY_OBJECT_ARRAY, datum);
     }
 
 
@@ -73,29 +64,23 @@ class SimpleSyntaxValue
     }
 
     /**
-     * @param pos may be null.
-     * @param datum must not be null and must not be a {@link SyntaxValue}.
-     */
-    static SyntaxValue makeSyntax(Evaluator      eval,
-                                  ResourcePosition pos,
-                                  BaseValue      datum)
-    {
-        return new SimpleSyntaxValue(pos, datum);
-    }
-
-    /**
-     * @param pos may be null.
-     * @param datum must be a Fusion value but not a {@link SyntaxValue}.
+     * @param pos can be null.
+     * @param datum must not be a {@link SyntaxValue}.
      */
     static SyntaxValue makeSyntax(Evaluator      eval,
                                   ResourcePosition pos,
                                   Object         datum)
     {
-        return new SimpleSyntaxValue(pos, (BaseValue) datum);
+        return new SimpleSyntaxValue(pos, EMPTY_OBJECT_ARRAY, datum);
     }
 
 
     //========================================================================
+
+    Object getContent()
+    {
+        return myDatum;
+    }
 
 
     @Override
