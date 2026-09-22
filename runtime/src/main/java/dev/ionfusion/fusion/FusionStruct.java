@@ -590,7 +590,7 @@ final class FusionStruct
 
         @Override
         SyntaxValue datumToSyntax(Evaluator        eval,
-                                  SyntaxSymbol     context,
+                                  SyntaxValue      context,
                                   ResourcePosition pos)
             throws FusionException
         {
@@ -883,7 +883,7 @@ final class FusionStruct
 
         @Override
         SyntaxValue datumToSyntax(final Evaluator        eval,
-                                  final SyntaxSymbol     context,
+                                  final SyntaxValue      context,
                                   final ResourcePosition pos)
             throws FusionException
         {

@@ -545,7 +545,7 @@ public final class FusionSexp
 
         @Override
         SyntaxValue datumToSyntax(Evaluator        eval,
-                                  SyntaxSymbol     context,
+                                  SyntaxValue      context,
                                   ResourcePosition pos)
             throws FusionException
         {
@@ -934,7 +934,7 @@ public final class FusionSexp
          * Converts this pair to a normal pair of syntax objects.
          */
         private BaseSexp toPairOfSyntax(Evaluator        eval,
-                                        SyntaxSymbol     context,
+                                        SyntaxValue      context,
                                         ResourcePosition pos)
             throws FusionException
         {
@@ -955,7 +955,7 @@ public final class FusionSexp
 
         @Override
         SyntaxValue datumToSyntax(Evaluator        eval,
-                                  SyntaxSymbol     context,
+                                  SyntaxValue      context,
                                   ResourcePosition pos)
             throws FusionException
         {

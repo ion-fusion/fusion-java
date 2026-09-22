@@ -418,7 +418,7 @@ abstract class SyntaxValue
 
     @Override
     final SyntaxValue datumToSyntax(Evaluator        eval,
-                                    SyntaxSymbol     context,
+                                    SyntaxValue      context,
                                     ResourcePosition pos)
         throws FusionException
     {

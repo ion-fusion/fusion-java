@@ -95,7 +95,7 @@ abstract class BaseValue
      * @return not null.
      */
     SyntaxValue datumToSyntax(Evaluator        eval,
-                              SyntaxSymbol     context,
+                              SyntaxValue      context,
                               ResourcePosition pos)
         throws FusionException
     {

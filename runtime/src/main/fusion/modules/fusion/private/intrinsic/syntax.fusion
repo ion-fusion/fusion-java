@@ -25,13 +25,16 @@ reference position.
     (datum_to_syntax datum [context location])
 
 Recursively converts the `datum` to a syntax object with lexical information
-copied from the `context` syntax identifier, and source-location copied from
+copied from the `context` syntax object, and source-location copied from
 the `location` syntax object. Existing syntax objects in `datum` are included
 as-is.
 
 When `context` isn't provided, converted syntax objects have no lexical
 context.  When `location` isn't provided, they will have no location.
+
+At present, the datum in `context` must not be a collection.
     '''
+    // TODO #68 update this documentation
     (java_new "dev.ionfusion.fusion.DatumToSyntaxProc"))
 
 

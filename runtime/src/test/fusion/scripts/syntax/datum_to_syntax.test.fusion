@@ -10,6 +10,16 @@
 
 (define ctx (quote_syntax ctx))
 
+(define context_objects
+  (sexp ctx
+        (quote_syntax "context")
+        (quote_syntax null.null)
+        (quote_syntax 1234)
+        (datum_to_syntax (java_new "java.lang.Object") ctx)
+        // TODO #68 collections should also work
+        ))
+
+
 (define_check (check_loc expected actual)
   (check === (syntax_line     expected) (syntax_line     actual))
   (check === (syntax_column   expected) (syntax_column   actual))
@@ -18,36 +28,39 @@
   )
 
 
-(define (datum2stx2datum v)
+(define (datum2stx2datum v ctx)
   (syntax_to_datum (datum_to_syntax v ctx)))
 
 
 // When given a location, datum->syntax uses it for all new syntax objects
 // created, not just the outermost one.
 
-(let [(s (datum_to_syntax
-           (quote (a (b)))
-           ctx
-           ctx))]
-  (check_loc ctx s)
-  (check_loc ctx (. (syntax_unwrap s) 0))  // a
-  (check_loc ctx (. (syntax_unwrap s) 1))  // (b)
-  (check_loc ctx (. (syntax_unwrap (. (syntax_unwrap s) 1)) 0)))  // b
+(for [(ctx context_objects)]
+  (let [(s (datum_to_syntax
+             (quote (a (b)))
+             ctx
+             ctx))]
+    (check_loc ctx s)
+    (check_loc ctx (. (syntax_unwrap s) 0))  // a
+    (check_loc ctx (. (syntax_unwrap s) 1))  // (b)
+    (check_loc ctx (. (syntax_unwrap (. (syntax_unwrap s) 1)) 0))))  // b
 
 
-(define_check (check_syntaxable v)
-  (check ident v    (datum2stx2datum       v))
-  (check ident v (. (datum2stx2datum (sexp v)) 0))
-  (check ident v (. (datum2stx2datum      [v]) 0))
-  (check ident v (. (datum2stx2datum    {f:v}) "f"))
+(define_check (check_syntaxable v ctx)
+  (check ident v    (datum2stx2datum       v  ctx))
+  (check ident v (. (datum2stx2datum (sexp v) ctx) 0))
+  (check ident v (. (datum2stx2datum      [v] ctx) 0))
+  (check ident v (. (datum2stx2datum    {f:v} ctx) "f"))
 )
 
-// Non-code constants can be wrapped by syntax objects
-(check_syntaxable +)
-(check_syntaxable (void))
+(for [(ctx context_objects)]
+  // Non-code constants can be wrapped by syntax objects
+  (check_syntaxable + ctx)
+  (check_syntaxable (void) ctx)
+  // Even non-Fusion values
+  (check_syntaxable (java_new "java.lang.Object") ctx)
+)
 
-// Even non-Fusion values
-(check_syntaxable (java_new "java.lang.Object"))
 
 
 // Exiting syntax objects keep their locations.

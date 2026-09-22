@@ -34,7 +34,7 @@ final class Syntax
      * @param context may be null, in which case nothing happens.
      */
     static SyntaxValue applyContext(Evaluator   eval,
-                                    SyntaxText  context,
+                                    SyntaxValue context,
                                     SyntaxValue datum)
     {
         return datum.initLexicalContext(context);
@@ -47,9 +47,9 @@ final class Syntax
      *
      * @return not null.
      */
-    static SyntaxValue datumToSyntax(Evaluator      eval,
-                                     Object         datum,
-                                     SyntaxSymbol   context,
+    static SyntaxValue datumToSyntax(Evaluator        eval,
+                                     Object           datum,
+                                     SyntaxValue      context,
                                      ResourcePosition pos)
         throws FusionException
     {
