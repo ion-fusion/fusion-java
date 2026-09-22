@@ -5,6 +5,7 @@
   "/fusion/eval"
   "/fusion/experimental/check"
   "/fusion/experimental/syntax"
+  "/fusion/ffi/java"
 )
 
 (define ctx (quote_syntax ctx))
@@ -15,6 +16,11 @@
 //(check === (syntax-position expected) (syntax-position actual))
   (check === (syntax_source   expected) (syntax_source   actual))
   )
+
+
+(define (datum2stx2datum v)
+  (syntax_to_datum (datum_to_syntax v ctx)))
+
 
 // When given a location, datum->syntax uses it for all new syntax objects
 // created, not just the outermost one.
@@ -29,9 +35,19 @@
   (check_loc ctx (. (syntax_unwrap (. (syntax_unwrap s) 1)) 0)))  // b
 
 
+(define_check (check_syntaxable v)
+  (check ident v    (datum2stx2datum       v))
+  (check ident v (. (datum2stx2datum (sexp v)) 0))
+  (check ident v (. (datum2stx2datum      [v]) 0))
+  (check ident v (. (datum2stx2datum    {f:v}) "f"))
+)
+
 // Non-code constants can be wrapped by syntax objects
-(check ident + (syntax_unwrap (datum_to_syntax + ctx)))
-(check ident (void) (syntax_unwrap (datum_to_syntax (void) ctx)))
+(check_syntaxable +)
+(check_syntaxable (void))
+
+// Even non-Fusion values
+(check_syntaxable (java_new "java.lang.Object"))
 
 
 // Exiting syntax objects keep their locations.

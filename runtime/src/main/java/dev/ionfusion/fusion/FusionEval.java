@@ -11,7 +11,6 @@ import static dev.ionfusion.fusion.FusionSyntax.isSyntax;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.GlobalState.MODULE;
 import static dev.ionfusion.fusion.StandardReader.readSyntax;
-import static dev.ionfusion.fusion.Syntax.datumToSyntax;
 import static java.util.Objects.requireNonNull;
 
 import com.amazon.ion.IonReader;
@@ -49,14 +48,11 @@ final class FusionEval
 
     /**
      * Turns a given form (datum or syntax) into a top-level syntax object,
-     * and optionally enriching it.
-     *
-     * @param whosCalling The form to name for error messages; may be null.
+     * optionally enriching it.
      */
     private static SyntaxValue topLevelStx(Evaluator eval,
                                            Object topLevelForm,
-                                           boolean enrichSyntaxObject,
-                                           String whosCalling)
+                                           boolean enrichSyntaxObject)
         throws FusionException
     {
         SyntaxValue stx;
@@ -70,10 +66,7 @@ final class FusionEval
         }
         else
         {
-            stx = datumToSyntax(eval, topLevelForm,
-                                null, // context
-                                null, // location
-                                whosCalling);
+            stx = Syntax.datumToSyntax(eval, topLevelForm, null, null);
             stx = enrich(eval, stx);
         }
 
@@ -94,8 +87,7 @@ final class FusionEval
     private static Object defaultEval(Evaluator eval, Object topLevelForm)
         throws FusionException
     {
-        SyntaxValue stx =
-            topLevelStx(eval, topLevelForm, false, "default_eval_handler");
+        var stx = topLevelStx(eval, topLevelForm, false);
         ResourcePosition topPosition = stx.getPosition();
 
         Namespace ns = eval.findCurrentNamespace();
@@ -406,8 +398,7 @@ final class FusionEval
         Object doApply(Evaluator eval, Object arg0)
             throws FusionException
         {
-            SyntaxValue topLevelForm =
-                topLevelStx(eval, arg0, true, identify());
+            var topLevelForm = topLevelStx(eval, arg0, true);
 
             Namespace ns = eval.findCurrentNamespace();
             Expander expander = new Expander(eval);
@@ -425,8 +416,7 @@ final class FusionEval
         Object doApply(Evaluator eval, Object arg0)
             throws FusionException
         {
-            SyntaxValue topLevelForm =
-                topLevelStx(eval, arg0, true, identify());
+            var topLevelForm = topLevelStx(eval, arg0, true);
 
             Namespace ns = eval.findCurrentNamespace();
             Expander expander = new Expander(eval);

@@ -5,11 +5,11 @@ package dev.ionfusion.fusion;
 
 import static com.amazon.ion.util.IonTextUtils.SymbolVariant.OPERATOR;
 import static com.amazon.ion.util.IonTextUtils.symbolVariant;
+import static dev.ionfusion.commons.util.Empties.EMPTY_STRING_ARRAY;
 import static dev.ionfusion.fusion.FusionBool.falseBool;
 import static dev.ionfusion.fusion.FusionBool.makeBool;
 import static dev.ionfusion.fusion.FusionBool.trueBool;
 import static dev.ionfusion.fusion.FusionString.makeString;
-import static dev.ionfusion.commons.util.Empties.EMPTY_STRING_ARRAY;
 
 import com.amazon.ion.IonException;
 import com.amazon.ion.IonType;
@@ -18,8 +18,8 @@ import com.amazon.ion.IonWriter;
 import com.amazon.ion.ValueFactory;
 import com.amazon.ion.util.IonTextUtils;
 import dev.ionfusion.commons.resources.ResourcePosition;
-import dev.ionfusion.fusion.FusionBool.BaseBool;
 import dev.ionfusion.commons.util.InternMap;
+import dev.ionfusion.fusion.FusionBool.BaseBool;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.embed.TopLevel;
 import java.io.IOException;
@@ -157,7 +157,7 @@ final class FusionSymbol
         }
 
         @Override
-        SyntaxValue datumToSyntaxMaybe(Evaluator eval, ResourcePosition pos)
+        SyntaxValue scalarDatumToSyntax(Evaluator eval, ResourcePosition pos)
             throws FusionException
         {
             if (isKeyword())
@@ -210,7 +210,7 @@ final class FusionSymbol
         }
 
         @Override
-        SyntaxValue datumToSyntaxMaybe(Evaluator eval, ResourcePosition pos)
+        SyntaxValue scalarDatumToSyntax(Evaluator eval, ResourcePosition pos)
             throws FusionException
         {
             // No need to check for keywords.

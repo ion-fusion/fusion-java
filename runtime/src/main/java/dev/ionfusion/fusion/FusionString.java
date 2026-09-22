@@ -101,7 +101,7 @@ public final class FusionString
         }
 
         @Override
-        SyntaxString datumToSyntaxMaybe(Evaluator eval, ResourcePosition pos)
+        SyntaxString scalarDatumToSyntax(Evaluator eval, ResourcePosition pos)
         {
             return SyntaxString.make(eval, pos, this);
         }

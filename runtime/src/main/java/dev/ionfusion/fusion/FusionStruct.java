@@ -28,13 +28,13 @@ import com.amazon.ion.IonType;
 import com.amazon.ion.IonValue;
 import com.amazon.ion.IonWriter;
 import com.amazon.ion.ValueFactory;
+import dev.ionfusion.commons._private.hamt.MultiHashTrie;
 import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionBool.BaseBool;
 import dev.ionfusion.fusion.FusionCollection.BaseCollection;
 import dev.ionfusion.fusion.FusionCompare.EqualityTier;
 import dev.ionfusion.fusion.FusionIterator.AbstractIterator;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
-import dev.ionfusion.commons._private.hamt.MultiHashTrie;
 import dev.ionfusion.runtime.base.FusionException;
 import java.io.IOException;
 import java.util.Collections;
@@ -589,16 +589,15 @@ final class FusionStruct
         }
 
         @Override
-        SyntaxValue datumToSyntaxMaybe(Evaluator      eval,
-                                       SyntaxSymbol   context,
-                                       ResourcePosition pos)
+        SyntaxValue datumToSyntax(Evaluator        eval,
+                                  SyntaxSymbol     context,
+                                  ResourcePosition pos)
             throws FusionException
         {
             SyntaxValue stx = SyntaxStruct.make(eval, pos, this);
 
-            // TODO This should retain context, but not push it
+            // TODO #68 This should retain context, but not push it
             //      down to the current children (which already have it).
-            //      https://github.com/ion-fusion/fusion-java/issues/68
             //return Syntax.applyContext(eval, context, stx);
 
             return stx;
@@ -882,38 +881,18 @@ final class FusionStruct
             extends RuntimeException
         { }
 
-        /**
-         * TODO This needs to do cycle detection.
-         *   https://github.com/ion-fusion/fusion-java/issues/65
-         *
-         * @return null if an element can't be converted into syntax.
-         */
         @Override
-        SyntaxValue datumToSyntaxMaybe(final Evaluator      eval,
-                                       final SyntaxSymbol   context,
-                                       final ResourcePosition pos)
+        SyntaxValue datumToSyntax(final Evaluator        eval,
+                                  final SyntaxSymbol     context,
+                                  final ResourcePosition pos)
             throws FusionException
         {
-            StructFieldVisitor visitor = (name, value) -> {
-                SyntaxValue converted = Syntax.datumToSyntaxMaybe(eval, value, context,
-                                                                  pos);
-                if (converted == null)
-                {
-                    // Hit something that's not syntax-able
-                    throw new VisitFailure();
-                }
-                return converted;
-            };
+            StructFieldVisitor visitor =
+                (name, value) -> Syntax.datumToSyntax(eval, value, context, pos);
 
-            try
-            {
-                ImmutableStruct datum = transformFields(eval, visitor);
-                return SyntaxStruct.make(eval, pos, datum);
-            }
-            catch (VisitFailure e)  // This is crazy.
-            {
-                return null;
-            }
+            var datum = transformFields(eval, visitor);
+            return SyntaxStruct.make(eval, pos, datum);
+
         }
 
         @Override

@@ -6,6 +6,7 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.AmbiguousBindingFailure.makeAmbiguousBindingError;
 import static dev.ionfusion.fusion.BindingSite.makeExportBindingSite;
 import static dev.ionfusion.fusion.GlobalState.REQUIRE;
+import static dev.ionfusion.fusion.Syntax.datumToSyntax;
 import static dev.ionfusion.fusion.UnboundIdentifierException.makeUnboundError;
 
 import dev.ionfusion.commons.resources.ResourcePosition;
@@ -466,7 +467,7 @@ final class ModuleNamespace
         {
             BaseSymbol name = provided.getName();
             SyntaxSymbol id =
-                (SyntaxSymbol) name.datumToSyntaxMaybe(eval, lexicalContext, null);
+                (SyntaxSymbol) datumToSyntax(eval, name, lexicalContext, null);
             id.resolve(); // This needs to resolve "outside" this module.
 
             NsBinding prior = installBinding(id, new LanguageBinding(id, provided));

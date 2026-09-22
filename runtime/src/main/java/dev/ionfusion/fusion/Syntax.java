@@ -4,8 +4,6 @@
 package dev.ionfusion.fusion;
 
 
-import static dev.ionfusion.fusion.ArgumentException.makeArgumentError;
-
 import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.runtime.base.FusionException;
 
@@ -49,57 +47,7 @@ final class Syntax
 
 
     /**
-     * @param context may be null, in which case no lexical information is
-     * applied to converted objects.
-     *
-     * @return null if something in the datum can't be converted into syntax.
-     */
-    static SyntaxValue datumToSyntaxMaybe(Evaluator      eval,
-                                          Object         datum,
-                                          SyntaxSymbol   context,
-                                          ResourcePosition pos)
-        throws FusionException
-    {
-        if (datum instanceof BaseValue)
-        {
-            return ((BaseValue) datum).datumToSyntaxMaybe(eval, context, pos);
-        }
-
-        return null;
-    }
-
-
-    /**
-     * @param context may be null, in which case no lexical information is
-     * applied to converted objects.
-     * @param whosCalling The form to name for error messages; may be null.
-     *
-     * @return not null.
-     */
-    static SyntaxValue datumToSyntax(Evaluator      eval,
-                                     Object         datum,
-                                     SyntaxSymbol   context,
-                                     ResourcePosition pos,
-                                     String         whosCalling)
-        throws FusionException
-    {
-        SyntaxValue stx = datumToSyntaxMaybe(eval, datum, context, pos);
-        if (stx == null)
-        {
-            if (whosCalling == null) whosCalling = "datum_to_syntax";
-
-            throw makeArgumentError(eval,
-                                    whosCalling,
-                                    "syntax object or ionizable data",
-                                    -1,
-                                    datum);
-        }
-
-        return stx;
-    }
-
-    /**
-     * @param context may be null, in which case no lexical information is
+     * @param context can be null, in which case no lexical information is
      * applied to converted objects.
      *
      * @return not null.
@@ -110,6 +58,11 @@ final class Syntax
                                      ResourcePosition pos)
         throws FusionException
     {
-        return datumToSyntax(eval, datum, context, pos, null);
+        if (datum instanceof BaseValue)
+        {
+            return ((BaseValue) datum).datumToSyntax(eval, context, pos);
+        }
+
+        return SimpleSyntaxValue.makeSyntax(eval, pos, datum);
     }
 }

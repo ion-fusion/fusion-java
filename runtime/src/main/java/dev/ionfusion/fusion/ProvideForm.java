@@ -153,11 +153,10 @@ final class ProvideForm
             // at the same time.
             for (NsDefinedBinding binding : moduleNamespace.getDefinedBindings())
             {
-                // TODO the datum->syntax context should be the sexp
+                // TODO #68 the datum->syntax context should be the sexp
                 //  form `(all_defined_out)` not just `all_defined_out` but
                 //  we don't currently retain context on SyntaxSexp after
                 //  it has been pushed down to children.
-                //  https://github.com/ion-fusion/fusion-java/issues/68
                 SyntaxSymbol localized = (SyntaxSymbol)
                     datumToSyntax(eval,
                                   binding.getName(),

@@ -544,12 +544,12 @@ public final class FusionSexp
         }
 
         @Override
-        SyntaxValue datumToSyntaxMaybe(Evaluator      eval,
-                                       SyntaxSymbol   context,
-                                       ResourcePosition pos)
+        SyntaxValue datumToSyntax(Evaluator        eval,
+                                  SyntaxSymbol     context,
+                                  ResourcePosition pos)
             throws FusionException
         {
-            assert size(eval) == 0;
+            assert size(eval) == 0;  // else this method is overridden
 
             SyntaxValue stx = SyntaxSexp.make(eval, pos, this);
             return Syntax.applyContext(eval, context, stx);
@@ -934,51 +934,38 @@ public final class FusionSexp
         /**
          * Converts this pair to a normal pair of syntax objects.
          */
-        private BaseSexp toPairOfSyntaxMaybe(Evaluator eval,
-                                             SyntaxSymbol   context,
-                                             ResourcePosition pos)
+        private BaseSexp toPairOfSyntax(Evaluator        eval,
+                                        SyntaxSymbol     context,
+                                        ResourcePosition pos)
             throws FusionException
         {
-            SyntaxValue head =
-                Syntax.datumToSyntaxMaybe(eval, myHead, context, pos);
-            if (head == null) return null;
+            var head = Syntax.datumToSyntax(eval, myHead, context, pos);
 
             Object tail = myTail;
             if (isPair(eval, tail))
             {
-                tail = ((ImmutablePair)tail).toPairOfSyntaxMaybe(eval,
-                                                                 context,
-                                                                 pos);
+                tail = ((ImmutablePair)tail).toPairOfSyntax(eval, context, pos);
             }
             else if (! isEmptySexp(eval, tail))
             {
-                tail = Syntax.datumToSyntaxMaybe(eval, tail, context, pos);
+                tail = Syntax.datumToSyntax(eval, tail, context, pos);
             }
-            if (tail == null) return null;
 
             return pair(eval, myAnnotations, head, tail);
         }
 
-        /**
-         * TODO This needs to do cycle detection.
-         *   https://github.com/ion-fusion/fusion-java/issues/65
-         *
-         * @return null if an element can't be converted into syntax.
-         */
         @Override
-        SyntaxValue datumToSyntaxMaybe(Evaluator      eval,
-                                       SyntaxSymbol   context,
-                                       ResourcePosition pos)
+        SyntaxValue datumToSyntax(Evaluator        eval,
+                                  SyntaxSymbol     context,
+                                  ResourcePosition pos)
             throws FusionException
         {
-            BaseSexp newPair = toPairOfSyntaxMaybe(eval, context, pos);
-            if (newPair == null) return null;
+            var newPair = toPairOfSyntax(eval, context, pos);
 
-            SyntaxValue stx = SyntaxSexp.make(eval, pos, newPair);
+            var stx = SyntaxSexp.make(eval, pos, newPair);
 
-            // TODO This should retain context, but not push it
+            // TODO #68 This should retain context, but not push it
             //      down to the current children (which already have it).
-            //      https://github.com/ion-fusion/fusion-java/issues/68
             //return Syntax.applyContext(eval, context, stx);
 
             return stx;

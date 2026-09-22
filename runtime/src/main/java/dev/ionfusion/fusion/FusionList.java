@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.commons.util.Empties.EMPTY_OBJECT_ARRAY;
 import static dev.ionfusion.fusion.FusionBool.falseBool;
 import static dev.ionfusion.fusion.FusionBool.makeBool;
 import static dev.ionfusion.fusion.FusionBool.trueBool;
@@ -15,7 +16,6 @@ import static dev.ionfusion.fusion.FusionNumber.makeInt;
 import static dev.ionfusion.fusion.FusionNumber.unsafeTruncateIntToJavaInt;
 import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.internSymbols;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
-import static dev.ionfusion.commons.util.Empties.EMPTY_OBJECT_ARRAY;
 
 import com.amazon.ion.IonList;
 import com.amazon.ion.IonSequence;
@@ -612,17 +612,10 @@ final class FusionList
             return SyntaxList.makeOriginal(eval, pos, this);
         }
 
-        /**
-         * TODO This needs to do cycle detection.
-         *
-         * @return null if an element can't be converted into syntax.
-         *
-         * @see <a href="https://github.com/ion-fusion/fusion-java/issues/65">#65</a>
-         */
         @Override
-        SyntaxValue datumToSyntaxMaybe(Evaluator      eval,
-                                       SyntaxSymbol   context,
-                                       ResourcePosition pos)
+        SyntaxValue datumToSyntax(Evaluator        eval,
+                                  SyntaxSymbol     context,
+                                  ResourcePosition pos)
             throws FusionException
         {
             SyntaxList stx;
@@ -638,14 +631,7 @@ final class FusionList
                 for (int i = 0; i < size; i++)
                 {
                     Object rawChild = unsafeRef(eval, i);
-                    Object child =
-                        Syntax.datumToSyntaxMaybe(eval, rawChild, context, pos);
-                    if (child == null)
-                    {
-                        // Hit something that's not syntax-able
-                        return null;
-                    }
-                    children[i] = child;
+                    children[i] = Syntax.datumToSyntax(eval, rawChild, context, pos);
                 }
 
                 BaseSymbol[] anns = getAnnotations();

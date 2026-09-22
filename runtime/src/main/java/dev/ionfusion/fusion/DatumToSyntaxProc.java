@@ -6,7 +6,6 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionSyntax.isIdentifier;
 import static dev.ionfusion.fusion.FusionSyntax.isSyntax;
 import static dev.ionfusion.fusion.FusionSyntax.unsafeSyntaxPosition;
-import static dev.ionfusion.fusion.Syntax.datumToSyntax;
 
 import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.runtime.base.FusionException;
@@ -45,6 +44,6 @@ class DatumToSyntaxProc
             }
         }
 
-        return datumToSyntax(eval, datum, context, position);
+        return Syntax.datumToSyntax(eval, datum, context, position);
     }
 }

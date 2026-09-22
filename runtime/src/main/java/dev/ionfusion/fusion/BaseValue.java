@@ -86,33 +86,32 @@ abstract class BaseValue
 
 
     /**
-     * Contained {@link SyntaxValue}s must be left unchanged, so the context
-     * is pushed eagerly.
+     * For containers, extant {@link SyntaxValue}s must be left unchanged, so the
+     * context is eagerly propagated to new syntax objects. Otherwise, the parent's
+     * context would be propagated everywhere later on.
      * <p>
-     * TODO This needs to do cycle detection.
+     * TODO #65 This needs to do cycle detection.
      *
-     * @return null if something in this datum can't be converted into syntax.
-     *
-     * @see <a href="https://github.com/ion-fusion/fusion-java/issues/65">#65</a>
+     * @return not null.
      */
-    SyntaxValue datumToSyntaxMaybe(Evaluator      eval,
-                                   SyntaxSymbol   context,
-                                   ResourcePosition pos)
+    SyntaxValue datumToSyntax(Evaluator        eval,
+                              SyntaxSymbol     context,
+                              ResourcePosition pos)
         throws FusionException
     {
         assert !(this instanceof SyntaxValue) && !(this instanceof BaseCollection);
         // else this method is overridden
 
-        SyntaxValue stx = datumToSyntaxMaybe(eval, pos);
-        if (stx == null) return null;
+        var stx = scalarDatumToSyntax(eval, pos);
+        assert stx != null;
 
         return Syntax.applyContext(eval, context, stx);
     }
 
     /**
-     * @return null if something in the datum can't be converted into syntax.
+     * @return not null
      */
-    SyntaxValue datumToSyntaxMaybe(Evaluator eval, ResourcePosition pos)
+    SyntaxValue scalarDatumToSyntax(Evaluator eval, ResourcePosition pos)
         throws FusionException
     {
         // This default implementation is used for most values when we don't need to

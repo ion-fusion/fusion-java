@@ -383,9 +383,9 @@ abstract class SyntaxValue
 
 
     @Override
-    final SyntaxValue datumToSyntaxMaybe(Evaluator      eval,
-                                         SyntaxSymbol   context,
-                                         ResourcePosition pos)
+    final SyntaxValue datumToSyntax(Evaluator        eval,
+                                    SyntaxSymbol     context,
+                                    ResourcePosition pos)
         throws FusionException
     {
         return this;
@@ -393,7 +393,7 @@ abstract class SyntaxValue
 
 
     @Override
-    SyntaxValue makeOriginalSyntax(Evaluator eval, ResourcePosition pos)
+    final SyntaxValue makeOriginalSyntax(Evaluator eval, ResourcePosition pos)
     {
         throw new IllegalStateException("Cannot wrap syntax as syntax");
     }
