@@ -56,6 +56,15 @@ layers will shift over time, as intrinsic features are added or ported up to Fus
     unsafe_exn_message
   )
 
+  (require "/fusion/private/intrinsic/io")
+  (provide
+    display
+    ionize
+    is_eof
+    read
+    write
+  )
+
   (require "/fusion/private/intrinsic/list")
   (provide
     is_immutable_list
@@ -73,6 +82,12 @@ layers will shift over time, as intrinsic features are added or ported up to Fus
     unsafe_list_size
     unsafe_list_subseq
     unsafe_list_to_immutable_list
+  )
+
+  (require "/fusion/private/intrinsic/parameter")
+  (provide
+    make_parameter
+    parameterize
   )
 
   (require "/fusion/private/intrinsic/sequence")

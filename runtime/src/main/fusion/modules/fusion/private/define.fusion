@@ -5,7 +5,7 @@
 
   (require
     "/fusion/private/control"
-    "/fusion/io"
+    "/fusion/private/io"
     "/fusion/string"
     "/fusion/unsafe/sexp"
     "/fusion/void")

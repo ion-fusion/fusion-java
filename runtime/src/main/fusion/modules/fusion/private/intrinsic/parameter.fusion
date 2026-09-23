@@ -1,0 +1,33 @@
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(module intrinsic_parameter "/fusion/private/kernel"
+
+  (provide (all_defined_out))
+
+
+  (define_values (make_parameter)
+    '''
+    (make_parameter value)
+
+Makes a new dynamic parameter procedure. The initial value of the parameter is
+`value`.
+    '''
+    (lambda (value)
+      (java_new "dev.ionfusion.fusion.DynamicParameter" value)))
+
+
+  (define_syntax parameterize
+    '''
+    (parameterize [(param expr), ...] body ...+)
+
+Dynamically binds the `param`s to the `expr` values while evaluating the `body`.
+The `param`s are evaluated first, in order; each must result in a dynamic
+parameter. The `expr`s are then evaluated in order, and then the parameters
+are changed to their results for the dynamic extent of the `body`.
+
+The `body` may be one or more forms; the result of the last form is the result
+of the entire expression.
+    '''
+    (java_new "dev.ionfusion.fusion.ParameterizeForm"))
+)

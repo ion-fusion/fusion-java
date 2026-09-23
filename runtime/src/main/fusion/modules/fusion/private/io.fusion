@@ -4,14 +4,51 @@
 (module io "/fusion/private/layer0"
 
   (require
-    "/fusion/parameter"
-    "/fusion/private/builtins"
-    "/fusion/private/sexp"
+    "/fusion/private/intrinsic/parameter"
+    "/fusion/private/intrinsic/io"
   )
 
   (provide
+    current_directory
+    display
+    display_to_string
+    displayln
+    eof
+    ionize
+    ionize_to_blob
+    ionize_to_string
+    is_eof
+    jsonize_to_string
+    read
+    with_ion_from_file
+    with_ion_from_lob
+    with_ion_from_string
     with_output_to_string
+    write
+    writeln
   )
+
+
+  (define_values (displayln)
+    '''
+    (displayln value ...)
+
+[Displays](fusion/io.html#display) the values, then a newline.
+    '''
+    (lambda rest
+      (apply display rest)
+      (display "\n")))
+
+
+  (define_values (writeln)
+    '''
+    (writeln value)
+
+[Writes](fusion/io.html#write) the value, then a newline.
+    '''
+    (lambda (value)
+      (write value)
+      (display "\n")))
 
 
   (define_values (make_buffer)
@@ -35,7 +72,7 @@ local buffer, returning the content of that buffer as a string.
       (datum_to_syntax
         (quasiquote
           (parameterize [(current_output_port (make_buffer))]
-            (unquote (pair (quote begin) (tail (syntax_unwrap stx))))
+            (unquote (pair (quote begin) (unsafe_pair_tail (syntax_unwrap stx))))
             (buffer_to_string (current_output_port))))
         (quote_syntax context)
         stx)))

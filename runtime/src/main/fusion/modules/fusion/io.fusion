@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module io "/fusion/private/layer0"
+(module io "/fusion/private/kernel"
 
   '''
 Basic input/output features.  At present these are generally Ion-oriented.
@@ -86,16 +86,15 @@ upon launch of the Fusion runtime. See [FusionRuntimeBuilder][] for details.
 [FusionRuntimeBuilder]: javadoc/com/amazon/fusion/FusionRuntimeBuilder.html
   '''
 
-
-  // Note that we don't currently provide current_ion_reader since the name and
-  // semantics are still a bit shady.
+  (require "/fusion/private/io")
 
   (provide
-    current_directory          // from /fusion/private/kernel
+    current_directory
+//  current_ion_reader    // Not public yet
     display
     display_to_string
     displayln
-    eof                        // from /fusion/private/kernel
+    eof
     ionize
     ionize_to_blob
     ionize_to_string
@@ -105,243 +104,8 @@ upon launch of the Fusion runtime. See [FusionRuntimeBuilder][] for details.
     with_ion_from_file
     with_ion_from_lob
     with_ion_from_string
+//  with_output_to_string   // Not public yet
     write
     writeln
   )
-
-
-  (define_values (with_ion_from_file)
-    '''
-    (with_ion_from_file path thunk)
-
-Opens the file at `path` and uses it as the current Ion input port while
-applying the `thunk`.  The file is closed when the thunk returns (normally or
-abnormally).
-
-The `path` must be a non-empty string denoting the file to read.  If the path
-is relative, it is resolved against
-[`current_directory`](fusion/io.html#current_directory).
-The `thunk` must be a procedure that accepts zero arguments.
-
-A common use of this procedure is to read the top-level Ion values from a
-file into a list:
-
-    (with_ion_from_file "path/to/file.ion"
-      (|| (series_to_list (in_port))))
-
-For other idioms, see [/fusion/io](fusion/io.html#input).
-    '''
-    (java_new "dev.ionfusion.fusion.FusionIo$WithIonFromFileProc"
-      current_ion_reader))
-
-
-  (define_values (with_ion_from_string)
-    '''
-    (with_ion_from_string string thunk)
-
-Uses the content of `string` as the current Ion input port
-while applying the `thunk`.
-
-The `string` must be non-null and must contain Ion text data.
-The `thunk` must be a procedure that accepts zero arguments.
-
-A common use of this procedure is to read a single Ion value from the data:
-
-    (with_ion_from_string "123" read)   --> 123
-
-This leverages the fact that `read` accepts zero arguments and consumes the
-current Ion input port.  Note that this is likely to be more lenient than you
-wish, since the input is treated as a full Ion document:
-
-    (with_ion_from_string "$ion_1_0 123 /* ignored */" read)  --> 123
-
-If more than one value is expected, you can read them all into a list:
-
-    (with_ion_from_string "1 k {a:false}"
-      (|| (series_to_list (in_port))))
-    =>
-    [1, k, {a:false}]
-
-For other idioms, see [/fusion/io](fusion/io.html#input).
-    '''
-    (java_new "dev.ionfusion.fusion.FusionIo$WithIonFromStringProc"
-      current_ion_reader))
-
-
-  (define_values (with_ion_from_lob)
-    '''
-    (with_ion_from_lob lob thunk)
-
-Uses the content of `lob` (a blob or clob) as the current Ion input port
-while applying the `thunk`.
-
-The `lob` must be non-null and may contain Ion text or binary data.
-The `thunk` must be a procedure that accepts zero arguments.
-
-A common use of this procedure is to read a single Ion value from the data:
-
-    (with_ion_from_lob {{"[only_me]"}} read)   --> [only_me]
-
-A common use of this procedure is to read the top-level Ion values from a
-lob into a list:
-
-    (with_ion_from_lob {{"[first] 2"}}   // Reading from a clob
-      (|| (series_to_list (in_port))))
-    =>
-    [[first], 2]
-
-For other idioms, see [/fusion/io](fusion/io.html#input).
-    '''
-    (java_new "dev.ionfusion.fusion.FusionIo$WithIonFromLobProc"
-      current_ion_reader))
-
-
-  (define_values (read)
-    '''
-    (read)
-
-Reads an Ion value from the current Ion input port.
-Returns [`eof`](fusion/io.html#eof) when there's no more data.
-
-Here's one way to print to stdout the `address` fields of the
-structs on stdin:
-
-    (let loop [(value (read))]
-      (unless (is_eof value)
-        (writeln (. value "address"))
-        (loop (read))))
-
-In general, `read` is more low-level than necessary;
-see [/fusion/io](fusion/io.html#input) for more options.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionIo$ReadProc" current_ion_reader))
-
-
-  (define_values (is_eof)
-    '''
-    (is_eof value)
-
-Determines whether a `value` is the Fusion end-of-file value.  This value is
-bound to the name [`eof`](fusion/io.html#eof).
-    '''
-    (java_new "dev.ionfusion.fusion.FusionIo$IsEofProc"))
-
-
-
-  (define_values (ionize)
-    '''
-    (ionize value)
-
-Outputs an Ion text representation of `value` to the current output port,
-throwing an exception if the value contains any non-Ionizable data like closures.
-
-See [`write`](fusion/io.html#write) for an alternative that doesn't fail an
-non-Ionizable inputs.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionIo$IonizeProc" current_output_port))
-
-
-  (define_values (ionize_to_blob)
-    '''
-    (ionize_to_blob value)
-
-Encodes an Ion binary representation of `value`, throwing an exception if the
-value contains any non-Ionizable data like closures. The result is a blob
-containing an Ion binary document.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionIo$IonizeToBlobProc"))
-
-
-  (define_values (ionize_to_string)
-    '''
-    (ionize_to_string value)
-
-Encodes an Ion text representation of `value`, throwing an exception if the
-value contains any non-Ionizable data like closures. The result is a string
-containing an Ion text document.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionIo$IonizeToStringProc"))
-
-
-  (define_values (jsonize_to_string)
-    '''
-    (jsonize_to_string value)
-
-Encodes an JSON text representation of `value`, throwing an exception if the
-value contains any non-Ionizable data like closures. The result is a string
-containing a JSON text document.
-
-Compared to `ionize_to_string`, this method applies these conversions:
-
-  * All annotations are suppressed.
-  * Nulls of any type are printed as JSON `null`.
-  * Blobs are printed as strings, containing Base64.
-  * Clobs are printed as strings, containing only Unicode code points
-    U+00 through U+FF.
-  * Sexps are printed as lists.
-  * Symbols are printed as strings.
-  * Timestamps are printed as strings, using Ion timestamp format.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionIo$JsonizeToStringProc"))
-
-
-  (define_values (write)
-    '''
-    (write value)
-
-Outputs a text representation of `value` to the current output port, following
-Ion syntax where possible.
-The result will be unreadable (by the Fusion and Ion readers) if the value
-contains any non-Ionizable data like closures.
-Contrast this with [`ionize`](fusion/io.html#ionize), which throws an exception
-in such cases.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionIo$WriteProc" current_output_port))
-
-
-  (define_values (display)
-    '''
-    (display value ...)
-
-Outputs a text representation of the `value`s  to the current output port, in a
-form meant for human consumption.
-When a `value` is an unannotated string or symbol, its character data is written
-as-is, unquoted and unescaped.
-All other values are rendered as by [`write`](fusion/io.html#write).
-No characters are written between the values.
-In general, the result will be unreadable by the Fusion and Ion readers.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionIo$DisplayProc" current_output_port))
-
-
-  (define_values (display_to_string)
-    '''
-    (display_to_string value ...)
-
-Returns a string with a human-oriented text representation of the `value`s.
-The output format is as defined by [`display`](fusion/io.html#display).
-    '''
-    (java_new "dev.ionfusion.fusion.FusionIo$DisplayToStringProc"))
-
-
-  (define_values (displayln)
-    '''
-    (displayln value ...)
-
-[Displays](fusion/io.html#display) the values, then a newline.
-    '''
-    (lambda rest
-      (apply display rest)
-      (display "\n")))
-
-
-  (define_values (writeln)
-    '''
-    (writeln value)
-
-[Writes](fusion/io.html#write) the value, then a newline.
-    '''
-    (lambda (value)
-      (write value)
-      (display "\n")))
 )
