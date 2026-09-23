@@ -7,38 +7,34 @@
 # For each package, declare other packages it can depend on.
 rules:
 
-    # High-level structure; this breaks finer-grained rules below.
+    # I'd like to start with the high-level structure and add refinements, but these
+    # rules are overridden by those below.
+
 #    "dev.ionfusion.runtime":
 #        - "dev.ionfusion.commons"
-#        - "dev.ionfusion.commons.attributes"
-#        - "dev.ionfusion.commons.resources"
 #        - "dev.ionfusion.fusion"
 #    "dev.ionfusion.fusion":
 #        - "dev.ionfusion.commons"
 
     "dev.ionfusion.commons.resources":
+        - "dev.ionfusion.commons._private.io"
         - "dev.ionfusion.commons.attributes"
         - "dev.ionfusion.commons.util"
 
-    "dev.ionfusion.commons._private.hamt":  // Should not depend on anything
-    "dev.ionfusion.commons._private.io":    // Should not depend on anything
+    "dev.ionfusion.commons._private.hamt": [] # Should not depend on anything
+    "dev.ionfusion.commons._private.io":   [] # Should not depend on anything
 
     "dev.ionfusion.commons._private.ion":
         - "dev.ionfusion.commons.resources"
 
     "dev.ionfusion.fusion!":
-#        - "dev.ionfusion.commons.**"                    # XXX Does not work
-        - "dev.ionfusion.commons.attributes"
-        - "dev.ionfusion.commons.resources"
-        - "dev.ionfusion.commons.util"
-        - "dev.ionfusion.runtime._private.cover"
-        - "dev.ionfusion.runtime._private.doc"
+        - "dev.ionfusion.commons"
+        - "dev.ionfusion.runtime._private"
         - "dev.ionfusion.runtime.base"
         - "dev.ionfusion.runtime.embed"
 
     "dev.ionfusion.runtime._private.cover":
-        - "dev.ionfusion.commons.resources"
-        - "dev.ionfusion.commons.util"
+        - "dev.ionfusion.commons"
         - "dev.ionfusion.runtime.base"
         - "dev.ionfusion.runtime.embed"
 
@@ -47,13 +43,10 @@ rules:
         - "dev.ionfusion.runtime.embed"
 
     "dev.ionfusion.runtime.base":
-        - "dev.ionfusion.commons.attributes"
-        - "dev.ionfusion.commons.resources"
-        - "dev.ionfusion.commons.util"
+        - "dev.ionfusion.commons"
 
     "dev.ionfusion.runtime.embed":
-        - "dev.ionfusion.commons.resources"
-        - "dev.ionfusion.commons.util"
+        - "dev.ionfusion.commons"
         - "dev.ionfusion.runtime.base"
 
 # Declare class-import-class rules, generally for exceptions to the package rules above.
