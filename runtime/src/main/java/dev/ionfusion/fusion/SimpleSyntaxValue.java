@@ -5,11 +5,8 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.commons.util.Empties.EMPTY_OBJECT_ARRAY;
 
-import com.amazon.ion.IonException;
-import com.amazon.ion.IonWriter;
 import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.runtime.base.FusionException;
-import java.io.IOException;
 
 /**
  * Implementation of most {@link SyntaxValue}s, which consist of a simple
@@ -120,12 +117,5 @@ class SimpleSyntaxValue
         throws FusionException
     {
         return myDatum;
-    }
-
-    @Override
-    void ionize(Evaluator eval, IonWriter writer)
-        throws IOException, IonException, FusionException
-    {
-        myDatum.ionize(eval, writer);
     }
 }

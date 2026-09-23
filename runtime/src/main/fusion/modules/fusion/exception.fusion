@@ -222,17 +222,11 @@ The exception `display`s the `message`s, which are only evaluated on failure.
         (unless (is_pair operands)
           (wrong_syntax stx "expecting expression"))
         (lets [(expr_stx     (unsafe_pair_head operands)),
-               (expr_str     (ionize_to_string (syntax_unwrap expr_stx))),
+               (expr_str     (write_to_string (syntax_to_datum expr_stx))),
                (messages     (unsafe_pair_tail operands)),
                (message_expr (if (is_pair messages)
                                (pair (quote safe_display_to_string) messages)
                                null.string))]
-          // TODO Future-proof the expression display by using `write` not `ionize`.
-          //   This is using `ionize` for now because:
-          //     * Syntax objects must be Ion data
-          //     * `write` forces single-quotes around operators, but `ionize` does not.
-          //       See https://github.com/ion-fusion/fusion-java/issues/488
-
           (datum_to_syntax
             (quasiquote
               (let [(result (unquote expr_stx))]

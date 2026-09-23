@@ -3,13 +3,10 @@
 
 package dev.ionfusion.fusion;
 
-import com.amazon.ion.IonException;
-import com.amazon.ion.IonWriter;
 import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionStruct.ImmutableStruct;
 import dev.ionfusion.fusion.FusionStruct.StructFieldVisitor;
 import dev.ionfusion.runtime.base.FusionException;
-import java.io.IOException;
 
 final class SyntaxStruct
     extends SyntaxContainer
@@ -142,13 +139,5 @@ final class SyntaxStruct
 
         // Wraps have been pushed down so the copy doesn't need them.
         return new SyntaxStruct(getPosition(), s);
-    }
-
-
-    @Override
-    void ionize(Evaluator eval, IonWriter writer)
-        throws IOException, IonException, FusionException
-    {
-        myStruct.ionize(eval, writer);
     }
 }

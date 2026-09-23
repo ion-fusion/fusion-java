@@ -106,6 +106,7 @@ upon launch of the Fusion runtime. See [FusionRuntimeBuilder][] for details.
     with_ion_from_string
 //  with_output_to_string   // Not public yet
     write
+    write_to_string
     writeln
   )
 )

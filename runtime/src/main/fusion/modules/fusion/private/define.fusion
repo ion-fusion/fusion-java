@@ -80,7 +80,7 @@ Returns the expanded `define_values` form.
           (validate_args args)
           (let_values [((docs body) (split_docs body))]
             (final_expansion stx id
-              (prefix_docs_with_signature signature docs)
+              (prefix_docs_with_signature sig_stx docs)
               (pair (quote lambda) (pair args body))))))))
 
 
@@ -100,7 +100,7 @@ Returns the expanded `define_values` form.
 Appends a documentation string of an implicit lambda with its signature,
 as long as the docs don't already start with a code snippet.
     '''
-    (lambda (signature doc_stx)
+    (lambda (sig_stx doc_stx)
       (when doc_stx  // pass-through void
         (let_values [((doc_str) (syntax_unwrap doc_stx))]
           (if (or (string_starts_with doc_str "    ")
@@ -108,11 +108,13 @@ as long as the docs don't already start with a code snippet.
             // Doc already starts with a code snippet, don't add one.
             doc_stx
             (datum_to_syntax
-              (string_append "\n    " (ionize_to_string signature) "\n" doc_str)
+              (string_append "\n    "
+                             (ionize_to_string (syntax_to_datum sig_stx))
+                             "\n" doc_str)
               // TODO Should use original `doc_stx` for the lexical context,
               // but datum_to_syntax currently only accepts symbols.
               // We use the definition's bound identifier instead.
-              (unsafe_pair_head signature)
+              (unsafe_pair_head (syntax_unwrap sig_stx))
               doc_stx))))))
 
 

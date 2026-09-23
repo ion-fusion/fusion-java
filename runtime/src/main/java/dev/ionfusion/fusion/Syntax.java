@@ -88,9 +88,6 @@ final class Syntax
         {
             if (whosCalling == null) whosCalling = "datum_to_syntax";
 
-            // TODO Before allowing arbitrary data in syntax objects, make sure that
-            //   things like `assert` are using `write` and not `ionize` to show code.
-
             throw makeArgumentError(eval,
                                     whosCalling,
                                     "syntax object or ionizable data",

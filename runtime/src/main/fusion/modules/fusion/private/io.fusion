@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module io "/fusion/private/layer0"
+(module private_io "/fusion/private/layer0"
 
   (require
     "/fusion/private/intrinsic/parameter"
@@ -25,6 +25,7 @@
     with_ion_from_string
     with_output_to_string
     write
+    write_to_string
     writeln
   )
 
@@ -76,4 +77,9 @@ local buffer, returning the content of that buffer as a string.
             (buffer_to_string (current_output_port))))
         (quote_syntax context)
         stx)))
+
+
+  (define_values (write_to_string)
+    (lambda (value)
+      (with_output_to_string (write value))))
 )

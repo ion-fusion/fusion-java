@@ -6,12 +6,9 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.commons.util.Empties.EMPTY_OBJECT_ARRAY;
 import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 
-import com.amazon.ion.IonException;
-import com.amazon.ion.IonWriter;
 import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
-import java.io.IOException;
 
 final class SyntaxKeyword
     extends SyntaxText<SyntaxKeyword>
@@ -88,14 +85,5 @@ final class SyntaxKeyword
         // TODO I have no idea if this is correct long-term.
         // Should we allow it at the moment?
         return super.unwrap(eval);
-    }
-
-
-    @Override
-    void ionize(Evaluator eval, IonWriter writer)
-        throws IOException, IonException, FusionException
-    {
-        // TODO __ ??
-        super.ionize(eval, writer);
     }
 }

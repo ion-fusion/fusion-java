@@ -17,13 +17,11 @@ import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
 import static dev.ionfusion.fusion.FusionSexp.unsafeSexpSize;
 import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 
-import com.amazon.ion.IonWriter;
 import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionSexp.BaseSexp;
 import dev.ionfusion.fusion.FusionSexp.ImmutablePair;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
-import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -256,15 +254,6 @@ final class SyntaxSexp
     {
         pushWraps(eval);
         return (SyntaxValue) unsafePairDot(eval, mySexp, index);
-    }
-
-
-    @Override
-    void ionize(Evaluator eval, IonWriter out)
-        throws IOException, FusionException
-    {
-        // Ionization doesn't require wraps to be pushed.
-        mySexp.ionize(eval, out);
     }
 
 

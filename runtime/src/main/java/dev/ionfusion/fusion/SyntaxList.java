@@ -10,12 +10,10 @@ import static dev.ionfusion.fusion.FusionList.nullList;
 import static dev.ionfusion.fusion.FusionList.unsafeListElement;
 import static java.lang.System.arraycopy;
 
-import com.amazon.ion.IonWriter;
 import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionList.BaseList;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
-import java.io.IOException;
 
 final class SyntaxList
     extends SyntaxSequence
@@ -245,14 +243,6 @@ final class SyntaxList
         if (same) return this;
 
         return this.copyReplacingChildren(eval, children);
-    }
-
-
-    @Override
-    final void ionize(Evaluator eval, IonWriter out)
-        throws IOException, FusionException
-    {
-        myImmutableList.ionize(eval, out);
     }
 
 
