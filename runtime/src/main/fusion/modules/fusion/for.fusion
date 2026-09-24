@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module for "/fusion/private/layer0"
+(module for "/fusion/private/layer08"
 
   '''
 The `for`-family of syntax forms enables concise, consistent iteration
@@ -135,7 +135,6 @@ to apply optimizations to the generated code.
     "/fusion/list"
     "/fusion/number"
     "/fusion/private/bind"
-    "/fusion/private/control"
     "/fusion/private/define"
     "/fusion/private/series"
     "/fusion/procedure"

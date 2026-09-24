@@ -1,27 +1,10 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module struct "/fusion/private/layer0"
-
-  (require
-    "/fusion/private/control"
-  )
+(module private_struct "/fusion/private/layer08"
 
   (provide
-    is_immutable_struct
-    is_mutable_struct
-    is_struct
     is_struct_field_name
-    mutable_struct
-    mutable_struct_zip
-    remove_keys
-    remove_keys_m
-    retain_keys
-    retain_keys_m
-    struct
-    struct_merge
-    struct_merge_m
-    struct_zip
     unsafe_struct_has_key
     unsafe_struct_iterator
     unsafe_struct_put
@@ -30,10 +13,4 @@
     unsafe_struct_puts_m
     unsafe_struct_ref
   )
-
-
-  (define_values (is_struct_field_name)
-    (lambda (v)
-      (and (or (is_string v) (is_symbol v))
-           (not (is_null v)))))
 )

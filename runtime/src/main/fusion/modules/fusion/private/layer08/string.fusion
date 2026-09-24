@@ -1,12 +1,13 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module private_string "/fusion/private/layer0"
+(module string_08 "/fusion/private/layer0"
 
-  (provide
+  (define_signature 'sig:layer08:string' ()
     symbol_append
     text_to_string
   )
+  (provide_signature 'sig:layer08:string')
 
 
   (define_values (symbol_append)

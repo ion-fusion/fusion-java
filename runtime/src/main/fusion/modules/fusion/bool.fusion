@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module bool "/fusion/private/layer0"
+(module bool "/fusion/private/layer08"
 
   '''
 Boolean operations and related conditional forms.
@@ -96,11 +96,8 @@ forms return the result of the last expression evaluated rather than always
   // Pass-through bindings from kernel
   (provide if is_bool)
 
-  // Pass-through bindings from builtins
-  (provide not)
-
-  (require "/fusion/private/control")
-  (provide and cond or unless when)
+  // control
+  (provide and cond not or unless when)
 
 
   (require

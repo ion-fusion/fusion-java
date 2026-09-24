@@ -1,0 +1,19 @@
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(module layer08 "/fusion/private/layer0"
+
+  (require
+    "/fusion/private/layer08/control"
+    "/fusion/private/layer08/string"
+    "/fusion/private/layer08/struct"
+  )
+
+  (define_signature 'sig:layer08' ('sig:layer0'
+                                   'sig:layer08:control'
+                                   'sig:layer08:string'
+                                   'sig:layer08:struct'
+                                  )
+  )
+  (provide_signature 'sig:layer08')
+)

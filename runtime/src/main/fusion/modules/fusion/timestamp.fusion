@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module timestamp "/fusion/private/layer0"
+(module timestamp "/fusion/private/layer08"
 
   '''
 Immutable point-in-time values with local offset.
@@ -15,9 +15,8 @@ The semantics of Fusion timestamp values are identical to [Ion timestamps][ts].
     "/fusion/exception"
     "/fusion/experimental/defines"
     "/fusion/number"
-    "/fusion/private/control"
     "/fusion/private/define"
-    "/fusion/void")
+  )
 
 
   (provide < <= = >= >)

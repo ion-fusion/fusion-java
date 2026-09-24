@@ -18,7 +18,6 @@ based on two procedures:
   (require
     "/fusion/exception"
     "/fusion/private/bind"
-    "/fusion/private/control"
     "/fusion/private/intrinsic/iterator"
     "/fusion/private/intrinsic/list"
     "/fusion/private/intrinsic/sexp"

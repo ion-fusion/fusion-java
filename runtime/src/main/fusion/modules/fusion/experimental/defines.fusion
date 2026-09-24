@@ -1,15 +1,11 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module defines "/fusion/private/layer0"
+(module defines "/fusion/private/layer08"
 
   (require
-    "/fusion/experimental/syntax"
-    "/fusion/private/control"
     "/fusion/private/define"
-    "/fusion/private/intrinsic/compare"
     "/fusion/private/sexp"
-    "/fusion/unsafe/sexp"
   )
 
 

@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module exception "/fusion/private/layer0"
+(module exception "/fusion/private/layer08"
 
   '''
 Operations for working with exceptions.
@@ -47,11 +47,9 @@ with handlers.
     "/fusion/ffi/java"
     "/fusion/io"
     "/fusion/private/bind"
-    "/fusion/private/control"
     "/fusion/private/intrinsic/exception"  // for _make_assertion_error
     "/fusion/private/sexp"
     "/fusion/string"
-    "/fusion/unsafe/sexp"
   )
 
   (provide

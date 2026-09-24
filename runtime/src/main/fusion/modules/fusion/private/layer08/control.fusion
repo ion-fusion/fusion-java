@@ -3,14 +3,18 @@
 
 (module control "/fusion/private/layer0"
 
-  (require
-    "/fusion/void")
+  (define_signature 'sig:layer08:control' ()
+    and
+    cond
+    not
+    or
+    unless
+    when
+  )
+  (provide_signature 'sig:layer08:control')
 
-  (provide not)
 
-
-  (provide and)
-  (define_syntax and  // WARNING: Doc syntax isn't supported yet.
+  (define_syntax and
     '''
     (and expr ...)
 
@@ -46,8 +50,7 @@ The last `expr` is in tail position. Given no `expr`s, the result is true.
                   stx))))))))
 
 
-  (provide or)
-  (define_syntax or  // WARNING: Doc syntax isn't supported yet.
+  (define_syntax or
     '''
     (or expr ...)
 
@@ -83,8 +86,7 @@ The last `expr` is in tail position. Given no `expr`s, the result is false.
                   stx))))))))
 
 
-  (provide when)
-  (define_syntax when  // WARNING: Doc syntax isn't supported yet.
+  (define_syntax when
     '''
     (when test body ...)
 
@@ -111,8 +113,7 @@ A companion form is [`unless`](fusion/bool.html#unless).
                 stx)))))))
 
 
-  (provide unless)
-  (define_syntax unless  // WARNING: Doc syntax isn't supported yet.
+  (define_syntax unless
     '''
     (unless test body ...)
 
@@ -139,12 +140,10 @@ A companion form is [`when`](fusion/bool.html#when).
                 stx)))))))
 
 
-// TODO Support internal definitions in body sequences.
-//  https://github.com/ion-fusion/fusion-java/issues/67
-// Shouldn't use begin since that doesn't delimit the new scope that's needed.
+// TODO #67 Support internal definitions in body sequences.
+//  Shouldn't use begin since that doesn't delimit the new scope that's needed.
 
-  (provide cond)
-  (define_syntax cond  // WARNING: Doc syntax isn't supported yet.
+  (define_syntax cond
     '''
     (cond (test body ...) ...)
 

@@ -1,20 +1,17 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module private_sequence "/fusion/private/layer0"
+(module private_sequence "/fusion/private/layer08"
 
   (require
-    "/fusion/equality"
     "/fusion/iterator"
-    "/fusion/number"
     "/fusion/private/bind"
     "/fusion/private/collection"
-    "/fusion/private/control"
     "/fusion/private/define"
     "/fusion/private/sexp"
     "/fusion/procedure"
-    "/fusion/unsafe/list"
-    "/fusion/unsafe/sexp")
+    "/fusion/unsafe/sexp"
+  )
 
 
   (define_signature sequence_sig (collection_sig)
