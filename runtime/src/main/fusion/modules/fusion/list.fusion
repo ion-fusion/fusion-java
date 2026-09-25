@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module list "/fusion/private/kernel"
+(module list "/fusion/private/layer0"
 
   '''
 Operations for lists (_a.k.a._ arrays).
@@ -148,7 +148,7 @@ Other alternative traversal forms include [iterators][] and [comprehensions][].
     "/fusion/private/list"
   )
 
-  (provide_public_sequence)
+  (provide_signature_elements sequence_sig)
 
 
   (provide

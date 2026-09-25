@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module struct "/fusion/private/builtins"
+(module struct "/fusion/private/layer0"
 
   '''
 Operations for structs.
@@ -95,10 +95,11 @@ Other traversal forms include [iterators][] and [comprehensions][].
     "/fusion/private/bind"
     "/fusion/private/collection"
     "/fusion/private/control"
+    "/fusion/private/define"
     "/fusion/private/list"
     "/fusion/private/struct")
 
-  (provide_public_collection)
+  (provide_signature_elements collection_sig)
 
   (provide
     is_immutable_struct

@@ -1,0 +1,302 @@
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(module signature "/fusion/private/kernel"
+  '''
+Provides bulk export/import features.
+
+The `define_signature` form defines an object that aggregates a set of bindings into a
+_signature_.  A signature is intended to be `provided` by its defining module so it can
+be used.
+
+The `require_signature` form `require`s a signature and its bindings, even when those
+bindings were not explicitly `provide`d by the originating module.
+
+This is a very primitive version of Racket's
+[units](https://docs.racket-lang.org/reference/mzlib_unit.html).
+
+# Implementation Notes
+
+The primary trick here is that a signature is a macro holding the relevant bindings.
+The macro accepts a callback form that will receive the bindings.
+  '''
+
+  (require
+    "/fusion/private/intrinsic/exception"
+    "/fusion/private/intrinsic/sexp"
+    "/fusion/private/intrinsic/string"
+    "/fusion/private/intrinsic/syntax"
+
+    // To debug, it helps to switch between these:
+    // "/fusion/sexp"
+    (rename_in "/fusion/private/intrinsic/sexp"
+      (unsafe_pair_head head)
+      (unsafe_pair_tail tail))
+  )
+
+  (provide
+    define_signature
+    provide_signature
+    provide_signature_elements
+    require_signature
+  )
+
+
+  //====================================================================================
+  // Helpers
+
+  (define_values (expect_id)
+    (lambda (id)
+      (if (is_identifier id)
+        null
+        (wrong_syntax id "expected identifier"))))
+
+
+  (define_values (expect_ids)
+    (lambda (ids)
+      (if (is_pair ids)
+        (begin (expect_id (head ids))
+               (expect_ids (tail ids)))
+        (if (is_sexp ids)
+          null
+          (raise_argument_error "expect_ids" "sexp" 0 ids)))))
+
+
+  (define_values (capture)
+    '''
+    (capture ctx id)
+
+Replace the lexical context on the `id` with that from `ctx`.
+    '''
+    (lambda (ctx id)
+      (datum_to_syntax (syntax_to_datum id) ctx)))
+
+
+  (define_values (capture_ids)
+    '''
+    (capture_ids ctx ids)
+
+Replace the lexical context on the sexp of `ids` with that from `ctx`.
+Returns a sexp of identifiers.
+    '''
+    (lambda (ctx ids)
+      (if (is_pair ids)
+        (pair (capture ctx (head ids))
+              (capture_ids ctx (tail ids)))
+        (sexp))))
+
+
+  (define_values (symbol_append)
+    (lambda (text1 text2)
+      (string_to_symbol (string_append text1 text2))))
+
+
+  (define_values (concat)
+    (lambda (front back)
+      (if (is_pair front)
+        (pair (head front) (concat (tail front) back))
+        back)))
+
+
+  //====================================================================================
+  // Implementation
+
+  (define_syntax define_signature
+    '''
+    (define_signature sig_id (open_sig ...) id ...)
+
+Generates a `define_syntax` macro bound to `sig_id` which, when expanded, will
+pass the `id`s to another macro form.
+
+Each `open_sig` must identify another signature, and its elements are added to the new
+signature.
+
+With opened signatures `(open more ...)`, this form expands to:
+
+    (open _open_into sig_id (more ...) id ...)
+    =>
+    (_open_into (open_id ...) sig_id (more ...) id ...)
+    =>
+    (define_signature sig_id (more ...) id ... open_id ...)
+
+With no `open_sig`s, this form expands to:
+
+    (define_syntax SIG_ID
+      (lambda (stx) <...>)
+
+In other words, a signature is a macro that works like this:
+
+    (sig_id form arg ...)
+    =>
+    (form (ID ...) arg ...)
+
+    '''
+    (lambda (stx)
+      (letrec [(body      (tail (syntax_unwrap stx))),
+               (sig_id    (head body)),
+               (open_sexp (syntax_unwrap (head (tail body)))),
+               (id_sexp   (tail (tail body))),
+               (ids       (datum_to_syntax id_sexp))]
+      (if (is_sexp open_sexp)
+          (expect_ids open_sexp)
+          (wrong_syntax open_sexp "expected sexp of signatures to open"))
+      (expect_ids id_sexp)
+      (datum_to_syntax
+        (if (is_pair open_sexp)
+          // We have at least one signature to open, so add its ids to our list
+          (concat
+            (sexp (head open_sexp) (quote_syntax _open_into) sig_id (tail open_sexp))
+            id_sexp)
+          // Base case: we have no opens, so we can define the signature macro
+          (sexp (quote_syntax define_syntax) sig_id
+            (quasisyntax
+              (lambda (stx)  // invoked as (sig_id form arg ...)
+                (datum_to_syntax
+                  (pair (head (tail (syntax_unwrap stx)))  // the form argument
+                        (pair (quote_syntax (unsyntax ids))
+                              (tail (tail (syntax_unwrap stx)))))
+                  (head (syntax_unwrap stx))
+                  stx)))))
+        sig_id
+        stx))))
+
+
+  (define_syntax _open_into
+    '''
+    (_open_into (open_id ...) sig_id (more ...) id ...)
+
+Expands into:
+
+    (define_signature sig_id (more ...) id ... open_id ...)
+    '''
+    (lambda (stx)
+      (letrec [(body       (tail (syntax_unwrap stx))),
+               (open_ids   (syntax_unwrap (head body))),
+               (sig_id     (head (tail body))),
+               (more_opens (head (tail (tail body)))),
+               (orig_ids   (tail (tail (tail body)))),
+               (all_ids    (concat orig_ids open_ids))]
+        (datum_to_syntax
+          (pair (quote_syntax define_signature)
+                (pair sig_id
+                      (pair more_opens all_ids)))
+          (datum_to_syntax "no ctx")
+          stx))))
+
+
+  (define_syntax provide_signature_elements
+    '''
+    (provide_signature_elements sig_id)
+
+Exports the bindings in the referenced signature.
+
+Expands to:
+
+    (sig_id _provide_ids)
+    =>
+    (_provide_ids (id ...))
+    =>
+    (provide id ...)
+    '''
+    (lambda (stx)
+      (letrec [(sig_id (head (tail (syntax_unwrap stx))))]
+        (expect_id sig_id)
+        (datum_to_syntax
+          (sexp sig_id (quote_syntax _provide_ids))
+          sig_id
+          stx))))
+
+
+  (define_syntax _provide_ids
+    '''
+    (_provide_ids (id ...))
+
+Expands to:
+
+    (provide ID ...)
+    '''
+    (lambda (stx)
+      (letrec [(ids (head (tail (syntax_unwrap stx))))]
+        (datum_to_syntax
+          (pair (quote_syntax provide) (syntax_unwrap ids))
+          (datum_to_syntax "no ctx")
+          stx))))
+
+
+  (define_syntax provide_signature
+    '''
+    (provide_signature sig_id)
+
+Exports the referenced signature and its bindings.
+
+Expands to:
+
+    (begin
+      (provide sig_id)
+      (provide_signature_elements sig_id))
+    '''
+    (lambda (stx)
+      (letrec [(sig_id (head (tail (syntax_unwrap stx))))]
+        (expect_id sig_id)
+        (datum_to_syntax
+          (sexp (quote_syntax begin)
+                (sexp (quote_syntax provide) sig_id)
+                (sexp (quote_syntax provide_signature_elements) sig_id))
+          sig_id
+          stx))))
+
+
+  (define_syntax require_signature
+    '''
+    (require_signature module sig_id)
+
+Requires the given `sig_id` from the module, then requires its elements.
+
+Expands to:
+
+    (begin
+      (require (only_in MODULE SIG_ID))
+      (SIG_ID _require_from MODULE))
+
+The latter expands to `(_require_from (id ...) MODULE)`
+    '''
+    (lambda (stx)
+      (letrec [(body (tail (syntax_unwrap stx)))]
+        (if (is_pair body)
+          (if (is_pair (tail body)) null
+            (wrong_syntax stx "expected module path and signature id"))
+          (wrong_syntax stx "expected module path and signature id"))
+        (letrec [(module  (head body)),
+                 (sig_id  (head (tail body)))]
+          (expect_id sig_id)
+          (datum_to_syntax
+            (sexp (quote_syntax begin)
+                  (sexp (quote_syntax require)
+                        (sexp (quote_syntax only_in) module sig_id))
+                  (sexp sig_id (quote_syntax _require_from) module))
+            module
+            stx)))))
+
+
+  (define_syntax _require_from
+    '''
+    (_require_from (id ...) module)
+
+Expands to:
+
+    (require (only_in MODULE ID ...))
+    '''
+    (lambda (stx)
+      (letrec [(body    (tail (syntax_unwrap stx))),
+               (ids     (head body)),
+               (module  (head (tail body))),
+               // Give the ids the lexical context of the `require_signature` site,
+               // so they can be seen by the module.
+               (captured_ids (capture_ids module (syntax_unwrap ids)))]
+        (datum_to_syntax
+          (sexp (quote_syntax require)
+                (pair (quote_syntax only_in)
+                      (pair module captured_ids)))
+          (datum_to_syntax null)
+          stx))))
+)

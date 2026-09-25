@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module collection "/fusion/private/builtins"
+(module collection "/fusion/private/layer0"
 
   '''
 Generic operations over collection types.
@@ -17,5 +17,5 @@ The built-in collection types are [list](fusion/list.html),
 
   (require "/fusion/private/collection")
 
-  (provide_public_collection)
+  (provide_signature_elements collection_sig)
 )

@@ -1,0 +1,121 @@
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(require
+  "/fusion/experimental/check"
+)
+
+
+// `provide_signature_elements` does not provide the signature itself
+(module SigNotProvided "/fusion"
+  (require "/fusion/private/util/signature")
+  (define sig_elt1 1)
+  (define sig_elt2 2)
+  (define_signature private_sig ()
+    sig_elt1
+    sig_elt2)
+  (provide_signature_elements private_sig)
+)
+(module CheckSigNotProvided "/fusion"
+  (require "/fusion/experimental/check")
+
+  (require SigNotProvided)
+  (check === sig_elt1 1)
+  (check === sig_elt2 2)
+  (expect_syntax_error private_sig)
+)
+(require CheckSigNotProvided)
+
+
+(module Base "/fusion"
+  (require "/fusion/private/util/signature")
+
+  (define base1 1)
+  (define base2 "not in signature")
+  (define_signature base_sig ()
+    base1)
+
+  (provide_signature base_sig)
+  (provide base2)
+)
+(module CheckBase "/fusion"
+  (require "/fusion/experimental/check"
+           "/fusion/private/util/signature")
+
+  (require_signature Base base_sig)
+  (check === 1 base1)
+  (expect_syntax_error base2)
+)
+(require CheckBase)
+
+
+// Provide a signature without requiring its elements
+(module PassBase "/fusion"
+  (require "/fusion/private/util/signature"
+           (only_in Base base_sig))
+
+  (provide_signature_elements base_sig)
+
+  // We have not imported the signature's elements
+  (require "/fusion/experimental/check")
+  (expect_syntax_error base1)
+)
+(module CheckPassBase "/fusion"
+  (require "/fusion/experimental/check"
+           PassBase)
+  (check === 1 base1)
+)
+(require CheckPassBase)
+
+
+// Open the base signature into another one
+(module Mid "/fusion"
+  (require "/fusion/private/util/signature"
+           (only_in Base base_sig))
+
+  (define mid "mid")
+  (define_signature mid_sig (base_sig)
+    mid)
+  (provide_signature mid_sig)
+)
+(module CheckRequiringMid "/fusion"
+  (require "/fusion/experimental/check"
+           Mid)
+  (check === 1 base1)
+  (check === "mid" mid)
+)
+(require CheckRequiringMid)
+
+
+(module Side "/fusion"
+  (require "/fusion/private/util/signature")
+
+  (define side "side")
+  (define_signature side_sig () side)
+  (provide_signature side_sig)
+)
+
+
+// Multiple "inheritance"
+(module Top "/fusion"
+  (require "/fusion/private/util/signature")
+  (require_signature Side side_sig)
+  (require_signature Mid mid_sig)
+  (define_signature top_sig (side_sig mid_sig))
+  (provide_signature top_sig)
+)
+(module CheckTop "/fusion"
+  (require "/fusion/experimental/check"
+           Top)
+  (check === 1 base1)
+  (check === "mid" mid)
+  (check === "side" side)
+)
+
+
+// Test requiring into top-level
+(require "/fusion/private/util/signature")
+(require_signature "Top" top_sig)          // Check that string works as module path
+(check === 1 base1)
+(check === "mid" mid)
+(check === "side" side)

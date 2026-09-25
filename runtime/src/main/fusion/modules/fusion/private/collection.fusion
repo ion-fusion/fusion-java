@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module private_collection "/fusion/private/builtins"
+(module private_collection "/fusion/private/layer0"
 
   (require
     "/fusion/equality"
@@ -12,6 +12,7 @@
     "/fusion/private/bind"
     "/fusion/private/intrinsic/compare"
     "/fusion/private/control"
+    "/fusion/private/define"
     "/fusion/private/sexp"
     "/fusion/private/struct"
     "/fusion/unsafe/list"
@@ -19,18 +20,22 @@
     "/fusion/void")
 
 
-  (define_syntax provide_public_collection
-    '''
-Helper to keep inheriting modules in sync. This is a workaround to not having
-`all_from_out` per [#84](https://github.com/ion-fusion/fusion-java/issues/84).
-    '''
-    (lambda (stx)
-      (quote_syntax
-        (provide . any do element elt every find has_key is_collection is_empty none
-                 same_size size))))
-
-  (provide_public_collection)
-  (provide provide_public_collection)
+  (define_signature collection_sig ()
+    .
+    any
+    do
+    element
+    elt
+    every
+    find
+    has_key
+    is_collection
+    is_empty
+    none
+    same_size
+    size
+  )
+  (provide_signature collection_sig)
 
 
   (define (is_collection value)
