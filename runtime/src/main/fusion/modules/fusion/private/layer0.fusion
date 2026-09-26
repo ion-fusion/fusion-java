@@ -13,17 +13,26 @@ that library features can be coded at a high level.  We expect that the content 
 layers will shift over time, as intrinsic features are added or ported up to Fusion.
   '''
 
-  (require "/fusion/private/util/signature")
-  (provide
-    define_signature
-    provide_signature
-    provide_signature_elements
-    require_signature
+  (require
+    "/fusion/private/intrinsic/compare"
+    "/fusion/private/intrinsic/exception"
+    "/fusion/private/intrinsic/io"
+    "/fusion/private/intrinsic/list"
+    "/fusion/private/intrinsic/number"
+    "/fusion/private/intrinsic/parameter"
+    "/fusion/private/intrinsic/sequence"
+    "/fusion/private/intrinsic/sexp"
+    "/fusion/private/intrinsic/string"
+    "/fusion/private/intrinsic/struct"
+    "/fusion/private/intrinsic/syntax"
+    "/fusion/private/intrinsic/void"
+    "/fusion/private/util/signature"
   )
 
 
-  // Pass-through most bindings from kernel
-  (provide
+  (define_signature 'sig:layer0' ()
+
+    // kernel
     all_defined_out
     begin
     current_directory
@@ -52,16 +61,13 @@ layers will shift over time, as intrinsic features are added or ported up to Fus
     set
     unquote
     unsyntax
-    '#%top')
+    '#%top'
 
-  (require "/fusion/private/intrinsic/compare")
-  (provide
+    // compare
     = == === same ident
     < <= >= >
-  )
 
-  (require "/fusion/private/intrinsic/exception")
-  (provide
+    // exception
     call_with_handler
     raise
     raise_argument_error
@@ -69,19 +75,15 @@ layers will shift over time, as intrinsic features are added or ported up to Fus
     raise_contract_error
     raise_result_error
     unsafe_exn_message
-  )
 
-  (require "/fusion/private/intrinsic/io")
-  (provide
+    // io
     display
     ionize
     is_eof
     read
     write
-  )
 
-  (require "/fusion/private/intrinsic/list")
-  (provide
+    // list
     is_immutable_list
     is_list
     is_mutable_list
@@ -97,10 +99,8 @@ layers will shift over time, as intrinsic features are added or ported up to Fus
     unsafe_list_size
     unsafe_list_subseq
     unsafe_list_to_immutable_list
-  )
 
-  (require "/fusion/private/intrinsic/number")
-  (provide
+    // number
     + - * /
     ceiling
     decimal
@@ -111,23 +111,23 @@ layers will shift over time, as intrinsic features are added or ported up to Fus
     is_float
     random
     string_to_int
-  )
 
-  (require "/fusion/private/intrinsic/parameter")
-  (provide
+    // parameter
     make_parameter
     parameterize
-  )
 
-  (require "/fusion/private/intrinsic/sequence")
-  (provide
+    // sequence
     add
     append
     append_m
-  )
 
-  (require "/fusion/private/intrinsic/string")
-  (provide
+    // signature
+    define_signature
+    provide_signature
+    provide_signature_elements
+    require_signature
+
+    // string
     is_string
     string_append
     string_contains
@@ -142,20 +142,16 @@ layers will shift over time, as intrinsic features are added or ported up to Fus
     string_to_upper
     string_to_symbol
     symbol_to_string
-  )
 
-  (require "/fusion/private/intrinsic/sexp")
-  (provide
+    // sexp
     is_pair
     is_sexp
     pair
     sexp
     unsafe_pair_head
     unsafe_pair_tail
-  )
 
-  (require "/fusion/private/intrinsic/struct")
-  (provide
+    // struct
     is_immutable_struct
     is_mutable_struct
     is_struct
@@ -176,10 +172,8 @@ layers will shift over time, as intrinsic features are added or ported up to Fus
     unsafe_struct_puts
     unsafe_struct_puts_m
     unsafe_struct_ref
-  )
 
-  (require "/fusion/private/intrinsic/syntax")
-  (provide
+    // syntax
     bound_identifier_equal
     datum_to_syntax
     define_syntax
@@ -203,16 +197,29 @@ layers will shift over time, as intrinsic features are added or ported up to Fus
     syntax_unwrap
     unsyntax
     wrong_syntax
-  )
 
-  (require "/fusion/private/intrinsic/void")
-  (provide
+    // void
     is_void
     void
+
+    // TODO Move remaining things still defined below
+    annotate
+    annotations
+    apply
+    is_blob
+    is_bool
+    is_clob
+    is_null
+    is_null_null
+    is_procedure
+    is_symbol
+    not
+    size
+    values
   )
 
+  (provide_signature 'sig:layer0')
 
-  (provide (all_defined_out))
 
 
   (define_values (annotate)

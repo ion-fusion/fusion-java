@@ -3,42 +3,7 @@
 
 (module builtins "/fusion/private/layer0"
 
-
-  // Pass-through bindings from kernel
-  (provide all_defined_out begin define_values lambda module
-    only_in prefix_in provide rename_in rename_out require)
-
-  // Pass-through bindings from layer0
-  (provide
-    '#%top'
-    apply
-    if
-    is_blob
-    is_bool
-    is_clob
-    is_immutable_list
-    is_list
-    is_mutable_list
-    is_null
-    is_null_null
-    is_procedure
-    is_sexp
-    is_stretchy_list
-    is_string
-    is_struct
-    is_symbol
-    let_values
-    letrec
-    list
-    mutable_list
-    not
-    quasiquote
-    quote
-    set
-    size
-    stretchy_list
-    unquote
-    values)
+  (provide_signature_elements 'sig:layer0')
 
 
   (require "/fusion/private/define")
