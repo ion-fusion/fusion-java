@@ -23,8 +23,9 @@ The macro accepts a callback form that will receive the bindings.
 
   (require
     "/fusion/private/intrinsic/exception"
+    "/fusion/private/intrinsic/compare"
+    "/fusion/private/intrinsic/number"
     "/fusion/private/intrinsic/sexp"
-    "/fusion/private/intrinsic/string"
     "/fusion/private/intrinsic/syntax"
 
     // To debug, it helps to switch between these:
@@ -48,18 +49,26 @@ The macro accepts a callback form that will receive the bindings.
   (define_values (expect_id)
     (lambda (id)
       (if (is_identifier id)
-        null
+        id
         (wrong_syntax id "expected identifier"))))
 
 
+  (define_values (expect_stx_sexp)
+    (lambda (stx)
+      (if (is_sexp (syntax_unwrap stx))
+        (syntax_unwrap stx)
+        (wrong_syntax stx "expected sexp"))))
+
+
   (define_values (expect_ids)
-    (lambda (ids)
-      (if (is_pair ids)
-        (begin (expect_id (head ids))
-               (expect_ids (tail ids)))
-        (if (is_sexp ids)
-          null
-          (raise_argument_error "expect_ids" "sexp" 0 ids)))))
+    (lambda (sexp)
+      // Use local recursion so we can return the outside sexp
+      (letrec [(loop (lambda (ids)
+                       (if (is_pair ids)
+                         (begin (expect_id (head ids))
+                                (loop (tail ids)))
+                         sexp)))]
+        (loop sexp))))
 
 
   (define_values (capture)
@@ -86,16 +95,34 @@ Returns a sexp of identifiers.
         (sexp))))
 
 
-  (define_values (symbol_append)
-    (lambda (text1 text2)
-      (string_to_symbol (string_append text1 text2))))
-
-
   (define_values (concat)
     (lambda (front back)
       (if (is_pair front)
         (pair (head front) (concat (tail front) back))
         back)))
+
+
+ (define_values (sexp_size)
+   (lambda (s)
+     (if (is_pair s)
+       (+ 1 (sexp_size (tail s)))
+       0)))
+
+
+  (define_values (expect_body_size)
+    (lambda (stx size)
+      (letrec [(body_sexp (tail (syntax_unwrap stx)))]
+        (if (=== size (sexp_size body_sexp))
+          body_sexp
+          (wrong_syntax stx)))))
+
+  (define_values (expect_body_size_at_least)
+    (lambda (stx min)
+      // Hold onto the original args for error messaging
+      (letrec [(body_sexp (tail (syntax_unwrap stx)))]
+        (if (<= min (sexp_size body_sexp))
+          body_sexp
+          (wrong_syntax stx)))))
 
 
   //====================================================================================
@@ -132,15 +159,11 @@ In other words, a signature is a macro that works like this:
 
     '''
     (lambda (stx)
-      (letrec [(body      (tail (syntax_unwrap stx))),
-               (sig_id    (head body)),
-               (open_sexp (syntax_unwrap (head (tail body)))),
-               (id_sexp   (tail (tail body))),
+      (letrec [(body      (expect_body_size_at_least stx 2)),
+               (sig_id    (expect_id (head body))),
+               (open_sexp (expect_ids (expect_stx_sexp (head (tail body))))),
+               (id_sexp   (expect_ids (tail (tail body)))),
                (ids       (datum_to_syntax id_sexp))]
-      (if (is_sexp open_sexp)
-          (expect_ids open_sexp)
-          (wrong_syntax open_sexp "expected sexp of signatures to open"))
-      (expect_ids id_sexp)
       (datum_to_syntax
         (if (is_pair open_sexp)
           // We have at least one signature to open, so add its ids to our list
@@ -199,8 +222,8 @@ Expands to:
     (provide id ...)
     '''
     (lambda (stx)
-      (letrec [(sig_id (head (tail (syntax_unwrap stx))))]
-        (expect_id sig_id)
+      (letrec [(body   (expect_body_size stx 1)),
+               (sig_id (expect_id (head body)))]
         (datum_to_syntax
           (sexp sig_id (quote_syntax _provide_ids))
           sig_id
@@ -236,8 +259,8 @@ Expands to:
       (provide_signature_elements sig_id))
     '''
     (lambda (stx)
-      (letrec [(sig_id (head (tail (syntax_unwrap stx))))]
-        (expect_id sig_id)
+      (letrec [(body   (expect_body_size stx 1)),
+               (sig_id (expect_id (head body)))]
         (datum_to_syntax
           (sexp (quote_syntax begin)
                 (sexp (quote_syntax provide) sig_id)
@@ -261,21 +284,16 @@ Expands to:
 The latter expands to `(_require_from (id ...) MODULE)`
     '''
     (lambda (stx)
-      (letrec [(body (tail (syntax_unwrap stx)))]
-        (if (is_pair body)
-          (if (is_pair (tail body)) null
-            (wrong_syntax stx "expected module path and signature id"))
-          (wrong_syntax stx "expected module path and signature id"))
-        (letrec [(module  (head body)),
-                 (sig_id  (head (tail body)))]
-          (expect_id sig_id)
-          (datum_to_syntax
-            (sexp (quote_syntax begin)
-                  (sexp (quote_syntax require)
-                        (sexp (quote_syntax only_in) module sig_id))
-                  (sexp sig_id (quote_syntax _require_from) module))
-            module
-            stx)))))
+      (letrec [(body    (expect_body_size stx 2)),
+               (module  (head body)),
+               (sig_id  (expect_id (head (tail body))))]
+        (datum_to_syntax
+          (sexp (quote_syntax begin)
+                (sexp (quote_syntax require)
+                      (sexp (quote_syntax only_in) module sig_id))
+                (sexp sig_id (quote_syntax _require_from) module))
+          module
+          stx))))
 
 
   (define_syntax _require_from

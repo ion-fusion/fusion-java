@@ -5,6 +5,140 @@
   "/fusion/experimental/check"
 )
 
+(define_check (check_msg_contains exn substring)
+  (check string_contains (exn_message exn) substring))
+
+
+//====================================================================================
+// Syntax error handling
+// These forms use low-level, unsafe operators, so weak error checking can cause
+// crashes when these forms are misused.
+
+// define_signature
+
+(expect_syntax_error
+  (module BadForm "/fusion"
+    (require "/fusion/private/util/signature")
+    (define_signature)))
+
+(expect_syntax_error
+  (module BadForm "/fusion"
+    (require "/fusion/private/util/signature")
+    (define_signature sig)))
+
+(check_msg_contains
+  (expect_syntax_error
+    (module BadForm "/fusion"
+      (require "/fusion/private/util/signature")
+      (define_signature 12 ())))
+  "expected identifier")
+
+(check_msg_contains
+  (expect_syntax_error
+    (module BadForm "/fusion"
+      (require "/fusion/private/util/signature")
+      (define_signature sig [])))
+  "expected sexp")
+
+(check_msg_contains
+  (expect_syntax_error
+    (module BadForm "/fusion"
+      (require "/fusion/private/util/signature")
+      (define_signature sig (1))))
+  "expected identifier")
+
+(check_msg_contains
+  (expect_syntax_error
+    (module BadForm "/fusion"
+      (require "/fusion/private/util/signature")
+      (define_signature sig () "not id")))
+  "expected identifier")
+
+
+// provide_signature
+
+(expect_syntax_error
+  (module BadForm "/fusion"
+    (require "/fusion/private/util/signature")
+    (provide_signature)))
+
+(expect_syntax_error
+  (module BadForm "/fusion"
+    (require "/fusion/private/util/signature")
+    (define_signature sig1 ())
+    (define_signature sig2 ())
+    (provide_signature sig1 sig2)))
+
+(check_msg_contains
+  (expect_syntax_error
+    (module BadForm "/fusion"
+      (require "/fusion/private/util/signature")
+      (provide_signature "not id")))
+  "expected identifier")
+
+(check_msg_contains
+  (expect_syntax_error
+    (module BadForm "/fusion"
+      (require "/fusion/private/util/signature")
+      (provide_signature foo)))
+  "unbound identifier")
+
+
+// provide_signature_elements
+
+(expect_syntax_error
+  (module BadForm "/fusion"
+    (require "/fusion/private/util/signature")
+    (provide_signature_elements)))
+
+(expect_syntax_error
+  (module BadForm "/fusion"
+    (require "/fusion/private/util/signature")
+    (define_signature sig1 ())
+    (define_signature sig2 ())
+    (provide_signature_elements sig1 sig2)))
+
+(check_msg_contains
+  (expect_syntax_error
+    (module BadForm "/fusion"
+      (require "/fusion/private/util/signature")
+      (provide_signature_elements "not id")))
+  "expected identifier")
+
+(check_msg_contains
+  (expect_syntax_error
+    (module BadForm "/fusion"
+      (require "/fusion/private/util/signature")
+      (provide_signature_elements foo)))
+  "unbound identifier")
+
+
+// require_signature
+
+(expect_syntax_error
+  (module BadForm "/fusion"
+    (require "/fusion/private/util/signature")
+    (require_signature)))
+
+(expect_syntax_error
+  (module BadForm "/fusion"
+    (require "/fusion/private/util/signature")
+    (require_signature "/fusion")))
+
+(expect_syntax_error
+  (module BadForm "/fusion"
+    (require "/fusion/private/util/signature")
+    (require_signature "/fusion" sig1 sig2)))
+
+(check_msg_contains
+  (expect_syntax_error
+    (module BadForm "/fusion"
+      (require "/fusion/private/util/signature")
+      (require_signature "/fusion" "not id")))
+  "expected identifier")
+
+
+  //====================================================================================
 
 // `provide_signature_elements` does not provide the signature itself
 (module SigNotProvided "/fusion"
