@@ -1,0 +1,105 @@
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(module intrinsic_atoms "/fusion/private/kernel"
+  '''
+Trivial atomic types: bool, null, void.
+
+Also annotations, since there's no clear home for them.
+  '''
+
+  (provide (all_defined_out))
+
+
+  (define_values (annotate)
+    '''
+    (annotate value text ...)
+
+Applies the given annotations to a `value`, returning a (shallow) copy if
+necessary to avoid mutating it.  Any annotations on `value` are removed,
+so `(annotate value)` effectively de-annotates a value.
+
+The `value` must be annotatable; that is, it must be one of the Ion types.
+The `text` arguments must be non-null strings or symbols.
+
+    (annotate 123 "a")              =>  a::123
+    (let [(v (quote a::123))]
+      (annotate v))                 =>  123
+    (let [(anns ["a", (quote b)])]
+      (apply annotate 123 anns))    =>  a::b::123
+
+To extract annotations from a value, use
+[`annotations`](fusion.html#annotations).
+    '''
+    (java_new "dev.ionfusion.fusion.AnnotateProc"))
+
+
+  (define_values (annotations)
+    '''
+    (annotations value)
+
+Returns a non-null immutable list of symbols containing the user type
+annotations on the `value`.
+
+    (annotations 123)                =>  []
+    (annotations (quote a::b::123))  =>  [a, b]
+
+To put annotations onto a value, use [`annotate`](fusion.html#annotate).
+    '''
+    (java_new "dev.ionfusion.fusion.TypeAnnotationsProc"))
+
+
+  (define_values (is_bool)
+    '''
+    (is_bool value)
+
+Determines whether a `value` is of type `bool`, returning `true` or `false`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionBool$IsBoolProc"))
+
+
+  (define_values (is_null)
+     '''
+     (is_null value)
+
+Returns `true` when `value` is _any_ Ion null, `false` otherwise.
+     '''
+     (java_new "dev.ionfusion.fusion.IsNullProc"))
+
+
+  (define_values (is_null_null)
+    '''
+    (is_null_null value)
+
+Determines whether a `value` is `null.null`, returning `true` or `false`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionNull$IsNullNullProc"))
+
+
+  (define_values (is_void)
+    '''
+    (is_void value)
+
+Determines whether a `value` is the Fusion void value.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionVoid$IsVoidProc"))
+
+
+  (define_values (not)
+    '''
+    (not value)
+
+Returns `true` if `value` is untruthy, `false` if `value` is truthy. Truthiness
+is as defined by [`if`](fusion/bool.html#if).
+    '''
+    (java_new "dev.ionfusion.fusion.NotProc"))
+
+
+  (define_values (void)
+    '''
+    (void arg ...)
+
+Returns the singular void value, ignoring all `arg`s.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionVoid$VoidProc"))
+)

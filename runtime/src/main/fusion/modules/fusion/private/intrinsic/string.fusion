@@ -15,6 +15,15 @@ Determines whether a `value` is of type `string`, returning `true` or `false`.
     (java_new "dev.ionfusion.fusion.FusionString$IsStringProc"))
 
 
+  (define_values (is_symbol)
+    '''
+    (is_symbol value)
+
+Determines whether a `value` is of type `symbol`, returning `true` or `false`.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionSymbol$IsSymbolProc"))
+
+
   (define_values (string_append)
     '''
     (string_append text ...)

@@ -14,18 +14,20 @@ layers will shift over time, as intrinsic features are added or ported up to Fus
   '''
 
   (require
+    "/fusion/private/intrinsic/atoms"
     "/fusion/private/intrinsic/compare"
     "/fusion/private/intrinsic/exception"
     "/fusion/private/intrinsic/io"
     "/fusion/private/intrinsic/list"
+    "/fusion/private/intrinsic/lob"
     "/fusion/private/intrinsic/number"
     "/fusion/private/intrinsic/parameter"
+    "/fusion/private/intrinsic/procedure"
     "/fusion/private/intrinsic/sequence"
     "/fusion/private/intrinsic/sexp"
     "/fusion/private/intrinsic/string"
     "/fusion/private/intrinsic/struct"
     "/fusion/private/intrinsic/syntax"
-    "/fusion/private/intrinsic/void"
     "/fusion/private/util/signature"
   )
 
@@ -62,6 +64,16 @@ layers will shift over time, as intrinsic features are added or ported up to Fus
     unquote
     unsyntax
     '#%top'
+
+    // atoms
+    annotate
+    annotations
+    is_bool
+    is_null
+    is_null_null
+    is_void
+    not
+    void
 
     // compare
     = == === same ident
@@ -100,6 +112,12 @@ layers will shift over time, as intrinsic features are added or ported up to Fus
     unsafe_list_subseq
     unsafe_list_to_immutable_list
 
+    // lob
+    is_blob
+    is_clob
+    lob_digest
+    unsafe_lob_to_hex
+
     // number
     + - * /
     ceiling
@@ -116,10 +134,16 @@ layers will shift over time, as intrinsic features are added or ported up to Fus
     make_parameter
     parameterize
 
+    // procedure
+    apply
+    is_procedure
+    values
+
     // sequence
     add
     append
     append_m
+    size
 
     // signature
     define_signature
@@ -129,6 +153,7 @@ layers will shift over time, as intrinsic features are added or ported up to Fus
 
     // string
     is_string
+    is_symbol
     string_append
     string_contains
     string_ends_with
@@ -197,176 +222,7 @@ layers will shift over time, as intrinsic features are added or ported up to Fus
     syntax_unwrap
     unsyntax
     wrong_syntax
-
-    // void
-    is_void
-    void
-
-    // TODO Move remaining things still defined below
-    annotate
-    annotations
-    apply
-    is_blob
-    is_bool
-    is_clob
-    is_null
-    is_null_null
-    is_procedure
-    is_symbol
-    not
-    size
-    values
   )
 
   (provide_signature 'sig:layer0')
-
-
-
-  (define_values (annotate)
-    '''
-    (annotate value text ...)
-
-Applies the given annotations to a `value`, returning a (shallow) copy if
-necessary to avoid mutating it.  Any annotations on `value` are removed,
-so `(annotate value)` effectively de-annotates a value.
-
-The `value` must be annotatable; that is, it must be one of the Ion types.
-The `text` arguments must be non-null strings or symbols.
-
-    (annotate 123 "a")              =>  a::123
-    (let [(v (quote a::123))]
-      (annotate v))                 =>  123
-    (let [(anns ["a", (quote b)])]
-      (apply annotate 123 anns))    =>  a::b::123
-
-To extract annotations from a value, use
-[`annotations`](fusion.html#annotations).
-    '''
-    (java_new "dev.ionfusion.fusion.AnnotateProc"))
-
-
-  (define_values (annotations)
-    '''
-    (annotations value)
-
-Returns a non-null immutable list of symbols containing the user type
-annotations on the `value`.
-
-    (annotations 123)                =>  []
-    (annotations (quote a::b::123))  =>  [a, b]
-
-To put annotations onto a value, use [`annotate`](fusion.html#annotate).
-    '''
-    (java_new "dev.ionfusion.fusion.TypeAnnotationsProc"))
-
-
-  (define_values (apply)
-    '''
-    (apply proc arg ... sequence)
-
-Calls the given `proc` with arguments that are the (optional) `arg`s prepended
-to the elements of `sequence`.  The `proc` is called in tail position.
-
-    (apply + [1, 2])             =>  3
-    (apply + 10 11 (sexp 1 2))   =>  24
-    '''
-    (java_new "dev.ionfusion.fusion.ApplyProc"))
-
-
-  (define_values (is_blob)
-    '''
-    (is_blob value)
-
-Determines whether a `value` is of type `blob`, returning `true` or `false`.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionBlob$IsBlobProc"))
-
-
-  (define_values (is_bool)
-    '''
-    (is_bool value)
-
-Determines whether a `value` is of type `bool`, returning `true` or `false`.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionBool$IsBoolProc"))
-
-
-  (define_values (is_clob)
-    '''
-    (is_clob value)
-
-Determines whether a `value` is of type `clob`, returning `true` or `false`.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionClob$IsClobProc"))
-
-
-  (define_values (is_null)
-     '''
-     (is_null value)
-
-Returns `true` when `value` is _any_ Ion null, `false` otherwise.
-     '''
-     (java_new "dev.ionfusion.fusion.IsNullProc"))
-
-
-  (define_values (is_null_null)
-    '''
-    (is_null_null value)
-
-Determines whether a `value` is `null.null`, returning `true` or `false`.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionNull$IsNullNullProc"))
-
-
-  (define_values (is_procedure)
-    '''
-    (is_procedure value)
-
-Returns `true` when `value` is a procedure, `false` otherwise.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionProcedure$IsProcedureProc"))
-
-
-  (define_values (is_symbol)
-    '''
-    (is_symbol value)
-
-Determines whether a `value` is of type `symbol`, returning `true` or `false`.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionSymbol$IsSymbolProc"))
-
-
-  (define_values (not)
-    '''
-    (not value)
-
-Returns `true` if `value` is untruthy, `false` if `value` is truthy. Truthiness
-is as defined by [`if`](fusion/bool.html#if).
-    '''
-    (java_new "dev.ionfusion.fusion.NotProc"))
-
-
-  (define_values (size)
-    '''
-    (size collection)
-
-Returns the number of elements in the `collection`.
-The size of `null.list` (_etc._) is zero.  If `collection` is an improper sexp,
-an exception is thrown.
-
-**Warning:** Computing the size of an sexp takes linear time, since it must
-traverse the linked list of pairs to count elements.
-    '''
-    (java_new "dev.ionfusion.fusion.FusionCollection$SizeProc"))
-
-
-  (define_values (values)
-    '''
-    (values value ...)
-
-Produces [multiple results](fusion/procedure.html#results), returning the zero
-or more `value`s. Usually used in conjuction with `let_values` to bind the
-results to names.
-    '''
-    (java_new "dev.ionfusion.fusion.ValuesProc"))
 )

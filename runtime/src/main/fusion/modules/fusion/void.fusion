@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module void "/fusion/private/kernel"
+(module void "/fusion/private/layer0"
 
   '''
 The singular no-value value.
@@ -67,7 +67,6 @@ Along with all nulls and `false`, the void value is [untruthy][]:
   [untruthy]: fusion/bool.html#truthiness
   '''
 
-  (require "/fusion/private/intrinsic/void")
   (provide
     is_void
     void

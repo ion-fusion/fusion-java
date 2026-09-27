@@ -46,4 +46,18 @@ Any argument that is `null.list` (or `null.sexp`) is treated as if it were an
 empty list (or empty sexp).
     '''
     (java_new "dev.ionfusion.fusion.FusionSequence$AppendMProc"))
+
+
+  (define_values (size)
+    '''
+    (size collection)
+
+Returns the number of elements in the `collection`.
+The size of `null.list` (_etc._) is zero.  If `collection` is an improper sexp,
+an exception is thrown.
+
+**Warning:** Computing the size of an sexp takes linear time, since it must
+traverse the linked list of pairs to count elements.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionCollection$SizeProc"))
 )

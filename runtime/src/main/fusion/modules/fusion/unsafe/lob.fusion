@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module lob '/fusion/private/builtins'
+(module lob "/fusion/private/layer0"
 
   '''
 Unsafe (but fast) operations on lobs (blob and clob).
@@ -15,21 +15,7 @@ See the module [`/fusion/lob`](fusion/lob.html) for more information and
 related operations on lobs.
   '''
 
-  (require
-    "/fusion/ffi/java"
-  )
-
   (provide
     unsafe_lob_to_hex
   )
-
-  (define unsafe_lob_to_hex
-    '''
-    (unsafe_lob_to_hex lob)
-
-Converts a lob to its hex encoding as a string.  Returns `null.string`
-when given `null.clob` or `null.blob`.  The returned hex string does not
-contain a '0x' prefix, and will only contain the characters [0-9a-f].
-    '''
-    (java_new "dev.ionfusion.fusion.FusionLob$UnsafeLobToHexProc"))
 )

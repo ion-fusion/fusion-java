@@ -1,0 +1,40 @@
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(module intrinsic_procedure "/fusion/private/kernel"
+
+  (provide (all_defined_out))
+
+
+  (define_values (apply)
+    '''
+    (apply proc arg ... sequence)
+
+Calls the given `proc` with arguments that are the (optional) `arg`s prepended
+to the elements of `sequence`.  The `proc` is called in tail position.
+
+    (apply + [1, 2])             =>  3
+    (apply + 10 11 (sexp 1 2))   =>  24
+    '''
+    (java_new "dev.ionfusion.fusion.ApplyProc"))
+
+
+  (define_values (is_procedure)
+    '''
+    (is_procedure value)
+
+Returns `true` when `value` is a procedure, `false` otherwise.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionProcedure$IsProcedureProc"))
+
+
+  (define_values (values)
+    '''
+    (values value ...)
+
+Produces [multiple results](fusion/procedure.html#results), returning the zero
+or more `value`s. Usually used in conjuction with `let_values` to bind the
+results to names.
+    '''
+    (java_new "dev.ionfusion.fusion.ValuesProc"))
+)
