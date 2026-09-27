@@ -88,7 +88,6 @@ of bound identifiers:
     "/fusion/private/bind"
     "/fusion/private/define"
     "/fusion/private/procedure"
-    "/fusion/private/sexp"
     "/fusion/unsafe/sexp"
   )
 

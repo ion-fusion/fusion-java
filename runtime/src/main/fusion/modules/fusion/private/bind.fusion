@@ -3,16 +3,6 @@
 
 (module bind "/fusion/private/builtins"
 
-
-  (require
-    "/fusion/experimental/syntax"
-    "/fusion/private/intrinsic/compare"
-    "/fusion/private/sexp"
-    "/fusion/unsafe/list"
-    "/fusion/unsafe/sexp"
-    )
-
-
   // From builtins
   (provide let_values letrec values)
 

@@ -4,10 +4,8 @@
 (module private_procedure "/fusion/private/builtins"
 
   (require
-    "/fusion/experimental/syntax"
     "/fusion/private/bind"
-    "/fusion/private/sexp"
-    "/fusion/unsafe/sexp")
+  )
 
   (provide thunk_expander)
 

@@ -8,7 +8,6 @@
     "/fusion/private/bind"
     "/fusion/private/collection"
     "/fusion/private/define"
-    "/fusion/private/sexp"
     "/fusion/procedure"
     "/fusion/unsafe/sexp"
   )

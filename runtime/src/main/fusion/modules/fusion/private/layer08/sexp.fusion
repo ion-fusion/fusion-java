@@ -1,0 +1,112 @@
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(module sexp_08 "/fusion/private/layer0"
+
+  (define_signature 'sig:layer08:sexp' ()
+    head
+    is_pair
+    is_sexp
+    pair
+    reverse
+    sexp
+    sexp_append
+    tail
+    unsafe_pair_head
+    unsafe_pair_tail
+  )
+  (provide_signature 'sig:layer08:sexp')
+
+
+  (define_values (head)
+    '''
+    (head sexp)
+
+Returns the first element of `sexp`.  If `sexp` is a pair, the result is its
+head slot.  If `sexp` isn't a pair (that is, it's zero-length or `null.sexp`),
+the result is void.
+    '''
+    (lambda (sexp)
+      (if (is_pair sexp)
+        (unsafe_pair_head sexp)
+        (if (is_sexp sexp)
+          (void)
+          (raise_argument_error "head" "sexp" 0 sexp)))))
+
+
+  (define_values (tail)
+    '''
+    (tail sexp)
+
+Returns the elements _after_ the first element of `sexp`.  If `sexp` is a
+pair, the result is its tail slot.  If `sexp` isn't a pair (that is, it's
+zero-length or `null.sexp`), the result is void.
+    '''
+    (lambda (sexp)
+      (if (is_pair sexp)
+        (unsafe_pair_tail sexp)
+        (if (is_sexp sexp)
+          (void)
+          (raise_argument_error "tail" "sexp" 0 sexp)))))
+
+
+  (define_values (sexp_append)
+    '''
+    (sexp_append front back)
+
+Appends two sexps, reusing the second.
+
+This is a temporary, limited implementation for internal use.
+    '''
+    (lambda (front back)
+      (letrec
+        [(loop
+          (lambda (s1 s2)
+            (if (is_pair s1)
+              (pair (unsafe_pair_head s1)
+                    (loop (unsafe_pair_tail s1) s2))
+              (if (is_sexp s1)
+                // s1 must be () or null.sexp
+                (if (is_sexp s2)
+                  (if (is_null s2) (quote ()) s2)
+                  (raise_argument_error "sexp_append" "sexp" 1 front back))
+                (raise_argument_error "sexp_append" "sexp" 0 front back)))))]
+        (loop front back))))
+
+
+  (define_values (reverse)
+    '''
+    (reverse sexp)
+
+Reverses the elements of a proper `sexp`.
+
+    (reverse (sexp 1 2 3))   =>  (3 2 1)
+
+Fresh pairs are allocated so any annotations on the input sexp (but not its
+elements) are lost.
+
+    (reverse (quote a::(1 a::2 3)))  => (3 a::2 1)
+    (reverse (quote a::()))          => ()
+    (reverse (quote a::null.sexp))   => null.sexp
+    '''
+    (lambda (sexp)
+      (letrec
+        [(bad_arg
+           (lambda () (raise_argument_error "reverse" "sexp" 0 sexp))),
+         (reverse_onto
+           //  Reverses the `front` sexp, prepending onto the `back` sexp.
+           (lambda (front back)
+            (if (is_pair front)
+              (reverse_onto (unsafe_pair_tail front)
+                (pair (unsafe_pair_head front) back))
+              (if (is_sexp front)  // Does the front terminate properly?
+                (if (is_null front)
+                  (bad_arg)
+                  back)
+                (bad_arg)))))]
+        (if (is_sexp sexp)
+          (if (is_null sexp)
+            (quote null.sexp)  // Intentionally drops annotations, for uniformity.
+            (reverse_onto sexp (quote ())))
+          (bad_arg)))))
+)

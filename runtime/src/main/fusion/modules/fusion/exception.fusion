@@ -48,7 +48,6 @@ with handlers.
     "/fusion/io"
     "/fusion/private/bind"
     "/fusion/private/intrinsic/exception"  // for _make_assertion_error
-    "/fusion/private/sexp"
     "/fusion/string"
   )
 

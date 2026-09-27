@@ -8,7 +8,6 @@
     "/fusion/iterator"
     "/fusion/private/bind"
     "/fusion/private/define"
-    "/fusion/private/sexp"
   )
 
 

@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module sexp "/fusion/private/layer0"
+(module sexp "/fusion/private/layer08"
 
   '''
 Operations for sexps (_a.k.a._ S-expressions) and pairs.
@@ -25,7 +25,6 @@ sexps.
 
   (require
     "/fusion/private/sequence"
-    "/fusion/private/sexp"
   )
 
   (provide_signature_elements sequence_sig)
