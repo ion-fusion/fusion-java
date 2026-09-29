@@ -18,9 +18,16 @@ representation required for constant-time access.
 [CCS]: http://www.unicode.org/glossary/#coded_character_sequence
   '''
 
+  (require
+    "/fusion/private/layer08/actual"
+  )
+
 
   (provide
+    is_actual_string
+    is_actual_symbol
     is_string
+    is_symbol
     string_append
     string_contains
     string_ends_with

@@ -7,7 +7,11 @@
 Operations on arrays of octets, also known as "lobs" (blob and clob).
   '''
 
+  (require "/fusion/private/layer08/actual")
+
   (provide
+    is_actual_blob
+    is_actual_clob
     is_blob
     is_clob
     lob_digest

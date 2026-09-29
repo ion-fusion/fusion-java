@@ -1,0 +1,77 @@
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(module actual "/fusion/private/layer0"
+
+  (require
+    "/fusion/private/layer08/string"
+  )
+
+  (define_signature 'sig:actual' ()
+    is_actual
+    is_actual_blob
+    is_actual_bool
+    is_actual_clob
+    is_actual_decimal
+    is_actual_float
+    is_actual_int
+    is_actual_list
+    is_actual_sexp
+    is_actual_string
+    is_actual_struct
+    is_actual_symbol
+    is_actual_timestamp
+  )
+  (provide_signature 'sig:actual')
+
+
+  (define_values (is_actual)
+    '''
+    (is_actual value)
+
+Determines whether `value` is _actual_: not null and not void.
+Returns `true` or `false`.
+    '''
+    (lambda (v)
+      (if (is_null v) false
+        (if (is_void v) false
+          true))))
+
+
+  (define_syntax define_actual
+    (lambda (stx)
+      (letrec [(body        (unsafe_pair_tail (syntax_unwrap stx))),
+               (type_stx    (unsafe_pair_head body)),
+               (type        (syntax_unwrap type_stx)),
+               (base_pred   (symbol_append "is_"        type)),
+               (actual_pred (symbol_append "is_actual_" type)),
+               (docs (string_append
+                        "\n    (" actual_pred " value)\n\n"
+                        "Determines whether `value` is a non-null " type
+                        ", returning `true` or `false`."))]
+        (datum_to_syntax
+//          (define_values (is_actual_T)
+//            <docs>
+//            (lambda (v)
+//              (if (is_null v) false (is_T v))))
+          (quasiquote
+            (define_values ((unquote actual_pred))
+              (unquote docs)
+              (lambda (v)
+                (if (is_null v) false ((unquote base_pred) v)))))
+          type_stx
+          stx))))
+
+  (define_actual blob)
+  (define_actual bool)
+  (define_actual clob)
+  (define_actual decimal)
+  (define_actual float)
+  (define_actual int)
+  (define_actual list)
+  (define_actual sexp)
+  (define_actual string)
+  (define_actual struct)
+  (define_actual symbol)
+  (define_actual timestamp)
+)

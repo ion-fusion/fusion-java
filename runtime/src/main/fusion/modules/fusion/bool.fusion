@@ -93,11 +93,13 @@ forms return the result of the last expression evaluated rather than always
   [when]:   fusion/bool.html#when
   '''
 
+  (require "/fusion/private/layer08/actual")
 
   (provide
     and
     cond
     if
+    is_actual_bool
     is_bool
     is_false
     is_truthy

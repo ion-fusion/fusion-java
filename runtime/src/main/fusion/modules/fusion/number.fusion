@@ -1,17 +1,20 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module number "/fusion/private/kernel"
+(module number "/fusion/private/layer08"
 
   '''
 Operations on numbers (int, decimal, and float).
   '''
 
 
-  (require "/fusion/private/intrinsic/compare")
-  (provide < <= = >= >)
+  (require
+    "/fusion/private/layer08/actual"
+  )
 
-  (require "/fusion/private/intrinsic/number")
+
+  (provide < <= = == === >= >)
+
   (provide
     +
     -
@@ -21,6 +24,9 @@ Operations on numbers (int, decimal, and float).
     decimal
     floor
     int_to_string
+    is_actual_decimal
+    is_actual_float
+    is_actual_int
     is_decimal
     is_float
     is_int

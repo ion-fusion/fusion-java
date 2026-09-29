@@ -145,6 +145,7 @@ Other alternative traversal forms include [iterators][] and [comprehensions][].
 
   (require
     "/fusion/private/sequence"
+    "/fusion/private/layer08/actual"
     "/fusion/private/list"
   )
 
@@ -153,6 +154,7 @@ Other alternative traversal forms include [iterators][] and [comprehensions][].
 
   (provide
     add_m
+    is_actual_list
     is_immutable_list
     is_mutable_list
     is_stretchy_list

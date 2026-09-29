@@ -14,6 +14,7 @@ The semantics of Fusion timestamp values are identical to [Ion timestamps][ts].
   (require
     "/fusion/private/define"
     "/fusion/private/intrinsic/timestamp"
+    "/fusion/private/layer08/actual"
   )
 
   (provide_signature_elements 'sig:layer0:timestamp')
@@ -27,6 +28,7 @@ The semantics of Fusion timestamp values are identical to [Ion timestamps][ts].
     adjust_month
     adjust_second
     adjust_year
+    is_actual_timestamp
     timestamp_at_day
     timestamp_at_minute
     timestamp_at_month

@@ -1,0 +1,29 @@
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(require
+  "/fusion/experimental/check"
+  "/fusion/private/layer08/actual"
+)
+
+// These functions are macro-generated and very simple, so tests are minimal.
+
+(check_true  (is_actual true))
+(check_true  (is_actual "true"))
+(check_false (is_actual null))
+(check_false (is_actual null.null))
+(check_false (is_actual (void)))
+
+
+(check_true  (is_actual_bool true))
+(check_true  (is_actual_bool false))
+(check_false (is_actual_bool null.bool))
+(check_false (is_actual_bool null))
+(check_false (is_actual_bool (void)))
+
+(check_true  (is_actual_int 1))
+(check_true  (is_actual_int 0))
+(check_false (is_actual_int null.int))
+(check_false (is_actual_int null))
+(check_false (is_actual_int 1.))
+(check_false (is_actual_int (void)))

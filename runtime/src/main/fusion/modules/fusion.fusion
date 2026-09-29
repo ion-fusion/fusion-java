@@ -1,7 +1,7 @@
 // Copyright Ion Fusion contributors. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-(module fusion "/fusion/private/layer0"
+(module fusion "/fusion/private/layer08"
 
   // WARNING: Doc syntax isn't supported yet.
   '''
@@ -36,6 +36,10 @@ contact us for clarification.
   // Misc core forms
   (provide annotate annotations quasiquote quote
     set unquote '#%top')
+
+
+  (require "/fusion/private/layer08/actual")
+  (provide_signature_elements 'sig:actual')
 
 
   //=========================================================================

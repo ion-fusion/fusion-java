@@ -94,6 +94,7 @@ Other traversal forms include [iterators][] and [comprehensions][].
     "/fusion/private/bind"
     "/fusion/private/collection"
     "/fusion/private/define"
+    "/fusion/private/layer08/actual"
     "/fusion/private/list"
     "/fusion/private/struct"
   )
@@ -101,6 +102,7 @@ Other traversal forms include [iterators][] and [comprehensions][].
   (provide_signature_elements collection_sig)
 
   (provide
+    is_actual_struct
     is_immutable_struct
     is_mutable_struct
     is_struct

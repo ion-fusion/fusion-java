@@ -24,6 +24,7 @@ sexps.
   '''
 
   (require
+    "/fusion/private/layer08/actual"
     "/fusion/private/sequence"
   )
 
@@ -31,6 +32,7 @@ sexps.
 
   (provide
     head
+    is_actual_sexp
     is_pair
     is_sexp
     pair
