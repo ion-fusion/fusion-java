@@ -93,20 +93,27 @@ forms return the result of the last expression evaluated rather than always
   [when]:   fusion/bool.html#when
   '''
 
-  // Pass-through bindings from kernel
-  (provide if is_bool)
 
-  // control
-  (provide and cond not or unless when)
-
-
-  (require
-    "/fusion/experimental/defines"
+  (provide
+    and
+    cond
+    if
+    is_bool
+    is_false
+    is_truthy
+    is_true
+    is_untruthy
+    not
+    or
+    unless
+    when
   )
 
 
-  (defpub (is_truthy v)
+  (define_values (is_truthy)
     '''
+    (is_truthy v)
+
 Returns `true` when the argument is truthy, or `false` otherwise.
 Fusion defines truthiness as follows:
 
@@ -118,11 +125,14 @@ Equivalent to:
 
 See also: <a href="fusion/bool.html#truthiness">Truthiness</a>
     '''
-    (if v true false))
+    (lambda (v)
+      (if v true false)))
 
 
-  (defpub (is_untruthy v)
+  (define_values (is_untruthy)
     '''
+    (is_untruthy v)
+
 Returns `true` when the argument is _not_ truthy, or `false` otherwise.
 The untruthy values are `false`, void, and any variant of `null`.
 
@@ -132,11 +142,14 @@ Equivalent to:
 
 See also: <a href="fusion/bool.html#truthiness">Truthiness</a>
     '''
-    (if v false true))
+    (lambda (v)
+      (if v false true)))
 
 
-  (defpub (is_true v)
+  (define_values (is_true)
     '''
+    (is_true v)
+
 Returns `true` when the argument is `true` (annotated or not), or `false`
 otherwise.
 
@@ -144,11 +157,14 @@ Equivalent to:
 
     (== v true)
     '''
-    (== v true))
+    (lambda (v)
+      (== v true)))
 
 
-  (defpub (is_false v)
+  (define_values (is_false)
     '''
+    (is_false v)
+
 Returns `true` when the argument is `false` (annotated or not), or `false`
 otherwise.
 
@@ -156,6 +172,6 @@ Equivalent to:
 
     (== v false)
     '''
-    (== v false))
-
+    (lambda (v)
+      (== v false)))
 )
