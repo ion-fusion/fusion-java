@@ -146,7 +146,7 @@ Other alternative traversal forms include [iterators][] and [comprehensions][].
   (require
     "/fusion/private/sequence"
     "/fusion/private/layer08/actual"
-    "/fusion/private/list"
+    "/fusion/private/layer08/list"
   )
 
   (provide_signature_elements sequence_sig)

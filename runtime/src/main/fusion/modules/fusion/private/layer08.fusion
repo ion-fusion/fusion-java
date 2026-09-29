@@ -5,6 +5,7 @@
 
   (require
     "/fusion/private/layer08/control"
+    "/fusion/private/layer08/list"
     "/fusion/private/layer08/sexp"
     "/fusion/private/layer08/string"
     "/fusion/private/layer08/struct"
@@ -12,6 +13,7 @@
 
   (define_signature 'sig:layer08' ('sig:layer0'
                                    'sig:layer08:control'
+                                   'sig:layer08:list'
                                    'sig:layer08:sexp'
                                    'sig:layer08:string'
                                    'sig:layer08:struct'

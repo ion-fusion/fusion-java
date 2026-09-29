@@ -95,7 +95,7 @@ Other traversal forms include [iterators][] and [comprehensions][].
     "/fusion/private/collection"
     "/fusion/private/define"
     "/fusion/private/layer08/actual"
-    "/fusion/private/list"
+    "/fusion/private/layer08/list"
     "/fusion/private/struct"
   )
 

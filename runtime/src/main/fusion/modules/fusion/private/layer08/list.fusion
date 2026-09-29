@@ -1,0 +1,82 @@
+// Copyright Ion Fusion contributors. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+(module private_list "/fusion/private/layer0"
+
+  (require
+    "/fusion/private/layer08/actual"
+    "/fusion/private/layer08/control"
+  )
+
+
+  (define_signature 'sig:layer08:list' ()
+    list_element
+  )
+  (provide_signature 'sig:layer08:list')
+
+  // Mutation ops aren't part of the layer dialect
+  (provide
+    add_m
+    list_set
+  )
+
+
+  //==========================================================================
+  // Element access
+
+  (define_values (list_element)
+    '''
+    (list_element list i)
+
+Returns the element of `list` at zero-based index `i`.
+The `list` must be non-null.
+If `i` is out of bounds or not an int, a exception is raised.
+    '''
+    (lambda (list i)
+      (unless (is_actual_list list)
+        (raise_argument_error "list_element" "actual list" 0 list i))
+      (unless (is_actual_int i)
+        (raise_argument_error "list_element" "non-null int" 1 list i))
+      (when (or (< i 0) (<= (unsafe_list_size list) i))
+        (raise_argument_error "list_element" "valid index" 1 list i))
+      (unsafe_list_element list i)))
+
+
+  //==========================================================================
+  // Modification
+
+  (define_values (list_set)
+    '''
+    (list_set list i value)
+
+Changes the element of a mutable `list` at zero-based index `i` to hold the `value`.
+If `i` is out of bounds or not an int, a exception is raised.
+    '''
+    (lambda (list i value)
+      (unless (is_mutable_list list)
+        (raise_argument_error "list_set" "mutable list" 0 list i value))
+      (unless (is_actual_int i)
+        (raise_argument_error "list_set" "non-null int" 1 list i value))
+      (when (or (< i 0) (<= (unsafe_list_size list) i))
+        (raise_argument_error "list_set" "valid index" 1 list i value))
+      (unsafe_list_set list i value)))
+
+  (define_values (add_m)
+    '''
+    (add_m list element)
+
+Returns a sequence with all the elements of `list` and the `element`.  The
+result sequence is similar to the input, its size is one greater, and it may
+share structure with other sequences.  The input sequence may be mutated.
+
+In general, the position of `element` within the result is not specified, but
+particular sequence types may do so.
+
+* For stretchy lists, the `element` is added to the end of the input sequence,
+  which is then returned.
+    '''
+    (lambda (list element)
+      (if (is_list list)
+        (unsafe_list_add_m list element)
+        (raise_argument_error "add_m" "list" 0 list element))))
+)
