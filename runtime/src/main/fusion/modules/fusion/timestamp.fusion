@@ -12,175 +12,14 @@ The semantics of Fusion timestamp values are identical to [Ion timestamps][ts].
   '''
 
   (require
-    "/fusion/exception"
     "/fusion/experimental/defines"
-    "/fusion/number"
     "/fusion/private/define"
+    "/fusion/private/intrinsic/timestamp"
   )
 
+  (provide_signature_elements 'sig:layer0:timestamp')
 
   (provide < <= = >= >)
-
-  (defpub_j is_timestamp
-    '''
-    (is_timestamp value)
-
-Determines whether a `value` is of type `timestamp`, returning `true` or
-`false`.
-    '''
-    "dev.ionfusion.fusion.FusionTimestamp$IsTimestampProc")
-
-  (defpub_j string_to_timestamp
-    '''
-    (string_to_timestamp string)
-
-Converts a `string` to a timestamp, recognizing (only) Ion formatted data.
-Returns `null.timestamp` when given `null.string`.
-
-    (string_to_timestamp null.string)        ==> null.timestamp
-    (string_to_timestamp "2013-11-13T")      ==> 2013-11-13
-    (string_to_timestamp "null.timestamp")   ==> ERROR
-    '''
-    "dev.ionfusion.fusion.FusionTimestamp$StringToTimestampProc")
-
-  (defpub_j timestamp_now
-    '''
-    (timestamp_now)
-
-Returns a timestamp representing "now".  At present the local offset is
-unspecified, but that may change in the future.
-    '''
-    "dev.ionfusion.fusion.FusionTimestamp$TimestampNowProc")
-
-  (defpub_j epoch_millis_to_timestamp
-    '''
-    (epoch_millis_to_timestamp epoch_millis)
-
-Returns a timestamp for the point in time given as the number of milliseconds
-since 1970-01-01T00:00Z. The `epoch_millis` may be a decimal or int.
-    '''
-    "dev.ionfusion.fusion.FusionTimestamp$EpochMillisToTimestampProc")
-
-  (defpub_j timestamp_to_epoch_millis
-    '''
-    (timestamp_to_epoch_millis timestamp)
-
-Given a non-null timestamp, returns the same point in time represented as the
-number of milliseconds since 1970-01-01T00:00Z.  The result is a decimal.
-    '''
-    "dev.ionfusion.fusion.FusionTimestamp$TimestampToEpochMillisProc")
-
-  (defpub_j timestamp_to_string
-    '''
-    (timestamp_to_string timestamp)
-
-Converts a `timestamp` to a string in Ion format.
-Returns `null.string` when given `null.timestamp`.
-
-    (timestamp_to_string null.timestamp)   ==> null.string
-    (timestamp_to_string 2013-11-13T)      ==> "2013-11-13"
-    '''
-    "dev.ionfusion.fusion.FusionTimestamp$TimestampToStringProc")
-
-
-  (defpub_j timestamp
-    '''
-    (timestamp year month? day? hour? minute? second? offset?)
-
-Returns a timestamp representing a specified point in time.
-
-The `year` is required, and other fields can be added in increasing precision.
-Acceptable combinations of arguments being present or absent align with the
-combinations of fields allowed by [Ion timestamps][ts]. Optional arguments that are
-not present are equivalent to being void.
-
-  * When present, `month` must be an actual integer.
-  * When present, `day` must be an actual integer and `month` must be present.
-  * When either is present, `hour` and `minute` must both be actual integers,
-    and `month` and `day` must be present.
-  * When present, `second` must be an actual integer or decimal, and all
-    preceding arguments must be present.
-  * When present, `offset` must be an actual integer denoting the minutes of
-    local offset; void denotes the unknown local offset `-00:00`.  The offset
-    is ignored when the hour and minutes are not provided.
-
-For example:
-
-    (timestamp 2016)                       ==> 2016T
-    (timestamp 2016 7)                     ==> 2016-07T
-    (timestamp 2016 7 1)                   ==> 2016-07-01
-    (timestamp 2016 7 1 9 5)               ==> 2016-07-01T09:05-00:00
-    (timestamp 2016 7 1 9 5 (void) -420)   ==> 2016-07-01T09:05-07:00
-    (timestamp 2016 7 1 9 5 6. 0)          ==> 2016-07-01T09:05:06+00:00
-    (timestamp 2016 7 1 9 5 6. (void))     ==> 2016-07-01T09:05:06-00:00
-    (timestamp 2016 7 1 9 5 6.123)         ==> 2016-07-01T09:05:06.123-00:00
-
-[ts]: https://amzn.github.io/ion-docs/docs/spec.html#timestamp
-    '''
-    "dev.ionfusion.fusion.FusionTimestamp$TimestampProc")
-
-
-  (defpub_j timestamp_year
-    '''
-    (timestamp_year ts)
-
-Returns the year of `ts` in its local time.
-    '''
-    "dev.ionfusion.fusion.FusionTimestamp$TimestampYearProc")
-
-
-  (defpub_j timestamp_month
-    '''
-    (timestamp_month ts)
-
-Returns the month of `ts` in its local time if its precision is `MONTH` or finer, returns void otherwise.
-    '''
-    "dev.ionfusion.fusion.FusionTimestamp$TimestampMonthProc")
-
-
-  (defpub_j timestamp_day
-    '''
-    (timestamp_day ts)
-
-Returns the day of `ts` in its local time if its precision is `DAY` or finer, returns void otherwise.
-    '''
-    "dev.ionfusion.fusion.FusionTimestamp$TimestampDayProc")
-
-
-  (defpub_j timestamp_hour
-    '''
-    (timestamp_hour ts)
-
-Returns the hour in the day of `ts` in its local time if its precision is `MINUTE` or finer, returns void otherwise.
-    '''
-    "dev.ionfusion.fusion.FusionTimestamp$TimestampHourProc")
-
-
-  (defpub_j timestamp_minute
-    '''
-    (timestamp_minute ts)
-
-Returns the number of minutes past the hour of `ts` in its local time if its precision is `MINUTE` or finer, returns void otherwise.
-    '''
-    "dev.ionfusion.fusion.FusionTimestamp$TimestampMinuteProc")
-
-
-  (defpub_j timestamp_second
-    '''
-    (timestamp_second ts)
-
-Returns the number of seconds past the minute in `ts` in its local time if its precision is `SECOND`, returns void otherwise.
-    '''
-    "dev.ionfusion.fusion.FusionTimestamp$TimestampSecondProc")
-
-
-  (defpub_j timestamp_offset
-    '''
-    (timestamp_offset ts)
-
-Returns the local offset of `ts` as an integer in minutes if its offset is known, returns void otherwise.
-    '''
-    "dev.ionfusion.fusion.FusionTimestamp$TimestampOffsetProc")
 
 
   (defpub (timestamp_at_year ts)
@@ -244,19 +83,6 @@ The returned timestamp may have different time fields to maintain the same point
 Expects `ts` to have precision `MINUTE` or finer.
     '''
     "dev.ionfusion.fusion.FusionTimestamp$TimestampWithOffsetProc")
-
-  (define unsafe_adjust_year
-    (java_new "dev.ionfusion.fusion.FusionTimestamp$UnsafeTimestampAddYearProc"))
-  (define unsafe_adjust_month
-    (java_new "dev.ionfusion.fusion.FusionTimestamp$UnsafeTimestampAddMonthProc"))
-  (define unsafe_adjust_day
-    (java_new "dev.ionfusion.fusion.FusionTimestamp$UnsafeTimestampAddDayProc"))
-  (define unsafe_adjust_hour
-    (java_new "dev.ionfusion.fusion.FusionTimestamp$UnsafeTimestampAddHourProc"))
-  (define unsafe_adjust_minute
-    (java_new "dev.ionfusion.fusion.FusionTimestamp$UnsafeTimestampAddMinuteProc"))
-  (define unsafe_adjust_second
-    (java_new "dev.ionfusion.fusion.FusionTimestamp$UnsafeTimestampAddSecondProc"))
 
 
   (define (safe_add name unsafe_proc ts period)

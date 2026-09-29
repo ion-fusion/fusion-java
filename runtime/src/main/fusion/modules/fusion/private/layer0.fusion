@@ -28,11 +28,12 @@ layers will shift over time, as intrinsic features are added or ported up to Fus
     "/fusion/private/intrinsic/string"
     "/fusion/private/intrinsic/struct"
     "/fusion/private/intrinsic/syntax"
+    "/fusion/private/intrinsic/timestamp"
     "/fusion/private/util/signature"
   )
 
 
-  (define_signature 'sig:layer0' ()
+  (define_signature 'sig:layer0' ('sig:layer0:timestamp')
 
     // kernel
     all_defined_out
@@ -222,6 +223,8 @@ layers will shift over time, as intrinsic features are added or ported up to Fus
     syntax_unwrap
     unsyntax
     wrong_syntax
+
+
   )
 
   (provide_signature 'sig:layer0')
