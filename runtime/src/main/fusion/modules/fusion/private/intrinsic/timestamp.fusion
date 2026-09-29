@@ -19,6 +19,7 @@
     timestamp_month
     timestamp_offset
     timestamp_second
+    timestamp_with_offset
     timestamp_year
   )
   (provide_signature 'sig:layer0:timestamp')
@@ -196,6 +197,17 @@ Returns the number of seconds past the minute in `ts` in its local time if its p
  is `SECOND`, returns void otherwise.
     '''
     (java_new "dev.ionfusion.fusion.FusionTimestamp$TimestampSecondProc"))
+
+
+  (define_values (timestamp_with_offset)
+    '''
+    (timestamp_with_offset ts offset)
+
+Returns a timestamp at the same point-in-time as `ts`, but with local offset equal to `offset` minutes.
+The returned timestamp may have different time fields to maintain the same point-in-time.
+Expects `ts` to have precision `MINUTE` or finer.
+    '''
+    (java_new "dev.ionfusion.fusion.FusionTimestamp$TimestampWithOffsetProc"))
 
 
   (define_values (timestamp_year)

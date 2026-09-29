@@ -12,24 +12,38 @@ The semantics of Fusion timestamp values are identical to [Ion timestamps][ts].
   '''
 
   (require
-    "/fusion/experimental/defines"
     "/fusion/private/define"
     "/fusion/private/intrinsic/timestamp"
   )
 
   (provide_signature_elements 'sig:layer0:timestamp')
 
-  (provide < <= = >= >)
+  (provide < <= = == === >= >)
+
+  (provide
+    adjust_day
+    adjust_hour
+    adjust_minute
+    adjust_month
+    adjust_second
+    adjust_year
+    timestamp_at_day
+    timestamp_at_minute
+    timestamp_at_month
+    timestamp_at_second
+    timestamp_at_year
+    timestamp_put_offset
+  )
 
 
-  (defpub (timestamp_at_year ts)
+  (define (timestamp_at_year ts)
     '''
 Returns a timestamp that represents the same point-in-time as `ts`, with precision `YEAR`.
     '''
     (timestamp (timestamp_year ts)))
 
 
-  (defpub (timestamp_at_month ts)
+  (define (timestamp_at_month ts)
     '''
 Returns a timestamp that represents the same point-in-time as `ts`, with precision `MONTH`.
     '''
@@ -37,7 +51,7 @@ Returns a timestamp that represents the same point-in-time as `ts`, with precisi
                (or (timestamp_month ts) 1)))
 
 
-  (defpub (timestamp_at_day ts)
+  (define (timestamp_at_day ts)
     '''
 Returns a timestamp that represents the same point-in-time as `ts`, with precision `DAY`.
     '''
@@ -46,7 +60,7 @@ Returns a timestamp that represents the same point-in-time as `ts`, with precisi
                (or (timestamp_day ts) 1)))
 
 
-  (defpub (timestamp_at_minute ts)
+  (define (timestamp_at_minute ts)
     '''
 Returns a timestamp that represents the same point-in-time as `ts`, with precision `MINUTE`.
 Local offset is preserved.
@@ -60,7 +74,7 @@ Local offset is preserved.
                (timestamp_offset ts)))
 
 
-  (defpub (timestamp_at_second ts)
+  (define (timestamp_at_second ts)
     '''
 Returns a timestamp that represents the same point-in-time as `ts`, with precision `SECOND`.
 Local offset is preserved.
@@ -74,15 +88,6 @@ Local offset is preserved.
                (timestamp_offset ts)))
 
 
-  (defpub_j timestamp_with_offset
-    '''
-    (timestamp_with_offset ts offset)
-
-Returns a timestamp at the same point-in-time as `ts`, but with local offset equal to `offset` minutes.
-The returned timestamp may have different time fields to maintain the same point-in-time.
-Expects `ts` to have precision `MINUTE` or finer.
-    '''
-    "dev.ionfusion.fusion.FusionTimestamp$TimestampWithOffsetProc")
 
 
   (define (safe_add name unsafe_proc ts period)
@@ -93,7 +98,7 @@ Expects `ts` to have precision `MINUTE` or finer.
         (unsafe_proc ts period))))
 
 
-  (defpub (adjust_year ts period)
+  (define (adjust_year ts period)
     '''
 Returns a timestamp that's `period` years after (or before, if negative) `ts`.
 The result will have the same precision and local offset. In general, only
@@ -105,7 +110,7 @@ to the 32-bit range).
     (safe_add "adjust_year" unsafe_adjust_year ts period))
 
 
-  (defpub (adjust_month ts period)
+  (define (adjust_month ts period)
     '''
 Returns a timestamp that's `period` months after (or before, if negative) `ts`.
 The result will have the same precision and local offset. In general, only
@@ -118,7 +123,7 @@ to the 32-bit range).
     (safe_add "adjust_month" unsafe_adjust_month ts period))
 
 
-  (defpub (adjust_day ts period)
+  (define (adjust_day ts period)
     '''
 Returns a timestamp that's `period` days after (or before, if negative) `ts`.
 The result will have the same precision and local offset.
@@ -129,7 +134,7 @@ to the 32-bit range).
     (safe_add "adjust_day" unsafe_adjust_day ts period))
 
 
-  (defpub (adjust_hour ts period)
+  (define (adjust_hour ts period)
     '''
 Returns a timestamp that's `period` hours after (or before, if negative) `ts`.
 The result will have the same precision and local offset.
@@ -140,7 +145,7 @@ to the 32-bit range).
     (safe_add "adjust_hour" unsafe_adjust_hour ts period))
 
 
-  (defpub (adjust_minute ts period)
+  (define (adjust_minute ts period)
     '''
 Returns a timestamp that's `period` minutes after (or before, if negative) `ts`.
 The result will have the same precision and local offset.
@@ -151,7 +156,7 @@ to the 32-bit range).
     (safe_add "adjust_minute" unsafe_adjust_minute ts period))
 
 
-  (defpub (adjust_second ts period)
+  (define (adjust_second ts period)
     '''
 Returns a timestamp that's `period` seconds after (or before, if negative) `ts`.
 The result will have the same precision and local offset.
@@ -162,7 +167,7 @@ to the 32-bit range).
     (safe_add "adjust_second" unsafe_adjust_second ts period))
 
 
-  (defpub (timestamp_put_offset ts offset)
+  (define (timestamp_put_offset ts offset)
     '''
 Returns a timestamp that has the same time fields (year, month, ...) as `ts`, with local offset equal to `offset` minutes.
 The result may represent a point-in-time different from `ts`.
