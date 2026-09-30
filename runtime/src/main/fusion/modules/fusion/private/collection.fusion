@@ -107,34 +107,10 @@ an element within the collection.
     (element {f:2} "g")      =>  ERROR
     '''
     (cond
-      ((is_list collection)
-       (list_element collection key))
-      //-
-      ((is_struct collection)
-       (if (is_struct_field_name key)
-         (unsafe_struct_ref collection key
-           (lambda ()
-             (raise_argument_error "element" "valid field name"
-               1 collection key)))
-         (raise_argument_error "element" "non-null string or symbol"
-           1 collection key)))
-      //-
-      ((is_sexp collection)
-       (if (is_int key)
-         (if (and key  // null check
-                  (<= 0 key))
-           (let loop [(k key), (s collection)]
-             (if (is_pair s)
-               (if (= 0 k)
-                 (unsafe_pair_head s)
-                 (loop (- k 1) (unsafe_pair_tail s)))
-               (raise_argument_error "element" "valid position"
-                 1 collection key)))
-           (raise_argument_error "element" "valid position" 1 collection key))
-         (raise_argument_error "element" "int" 1 collection key)))
-      //-
-      ((is_syntax collection)
-       (element (syntax_unwrap collection) key))
+      ((is_list collection)    (list_element   collection key))
+      ((is_struct collection)  (struct_element collection key))
+      ((is_sexp collection)    (sexp_element   collection key))
+      ((is_syntax collection)  (element (syntax_unwrap collection) key))
       (true
        (raise_argument_error "element" "collection" 0 collection key))))
 
@@ -174,33 +150,11 @@ be evaluated as a variable reference:
 An exception is raised if the `collection` has an unsupported type.
     '''
     (cond
-      ((is_list collection)
-       (when (and (is_int key)
-                  key  // null check
-                  (<= 0 key)
-                  (< key (unsafe_list_size collection)))
-         (unsafe_list_element collection key)))
-      //-
-      ((is_struct collection)
-       (when (is_struct_field_name key)
-         (unsafe_struct_ref collection key void)))
-      //-
-      ((is_sexp collection)
-       (when (and (is_int key)
-                  key  // null check
-                  (<= 0 key))
-         (let loop [(key key), (s collection)]
-           (if (is_pair s)
-             (if (= 0 key)
-               (unsafe_pair_head s)
-               (loop (- key 1) (unsafe_pair_tail s)))
-             (void)))))
-      //-
-      ((is_syntax collection)
-       (elt (syntax_unwrap collection) key))
-      //-
-      ((is_void collection)
-       (void))
+      ((is_list collection)    (list_elt   collection key))
+      ((is_struct collection)  (struct_elt collection key))
+      ((is_sexp collection)    (sexp_elt   collection key))
+      ((is_syntax collection)  (elt (syntax_unwrap collection) key))
+      ((is_void collection)    (void))
       (true
        (raise_argument_error "elt" "collection or void" 0 collection key))))
 
