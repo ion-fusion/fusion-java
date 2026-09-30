@@ -116,6 +116,8 @@ Other traversal forms include [iterators][] and [comprehensions][].
     retain_keys_m
     struct
     struct_do
+    struct_element
+    struct_elt
     struct_merge
     struct_merge_m
     struct_unzip

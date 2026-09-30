@@ -4,11 +4,14 @@
 (module struct_08 "/fusion/private/layer0"
 
   (require
+    "/fusion/private/layer08/actual"
     "/fusion/private/layer08/control"
   )
 
   (define_signature 'sig:layer08:struct' ()
     is_struct_field_name
+    struct_element
+    struct_elt
   )
   (provide_signature 'sig:layer08:struct')
 
@@ -17,4 +20,42 @@
     (lambda (v)
       (and (or (is_string v) (is_symbol v))
            (not (is_null v)))))
+
+
+  (define_values (struct_element)
+    '''
+    (struct_element struct n)
+
+Returns an element of `struct` with field name `n`.
+The `struct` must be non-null.
+If `n` is not an actual string or symbol, or does not identify a present field,
+an exception is raised.
+If `n` identifies more than one field, an arbitrary one of them is selected.
+    '''
+    (lambda (struct n)
+      (unless (is_actual_struct struct)
+        (raise_argument_error "struct_element" "actual struct" 1 struct n))
+      (if (is_struct_field_name n)
+        (unsafe_struct_ref struct n
+          (lambda ()
+            (raise_argument_error "struct_element" "present field name"
+              1 struct n)))
+        (raise_argument_error "struct_element" "present field name"
+          1 struct n))))
+
+
+  (define_values (struct_elt)
+    '''
+    (struct_elt struct n)
+
+Returns an element of `struct` with field name `n`, being lenient.
+The result is void if  `struct` is null, or if `n` is not text or does not identify a
+present field.
+If `n` identifies more than one field, an arbitrary one of them is selected.
+    '''
+    (lambda (struct n)
+      (unless (is_struct struct)
+        (raise_argument_error "struct_element" "struct" 1 struct n))
+      (when (is_struct_field_name n)
+        (unsafe_struct_ref struct n void))))
 )

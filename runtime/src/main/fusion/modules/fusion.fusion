@@ -158,6 +158,7 @@ contact us for clarification.
 
   (require "/fusion/struct")
   (provide is_struct put remove_keys retain_keys struct struct_do
+    struct_element struct_elt
     struct_merge struct_unzip struct_zip)
 
 

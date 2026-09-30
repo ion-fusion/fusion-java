@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 (require
+  "/ftst/check_more"
   "/fusion/experimental/check"
   "/fusion/iterator"
   "/fusion/list"
@@ -206,6 +207,66 @@
 
 (expect_arity_error (has_key))
 (expect_arity_error (has_key {}))
+
+
+//==========================================================================
+// Element access
+
+
+(define_check (check_good_key struct key val)
+  (check same val (struct_element struct key))
+  (check same val (struct_elt     struct key))
+)
+
+(define_check (check_bad_key struct key)
+  (check_msg_contains
+    (expect_argument_error (struct_element struct key))
+    "present field name")
+  (check_void (struct_elt struct key))
+)
+
+(define_check (check_refs ctor)
+  (let [(str (ctor "f" 0 "g" +))]
+    (check_good_key str "f" 0)
+    (check_good_key str "g" +)
+
+    // key not present
+    (check_bad_key str "")
+    (check_bad_key str "nope")
+
+    // bad type
+    (check_bad_key str null.string)
+    (check_bad_key str (quote null.symbol))
+    (check_bad_key str [0])
+    (check_bad_key str 0)
+    (check_bad_key str (void))
+))
+
+(check_refs struct)
+(check_refs mutable_struct)
+
+
+// Handling of null.struct
+(check_msg_contains
+  (expect_argument_error (struct_element null.struct 0))
+  "actual struct")
+
+(check_void (struct_elt null.struct 0))
+
+
+(define_check (check_non_struct struct)
+  (check_msg_contains (expect_argument_error (struct_element struct 0))
+    "actual struct")
+  (check_msg_contains (expect_argument_error (struct_elt     struct 0))
+    "struct")
+)
+
+(check_non_struct null)
+(check_non_struct null.null)
+(check_non_struct [])
+(check_non_struct [0])
+(check_non_struct (sexp))
+(check_non_struct "0")
 
 
 //==========================================================================
