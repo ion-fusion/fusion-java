@@ -27,11 +27,8 @@ import java.util.IdentityHashMap;
 import java.util.List;
 
 final class SyntaxSexp
-    extends SyntaxSequence
+    extends SyntaxSequence<BaseSexp>
 {
-    private BaseSexp mySexp;
-
-
     /**
      * @param sexp must not be null.
      */
@@ -40,9 +37,7 @@ final class SyntaxSexp
                        SyntaxWraps      wraps,
                        BaseSexp         sexp)
     {
-        super(pos, properties, wraps);
-        assert sexp != null;
-        mySexp = sexp;
+        super(sexp, pos, properties, wraps);
     }
 
 
@@ -51,16 +46,14 @@ final class SyntaxSexp
      */
     private SyntaxSexp(ResourcePosition pos, BaseSexp sexp)
     {
-        super(pos);
-        assert sexp != null;
-        mySexp = sexp;
+        super(sexp, pos);
     }
 
 
     @Override
     SyntaxSexp copyReplacing(SyntaxWraps wraps, Object[] properties)
     {
-        return new SyntaxSexp(getPosition(), properties, wraps, mySexp);
+        return new SyntaxSexp(getPosition(), properties, wraps, getContent());
     }
 
 
@@ -129,7 +122,7 @@ final class SyntaxSexp
                                      SyntaxValue... children)
         throws FusionException
     {
-        BaseSymbol[] annotations = mySexp.getAnnotations();
+        BaseSymbol[] annotations = getContent().getAnnotations();
         BaseSexp datum = (children == null
                               ? nullSexp(eval, annotations)
                               : immutableSexp(eval, annotations, children));
@@ -171,13 +164,18 @@ final class SyntaxSexp
 
 
     @Override
-    synchronized void propagateLexicalContext(Evaluator eval, SyntaxWraps propagate)
+    BaseSexp propagateLexicalContent(Evaluator eval,
+                                     BaseSexp content,
+                                     SyntaxWraps propagate)
         throws FusionException
     {
-        if (mySexp instanceof ImmutablePair)
+        if (content instanceof ImmutablePair)
         {
-            mySexp = pushWraps(eval, (ImmutablePair) mySexp, propagate);
+            return pushWraps(eval, (ImmutablePair) content, propagate);
         }
+        // else our content is `null.sexp` or `()`
+
+        return content;
     }
 
 
@@ -228,7 +226,7 @@ final class SyntaxSexp
     int size(Evaluator eval)
         throws FusionException
     {
-        return mySexp.size(eval);
+        return getContent().size(eval);
     }
 
 
@@ -264,19 +262,10 @@ final class SyntaxSexp
                 tail = ((SyntaxValue) tail).syntaxToDatum(eval);
             }
 
-            sexp = pair(eval, sexp.myAnnotations, head, tail);
+            sexp = pair(eval, sexp.getAnnotations(), head, tail);
         }
 
         return sexp;
-    }
-
-
-    @Override
-    BaseSexp<?> unwrap(Evaluator eval)
-        throws FusionException
-    {
-        propagateLexicalContext(eval);
-        return mySexp;
     }
 
 
@@ -285,7 +274,7 @@ final class SyntaxSexp
         throws FusionException
     {
         // Don't bother to push wraps; we'll just discard them anyway.
-        return syntaxToDatum(eval, mySexp);
+        return syntaxToDatum(eval, getContent());
     }
 
 

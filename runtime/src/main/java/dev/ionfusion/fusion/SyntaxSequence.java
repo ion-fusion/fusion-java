@@ -5,19 +5,20 @@ package dev.ionfusion.fusion;
 
 
 import dev.ionfusion.commons.resources.ResourcePosition;
+import dev.ionfusion.fusion.FusionSequence.BaseSequence;
 import dev.ionfusion.runtime.base.FusionException;
 
-abstract class SyntaxSequence
-    extends SyntaxValue
+abstract class SyntaxSequence<Content extends BaseSequence>
+    extends GenericSyntaxValue<Content>
 {
-    SyntaxSequence(ResourcePosition pos, Object[] properties, SyntaxWraps wraps)
+    SyntaxSequence(Content content, ResourcePosition pos, Object[] properties, SyntaxWraps wraps)
     {
-        super(wraps, pos, properties);
+        super(content, wraps, pos, properties);
     }
 
-    SyntaxSequence(ResourcePosition pos)
+    SyntaxSequence(Content content, ResourcePosition pos)
     {
-        super(null, pos);
+        super(content, null, pos);
     }
 
 
@@ -42,19 +43,19 @@ abstract class SyntaxSequence
      * Creates a new syntax sequence, using our location and properties but
      * the given children.
      */
-    abstract SyntaxSequence copyReplacingChildren(Evaluator eval,
-                                                  SyntaxValue... children)
+    abstract SyntaxSequence<Content> copyReplacingChildren(Evaluator eval,
+                                                           SyntaxValue... children)
         throws FusionException;
 
 
     /** Creates a new sequence with this + that. */
-    abstract SyntaxSequence makeAppended(Evaluator eval, SyntaxSequence that)
+    abstract SyntaxSequence<Content> makeAppended(Evaluator eval, SyntaxSequence<?> that)
         throws FusionException;
 
 
     /**
      * @return null if this sequence isn't proper and from goes beyond the end.
      */
-    abstract SyntaxSequence makeSubseq(Evaluator eval, int from)
+    abstract SyntaxSequence<Content> makeSubseq(Evaluator eval, int from)
         throws FusionException;
 }

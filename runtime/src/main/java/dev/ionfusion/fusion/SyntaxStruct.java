@@ -9,11 +9,8 @@ import dev.ionfusion.fusion.FusionStruct.StructFieldVisitor;
 import dev.ionfusion.runtime.base.FusionException;
 
 final class SyntaxStruct
-    extends SyntaxValue
+    extends GenericSyntaxValue<ImmutableStruct>
 {
-    private ImmutableStruct myStruct;
-
-
     /**
      * @param struct must not be null.
      */
@@ -22,8 +19,7 @@ final class SyntaxStruct
                          SyntaxWraps wraps,
                          ImmutableStruct struct)
     {
-        super(wraps, pos, properties);
-        myStruct = struct;
+        super(struct, wraps, pos, properties);
     }
 
     /**
@@ -31,8 +27,7 @@ final class SyntaxStruct
      */
     private SyntaxStruct(ResourcePosition pos, ImmutableStruct struct)
     {
-        super(null, pos);
-        myStruct = struct;
+        super(struct, null, pos);
     }
 
 
@@ -40,7 +35,7 @@ final class SyntaxStruct
     @Override
     SyntaxStruct copyReplacing(SyntaxWraps wraps, Object[] properties)
     {
-        return new SyntaxStruct(getPosition(), properties, wraps, myStruct);
+        return new SyntaxStruct(getPosition(), properties, wraps, getContent());
     }
 
 
@@ -55,9 +50,9 @@ final class SyntaxStruct
     /**
      * @param datum must be an immutable struct
      */
-    static SyntaxStruct make(Evaluator eval, ResourcePosition pos, Object datum)
+    static SyntaxStruct make(Evaluator eval, ResourcePosition pos, ImmutableStruct datum)
     {
-        return new SyntaxStruct(pos, (ImmutableStruct) datum);
+        return new SyntaxStruct(pos, datum);
     }
 
 
@@ -65,22 +60,15 @@ final class SyntaxStruct
 
 
     @Override
-    synchronized void propagateLexicalContext(Evaluator eval, SyntaxWraps propagate)
+    synchronized ImmutableStruct propagateLexicalContent(Evaluator eval,
+                                                         ImmutableStruct content,
+                                                         SyntaxWraps propagate)
         throws FusionException
     {
         StructFieldVisitor visitor =
             (name, value) -> ((SyntaxValue) value).addWraps(propagate);
 
-        myStruct = myStruct.transformFields(eval, visitor);
-    }
-
-
-    @Override
-    ImmutableStruct unwrap(Evaluator eval)
-        throws FusionException
-    {
-        propagateLexicalContext(eval);
-        return myStruct;
+        return content.transformFields(eval, visitor);
     }
 
 
@@ -88,15 +76,17 @@ final class SyntaxStruct
     Object syntaxToDatum(final Evaluator eval)
         throws FusionException
     {
-        if (myStruct.size() == 0)
+        // No need to propagate, we're discarding the context.
+        var thisStruct = getContent();
+        if (thisStruct.size() == 0)
         {
-            return myStruct;
+            return thisStruct;
         }
 
         StructFieldVisitor visitor =
             (name, value) -> ((SyntaxValue) value).syntaxToDatum(eval);
 
-        return myStruct.transformFields(eval, visitor);
+        return thisStruct.transformFields(eval, visitor);
     }
 
 

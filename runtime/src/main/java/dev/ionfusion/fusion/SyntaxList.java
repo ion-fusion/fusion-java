@@ -16,17 +16,8 @@ import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
 
 final class SyntaxList
-    extends SyntaxSequence
+    extends SyntaxSequence<BaseList>
 {
-    /**
-     * Both the list and its elements may be shared with other instances.
-     * When we push down wraps, we copy the list and the children as needed.
-     * We push lazily to aggregate as many wraps here and only push once.
-     * That avoids repeated cloning of the children.
-     */
-    private BaseList myImmutableList;
-
-
     /**
      * @param datum an immutable list of {@link SyntaxValue}s.
      */
@@ -35,8 +26,7 @@ final class SyntaxList
                        SyntaxWraps      wraps,
                        BaseList         datum)
     {
-        super(pos, properties, wraps);
-        myImmutableList = datum;
+        super(datum, pos, properties, wraps);
     }
 
     /**
@@ -46,16 +36,15 @@ final class SyntaxList
                        ResourcePosition pos,
                        BaseList datum)
     {
-        super(pos);
+        super(datum, pos);
         assert isImmutableList(eval, datum);
-        myImmutableList = datum;
     }
 
 
     @Override
     SyntaxValue copyReplacing(SyntaxWraps wraps, Object[] properties)
     {
-        return new SyntaxList(getPosition(), properties, wraps, myImmutableList);
+        return new SyntaxList(getPosition(), properties, wraps, getContent());
     }
 
 
@@ -81,7 +70,7 @@ final class SyntaxList
                                      SyntaxValue... children)
         throws FusionException
     {
-        BaseSymbol[] annotations = myImmutableList.getAnnotations();
+        BaseSymbol[] annotations = getContent().getAnnotations();
         BaseList datum = (children == null
                               ? nullList(eval, annotations)
                               : immutableList(eval, annotations, children));
@@ -90,17 +79,19 @@ final class SyntaxList
 
 
     @Override
-    synchronized void propagateLexicalContext(Evaluator eval, SyntaxWraps propagate)
+    BaseList propagateLexicalContent(Evaluator eval,
+                                     BaseList content,
+                                     SyntaxWraps propagate)
         throws FusionException
     {
-        int len = myImmutableList.size();
+        int len = content.size();
         if (len > 0)
         {
             boolean changed = false;
             SyntaxValue[] children = new SyntaxValue[len];
             for (int i = 0; i < len; i++)
             {
-                SyntaxValue child = (SyntaxValue) myImmutableList.elt(eval, i);
+                SyntaxValue child = (SyntaxValue) content.elt(eval, i);
                 SyntaxValue wrapped = child.addWraps(propagate);
                 children[i] = wrapped;
                 changed |= wrapped != child;
@@ -108,17 +99,18 @@ final class SyntaxList
 
             if (changed) // Keep sharing when we can
             {
-                BaseSymbol[] annotations = myImmutableList.getAnnotations();
-                myImmutableList = immutableList(eval, annotations, children);
+                BaseSymbol[] annotations = content.getAnnotations();
+                return immutableList(eval, annotations, children);
             }
         }
+        return content;
     }
 
 
     @Override
     final int size(Evaluator eval)
     {
-        return myImmutableList.size();
+        return getContent().size();
     }
 
 
@@ -146,7 +138,7 @@ final class SyntaxList
 
 
     @Override
-    SyntaxSequence makeAppended(Evaluator eval, SyntaxSequence that)
+    SyntaxList makeAppended(Evaluator eval, SyntaxSequence<?> that)
         throws FusionException
     {
         int thisLength = this.size(eval);
@@ -176,7 +168,7 @@ final class SyntaxList
 
 
     @Override
-    SyntaxSequence makeSubseq(Evaluator eval, int from)
+    SyntaxList makeSubseq(Evaluator eval, int from)
         throws FusionException
     {
         var thisList = unwrap(eval);
@@ -232,33 +224,25 @@ final class SyntaxList
 
 
     @Override
-    BaseList unwrap(Evaluator eval)
-        throws FusionException
-    {
-        propagateLexicalContext(eval);
-        return myImmutableList;
-    }
-
-
-    @Override
     Object syntaxToDatum(Evaluator eval)
         throws FusionException
     {
-        int size = myImmutableList.size();
+        // No need to propagate, we're discarding the context.
+        var thisList = getContent();
+        int size = thisList.size();
         if (size == 0)
         {
-            return myImmutableList;
+            return thisList;
         }
 
-        // Don't bother to push wraps; we'll just discard them anyway.
         Object[] children = new Object[size];
         for (int i = 0; i < size; i++)
         {
-            SyntaxValue child = (SyntaxValue) myImmutableList.elt(eval, i);
+            SyntaxValue child = (SyntaxValue) thisList.elt(eval, i);
             children[i] = child.syntaxToDatum(eval);
         }
 
-        BaseSymbol[] annotations = myImmutableList.getAnnotations();
+        BaseSymbol[] annotations = thisList.getAnnotations();
         return immutableList(eval, annotations, children);
     }
 }
