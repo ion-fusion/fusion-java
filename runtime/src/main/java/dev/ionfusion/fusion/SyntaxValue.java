@@ -76,15 +76,17 @@ abstract class SyntaxValue
         this(wraps, pos, EMPTY_OBJECT_ARRAY);
     }
 
+    /** Does not propagate context! */
     abstract SyntaxValue copyReplacing(SyntaxWraps wraps, Object[] properties);
 
-
-    final SyntaxValue copyReplacingWraps(SyntaxWraps wraps)
+    /** Does not propagate context! */
+    private SyntaxValue copyReplacingWraps(SyntaxWraps wraps)
     {
         return copyReplacing(wraps, getProperties());
     }
 
-    final SyntaxValue copyReplacingProperties(Object[] properties)
+    /** Does not propagate context! */
+    private SyntaxValue copyReplacingProperties(Object[] properties)
     {
         return copyReplacing(getWraps(), properties);
     }
@@ -336,6 +338,41 @@ abstract class SyntaxValue
     }
 
 
+    /**
+     * Push any cached context down into fresh copies of all contained syntax objects.
+     * This must be called before exposing any children outside of this instance, so
+     * it appears as if the context was pushed when it was added.
+     * <p>
+     * This mutates {@link #myWraps} and content field.
+     */
+    synchronized void propagateLexicalContext(Evaluator eval)
+        throws FusionException
+    {
+        if (myWraps != null)
+        {
+            propagateLexicalContext(eval, myWraps);
+            myWraps = null;
+        }
+    }
+
+    /**
+     * Type-specific content propagation.
+     *
+     * @param propagate is not null
+     */
+    abstract void propagateLexicalContext(Evaluator eval, SyntaxWraps propagate)
+        throws FusionException;
+
+
+    final SyntaxValue stripLexicalContext(Evaluator eval)
+        throws FusionException
+    {
+        // Make sure we don't lose cached context that should be on children.
+        propagateLexicalContext(eval);
+        return myWraps == null ? this : copyReplacingWraps(null);
+    }
+
+
     final SyntaxWraps getWraps()
     {
         return myWraps;
@@ -410,8 +447,11 @@ abstract class SyntaxValue
 
 
     /**
-     * Unwraps syntax, returning plain values. Only one layer is unwrapped, so
-     * if this is a container, the result will contain syntax objects.
+     * Unwraps syntax, propagating lexical context and returning a plain value.
+     * Only one layer is unwrapped: if the content is a container, the result will
+     * contain syntax objects.
+     * <p>
+     * This method is equivalent to Racket's `syntax-e`.
      */
     abstract Object unwrap(Evaluator eval)
         throws FusionException;
@@ -419,7 +459,7 @@ abstract class SyntaxValue
 
     /**
      * Unwraps syntax recursively, returning plain values.
-     * Used by `quote` and `synatax_to_datum`.
+     * Used by `quote` and `syntax_to_datum`.
      */
     abstract Object syntaxToDatum(Evaluator eval)
         throws FusionException;

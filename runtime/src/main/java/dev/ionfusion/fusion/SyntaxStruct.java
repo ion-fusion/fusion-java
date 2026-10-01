@@ -64,31 +64,22 @@ final class SyntaxStruct
     //========================================================================
 
 
-    SyntaxValue get(Evaluator eval, String fieldName)
+    @Override
+    synchronized void propagateLexicalContext(Evaluator eval, SyntaxWraps propagate)
         throws FusionException
     {
-        // This should only be called at runtime, after wraps are pushed.
-        assert myWraps == null;
+        StructFieldVisitor visitor =
+            (name, value) -> ((SyntaxValue) value).addWraps(propagate);
 
-        return (SyntaxValue) myStruct.elt(eval, fieldName);
+        myStruct = myStruct.transformFields(eval, visitor);
     }
 
 
     @Override
-    Object unwrap(Evaluator eval)
+    ImmutableStruct unwrap(Evaluator eval)
         throws FusionException
     {
-        if (myWraps == null || myStruct.size() == 0)
-        {
-            return myStruct;
-        }
-
-        StructFieldVisitor visitor =
-            (name, value) -> ((SyntaxValue) value).addWraps(myWraps);
-
-        myStruct = myStruct.transformFields(eval, visitor);
-        myWraps = null;
-
+        propagateLexicalContext(eval);
         return myStruct;
     }
 
@@ -113,22 +104,17 @@ final class SyntaxStruct
     SyntaxValue doExpand(final Expander expander, final Environment env)
         throws FusionException
     {
-        final Evaluator eval = expander.getEvaluator();
-        if (myStruct.size() == 0)
+        var eval = expander.getEvaluator();
+        var thisStruct = unwrap(eval);
+        if (thisStruct.size() == 0)
         {
             return this;
         }
 
-        StructFieldVisitor visitor = (name, value) -> {
-            SyntaxValue subform = (SyntaxValue) value;
-            if (myWraps != null)
-            {
-                subform = subform.addWraps(myWraps);
-            }
-            return expander.expandExpression(env, subform);
-        };
+        StructFieldVisitor visitor =
+            (name, value) -> expander.expandExpression(env, (SyntaxValue) value);
 
-        ImmutableStruct s = myStruct.transformFields(eval, visitor);
+        ImmutableStruct s = thisStruct.transformFields(eval, visitor);
 
         // Wraps have been pushed down so the copy doesn't need them.
         return new SyntaxStruct(getPosition(), s);

@@ -94,12 +94,6 @@ final class SyntaxSymbol
     //========================================================================
 
 
-    SyntaxSymbol stripLexicalInfo()
-    {
-        return myWraps == null ? this : (SyntaxSymbol) copyReplacingWraps(null);
-    }
-
-
     @Override
     SyntaxSymbol copyReplacing(SyntaxWraps wraps, Object[] properties)
     {
@@ -116,7 +110,7 @@ final class SyntaxSymbol
     SyntaxSymbol copyReplacingBinding(Binding binding)
     {
         SyntaxSymbol copy =
-            new SyntaxSymbol(myWraps, getPosition(), getProperties(), getName());
+            new SyntaxSymbol(getWraps(), getPosition(), getProperties(), getName());
         copy.myBoundId = uncachedResolveBoundIdentifier().copyReplacingBinding(binding);
         return copy;
     }

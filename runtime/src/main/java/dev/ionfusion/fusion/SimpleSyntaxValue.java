@@ -77,6 +77,21 @@ class SimpleSyntaxValue
 
     //========================================================================
 
+    @Override
+    void propagateLexicalContext(Evaluator eval)
+    {
+        // We have no children, so we don't need to propagate.
+        // More importantly, this override exists to prevent the super-method from
+        // clearing any context we have.
+    }
+
+    @Override
+    void propagateLexicalContext(Evaluator eval, SyntaxWraps propagate)
+    {
+        throw new IllegalStateException();
+    }
+
+
     Object getContent()
     {
         return myDatum;

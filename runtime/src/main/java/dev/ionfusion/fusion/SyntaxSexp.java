@@ -133,7 +133,7 @@ final class SyntaxSexp
         BaseSexp datum = (children == null
                               ? nullSexp(eval, annotations)
                               : immutableSexp(eval, annotations, children));
-        return new SyntaxSexp(getPosition(), getProperties(), myWraps, datum);
+        return new SyntaxSexp(getPosition(), getProperties(), getWraps(), datum);
     }
 
 
@@ -170,19 +170,13 @@ final class SyntaxSexp
     }
 
 
-    /**
-     * If we have wraps cached here, push them down into fresh copies of all
-     * children. This must be called before exposing any children outside of
-     * this instance, so that it appears as if the wraps were pushed when they
-     * were created.
-     */
-    private void pushWraps(Evaluator eval)
+    @Override
+    synchronized void propagateLexicalContext(Evaluator eval, SyntaxWraps propagate)
         throws FusionException
     {
-        if (myWraps != null && mySexp instanceof ImmutablePair)
+        if (mySexp instanceof ImmutablePair)
         {
-            mySexp = pushWraps(eval, (ImmutablePair) mySexp, myWraps);
-            myWraps = null;
+            mySexp = pushWraps(eval, (ImmutablePair) mySexp, propagate);
         }
     }
 
@@ -197,15 +191,14 @@ final class SyntaxSexp
     <T> T[] extract(Evaluator eval, Class<T> klass)
         throws FusionException
     {
-        pushWraps(eval);
+        var thisSexp = unwrap(eval);
+        if (isNullSexp(eval, thisSexp)) return null;
 
-        if (isNullSexp(eval, mySexp)) return null;
-
-        int len = unsafeSexpSize(eval, mySexp);
+        int len = unsafeSexpSize(eval, thisSexp);
         T[] extracted = (T[]) Array.newInstance(klass, len);
 
         int i = 0;
-        for (Object p = mySexp; isPair(eval, p); p = unsafePairTail(eval, p))
+        for (Object p = thisSexp; isPair(eval, p); p = unsafePairTail(eval, p))
         {
             extracted[i] = klass.cast(unsafePairHead(eval, p));
             i++;
@@ -218,10 +211,8 @@ final class SyntaxSexp
     void extract(Evaluator eval, List<SyntaxValue> list, int from)
         throws FusionException
     {
-        pushWraps(eval);
-
         int i = 0;
-        for (Object p = mySexp; isPair(eval, p); p = unsafePairTail(eval, p))
+        for (Object p = unwrap(eval); isPair(eval, p); p = unsafePairTail(eval, p))
         {
             if (from <= i)
             {
@@ -245,8 +236,7 @@ final class SyntaxSexp
     SyntaxValue get(Evaluator eval, int index)
         throws FusionException
     {
-        pushWraps(eval);
-        return (SyntaxValue) unsafePairDot(eval, mySexp, index);
+        return (SyntaxValue) unsafePairDot(eval, unwrap(eval), index);
     }
 
 
@@ -285,7 +275,7 @@ final class SyntaxSexp
     BaseSexp<?> unwrap(Evaluator eval)
         throws FusionException
     {
-        pushWraps(eval);
+        propagateLexicalContext(eval);
         return mySexp;
     }
 
@@ -319,9 +309,7 @@ final class SyntaxSexp
             backSexp = unsafeListToSexp(eval, back);
         }
 
-        pushWraps(eval);
-
-        BaseSexp appended = mySexp.sexpAppend(eval, backSexp);
+        BaseSexp appended = unwrap(eval).sexpAppend(eval, backSexp);
         if (appended == null)
         {
             return null;
@@ -357,9 +345,7 @@ final class SyntaxSexp
     SyntaxSequence makeSubseq(Evaluator eval, int from)
         throws FusionException
     {
-        pushWraps(eval);
-
-        BaseSexp sub = (BaseSexp) subseq(eval, mySexp, from);
+        BaseSexp sub = (BaseSexp) subseq(eval, unwrap(eval), from);
 
         return make(eval, null, sub);
     }
@@ -376,11 +362,10 @@ final class SyntaxSexp
     SyntaxSymbol firstIdentifier(Evaluator eval)
         throws FusionException
     {
-        if (isPair(eval, mySexp))
+        var thisSexp = unwrap(eval);
+        if (isPair(eval, thisSexp))
         {
-            pushWraps(eval);
-
-            Object first = unsafePairHead(eval, mySexp);
+            Object first = unsafePairHead(eval, thisSexp);
             if (first instanceof SyntaxSymbol)
             {
                 return (SyntaxSymbol) first;

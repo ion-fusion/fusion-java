@@ -85,28 +85,23 @@ final class SyntaxList
         BaseList datum = (children == null
                               ? nullList(eval, annotations)
                               : immutableList(eval, annotations, children));
-        return new SyntaxList(getPosition(), getProperties(), myWraps, datum);
+        return new SyntaxList(getPosition(), getProperties(), getWraps(), datum);
     }
 
 
-    /**
-     * If we have wraps cached here, push them down into fresh copies of all
-     * children. This must be called before exposing any children outside of
-     * this instance, so that it appears as if the wraps were pushed when they
-     * were created.
-     */
-    private synchronized void pushWraps(Evaluator eval)
+    @Override
+    synchronized void propagateLexicalContext(Evaluator eval, SyntaxWraps propagate)
         throws FusionException
     {
         int len = myImmutableList.size();
-        if (myWraps != null && len > 0)
+        if (len > 0)
         {
             boolean changed = false;
             SyntaxValue[] children = new SyntaxValue[len];
             for (int i = 0; i < len; i++)
             {
                 SyntaxValue child = (SyntaxValue) myImmutableList.elt(eval, i);
-                SyntaxValue wrapped = child.addWraps(myWraps);
+                SyntaxValue wrapped = child.addWraps(propagate);
                 children[i] = wrapped;
                 changed |= wrapped != child;
             }
@@ -116,8 +111,6 @@ final class SyntaxList
                 BaseSymbol[] annotations = myImmutableList.getAnnotations();
                 myImmutableList = immutableList(eval, annotations, children);
             }
-
-            myWraps = null;
         }
     }
 
@@ -133,13 +126,12 @@ final class SyntaxList
     SyntaxValue[] extract(Evaluator eval)
         throws FusionException
     {
-        if (myImmutableList.isAnyNull()) return null;
+        var thisList = unwrap(eval);
+        if (thisList.isAnyNull()) return null;
 
-        pushWraps(eval);
-
-        int len = myImmutableList.size();
+        int len = thisList.size();
         SyntaxValue[] extracted = new SyntaxValue[len];
-        myImmutableList.unsafeCopy(eval, 0, extracted, 0, len);
+        thisList.unsafeCopy(eval, 0, extracted, 0, len);
         return extracted;
     }
 
@@ -148,8 +140,8 @@ final class SyntaxList
     SyntaxValue get(Evaluator eval, int index)
         throws FusionException
     {
-        pushWraps(eval);
-        return (SyntaxValue) myImmutableList.elt(eval, index);
+        var thisList = unwrap(eval);
+        return (SyntaxValue) thisList.elt(eval, index);
     }
 
 
@@ -163,11 +155,11 @@ final class SyntaxList
 
         if (newLength == 0) return this;
 
+        var thisList = unwrap(eval);
         Object[] children = new Object[newLength];
         if (thisLength != 0)
         {
-            pushWraps(eval);
-            myImmutableList.unsafeCopy(eval, 0, children, 0, thisLength);
+            thisList.unsafeCopy(eval, 0, children, 0, thisLength);
         }
         if (thatLength != 0)
         {
@@ -177,7 +169,7 @@ final class SyntaxList
             arraycopy(c, 0, children, thisLength, thatLength);
         }
 
-        BaseSymbol[] anns = myImmutableList.getAnnotations();
+        BaseSymbol[] anns = thisList.getAnnotations();
         BaseList list = immutableList(eval, anns, children);
         return new SyntaxList(eval, null, list);
     }
@@ -187,25 +179,25 @@ final class SyntaxList
     SyntaxSequence makeSubseq(Evaluator eval, int from)
         throws FusionException
     {
-        if ((myImmutableList.size() == 0 || from == 0)
-            && ! myImmutableList.isAnnotated())
+        var thisList = unwrap(eval);
+
+        if ((thisList.size() == 0 || from == 0)
+            && ! thisList.isAnnotated())
         {
             return this;
         }
 
-        pushWraps(eval);
-
         BaseList list;
-        if (myImmutableList.isAnyNull())
+        if (thisList.isAnyNull())
         {
             list = FusionList.NULL_LIST;
         }
         else
         {
             // TODO will crash if `from` is beyond the end of the list
-            int len = myImmutableList.size();
+            int len = thisList.size();
             Object[] children = new Object[len - from];
-            myImmutableList.unsafeCopy(eval, from, children, 0, children.length);
+            thisList.unsafeCopy(eval, from, children, 0, children.length);
             list = immutableList(eval, EMPTY_STRING_ARRAY, children);
         }
 
@@ -240,10 +232,10 @@ final class SyntaxList
 
 
     @Override
-    Object unwrap(Evaluator eval)
+    BaseList unwrap(Evaluator eval)
         throws FusionException
     {
-        pushWraps(eval);
+        propagateLexicalContext(eval);
         return myImmutableList;
     }
 
