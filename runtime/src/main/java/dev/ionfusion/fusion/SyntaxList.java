@@ -59,13 +59,6 @@ final class SyntaxList
     }
 
 
-    @Override
-    Object visit(Visitor v) throws FusionException
-    {
-        return v.accept(this);
-    }
-
-
     /**
      * @param datum an immutable list of {@link SyntaxValue}s.
      */

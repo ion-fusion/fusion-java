@@ -3,17 +3,26 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.commons.util.Empties.EMPTY_OBJECT_ARRAY;
 import static dev.ionfusion.fusion.FusionIo.safeWrite;
 import static dev.ionfusion.fusion.FusionList.immutableList;
+import static dev.ionfusion.fusion.FusionList.isImmutableList;
+import static dev.ionfusion.fusion.FusionList.isList;
 import static dev.ionfusion.fusion.FusionList.unsafeListElement;
 import static dev.ionfusion.fusion.FusionSexp.isPair;
+import static dev.ionfusion.fusion.FusionSexp.isSexp;
+import static dev.ionfusion.fusion.FusionSexp.unsafePairDot;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairTailN;
+import static dev.ionfusion.fusion.FusionSexp.unsafeSexpSize;
 import static dev.ionfusion.fusion.FusionString.stringToJavaString;
 import static dev.ionfusion.fusion.FusionStruct.emptyStruct;
 import static dev.ionfusion.fusion.FusionStruct.immutableStruct;
+import static dev.ionfusion.fusion.FusionStruct.isImmutableStruct;
+import static dev.ionfusion.fusion.FusionStruct.isStruct;
 import static dev.ionfusion.fusion.FusionStruct.nullStruct;
+import static dev.ionfusion.fusion.FusionSymbol.isSymbol;
 import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionValue.isAnnotated;
 import static dev.ionfusion.fusion.FusionValue.isAnyNull;
@@ -22,7 +31,6 @@ import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.LetValuesForm.compilePlainLet;
 import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 import static dev.ionfusion.fusion.UnboundIdentifierException.makeUnboundError;
-import static dev.ionfusion.commons.util.Empties.EMPTY_OBJECT_ARRAY;
 
 import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionSexp.BaseSexp;
@@ -99,94 +107,66 @@ class Compiler
     /**
      * @see FusionEval#evalCompileTimePartOfTopLevel
      */
-    void evalCompileTimePart(final TopLevelNamespace topNs,
-                             final SyntaxValue       stx)
+    void evalCompileTimePart(TopLevelNamespace topNs, SyntaxValue stx)
         throws FusionException
     {
-        SyntaxValue.Visitor v = new SyntaxValue.Visitor()
+        var content = stx.unwrap(myEval);
+        if (! isPair(myEval, content))
         {
-            @Override
-            Object accept(SyntaxValue stx) throws FusionException
-            {
-                return null;
-            }
+            return;
+        }
 
-            @Override
-            Object accept(SyntaxSexp stx) throws FusionException
+        var first = unsafePairDot(myEval, content, 0);
+        if (first instanceof SyntaxSymbol)
+        {
+            SyntacticForm form = ((SyntaxSymbol) first).resolveSyntaxMaybe(topNs);
+            if (form != null)
             {
-                SyntaxValue first = stx.get(myEval, 0);
-                if (first instanceof SyntaxSymbol)
-                {
-                    SyntacticForm form =
-                        ((SyntaxSymbol) first).resolveSyntaxMaybe(topNs);
-                    if (form != null)
-                    {
-                        // TODO Eliminate this tail-call.
-                        //  https://github.com/ion-fusion/fusion-java/issues/71
-                        form.evalCompileTimePart(Compiler.this, topNs, stx);
-                    }
-                }
-                return null;
+                // TODO Eliminate this tail-call.
+                //  https://github.com/ion-fusion/fusion-java/issues/71
+                form.evalCompileTimePart(Compiler.this, topNs, (SyntaxSexp) stx);
             }
-        };
-
-        stx.visit(v);
+        }
     }
 
 
     /**
-     * Compiles a single fully-expanded core syntax form.
+     * Compiles a single fully expanded core syntax form.
      */
     CompiledForm compileExpression(final Environment env, SyntaxValue stx)
         throws FusionException
     {
-        SyntaxValue.Visitor v = new SyntaxValue.Visitor()
+        var content = stx.unwrap(myEval);
+
+        if (isSexp(myEval, content))
         {
-            @Override
-            Object accept(SimpleSyntaxValue stx) throws FusionException
-            {
-                return new CompiledConstant(stx.unwrap(myEval));
-            }
+            return compileSexp(env, stx);
+        }
 
-            @Override
-            Object accept(SyntaxSymbol stx) throws FusionException
-            {
-                assert stx.getBinding() != null : "No binding for " + stx;
-                return compileReference(env, stx);
-            }
+        if (isSymbol(myEval, content))
+        {
+            // TODO #112 Keywords need to be handled here
+            return compileReference(env, stx);
+        }
 
-            @Override
-            Object accept(SyntaxKeyword stx) throws FusionException
-            {
-                throw new IllegalStateException("Should not get here");
-            }
+        if (isList(myEval, content))
+        {
+            return compileListSemiliteral(env, stx);
+        }
 
-            @Override
-            Object accept(SyntaxList stx) throws FusionException
-            {
-                return compileListSemiliteral(env, stx);
-            }
+        if (isStruct(myEval, content))
+        {
+            return compileStructSemiliteral(env, stx);
+        }
 
-            @Override
-            Object accept(SyntaxSexp stx) throws FusionException
-            {
-                return compileExpression(env, stx);
-            }
-
-            @Override
-            Object accept(SyntaxStruct stx) throws FusionException
-            {
-                return compileStructSemiliteral(env, stx);
-            }
-        };
-
-        return (CompiledForm) stx.visit(v);
+        return new CompiledConstant(content);
     }
 
 
-    CompiledForm compileExpression(Environment env, SyntaxSexp stx)
+    CompiledForm compileSexp(Environment env, SyntaxValue syntax)
         throws FusionException
     {
+        SyntaxSexp stx = (SyntaxSexp) syntax;
         SyntacticForm form = stx.syntaxForm(myEval, env);
         if (form != null)
         {
@@ -425,10 +405,10 @@ class Compiler
     }
 
 
-    private CompiledForm compileReference(final Environment  env,
-                                          final SyntaxSymbol identifier)
+    private CompiledForm compileReference(Environment env, SyntaxValue stx)
         throws FusionException
     {
+        SyntaxSymbol identifier = (SyntaxSymbol) stx;
         Binding.Visitor v = new Binding.Visitor()
         {
             @Override
@@ -574,11 +554,14 @@ class Compiler
     }
 
 
-    CompiledForm compileSet(final Environment env, SyntaxSexp stx)
+    CompiledForm compileSet(final Environment env, SyntaxValue stx)
         throws FusionException
     {
-        final CompiledForm valueForm =
-            compileExpression(env, stx.get(myEval, 2));
+        Object sexp = stx.unwrap(myEval);
+        assert isPair(myEval, sexp) && (unsafeSexpSize(myEval, sexp) == 3);
+
+        SyntaxValue expr = (SyntaxValue) unsafePairDot(myEval, sexp, 2);
+        CompiledForm valueForm = compileExpression(env, expr);
 
         Binding.Visitor v = new Binding.Visitor()
         {
@@ -604,17 +587,17 @@ class Compiler
             }
         };
 
-        SyntaxSymbol id = (SyntaxSymbol) stx.get(myEval, 1);
+        SyntaxSymbol id = (SyntaxSymbol) unsafePairDot(myEval, sexp, 1);
         Binding binding = id.getBinding();
         return (CompiledForm) binding.visit(v);
     }
 
 
-    private CompiledForm compileListSemiliteral(Environment env,
-                                                SyntaxList  stx)
+    private CompiledForm compileListSemiliteral(Environment env, SyntaxValue stx)
         throws FusionException
     {
         Object list = stx.unwrap(myEval);
+        assert isImmutableList(myEval, list);
 
         // Annotations on this form are not handled here.
         assert ! isAnnotated(myEval, list);
@@ -626,7 +609,7 @@ class Compiler
 
         boolean allConstant = true;
 
-        int len = stx.size(myEval);
+        int len = FusionList.unsafeListSize(myEval, list);
         CompiledForm[] children = new CompiledForm[len];
         for (int i = 0; i < len; i++)
         {
@@ -655,11 +638,11 @@ class Compiler
     }
 
 
-    private CompiledForm compileStructSemiliteral(final Environment  env,
-                                                  final SyntaxStruct stx)
+    private CompiledForm compileStructSemiliteral(Environment env, SyntaxValue stx)
         throws FusionException
     {
         Object struct = stx.unwrap(myEval);
+        assert isImmutableStruct(myEval, struct);
 
         // Annotations on this form are not handled here.
         assert ! FusionValue.isAnnotated(myEval, struct);

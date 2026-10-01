@@ -94,13 +94,6 @@ final class SyntaxSymbol
     //========================================================================
 
 
-    @Override
-    Object visit(Visitor v) throws FusionException
-    {
-        return v.accept(this);
-    }
-
-
     SyntaxSymbol stripLexicalInfo()
     {
         return myWraps == null ? this : (SyntaxSymbol) copyReplacingWraps(null);

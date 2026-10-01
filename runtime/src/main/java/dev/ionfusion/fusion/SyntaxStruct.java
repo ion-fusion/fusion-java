@@ -64,13 +64,6 @@ final class SyntaxStruct
     //========================================================================
 
 
-    @Override
-    Object visit(Visitor v) throws FusionException
-    {
-        return v.accept(this);
-    }
-
-
     SyntaxValue get(Evaluator eval, String fieldName)
         throws FusionException
     {
