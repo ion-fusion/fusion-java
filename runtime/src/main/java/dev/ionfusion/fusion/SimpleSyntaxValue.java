@@ -6,18 +6,16 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.commons.util.Empties.EMPTY_OBJECT_ARRAY;
 
 import dev.ionfusion.commons.resources.ResourcePosition;
+import dev.ionfusion.fusion.FusionCollection.BaseCollection;
 import dev.ionfusion.runtime.base.FusionException;
 
 /**
- * Implementation of most {@link SyntaxValue}s, which consist of a simple
- * wrapped datum.
+ * Implementation of most {@link SyntaxValue}s, the content of which does not contain
+ * other syntax objects.
  */
 class SimpleSyntaxValue
-    extends SyntaxValue
+    extends GenericSyntaxValue<Object>
 {
-    private final Object myDatum;
-
-
     /**
      * @param wraps can be null.
      * @param pos can be null.
@@ -29,9 +27,10 @@ class SimpleSyntaxValue
                       Object[] properties,
                       Object datum)
     {
-        super(wraps, pos, properties);
+        super(datum, wraps, pos, properties);
         assert !(datum instanceof SyntaxValue);
-        myDatum = datum;
+        assert !(datum instanceof BaseCollection);
+        // TODO we could contain empty or null collections
     }
 
     /**
@@ -48,7 +47,7 @@ class SimpleSyntaxValue
     @Override
     SimpleSyntaxValue copyReplacing(SyntaxWraps wraps, Object[] properties)
     {
-        return new SimpleSyntaxValue(wraps, getPosition(), properties, myDatum);
+        return new SimpleSyntaxValue(wraps, getPosition(), properties, getContent());
     }
 
 
@@ -85,30 +84,17 @@ class SimpleSyntaxValue
         // clearing any context we have.
     }
 
-    @Override
-    void propagateLexicalContext(Evaluator eval, SyntaxWraps propagate)
+    final Object propagateLexicalContent(Evaluator eval,
+                                         Object content,
+                                         SyntaxWraps propagate)
     {
         throw new IllegalStateException();
-    }
-
-
-    Object getContent()
-    {
-        return myDatum;
-    }
-
-
-    @Override
-    Object unwrap(Evaluator eval)
-        throws FusionException
-    {
-        return myDatum;
     }
 
     @Override
     Object syntaxToDatum(Evaluator eval)
         throws FusionException
     {
-        return myDatum;
+        return getContent();
     }
 }
