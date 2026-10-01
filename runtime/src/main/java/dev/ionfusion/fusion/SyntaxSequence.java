@@ -9,7 +9,7 @@ import dev.ionfusion.fusion.FusionSequence.BaseSequence;
 import dev.ionfusion.runtime.base.FusionException;
 
 abstract class SyntaxSequence<Content extends BaseSequence>
-    extends GenericSyntaxValue<Content>
+    extends SyntaxValue<Content>
 {
     SyntaxSequence(Content content, ResourcePosition pos, Object[] properties, SyntaxWraps wraps)
     {

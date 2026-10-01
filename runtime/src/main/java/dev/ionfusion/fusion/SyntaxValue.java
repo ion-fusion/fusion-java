@@ -20,7 +20,7 @@ import java.util.Arrays;
  * Unlike the {@link IonValue} model, this one allows sharing of nodes in a
  * DAG structure.
  */
-abstract class SyntaxValue
+abstract class SyntaxValue<Content>
     extends BaseValue
 {
     /** A zero-length array. */
@@ -40,11 +40,16 @@ abstract class SyntaxValue
     final static Object[] ORIGINAL_STX_PROPS =
         new Object[] { STX_PROPERTY_ORIGINAL, Boolean.TRUE };
 
+    /**
+     * The wrapped content; not null.
+     * Can be mutated by {@link #propagateLexicalContext(Evaluator)}
+     */
+    private Content myContent;
 
     /**
      * The lexical context collected during expansion.
-     * It is not final because we uses mutation to lazily propagate context to children.
-     *
+     * It is not final because we use mutation to lazily propagate context to children.
+     * <p>
      * TODO make private to control mutation.
      * TODO make non-null to streamline logic.
      */
@@ -57,12 +62,18 @@ abstract class SyntaxValue
 
 
     /**
+     * @param content must not be null and must not be a {@link SyntaxValue}.
      * @param pos can be null.
      * @param properties must not be null.
      */
-    SyntaxValue(SyntaxWraps wraps, ResourcePosition pos, Object[] properties)
+    SyntaxValue(Content content,
+                SyntaxWraps wraps,
+                ResourcePosition pos,
+                Object[] properties)
     {
+        assert !(content instanceof SyntaxValue);
         assert properties != null;
+        myContent = content;
         myWraps = wraps;
         myPosition = pos;
         myProperties = properties;
@@ -71,22 +82,22 @@ abstract class SyntaxValue
     /**
      * @param pos can be null.
      */
-    SyntaxValue(SyntaxWraps wraps, ResourcePosition pos)
+    SyntaxValue(Content content, SyntaxWraps wraps, ResourcePosition pos)
     {
-        this(wraps, pos, EMPTY_OBJECT_ARRAY);
+        this(content, wraps, pos, EMPTY_OBJECT_ARRAY);
     }
 
     /** Does not propagate context! */
-    abstract SyntaxValue copyReplacing(SyntaxWraps wraps, Object[] properties);
+    abstract SyntaxValue<Content> copyReplacing(SyntaxWraps wraps, Object[] properties);
 
     /** Does not propagate context! */
-    private SyntaxValue copyReplacingWraps(SyntaxWraps wraps)
+    private SyntaxValue<Content> copyReplacingWraps(SyntaxWraps wraps)
     {
         return copyReplacing(wraps, getProperties());
     }
 
     /** Does not propagate context! */
-    private SyntaxValue copyReplacingProperties(Object[] properties)
+    private SyntaxValue<Content> copyReplacingProperties(Object[] properties)
     {
         return copyReplacing(getWraps(), properties);
     }
@@ -158,7 +169,7 @@ abstract class SyntaxValue
     }
 
 
-    SyntaxValue copyWithProperty(Evaluator eval, Object key, Object value)
+    SyntaxValue<Content> copyWithProperty(Evaluator eval, Object key, Object value)
         throws FusionException
     {
         // Determine whether the property already exists so we can replace it.
@@ -186,15 +197,15 @@ abstract class SyntaxValue
     // Original syntax tracking
 
     @Override
-    final SyntaxValue makeOriginalSyntax(Evaluator eval, ResourcePosition pos)
+    final SyntaxValue<Content> makeOriginalSyntax(Evaluator eval, ResourcePosition pos)
     {
         throw new IllegalStateException("Cannot wrap syntax as syntax");
     }
 
 
-    final SyntaxValue trackOrigin(Evaluator    eval,
-                                  SyntaxValue  origStx,
-                                  SyntaxSymbol origin)
+    final SyntaxValue<Content> trackOrigin(Evaluator      eval,
+                                           SyntaxValue<?> origStx,
+                                           SyntaxSymbol   origin)
         throws FusionException
     {
         Object stxPropOrigin = eval.getGlobalState().myStxPropOrigin;
@@ -323,7 +334,7 @@ abstract class SyntaxValue
     /**
      * @param context can be null.
      */
-    final SyntaxValue initLexicalContext(SyntaxValue context)
+    final SyntaxValue<Content> initLexicalContext(SyntaxValue<?> context)
     {
         assert !(context instanceof SyntaxStruct) &&
                !(context instanceof SyntaxSequence)
@@ -350,7 +361,7 @@ abstract class SyntaxValue
     {
         if (myWraps != null)
         {
-            propagateLexicalContext(eval, myWraps);
+            myContent = propagateLexicalContent(eval, myContent, myWraps);
             myWraps = null;
         }
     }
@@ -360,11 +371,13 @@ abstract class SyntaxValue
      *
      * @param propagate is not null
      */
-    abstract void propagateLexicalContext(Evaluator eval, SyntaxWraps propagate)
+    abstract Content propagateLexicalContent(Evaluator eval,
+                                             Content content,
+                                             SyntaxWraps propagate)
         throws FusionException;
 
 
-    final SyntaxValue stripLexicalContext(Evaluator eval)
+    final SyntaxValue<Content> stripLexicalContext(Evaluator eval)
         throws FusionException
     {
         // Make sure we don't lose cached context that should be on children.
@@ -382,7 +395,7 @@ abstract class SyntaxValue
      * Prepends a wrap onto our existing wraps.
      * This will return a new instance as necessary to preserve immutability.
      */
-    final SyntaxValue addWrap(SyntaxWrap wrap)
+    final SyntaxValue<Content> addWrap(SyntaxWrap wrap)
         throws FusionException
     {
         assert wrap != null;
@@ -403,7 +416,7 @@ abstract class SyntaxValue
      * Prepends a sequence of wraps onto our existing wraps.
      * This will return a new instance as necessary to preserve immutability.
      */
-    final SyntaxValue addWraps(SyntaxWraps wraps)
+    final SyntaxValue<Content> addWraps(SyntaxWraps wraps)
         throws FusionException
     {
         assert wraps != null;
@@ -439,12 +452,20 @@ abstract class SyntaxValue
     //========================================================================
 
     /** Don't call directly! Go through the evaluator. */
-    SyntaxValue doExpand(Expander expander, Environment env)
+    SyntaxValue<Content> doExpand(Expander expander, Environment env)
         throws FusionException
     {
         return this;
     }
 
+
+    /**
+     * Returns our content like {@link #unwrap}, but does not propagate context.
+     */
+    final Content getContent()
+    {
+        return myContent;
+    }
 
     /**
      * Unwraps syntax, propagating lexical context and returning a plain value.
@@ -453,8 +474,12 @@ abstract class SyntaxValue
      * <p>
      * This method is equivalent to Racket's `syntax-e`.
      */
-    abstract Object unwrap(Evaluator eval)
-        throws FusionException;
+    Content unwrap(Evaluator eval)
+        throws FusionException
+    {
+        propagateLexicalContext(eval);
+        return myContent;
+    }
 
 
     /**

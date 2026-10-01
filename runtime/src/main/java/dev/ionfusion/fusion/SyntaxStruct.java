@@ -9,7 +9,7 @@ import dev.ionfusion.fusion.FusionStruct.StructFieldVisitor;
 import dev.ionfusion.runtime.base.FusionException;
 
 final class SyntaxStruct
-    extends GenericSyntaxValue<ImmutableStruct>
+    extends SyntaxValue<ImmutableStruct>
 {
     /**
      * @param struct must not be null.

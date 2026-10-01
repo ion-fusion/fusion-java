@@ -10,11 +10,11 @@ import dev.ionfusion.fusion.FusionCollection.BaseCollection;
 import dev.ionfusion.runtime.base.FusionException;
 
 /**
- * Implementation of most {@link SyntaxValue}s, the content of which does not contain
+ * Implementation of {@link SyntaxValue}s for content that does not contain
  * other syntax objects.
  */
 class SimpleSyntaxValue
-    extends GenericSyntaxValue<Object>
+    extends SyntaxValue<Object>
 {
     /**
      * @param wraps can be null.
