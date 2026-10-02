@@ -26,14 +26,14 @@ final class SyntaxString
                                      ResourcePosition pos,
                                      BaseString       datum)
     {
-        return new SyntaxString(null, pos, ORIGINAL_STX_PROPS, datum);
+        return new SyntaxString(SyntaxWraps.EMPTY, pos, ORIGINAL_STX_PROPS, datum);
     }
 
     static SyntaxString make(Evaluator        eval,
                              ResourcePosition pos,
                              BaseString       datum)
     {
-        return new SyntaxString(null, pos, EMPTY_OBJECT_ARRAY, datum);
+        return new SyntaxString(SyntaxWraps.EMPTY, pos, EMPTY_OBJECT_ARRAY, datum);
     }
 
 

@@ -40,7 +40,7 @@ class SimpleSyntaxValue
      */
     private SimpleSyntaxValue(ResourcePosition pos, Object[] properties, Object datum)
     {
-        this(null, pos, properties, datum);
+        this(SyntaxWraps.EMPTY, pos, properties, datum);
     }
 
 

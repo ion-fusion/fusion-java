@@ -32,7 +32,7 @@ final class SyntaxKeyword
                           Object[]         properties,
                           BaseSymbol       datum)
     {
-        super(null, pos, properties, datum);
+        super(SyntaxWraps.EMPTY, pos, properties, datum);
     }
 
 

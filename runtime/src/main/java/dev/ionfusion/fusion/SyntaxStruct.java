@@ -27,7 +27,7 @@ final class SyntaxStruct
      */
     private SyntaxStruct(ResourcePosition pos, ImmutableStruct struct)
     {
-        super(struct, null, pos);
+        super(struct, pos);
     }
 
 
@@ -43,7 +43,7 @@ final class SyntaxStruct
                                      ResourcePosition pos,
                                      ImmutableStruct struct)
     {
-        return new SyntaxStruct(pos, ORIGINAL_STX_PROPS, null, struct);
+        return new SyntaxStruct(pos, ORIGINAL_STX_PROPS, SyntaxWraps.EMPTY, struct);
     }
 
 

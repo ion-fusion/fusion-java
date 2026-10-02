@@ -53,7 +53,7 @@ final class SyntaxList
      */
     static SyntaxList makeOriginal(Evaluator eval, ResourcePosition pos, BaseList datum)
     {
-        return new SyntaxList(pos, ORIGINAL_STX_PROPS, null, datum);
+        return new SyntaxList(pos, ORIGINAL_STX_PROPS, SyntaxWraps.EMPTY, datum);
     }
 
     /**

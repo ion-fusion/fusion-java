@@ -59,7 +59,7 @@ final class SyntaxSexp
 
     static SyntaxSexp makeOriginal(Evaluator eval, ResourcePosition pos, BaseSexp sexp)
     {
-        return new SyntaxSexp(pos, ORIGINAL_STX_PROPS, null, sexp);
+        return new SyntaxSexp(pos, ORIGINAL_STX_PROPS, SyntaxWraps.EMPTY, sexp);
     }
 
     static SyntaxSexp make(Evaluator eval, ResourcePosition pos, BaseSexp sexp)

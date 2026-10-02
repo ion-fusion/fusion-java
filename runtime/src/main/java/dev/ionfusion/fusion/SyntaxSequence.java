@@ -18,7 +18,7 @@ abstract class SyntaxSequence<Content extends BaseSequence>
 
     SyntaxSequence(Content content, ResourcePosition pos)
     {
-        super(content, null, pos);
+        super(content, pos);
     }
 
 

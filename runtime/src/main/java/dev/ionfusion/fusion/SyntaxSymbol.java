@@ -15,7 +15,6 @@ import static dev.ionfusion.fusion.UnboundIdentifierException.makeUnboundError;
 import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
-import java.util.Collections;
 import java.util.Set;
 
 final class SyntaxSymbol
@@ -68,7 +67,7 @@ final class SyntaxSymbol
      */
     static SyntaxSymbol makeOriginal(ResourcePosition pos, BaseSymbol symbol)
     {
-        return new SyntaxSymbol(null, pos, ORIGINAL_STX_PROPS, symbol);
+        return new SyntaxSymbol(SyntaxWraps.EMPTY, pos, ORIGINAL_STX_PROPS, symbol);
     }
 
     /**
@@ -77,7 +76,7 @@ final class SyntaxSymbol
      */
     static SyntaxSymbol make(ResourcePosition pos, BaseSymbol symbol)
     {
-        return new SyntaxSymbol(null, pos, EMPTY_OBJECT_ARRAY, symbol);
+        return new SyntaxSymbol(SyntaxWraps.EMPTY, pos, EMPTY_OBJECT_ARRAY, symbol);
     }
 
 
@@ -87,7 +86,7 @@ final class SyntaxSymbol
     static SyntaxSymbol make(Evaluator eval, String value)
     {
         BaseSymbol datum = makeSymbol(eval, value);
-        return new SyntaxSymbol(null, null, EMPTY_OBJECT_ARRAY, datum);
+        return new SyntaxSymbol(SyntaxWraps.EMPTY, null, EMPTY_OBJECT_ARRAY, datum);
     }
 
 
@@ -132,7 +131,6 @@ final class SyntaxSymbol
      */
     Set<MarkWrap> computeMarks()
     {
-        if (myWraps == null) return Collections.emptySet();
         return myWraps.computeMarks();
     }
 
@@ -162,12 +160,8 @@ final class SyntaxSymbol
     BoundIdentifier uncachedResolveBoundIdentifier()
     {
         if (myBoundId != null) return myBoundId;
-        if (myWraps != null)
-        {
-            return myWraps.resolveBoundIdentifier(getName());
-        }
-        return new BoundIdentifier(new FreeBinding(getName()),
-                                   Collections.emptySet());
+
+        return myWraps.resolveBoundIdentifier(getName());
     }
 
     /**
@@ -221,7 +215,7 @@ final class SyntaxSymbol
     Binding uncachedResolveMaybe()
     {
         if (myBoundId != null) return myBoundId.getBinding();
-        if (myWraps   == null) return null;
+
         return myWraps.resolveMaybe(getName());
     }
 
@@ -232,11 +226,7 @@ final class SyntaxSymbol
      */
     SyntaxSymbol copyAndResolveTop()
     {
-        Binding b = null;
-        if (myWraps != null)
-        {
-            b = myWraps.resolveTopMaybe(getName());
-        }
+        Binding b = myWraps.resolveTopMaybe(getName());
         if (b == null)
         {
             b = new FreeBinding(getName());

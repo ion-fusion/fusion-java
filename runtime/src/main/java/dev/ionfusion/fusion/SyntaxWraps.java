@@ -15,8 +15,11 @@ import java.util.Set;
  * expansion and compilation.  An instance may be associated with more than one
  * syntax object, so the underlying object is not referenced here.
  */
-final class SyntaxWraps
+class SyntaxWraps
 {
+    final static SyntaxWraps EMPTY = new SyntaxWraps.Empty();
+
+
     /** Not null. */
     private final SyntaxWrap[] myWraps;
 
@@ -27,6 +30,8 @@ final class SyntaxWraps
 
     static SyntaxWraps make(SyntaxWrap... initialWraps)
     {
+        if (initialWraps.length == 0) return EMPTY;
+
         return new SyntaxWraps(initialWraps);
     }
 
@@ -64,6 +69,9 @@ final class SyntaxWraps
         // TODO this should use a linked-list to avoid copies
         int prefixLen = wraps.myWraps.length;
         int suffixLen =  this.myWraps.length;
+
+        if (suffixLen == 0) return this; // Nothing to add
+
         int len = prefixLen + suffixLen;
 
         SyntaxWrap[] combined = new SyntaxWrap[len];
@@ -120,7 +128,7 @@ final class SyntaxWraps
      */
     Binding resolveMaybe(BaseSymbol name)
     {
-        if (myWraps.length == 0) return null;
+        assert myWraps.length > 0;
         Set<MarkWrap> marks = new HashSet<>();
         return doResolveMaybe(name, marks);
     }
@@ -140,7 +148,7 @@ final class SyntaxWraps
      */
     Binding resolveTopMaybe(BaseSymbol name)
     {
-        if (myWraps.length == 0) return null;
+        assert myWraps.length > 0;
 
         Iterator<SyntaxWrap> i = Arrays.asList(myWraps).iterator();
 
@@ -154,15 +162,54 @@ final class SyntaxWraps
      */
     BoundIdentifier resolveBoundIdentifier(BaseSymbol name)
     {
-        if (myWraps.length == 0)
-        {
-            return new BoundIdentifier(new FreeBinding(name),
-                                       Collections.<MarkWrap>emptySet());
-        }
+        assert myWraps.length > 0;
 
         Set<MarkWrap> marks = new HashSet<>();
         Binding binding = doResolveMaybe(name, marks);
         if (binding == null) binding = new FreeBinding(name);
         return new BoundIdentifier(binding, marks);
+    }
+
+
+    private static final class Empty
+        extends SyntaxWraps
+    {
+        private Empty()
+        {
+            super(new SyntaxWrap[0]);
+        }
+
+        @Override
+        SyntaxWraps addWrap(SyntaxWrap wrap)
+        {
+            return new SyntaxWraps(wrap);
+        }
+
+        @Override
+        SyntaxWraps addWraps(SyntaxWraps wraps)
+        {
+            return wraps;
+        }
+
+        @Override
+        public Set<MarkWrap> computeMarks()
+        {
+            return Collections.emptySet();
+        }
+
+        Binding resolveMaybe(BaseSymbol name)
+        {
+            return null;
+        }
+
+        Binding resolveTopMaybe(BaseSymbol name)
+        {
+            return null;
+        }
+
+        BoundIdentifier resolveBoundIdentifier(BaseSymbol name)
+        {
+            return new BoundIdentifier(new FreeBinding(name), Collections.emptySet());
+        }
     }
 }

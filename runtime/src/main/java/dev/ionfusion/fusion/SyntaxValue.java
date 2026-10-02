@@ -47,11 +47,10 @@ abstract class SyntaxValue<Content>
     private Content myContent;
 
     /**
-     * The lexical context collected during expansion.
+     * The lexical context collected during expansion; not null.
      * It is not final because we use mutation to lazily propagate context to children.
      * <p>
      * TODO make private to control mutation.
-     * TODO make non-null to streamline logic.
      */
     SyntaxWraps myWraps;
 
@@ -72,6 +71,7 @@ abstract class SyntaxValue<Content>
                 Object[] properties)
     {
         assert !(content instanceof SyntaxValue);
+        assert wraps != null;
         assert properties != null;
         myContent = content;
         myWraps = wraps;
@@ -86,6 +86,15 @@ abstract class SyntaxValue<Content>
     {
         this(content, wraps, pos, EMPTY_OBJECT_ARRAY);
     }
+
+    /**
+     * @param pos can be null.
+     */
+    SyntaxValue(Content content, ResourcePosition pos)
+    {
+        this(content, SyntaxWraps.EMPTY, pos, EMPTY_OBJECT_ARRAY);
+    }
+
 
     /** Does not propagate context! */
     abstract SyntaxValue<Content> copyReplacing(SyntaxWraps wraps, Object[] properties);
@@ -339,11 +348,11 @@ abstract class SyntaxValue<Content>
         assert !(context instanceof SyntaxStruct) &&
                !(context instanceof SyntaxSequence)
             : "Can't use container as lexical context; see #68";
-        assert myWraps == null : "Already initialized";
+        assert myWraps == SyntaxWraps.EMPTY : "Already initialized";
 
         if (context != null)
         {
-            myWraps = context.myWraps;  // Could still be null
+            myWraps = context.myWraps;
         }
         return this;
     }
@@ -359,10 +368,10 @@ abstract class SyntaxValue<Content>
     synchronized void propagateLexicalContext(Evaluator eval)
         throws FusionException
     {
-        if (myWraps != null)
+        if (myWraps != SyntaxWraps.EMPTY)
         {
             myContent = propagateLexicalContent(eval, myContent, myWraps);
-            myWraps = null;
+            myWraps = SyntaxWraps.EMPTY;
         }
     }
 
@@ -382,7 +391,9 @@ abstract class SyntaxValue<Content>
     {
         // Make sure we don't lose cached context that should be on children.
         propagateLexicalContext(eval);
-        return myWraps == null ? this : copyReplacingWraps(null);
+        return myWraps == SyntaxWraps.EMPTY
+               ? this
+               : copyReplacingWraps(SyntaxWraps.EMPTY);
     }
 
 
@@ -400,15 +411,8 @@ abstract class SyntaxValue<Content>
     {
         assert wrap != null;
 
-        SyntaxWraps newWraps;
-        if (myWraps == null)
-        {
-            newWraps = SyntaxWraps.make(wrap);
-        }
-        else
-        {
-            newWraps = myWraps.addWrap(wrap);
-        }
+        SyntaxWraps newWraps = myWraps.addWrap(wrap);
+
         return copyReplacingWraps(newWraps);
     }
 
@@ -421,15 +425,8 @@ abstract class SyntaxValue<Content>
     {
         assert wraps != null;
 
-        SyntaxWraps newWraps;
-        if (myWraps == null)
-        {
-            newWraps = wraps;
-        }
-        else
-        {
-            newWraps = myWraps.addWraps(wraps);
-        }
+        SyntaxWraps newWraps = myWraps.addWraps(wraps);
+
         return copyReplacingWraps(newWraps);
     }
 
@@ -445,7 +442,7 @@ abstract class SyntaxValue<Content>
 
     boolean hasMarks(Evaluator eval)
     {
-        return (myWraps != null && myWraps.hasMarks(eval));
+        return myWraps.hasMarks(eval);
     }
 
 
