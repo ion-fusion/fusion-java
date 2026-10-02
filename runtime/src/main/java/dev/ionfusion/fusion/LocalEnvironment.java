@@ -3,12 +3,13 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.commons.util.Empties.EMPTY_STRING_ARRAY;
 import static dev.ionfusion.fusion.BindingSite.makeLocalBindingSite;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
-import static dev.ionfusion.commons.util.Empties.EMPTY_STRING_ARRAY;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
+import java.util.Iterator;
 import java.util.Set;
 
 final class LocalEnvironment
@@ -121,11 +122,41 @@ final class LocalEnvironment
     }
 
 
+    private final class LocalEnvironmentWrap
+        extends SyntaxWrap
+    {
+        @Override
+        Binding resolveMaybe(BaseSymbol name,
+                             Iterator<SyntaxWrap> moreWraps,
+                             Set<MarkWrap> returnMarks)
+        {
+            if (moreWraps.hasNext())
+            {
+                SyntaxWrap nextWrap = moreWraps.next();
+                Binding b = nextWrap.resolveMaybe(name, moreWraps, returnMarks);
+                if (b != null)
+                {
+                    // There's an outside binding, look for a local shadow.
+                    return LocalEnvironment.this.substitute(b, returnMarks);
+                }
+            }
+
+            // The identifier doesn't have a binding outside of this environment,
+            // so look for one here.
+            return LocalEnvironment.this.substituteFree(name, returnMarks);
+        }
+    }
+
+
+    //==================================================================================
+
+
     /** Not null */
     private final Environment    myEnclosure;
     private final Namespace      myNamespace;
     private final int            myDepth;
     private final LocalBinding[] myBindings;
+    private final SyntaxWrap     myWrap;
 
 
     /**
@@ -147,6 +178,8 @@ final class LocalEnvironment
             SyntaxSymbol identifier = identifiers[i];
             myBindings[i] = new LocalBinding(identifier, myDepth, i);
         }
+
+        myWrap = new LocalEnvironmentWrap();
     }
 
 
@@ -161,6 +194,7 @@ final class LocalEnvironment
         myDepth = 1 + enclosure.getDepth();
 
         myBindings = null;
+        myWrap = null;
     }
 
 
@@ -168,6 +202,11 @@ final class LocalEnvironment
     public Namespace namespace()
     {
         return myNamespace;
+    }
+
+    public SyntaxWrap getWrap()
+    {
+        return myWrap;
     }
 
     @Override

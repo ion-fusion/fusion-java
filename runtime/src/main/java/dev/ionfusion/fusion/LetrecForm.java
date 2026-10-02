@@ -37,8 +37,8 @@ final class LetrecForm
         }
         ensureUniqueIdentifiers(eval, boundNames, stx);
 
-        Environment bodyEnv = new LocalEnvironment(env, boundNames);
-        SyntaxWrap localWrap = new EnvironmentWrap(bodyEnv);
+        var bodyEnv = new LocalEnvironment(env, boundNames);
+        SyntaxWrap localWrap = bodyEnv.getWrap();
 
         // Expand the bound-value expressions
         SyntaxValue[] expandedForms = new SyntaxValue[numBindings];

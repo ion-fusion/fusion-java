@@ -58,19 +58,18 @@ final class LambdaForm
         // TODO This will need changing for internal definitions
         //      since we won't know yet whether the rib will be empty or not.
         //      https://github.com/ion-fusion/fusion-java/issues/67
-        SyntaxWrap localWrap = null;
+        LocalEnvironment localEnv = null;
         if (args.length != 0)
         {
             ensureUniqueIdentifiers(eval, args, stx);
-            env = new LocalEnvironment(env, args);
-            localWrap = new EnvironmentWrap(env);
+            env = localEnv = new LocalEnvironment(env, args);
         }
 
         // Prepare the bound names so they resolve to their own binding.
         for (int i = 0; i < args.length; i++)
         {
             SyntaxSymbol arg = args[i];
-            arg = (SyntaxSymbol) arg.addWrap(localWrap);
+            arg = (SyntaxSymbol) arg.addWrap(localEnv.getWrap());
             arg.resolve();           // Caches the binding in the identifier
             args[i] = arg;
         }
@@ -89,10 +88,10 @@ final class LambdaForm
         //  https://github.com/ion-fusion/fusion-java/issues/67
         for (int i = bodyStart; i < children.length; i++)
         {
-            SyntaxValue bodyForm = children[i];
-            if (localWrap != null)
+            SyntaxValue<?> bodyForm = children[i];
+            if (localEnv != null)
             {
-                bodyForm = bodyForm.addWrap(localWrap);
+                bodyForm = bodyForm.addWrap(localEnv.getWrap());
             }
             bodyForm = expander.expandExpression(env, bodyForm);
             children[i] = bodyForm;

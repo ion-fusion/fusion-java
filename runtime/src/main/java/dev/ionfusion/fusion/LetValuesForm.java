@@ -65,8 +65,9 @@ final class LetValuesForm
         {
             boundNames = boundNameList.toArray(SyntaxSymbol.EMPTY_ARRAY);
             ensureUniqueIdentifiers(eval, boundNames, stx);
-            bodyEnv = new LocalEnvironment(env, boundNames);
-            localWrap = new EnvironmentWrap(bodyEnv);
+            var localEnv = new LocalEnvironment(env, boundNames);
+            localWrap = localEnv.getWrap();
+            bodyEnv   = localEnv;
         }
 
         // Expand the bound-value expressions
