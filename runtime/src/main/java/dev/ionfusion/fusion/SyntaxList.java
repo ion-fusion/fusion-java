@@ -79,7 +79,7 @@ final class SyntaxList
 
 
     @Override
-    BaseList propagateLexicalContent(Evaluator eval,
+    BaseList propagateLexicalContext(Evaluator eval,
                                      BaseList content,
                                      SyntaxWraps propagate)
         throws FusionException
