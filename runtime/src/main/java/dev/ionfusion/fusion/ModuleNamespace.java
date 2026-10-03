@@ -410,15 +410,9 @@ final class ModuleNamespace
     /**
      * Exposes the bindings visible at module-level.
      */
-    private static final class ModuleWrap
+    private final class ModuleWrap
         extends NamespaceWrap
     {
-        ModuleWrap(Namespace ns)
-        {
-            super(ns);
-            assert ns instanceof ModuleNamespace;
-        }
-
         @Override
         Binding resolveMaybe(BaseSymbol name,
                              Iterator<SyntaxWrap> moreWraps,
@@ -432,16 +426,22 @@ final class ModuleNamespace
                 Binding b = nextWrap.resolveMaybe(name, moreWraps, returnMarks);
                 if (b != null)
                 {
-                    return ((Namespace)getEnvironment()).resolveMaybe(b, returnMarks);
+                    return ModuleNamespace.this.resolveMaybe(b, returnMarks);
                 }
             }
 
-            return getEnvironment().substituteFree(name, returnMarks);
+            return ModuleNamespace.this.substituteFree(name, returnMarks);
         }
     }
 
 
+    //==================================================================================
+
+
     private final List<BaseSymbol> myDefinedNames = new ArrayList<>();
+
+    private final SyntaxWrap myWrap = new ModuleWrap();
+
 
     /**
      * Expansion-time namespaces are bootstrapped with bindings from a language.
@@ -501,9 +501,15 @@ final class ModuleNamespace
      */
     ModuleNamespace(ModuleRegistry registry, ModuleIdentity moduleId)
     {
-        super(registry, moduleId, ModuleWrap::new);
+        super(registry, moduleId);
     }
 
+
+    @Override
+    SyntaxWrap getWrap()
+    {
+        return myWrap;
+    }
 
 
     @Override

@@ -6,7 +6,6 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.BindingSite.makeDefineBindingSite;
 import static dev.ionfusion.fusion.BindingSite.makeImportBindingSite;
 import static dev.ionfusion.fusion.FusionIo.safeWriteToString;
-import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.NamedValue.inferObjectName;
 import static dev.ionfusion.fusion.ResultFailure.makeResultError;
@@ -27,7 +26,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 
 /**
  * Expand- and compile-time environment for all top-level sequences, and
@@ -238,14 +236,9 @@ abstract class Namespace
     /**
      * Exposes the bindings visible at namespace-level.
      */
-    static abstract class NamespaceWrap
-        extends EnvironmentWrap
+    abstract class NamespaceWrap
+        extends SyntaxWrap
     {
-        NamespaceWrap(Namespace ns)
-        {
-            super(ns);
-        }
-
         @Override
         Binding resolveTopMaybe(BaseSymbol           name,
                                 Iterator<SyntaxWrap> moreWraps,
@@ -263,8 +256,7 @@ abstract class Namespace
         @Override
         public String toString()
         {
-            ModuleIdentity id =
-                ((Namespace) getEnvironment()).getModuleId();
+            ModuleIdentity id = Namespace.this.getModuleId();
             return "{{{NS " + id.absolutePath() + "}}}";
         }
     }
@@ -282,7 +274,6 @@ abstract class Namespace
     private final ArrayList<ModuleStore> myRequiredModuleStores =
         new ArrayList<>();
 
-    private final SyntaxWraps          myWraps;
     private final BoundIdMap<NsBinding> myBindings = new BoundIdMap<>();
 
     /**
@@ -296,16 +287,11 @@ abstract class Namespace
     /**
      * @param registry must not be null.
      * @param id must not be null.
-     * @param initialWrap generates the {@link SyntaxWraps} for this namespace, given
-     *   a reference to {@code this}.
      */
-    Namespace(ModuleRegistry                   registry,
-              ModuleIdentity                   id,
-              Function<Namespace, NamespaceWrap> initialWrap)
+    Namespace(ModuleRegistry registry, ModuleIdentity id)
     {
         myRegistry = registry;
         myModuleId = id;
-        myWraps    = SyntaxWraps.make(initialWrap.apply(this));
     }
 
     @Override
@@ -325,6 +311,8 @@ abstract class Namespace
     {
         return this;
     }
+
+    abstract SyntaxWrap getWrap();
 
     @Override
     public final int getDepth()
@@ -411,14 +399,12 @@ abstract class Namespace
      *
      * @return a copy of the given syntax value, with the additional context.
      */
-    final SyntaxValue syntaxIntroduce(SyntaxValue source)
-        throws FusionException
+    final <C> SyntaxValue<C> syntaxIntroduce(SyntaxValue<C> source)
     {
         // TODO there's a case where we are applying the same wraps that are
         // already on the source.  This happens when expand-ing (and maybe when
         // eval-ing at top-level source that's from that same context.
-        source = source.addWraps(myWraps);
-        return source;
+        return source.addWrap(getWrap());
     }
 
 
@@ -484,8 +470,8 @@ abstract class Namespace
      */
     final Binding resolveMaybe(String name)
     {
-        BaseSymbol symbol = makeSymbol(null, name);
-        return myWraps.resolveMaybe(symbol);
+        var id = (SyntaxSymbol) syntaxIntroduce(SyntaxSymbol.make(null, name));
+        return id.resolve();
     }
 
 
@@ -857,7 +843,7 @@ abstract class Namespace
         Binding b = resolveMaybe(name);
         if (b == null)
         {
-            return b;
+            return null;
         }
         else
         {

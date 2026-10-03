@@ -407,7 +407,6 @@ abstract class SyntaxValue<Content>
      * This will return a new instance as necessary to preserve immutability.
      */
     final SyntaxValue<Content> addWrap(SyntaxWrap wrap)
-        throws FusionException
     {
         assert wrap != null;
 
@@ -421,7 +420,6 @@ abstract class SyntaxValue<Content>
      * This will return a new instance as necessary to preserve immutability.
      */
     final SyntaxValue<Content> addWraps(SyntaxWraps wraps)
-        throws FusionException
     {
         assert wraps != null;
 
@@ -432,7 +430,6 @@ abstract class SyntaxValue<Content>
 
 
     final SyntaxValue addOrRemoveMark(MarkWrap mark)
-        throws FusionException
     {
         // 2014-07-03 Only 32/906 (3.5%) of marks matched the first wrap.
         //            Eliminating those didn't increase that count.

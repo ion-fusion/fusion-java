@@ -117,18 +117,9 @@ final class TopLevelNamespace
     /**
      * Exposes the bindings visible at top-level.
      */
-    private static final class TopLevelWrap
+    private final class TopLevelWrap
         extends NamespaceWrap
     {
-        // TODO Unit tests passed when this extended EnvironmentWrap, but that
-        //   has the wrong variant of resolveTop. What tests are missing?
-
-        TopLevelWrap(Namespace ns)
-        {
-            super(ns);
-            assert ns instanceof TopLevelNamespace;
-        }
-
         @Override
         Binding resolveMaybe(BaseSymbol name,
                              Iterator<SyntaxWrap> moreWraps,
@@ -140,7 +131,7 @@ final class TopLevelNamespace
                 nextWrap.resolveMaybe(name, moreWraps, returnMarks);
             }
 
-            return getEnvironment().substituteFree(name, returnMarks);
+            return TopLevelNamespace.this.substituteFree(name, returnMarks);
         }
     }
 
@@ -206,14 +197,26 @@ final class TopLevelNamespace
     }
 
 
+    //==================================================================================
+
+
+    private final SyntaxWrap myWrap = new TopLevelWrap();
+
+
     /**
      * Constructs a top-level namespace. Any bindings will need to be
      * {@code require}d or {@code define}d.
      */
     TopLevelNamespace(ModuleRegistry registry)
     {
-        super(registry, ModuleIdentity.forUniqueScope(TOP_LEVEL_MODULE_PREFIX),
-              TopLevelWrap::new);
+        super(registry, ModuleIdentity.forUniqueScope(TOP_LEVEL_MODULE_PREFIX));
+    }
+
+
+    @Override
+    SyntaxWrap getWrap()
+    {
+        return myWrap;
     }
 
 
