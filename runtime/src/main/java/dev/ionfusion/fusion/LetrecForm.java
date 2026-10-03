@@ -79,20 +79,39 @@ final class LetrecForm
     //========================================================================
 
 
+    /**
+     * Extract the {@code id}s from a form like {@code ((id expr) ...)} or
+     * {@code [(id expr), ...]}.
+     */
+    private static SyntaxSymbol[] collectBinders(Evaluator eval,
+                                                 SyntaxSequence<?> bindings)
+        throws FusionException
+    {
+        final int numBindings = bindings.size(eval);
+
+        SyntaxSymbol[] binders = new SyntaxSymbol[numBindings];
+        for (int i = 0; i < numBindings; i++)
+        {
+            SyntaxSexp binding = (SyntaxSexp) bindings.get(eval, i);
+            binders[i] = (SyntaxSymbol) binding.get(eval, 0);
+        }
+
+        return binders;
+    }
+
+
     @Override
     CompiledForm compile(Compiler comp, Environment env, SyntaxSexp stx)
         throws FusionException
     {
         Evaluator eval = comp.getEvaluator();
 
-        // Dummy environment to keep track of depth
-        env = new LocalEnvironment(env);
+        var bindingForms = (SyntaxSequence) stx.get(eval, 1);
+        var binders = collectBinders(eval, bindingForms);
+        env = LocalEnvironment.forBinders(env, binders);
 
-        SyntaxSequence bindingForms = (SyntaxSequence) stx.get(eval, 1);
-
-        final int numBindings = bindingForms.size(eval);
-
-        CompiledForm    [] valueForms = new CompiledForm  [numBindings];
+        final int numBindings = binders.length;
+        CompiledForm    [] valueForms = new CompiledForm    [numBindings];
         ResourcePosition[] valuePosns = new ResourcePosition[numBindings];
 
         for (int i = 0; i < numBindings; i++)
@@ -105,7 +124,7 @@ final class LetrecForm
 
         CompiledForm body = comp.compileBegin(env, stx, 2);
 
-        switch (valueForms.length)
+        switch (numBindings)
         {
             case 0:
                 return body;

@@ -3,6 +3,9 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.fusion.FusionSexp.isPair;
+import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
+import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
 import static dev.ionfusion.fusion.ResultFailure.makeResultError;
 import static dev.ionfusion.fusion.SyntaxSymbol.ensureUniqueIdentifiers;
 
@@ -137,6 +140,7 @@ final class LetValuesForm
         // The number of bindings is >= the number of binding forms.
         final int numBindingForms = bindingForms.size(eval);
 
+        var binders = new ArrayList<SyntaxSymbol>();
         int[] valueCounts = new int[numBindingForms];
         CompiledForm[]     valueForms = new CompiledForm    [numBindingForms];
         ResourcePosition[] valuePosns = new ResourcePosition[numBindingForms];
@@ -145,16 +149,24 @@ final class LetValuesForm
         boolean allSingles = true;
         for (int i = 0; i < numBindingForms; i++)
         {
-            SyntaxSexp binding = (SyntaxSexp) bindingForms.get(eval, i);
+            var binding = ((SyntaxSexp) bindingForms.get(eval, i)).unwrap(eval);
 
-            SyntaxSexp names = (SyntaxSexp) binding.get(eval, 0);
-            int size = names.size(eval);
+            Object names = ((SyntaxSexp) unsafePairHead(eval, binding)).unwrap(eval);
+            int size = 0;
+            while (isPair(eval, names))
+            {
+                binders.add((SyntaxSymbol) unsafePairHead(eval, names));
+                names = unsafePairTail(eval, names);
+                size++;
+            }
+
             bindingCount += size;
             valueCounts[i] = size;
 
             allSingles &= (size == 1);
 
-            SyntaxValue boundExpr = binding.get(eval, 1);
+            SyntaxValue<?> boundExpr =
+                (SyntaxValue<?>) unsafePairHead(eval, unsafePairTail(eval, binding));
             valueForms[i] = comp.compileExpression(env, boundExpr);
             valuePosns[i] = boundExpr.getPosition();
         }
@@ -162,7 +174,7 @@ final class LetValuesForm
         if (bindingCount != 0)
         {
             // Dummy environment to keep track of depth
-            env = new LocalEnvironment(env);
+            env = LocalEnvironment.forBinders(env, binders.toArray(new SyntaxSymbol[0]));
         }
 
         CompiledForm body = comp.compileBegin(env, expr, 2);

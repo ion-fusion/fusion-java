@@ -6,6 +6,7 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.commons.util.Empties.EMPTY_STRING_ARRAY;
 import static dev.ionfusion.fusion.FusionSexp.immutableSexp;
 import static dev.ionfusion.fusion.FusionString.isString;
+import static dev.ionfusion.fusion.Syntax.identifiersToNames;
 import static dev.ionfusion.fusion.SyntaxSymbol.ensureUniqueIdentifiers;
 
 import dev.ionfusion.runtime.base.FusionException;
@@ -119,32 +120,25 @@ final class LambdaForm
 
     //========================================================================
 
-
-    private static int countFormals(Evaluator eval, SyntaxValue formalsDecl)
+    /**
+     * Collects the formal argument identifiers, regardless of rest-ness.
+     */
+    private static SyntaxSymbol[] flattenFormals(Evaluator eval,
+                                                 SyntaxValue<?> formalsDecl)
         throws FusionException
     {
         // (lambda rest ___)
-        if (formalsDecl instanceof SyntaxSymbol) return 1;
+        if (formalsDecl instanceof SyntaxSymbol)
+        {
+            return new SyntaxSymbol[] { (SyntaxSymbol) formalsDecl };
+        }
 
         // (lambda (formal ...) ___)
-        return ((SyntaxSexp) formalsDecl).size(eval);
-    }
-
-
-    private static String[] determineArgNames(Evaluator eval,
-                                              SyntaxSexp formalsDecl)
-        throws FusionException
-    {
-        int size = formalsDecl.size(eval);
-        if (size == 0) return EMPTY_STRING_ARRAY;
-
-        String[] args = new String[size];
-        for (int i = 0; i < size; i++)
-        {
-            SyntaxSymbol identifier = (SyntaxSymbol) formalsDecl.get(eval, i);
-            args[i] = identifier.stringValue();
-        }
-        return args;
+        var formalsSexp = (SyntaxSexp) formalsDecl;
+        int size = formalsSexp.size(eval);
+        return size == 0
+               ? SyntaxSymbol.EMPTY_ARRAY
+               : formalsSexp.extract(eval, SyntaxSymbol.class);
     }
 
 
@@ -154,11 +148,12 @@ final class LambdaForm
     {
         Evaluator eval = comp.getEvaluator();
 
-        SyntaxValue formalsDecl = stx.get(eval, 1);
-        if (countFormals(eval, formalsDecl) != 0)
+        var formalsDecl = stx.get(eval, 1);
+        var formals = flattenFormals(eval, formalsDecl);
+        if (formals.length != 0)
         {
-            // Dummy environment to keep track of depth
-            env = new LocalEnvironment(env);
+            // We micro-optimize by avoiding an environment frame for no-arg procedures.
+            env = LocalEnvironment.forBinders(env, formals);
         }
 
         CompiledForm body = comp.compileBegin(env, stx, 2);
@@ -172,8 +167,7 @@ final class LambdaForm
         }
         else
         {
-            String[] argNames =
-                determineArgNames(eval, (SyntaxSexp) formalsDecl);
+            String[] argNames = identifiersToNames(formals);
             switch (argNames.length)
             {
                 case 0:

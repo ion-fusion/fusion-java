@@ -5,7 +5,6 @@ package dev.ionfusion.fusion;
 
 import static com.amazon.ion.util.IonTextUtils.printQuotedSymbol;
 import static dev.ionfusion.commons.util.Empties.EMPTY_OBJECT_ARRAY;
-import static dev.ionfusion.commons.util.Empties.EMPTY_STRING_ARRAY;
 import static dev.ionfusion.fusion.FusionBool.makeBool;
 import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionSyntax.checkIdentifierArg;
@@ -22,24 +21,6 @@ final class SyntaxSymbol
 {
     /** A zero-length array of {@link SyntaxSymbol}. */
     static final SyntaxSymbol[] EMPTY_ARRAY = new SyntaxSymbol[0];
-
-    /** Extract the names from an array of symbols. */
-    static String[] toNames(SyntaxSymbol[] symbols)
-    {
-        if (symbols == null || symbols.length == 0)
-        {
-            return EMPTY_STRING_ARRAY;
-        }
-        else
-        {
-            String[] names = new String[symbols.length];
-            for (int i = 0; i < symbols.length; i++)
-            {
-                names[i] = symbols[i].stringValue();
-            }
-            return names;
-        }
-    }
 
 
     /** Initialized during {@link #doExpand} */

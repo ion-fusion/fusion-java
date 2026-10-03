@@ -38,10 +38,6 @@ import dev.ionfusion.fusion.FusionStruct.StructFieldVisitor;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.LambdaForm.CompiledLambdaBase;
 import dev.ionfusion.fusion.LambdaForm.CompiledLambdaExact;
-import dev.ionfusion.fusion.LocalEnvironment.CompiledImmediateVariableReference;
-import dev.ionfusion.fusion.LocalEnvironment.CompiledImmediateVariableSet;
-import dev.ionfusion.fusion.LocalEnvironment.CompiledLocalVariableReference;
-import dev.ionfusion.fusion.LocalEnvironment.CompiledLocalVariableSet;
 import dev.ionfusion.fusion.LocalEnvironment.LocalBinding;
 import dev.ionfusion.fusion.ModuleNamespace.CompiledImportedVariableReference;
 import dev.ionfusion.fusion.ModuleNamespace.CompiledModuleVariableReference;
@@ -425,14 +421,9 @@ class Compiler
             }
 
             @Override
-            Object visit(LocalBinding b) throws FusionException
+            Object visit(LocalBinding b)
             {
-                int rib = env.getDepth() - b.myDepth;
-                if (rib == 0)
-                {
-                    return new CompiledImmediateVariableReference(b.myAddress);
-                }
-                return new CompiledLocalVariableReference(rib, b.myAddress);
+                return ((LocalEnvironment) env).compileReferenceToLocal(b);
             }
 
             @Override
@@ -576,14 +567,7 @@ class Compiler
             @Override
             Object visit(LocalBinding b) throws FusionException
             {
-                int rib = env.getDepth() - b.myDepth;
-                if (rib == 0)
-                {
-                    return new CompiledImmediateVariableSet(b.myAddress,
-                                                            valueForm);
-                }
-                return new CompiledLocalVariableSet(rib, b.myAddress,
-                                                    valueForm);
+                return ((LocalEnvironment) env).compileMutationOfLocal(b, valueForm);
             }
         };
 

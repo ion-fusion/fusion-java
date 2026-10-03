@@ -36,16 +36,11 @@ final class LocalEnvironment
         static final LocalBinding[] EMPTY_ARRAY = new LocalBinding[0];
 
         private final SyntaxSymbol       myIdentifier;
-                final int                myDepth;
-                final int                myAddress;
         private final BindingSite        mySite;
 
-        private LocalBinding(SyntaxSymbol identifier, int depth, int address)
+        private LocalBinding(SyntaxSymbol identifier)
         {
-            assert depth > 0;
             myIdentifier = identifier;
-            myDepth      = depth;
-            myAddress    = address;
             mySite       = makeLocalBindingSite(identifier.getPosition());
         }
 
@@ -176,7 +171,7 @@ final class LocalEnvironment
         for (int i = 0; i < count; i++)
         {
             SyntaxSymbol identifier = identifiers[i];
-            myBindings[i] = new LocalBinding(identifier, myDepth, i);
+            myBindings[i] = new LocalBinding(identifier);
         }
 
         myWrap = new LocalEnvironmentWrap();
@@ -184,17 +179,27 @@ final class LocalEnvironment
 
 
     /**
-     * Compile-time environment construction; makes a dummy environment to
-     * keep track of the current depth.
+     * Compile-time environment does not create bindings but uses them to
+     * determine access coordinates.
      */
-    LocalEnvironment(Environment enclosure)
+    private LocalEnvironment(Environment enclosure, LocalBinding[] bindings)
     {
         myEnclosure = enclosure;
         myNamespace = enclosure.namespace();
         myDepth = 1 + enclosure.getDepth();
 
-        myBindings = null;
+        myBindings = bindings;
         myWrap = null;
+    }
+
+    static LocalEnvironment forBinders(Environment enclosure, SyntaxSymbol[] binders)
+    {
+        LocalBinding[] bindings = new LocalBinding[binders.length];
+        for (int i = 0; i < binders.length; i++)
+        {
+            bindings[i] = (LocalBinding) binders[i].resolve();
+        }
+        return new LocalEnvironment(enclosure, bindings);
     }
 
 
@@ -267,11 +272,48 @@ final class LocalEnvironment
     }
 
 
+    // TODO JAVA17 Use a record
+    int[] computeAddress(LocalBinding b)
+    {
+        var localEnv = this;
+        for (int depth = 0; ; depth++)
+        {
+            var locals = localEnv.myBindings;
+            for (int i = 0; i < locals.length; i++)
+            {
+                if (locals[i] == b)
+                {
+                    return new int[] { depth, i };
+                }
+            }
+
+            var enclosure = localEnv.myEnclosure;
+            if (!(enclosure instanceof LocalEnvironment))
+            {
+                throw new IllegalStateException("no binding found for " + b);
+            }
+            localEnv = (LocalEnvironment) enclosure;
+        }
+    }
+
+
     //========================================================================
 
 
+    CompiledForm compileReferenceToLocal(LocalBinding b)
+    {
+        var address = computeAddress(b);
+        int depth = address[0];
+        int index = address[1];
+
+        return depth == 0
+               ? new CompiledImmediateVariableReference(index)
+               : new CompiledLocalVariableReference(depth, index);
+    }
+
+
     /**
-     * A reference to a variable in the immediately-enclosing environment.
+     * A reference to a variable in the immediately enclosing environment.
      * This is an optimized form of {@link CompiledLocalVariableReference}
      * where {@code rib == 0}.
      */
@@ -319,6 +361,21 @@ final class LocalEnvironment
                 : "No value for rib " + myRib + " address " + myAddress;
             return result;
         }
+    }
+
+
+    //========================================================================
+
+
+    CompiledForm compileMutationOfLocal(LocalBinding b, CompiledForm expr)
+    {
+        var address = computeAddress(b);
+        int depth = address[0];
+        int index = address[1];
+
+        return depth == 0
+               ? new CompiledImmediateVariableSet(index, expr)
+               : new CompiledLocalVariableSet(depth, index, expr);
     }
 
 

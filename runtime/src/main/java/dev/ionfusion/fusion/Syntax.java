@@ -4,11 +4,13 @@
 package dev.ionfusion.fusion;
 
 
+import static dev.ionfusion.commons.util.Empties.EMPTY_STRING_ARRAY;
+
 import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.runtime.base.FusionException;
 
 /**
- * Utilities for working with {@link SyntaxValue}s.
+ * Internal utilities for working with {@link SyntaxValue}s.
  */
 final class Syntax
 {
@@ -45,5 +47,26 @@ final class Syntax
         }
 
         return SimpleSyntaxValue.makeSyntax(eval, pos, datum);
+    }
+
+
+    /**
+     * Extract the names from an array of identifiers.
+     *
+     * @param symbols can be null.
+     */
+    static String[] identifiersToNames(SyntaxSymbol[] symbols)
+    {
+        if (symbols == null || symbols.length == 0)
+        {
+            return EMPTY_STRING_ARRAY;
+        }
+
+        String[] names = new String[symbols.length];
+        for (int i = 0; i < symbols.length; i++)
+        {
+            names[i] = symbols[i].stringValue();
+        }
+        return names;
     }
 }
