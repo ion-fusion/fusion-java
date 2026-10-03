@@ -60,7 +60,7 @@ final class SyntaxStruct
 
 
     @Override
-    synchronized ImmutableStruct propagateLexicalContent(Evaluator eval,
+    synchronized ImmutableStruct propagateLexicalContext(Evaluator eval,
                                                          ImmutableStruct content,
                                                          SyntaxWraps propagate)
         throws FusionException

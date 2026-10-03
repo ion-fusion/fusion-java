@@ -84,7 +84,7 @@ class SimpleSyntaxValue
         // clearing any context we have.
     }
 
-    final Object propagateLexicalContent(Evaluator eval,
+    final Object propagateLexicalContext(Evaluator eval,
                                          Object content,
                                          SyntaxWraps propagate)
     {

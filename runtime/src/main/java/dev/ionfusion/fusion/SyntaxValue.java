@@ -370,17 +370,17 @@ abstract class SyntaxValue<Content>
     {
         if (myWraps != SyntaxWraps.EMPTY)
         {
-            myContent = propagateLexicalContent(eval, myContent, myWraps);
+            myContent = propagateLexicalContext(eval, myContent, myWraps);
             myWraps = SyntaxWraps.EMPTY;
         }
     }
 
     /**
-     * Type-specific content propagation.
+     * Type-specific context propagation.
      *
      * @param propagate is not null
      */
-    abstract Content propagateLexicalContent(Evaluator eval,
+    abstract Content propagateLexicalContext(Evaluator eval,
                                              Content content,
                                              SyntaxWraps propagate)
         throws FusionException;

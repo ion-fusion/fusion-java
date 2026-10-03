@@ -164,7 +164,7 @@ final class SyntaxSexp
 
 
     @Override
-    BaseSexp propagateLexicalContent(Evaluator eval,
+    BaseSexp propagateLexicalContext(Evaluator eval,
                                      BaseSexp content,
                                      SyntaxWraps propagate)
         throws FusionException
