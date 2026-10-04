@@ -314,11 +314,6 @@ abstract class Namespace
 
     abstract SyntaxWrap getWrap();
 
-    @Override
-    public final int getDepth()
-    {
-        return 0;
-    }
 
     @Override
     public final Object lookup(int rib, int address)

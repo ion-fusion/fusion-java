@@ -3,7 +3,6 @@
 
 package dev.ionfusion.fusion;
 
-import static dev.ionfusion.commons.util.Empties.EMPTY_STRING_ARRAY;
 import static dev.ionfusion.fusion.BindingSite.makeLocalBindingSite;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 
@@ -95,25 +94,6 @@ final class LocalEnvironment
         {
             return "{{{LocalBinding " + myIdentifier + "}}}";
         }
-
-
-        /** Extract the names from an array of bindings. */
-        static String[] toNames(LocalBinding[] bindings)
-        {
-            if (bindings == null || bindings.length == 0)
-            {
-                return EMPTY_STRING_ARRAY;
-            }
-            else
-            {
-                String[] names = new String[bindings.length];
-                for (int i = 0; i < bindings.length; i++)
-                {
-                    names[i] = bindings[i].myIdentifier.stringValue();
-                }
-                return names;
-            }
-        }
     }
 
 
@@ -149,7 +129,6 @@ final class LocalEnvironment
     /** Not null */
     private final Environment    myEnclosure;
     private final Namespace      myNamespace;
-    private final int            myDepth;
     private final LocalBinding[] myBindings;
     private final SyntaxWrap     myWrap;
 
@@ -161,7 +140,6 @@ final class LocalEnvironment
     {
         myEnclosure = enclosure;
         myNamespace = enclosure.namespace();
-        myDepth = 1 + enclosure.getDepth();
 
         // 2019-04 Stats from the standard library and test suite:
         //   85% of local envs have 1 entry, 12% have 2.
@@ -186,8 +164,6 @@ final class LocalEnvironment
     {
         myEnclosure = enclosure;
         myNamespace = enclosure.namespace();
-        myDepth = 1 + enclosure.getDepth();
-
         myBindings = bindings;
         myWrap = null;
     }
@@ -212,12 +188,6 @@ final class LocalEnvironment
     public SyntaxWrap getWrap()
     {
         return myWrap;
-    }
-
-    @Override
-    public int getDepth()
-    {
-        return myDepth;
     }
 
 

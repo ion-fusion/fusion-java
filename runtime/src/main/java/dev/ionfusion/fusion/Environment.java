@@ -15,11 +15,6 @@ interface Environment
 {
     Namespace namespace();
 
-
-    /** What's the lexical depth?  0 == namespace-level */
-    int getDepth();
-
-
     /**
      * NOT RECURSIVE TO ENCLOSING ENVIRONMENTS!
      *
