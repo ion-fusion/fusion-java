@@ -8,6 +8,8 @@ import static dev.ionfusion.commons.util.Empties.EMPTY_OBJECT_ARRAY;
 import static dev.ionfusion.fusion.FusionBool.makeBool;
 import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionSyntax.checkIdentifierArg;
+import static dev.ionfusion.fusion.Syntax.boundIdentifierEqual;
+import static dev.ionfusion.fusion.Syntax.freeIdentifierEqual;
 import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 import static dev.ionfusion.fusion.UnboundIdentifierException.makeUnboundError;
 
@@ -228,24 +230,9 @@ final class SyntaxSymbol
     }
 
 
-    boolean boundIdentifierEqual(SyntaxSymbol that)
-    {
-        BoundIdentifier thisId = this.resolveBoundIdentifier();
-        BoundIdentifier thatId = that.resolveBoundIdentifier();
-        return thisId.equals(thatId);
-    }
-
-    boolean freeIdentifierEqual(SyntaxSymbol that)
-    {
-        Binding thisBinding = this.resolve();
-        Binding thatBinding = that.resolve();
-        return thisBinding.sameTarget(thatBinding);
-    }
-
-
     /**
      * Verifies that a set of identifiers are unique with respect to
-     * {@link #boundIdentifierEqual}.
+     * {@link Syntax#boundIdentifierEqual}.
      *
      * @param identifiers must not be null.
      * @param formForErrors the syntax form to be implicated in error messages.
@@ -314,7 +301,7 @@ final class SyntaxSymbol
             SyntaxSymbol id1 = checkIdentifierArg(eval, this, "identifier", 0, arg1, arg2);
             SyntaxSymbol id2 = checkIdentifierArg(eval, this, "identifier", 1, arg1, arg2);
 
-            return makeBool(eval, id1.boundIdentifierEqual(id2));
+            return makeBool(eval, boundIdentifierEqual(id1, id2));
         }
     }
 
@@ -329,7 +316,7 @@ final class SyntaxSymbol
             SyntaxSymbol id1 = checkIdentifierArg(eval, this, "identifier", 0, arg1, arg2);
             SyntaxSymbol id2 = checkIdentifierArg(eval, this, "identifier", 1, arg1, arg2);
 
-            return makeBool(eval, id1.freeIdentifierEqual(id2));
+            return makeBool(eval, freeIdentifierEqual(id1, id2));
         }
     }
 }

@@ -11,6 +11,7 @@ import static dev.ionfusion.fusion.FusionSyntax.isSyntax;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
 import static dev.ionfusion.fusion.StandardReader.readSyntax;
 import static dev.ionfusion.fusion.Syntax.coreModuleIdentifier;
+import static dev.ionfusion.fusion.Syntax.freeIdentifierEqual;
 import static java.util.Objects.requireNonNull;
 
 import com.amazon.ion.IonReader;
@@ -218,7 +219,7 @@ final class FusionEval
             {
                 maybeKeyword = (SyntaxSymbol) ns.syntaxIntroduce(maybeKeyword);
                 SyntaxSymbol moduleKeyword = coreModuleIdentifier(eval);
-                if (maybeKeyword.freeIdentifierEqual(moduleKeyword))
+                if (freeIdentifierEqual(maybeKeyword, moduleKeyword))
                 {
                     // Stash the resolved identifier back in the sexp.
                     SyntaxValue[] children = maybeModule.extract(eval);

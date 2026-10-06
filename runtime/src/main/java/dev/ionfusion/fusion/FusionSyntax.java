@@ -132,7 +132,7 @@ public final class FusionSyntax
                                               Object    id2)
         throws FusionException
     {
-        return ((SyntaxSymbol) id1).boundIdentifierEqual((SyntaxSymbol) id2);
+        return Syntax.boundIdentifierEqual(((SyntaxSymbol) id1), (SyntaxSymbol) id2);
     }
 
 
@@ -149,7 +149,7 @@ public final class FusionSyntax
                                              Object    id2)
         throws FusionException
     {
-        return ((SyntaxSymbol) id1).freeIdentifierEqual((SyntaxSymbol) id2);
+        return Syntax.freeIdentifierEqual(((SyntaxSymbol) id1), (SyntaxSymbol) id2);
     }
 
 

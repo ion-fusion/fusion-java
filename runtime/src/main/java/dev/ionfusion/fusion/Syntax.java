@@ -79,4 +79,19 @@ final class Syntax
         }
         return names;
     }
+
+
+    static boolean boundIdentifierEqual(SyntaxSymbol a, SyntaxSymbol b)
+    {
+        BoundIdentifier idA = a.resolveBoundIdentifier();
+        BoundIdentifier idB = b.resolveBoundIdentifier();
+        return idA.equals(idB);
+    }
+
+    static boolean freeIdentifierEqual(SyntaxSymbol a, SyntaxSymbol b)
+    {
+        Binding bindingA = a.resolve();
+        Binding bindingB = b.resolve();
+        return bindingA.sameTarget(bindingB);
+    }
 }
