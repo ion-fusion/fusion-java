@@ -219,19 +219,17 @@ final class SyntaxSymbol
 
 
     /**
-     * Checks if this symbol is bound to a {@link SyntacticForm} in the given
-     * environment.  If so, cache the binding and return the form.  Otherwise,
-     * do nothing.
+     * Resolves this identifier, then checks if it is bound to a {@link SyntacticForm}
+     * in the given environment.
      *
-     * @return may be null.
+     * @return null if this identifier is not bound to a syntactic form.
      */
     SyntacticForm resolveSyntaxMaybe(Environment env)
     {
-        BoundIdentifier b = uncachedResolveBoundIdentifier();
-        Object resolved = env.namespace().lookup(b.getBinding());
+        Binding binding = resolve();
+        Object resolved = env.namespace().lookup(binding);
         if (resolved instanceof SyntacticForm)
         {
-            myBoundId = b;
             return (SyntacticForm) resolved;
         }
         return null;
@@ -244,53 +242,47 @@ final class SyntaxSymbol
     {
         Evaluator eval = expander.getEvaluator();
 
-        if (myBoundId == null)        // Otherwise we've already been expanded
+        String text = stringValue();
+        if (text == null)
         {
-            // FIXME Ensure that this validation always happens when necessary,
-            //       even if other code calls resolve() before expansion.
+            String message =
+                "`null.symbol` is not a valid expression; use `(quote null.symbol)` instead.";
+            throw makeSyntaxError(eval, null, message, this);
+        }
 
-            String text = stringValue();
-            if (text == null)
+        if (text.isEmpty())
+        {
+            String message =
+                "The empty symbol is not a valid expression; use `(quote '')` instead.";
+            throw makeSyntaxError(eval, null, message, this);
+        }
+
+        // TODO #72 identifier macros
+        if (resolveSyntaxMaybe(env) != null)
+        {
+            String message = "Invalid use of syntax form as identifier expression.";
+            throw makeSyntaxError(eval, null, message, this);
+        }
+
+        Binding b = resolve();
+        if (b instanceof FreeBinding)
+        {
+            BaseSymbol topSym = makeSymbol(eval, "#%top");
+            SyntaxSymbol top =
+                new SyntaxSymbol(myWraps,
+                                 /*location*/ null,
+                                 /*properties*/ EMPTY_OBJECT_ARRAY,
+                                 topSym);
+            if (top.resolve() instanceof FreeBinding)
             {
-                String message =
-                    "`null.symbol` is not a valid expression; use `(quote null.symbol)` instead.";
-                throw makeSyntaxError(eval, null, message, this);
+                throw makeUnboundError(this);
             }
 
-            if (text.isEmpty())
-            {
-                String message =
-                    "The empty symbol is not a valid expression; use `(quote '')` instead.";
-                throw makeSyntaxError(eval, null, message, this);
-            }
+            assert ! FusionValue.isAnnotated(eval, getContent());
+            SyntaxSexp topExpr = SyntaxSexp.make(eval, top, this);
 
-            if (resolveSyntaxMaybe(env) != null)
-            {
-                String message = "Invalid use of syntax form as identifier expression.";
-                throw makeSyntaxError(eval, null, message, this);
-            }
-
-            Binding b = resolve();
-            if (b instanceof FreeBinding)
-            {
-                BaseSymbol topSym = makeSymbol(eval, "#%top");
-                SyntaxSymbol top =
-                    new SyntaxSymbol(myWraps,
-                                     /*location*/ null,
-                                     /*properties*/ EMPTY_OBJECT_ARRAY,
-                                     topSym);
-                if (top.resolve() instanceof FreeBinding)
-                {
-                    throw makeUnboundError(this);
-                }
-
-                assert ! FusionValue.isAnnotated(eval, getContent());
-                SyntaxSexp topExpr = SyntaxSexp.make(eval, top, this);
-
-                // TODO Eliminate this tail-call.
-                //  https://github.com/ion-fusion/fusion-java/issues/71
-                return expander.expandExpression(env, topExpr);
-            }
+            // TODO #71 Eliminate this tail-call.
+            return expander.expandExpression(env, topExpr);
         }
 
         return this;

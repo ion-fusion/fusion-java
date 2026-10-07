@@ -416,18 +416,13 @@ final class SyntaxSexp
             // We found a static top-level binding to a built-in form or a
             // macro. Continue the expansion process.
 
-            // TODO identifier macros entail extra work here.
-            //  https://github.com/ion-fusion/fusion-java/issues/72
-            SyntaxSymbol first = firstIdentifier(eval);
-            assert expander.expand(env, first) == first;
-            // else the next stmt must change
+            // TODO #72 identifier macros entail extra work here; we should instead
+            //  fall through to expanding each child.
 
             // We use the same expansion context as we already have.
             // Don't need to replace the sexp since we haven't changed it.
-            SyntaxValue expandedExpr = expander.expand(env, form, this);
-            return expandedExpr;
-            // TODO Eliminate this tail-call.
-            //  https://github.com/ion-fusion/fusion-java/issues/71
+            return expander.expand(env, form, this);
+            // TODO #71 Eliminate this tail-call.
         }
 
         // else we have a procedure application, expand each subform as an
