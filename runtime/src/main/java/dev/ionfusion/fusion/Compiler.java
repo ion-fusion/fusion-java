@@ -353,37 +353,25 @@ class Compiler
         throws FusionException
     {
         int arity = stx.size(myEval);
-        SyntaxValue valueSource = stx.get(myEval, arity-1);
+        SyntaxValue<?> valueSource = stx.get(myEval, arity-1);
         final CompiledForm valueForm = compileExpression(env, valueSource);
 
         final SyntaxSymbol identifier = (SyntaxSymbol) stx.get(myEval, 1);
+        var boundName = identifier.unwrap(myEval);
+
         Binding binding = identifier.resolve();
+        assert binding.getName() == boundName;
 
-        Binding.Visitor v = new Binding.Visitor()
+        if (!(binding instanceof NsDefinedBinding))
         {
-            @Override
-            Object visit(Binding b) throws FusionException
-            {
-                String msg = "Unexpected binding type for `define_syntax`.";
-                throw new IllegalStateException(msg);
-            }
+            String msg = "Unexpected binding type for `define_syntax`.";
+            throw new IllegalStateException(msg);
+        }
 
-            @Override
-            public Object visit(NsDefinedBinding b) throws FusionException
-            {
-                return new CompiledNsDefineSyntax(b.getName(), b.myAddress, valueForm);
-            }
+        // TODO #75 TopLevelDefinedBinding should bind after evaluation, as 'define'.
 
-            @Override
-            public Object visit(TopLevelDefinedBinding b) throws FusionException
-            {
-                // TODO This should bind after evaluation, as 'define'.
-                //  https://github.com/ion-fusion/fusion-java/issues/75
-                return visit((NsDefinedBinding) b);
-            }
-        };
-
-        CompiledForm compiled = (CompiledForm) binding.visit(v);
+        var b = (NsDefinedBinding) binding;
+        var compiled = new CompiledNsDefineSyntax(boundName, b.myAddress, valueForm);
 
         if (arity != 3 && isDocCollectingEnabled())
         {
