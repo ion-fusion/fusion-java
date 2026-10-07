@@ -56,7 +56,7 @@ abstract class Namespace
          *   with a definition.
          */
         abstract NsDefinedBinding redefine(SyntaxSymbol identifier,
-                                           SyntaxValue formForErrors)
+                                           SyntaxValue<?> formForErrors)
             throws AmbiguousBindingFailure;
 
         /**
@@ -69,7 +69,7 @@ abstract class Namespace
          */
         abstract RequiredBinding require(SyntaxSymbol localId,
                                          ProvidedBinding provided,
-                                         SyntaxValue formForErrors)
+                                         SyntaxValue<?> formForErrors)
             throws AmbiguousBindingFailure;
 
         /**
@@ -423,7 +423,7 @@ abstract class Namespace
      * @param binding must not be null.
      * @param marks must not be null.
      *
-     * @return null if identifier isn't bound here.
+     * @return null if the identifier isn't bound here.
      */
     final NsBinding resolveMaybe(Binding binding, Set<MarkWrap> marks)
     {
@@ -555,13 +555,13 @@ abstract class Namespace
     public final void bind(String name, Object value)
         throws FusionException
     {
-        if (name == null || name.length() == 0)
+        if (name == null || name.isEmpty())
         {
             String message = "bound name must be non-null and non-empty";
             throw new IllegalArgumentException(message);
         }
 
-        // WARNING: We pass null evaluator because we know its not used.
+        // WARNING: We pass null evaluator because we know it's not used.
         //          That is NOT SUPPORTED for user code!
         SyntaxSymbol identifier = SyntaxSymbol.make(null, name);
 
@@ -600,7 +600,7 @@ abstract class Namespace
 
 
     /**
-     * Record a previously-instantiated module in our list of dependencies,
+     * Record a previously instantiated module in our list of dependencies,
      * allocating it an address for runtime access to bindings.
      */
     final synchronized int recordRequiredModule(ModuleIdentity moduleId,
@@ -628,7 +628,7 @@ abstract class Namespace
 
 
     /**
-     * Loads a module definition into this namespace's registry, without
+     * Loads a module definition into this namespace's registry without
      * instantiating it.
      *
      * @param modulePath is an absolute or relative module path.
@@ -731,7 +731,8 @@ abstract class Namespace
      * @param eval must not be null.
      * @param localId will be re-resolved to the outside edge of this namespace.
      * @param provided the binding to import.
-     * @throws AmbiguousBindingFailure
+     *
+     * @throws AmbiguousBindingFailure if there is conflict with an existing binding
      */
     final void installRequiredBinding(Evaluator       eval,
                                       SyntaxSymbol    localId,
@@ -755,7 +756,7 @@ abstract class Namespace
     }
 
     /**
-     * Creates a binding for a require that has no prior binding.
+     * Creates a binding for a {@code require} that has no prior binding.
      */
     abstract RequiredBinding newRequiredBinding(SyntaxSymbol    localId,
                                                 ProvidedBinding target);
@@ -866,7 +867,7 @@ abstract class Namespace
      * <p>
      * Also note that we may need to dereference variables from other modules
      * at somewhat-arbitrary points during expansion and compilation, and that
-     * expansion may trigger partial compilation and execution (eg when handling
+     * expansion may trigger partial compilation and execution (e.g. when handling
      * `define-syntax`).
      * </p>
      * @return a zero-based address for the module, valid only within this
@@ -935,7 +936,7 @@ abstract class Namespace
     }
 
     /**
-     * @return may be shorter than the number of provided variables.
+     * @return can be shorter than the number of provided variables.
      */
     final BindingDoc[] extractBindingDocs()
     {

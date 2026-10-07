@@ -202,7 +202,7 @@ final class ModuleNamespace
 
         @Override
         NsDefinedBinding redefine(SyntaxSymbol identifier,
-                                  SyntaxValue formForErrors)
+                                  SyntaxValue<?> formForErrors)
             throws AmbiguousBindingFailure
         {
             throw makeAmbiguousBindingError("module-level definition",
@@ -212,7 +212,7 @@ final class ModuleNamespace
         @Override
         RequiredBinding require(SyntaxSymbol localId,
                                 ProvidedBinding provided,
-                                SyntaxValue formForErrors)
+                                SyntaxValue<?> formForErrors)
             throws AmbiguousBindingFailure
         {
             if (this.sameTarget(provided)) return this;
@@ -251,7 +251,7 @@ final class ModuleNamespace
     /**
      * Denotes a binding imported into a module via the language declared at
      * its creation. This is a special kind of required-binding that can be
-     * overwritten by a require or a module-level definition.
+     * overwritten by a {@code require} or a module-level definition.
      */
     static final class LanguageBinding
         extends ModuleRequiredBinding
@@ -264,7 +264,7 @@ final class ModuleNamespace
 
         @Override
         NsDefinedBinding redefine(SyntaxSymbol identifier,
-                                  SyntaxValue formForErrors)
+                                  SyntaxValue<?> formForErrors)
         {
             // We can redefine an id that came from our language.
             return null;
@@ -273,18 +273,12 @@ final class ModuleNamespace
         @Override
         RequiredBinding require(SyntaxSymbol localId,
                                 ProvidedBinding provided,
-                                SyntaxValue formForErrors)
+                                SyntaxValue<?> formForErrors)
         {
             // Replace the language binding with the required one. We must do
             // this even if it leads to the same target, since a language
             // binding can be redefined, but a required binding cannot.
             return new ModuleRequiredBinding(localId, provided);
-        }
-
-        @Override
-        Object visit(Visitor v) throws FusionException
-        {
-            return v.visit(this);
         }
 
         @Override
@@ -321,7 +315,7 @@ final class ModuleNamespace
 
         @Override
         NsDefinedBinding redefine(SyntaxSymbol identifier,
-                                  SyntaxValue formForErrors)
+                                  SyntaxValue<?> formForErrors)
             throws AmbiguousBindingFailure
         {
             // A definition already exists, we can't redefine.
@@ -331,7 +325,7 @@ final class ModuleNamespace
         @Override
         RequiredBinding require(SyntaxSymbol localId,
                                 ProvidedBinding provided,
-                                SyntaxValue formForErrors)
+                                SyntaxValue<?> formForErrors)
             throws AmbiguousBindingFailure
         {
             // A definition already exists, we can't require the same id.
@@ -516,7 +510,7 @@ final class ModuleNamespace
     @Override
     ModuleIdentity getResolutionBase()
     {
-        // TODO https://github.com/ion-fusion/fusion-java/issues/166
+        // TODO #166 Relative path behavior needs more thought.
         //  Starting a relative path at the parent module will result in
         //  future inconsistency referencing nested modules, compared to
         //  referencing modules declared at top-level.
@@ -570,8 +564,8 @@ final class ModuleNamespace
     static final class CompiledImportedVariableReference
         implements CompiledForm
     {
-        final int myModuleAddress;
-        final int myBindingAddress;
+        private final int myModuleAddress;
+        private final int myBindingAddress;
 
         CompiledImportedVariableReference(int moduleAddress,
                                           int bindingAddress)

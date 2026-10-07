@@ -138,7 +138,7 @@ class SyntaxChecker
     }
 
 
-    // TODO problematic WRT keywords
+    // TODO #112 problematic WRT keywords
     @Deprecated
     final SyntaxSymbol requiredSymbol(String expectation, int argNum)
         throws FusionException

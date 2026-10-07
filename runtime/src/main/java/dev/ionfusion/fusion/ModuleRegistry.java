@@ -26,10 +26,9 @@ final class ModuleRegistry
     private final Map<ModuleIdentity,CompiledModule> myDeclarations =
         new HashMap<>();
 
-    // TODO this should separate module instances by phase.
-    //  https://github.com/ion-fusion/fusion-java/issues/77
-    // "Even though module declarations are shared for all phase levels, module
-    // instances are distinct for each phase."
+    // TODO #77 this should separate module instances by phase.
+    //  "Even though module declarations are shared for all phase levels, module
+    //  instances are distinct for each phase."
     private final Map<ModuleIdentity,ModuleInstance> myModules =
         new HashMap<>();
 

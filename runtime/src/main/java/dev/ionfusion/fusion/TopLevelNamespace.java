@@ -26,7 +26,7 @@ import java.util.Set;
  * definitions ({@link TopLevelDefinedBinding}) and imports
  * ({@link TopLevelRequiredBinding}).
  * <p>
- * Like modules, toplevels have a {@link ModuleIdentity}, each a unique
+ * Like modules, top level namespaces have a {@link ModuleIdentity}, each a unique
  * "scope" under the {@link #TOP_LEVEL_MODULE_PREFIX}. These paths are not
  * valid module paths! This means that code cannot require the namespace.
  * <p>
@@ -34,8 +34,8 @@ import java.util.Set;
  * declared name is used to mint a child identifier of the toplevel:
  * {@code (module M ...)} makes a module with identity of the form
  * {@code /fusion/private/toplevel/1234/M}.
- * This ensures that modules declared at toplevel get unique identifiers, and
- * cannot conflict (porticularly within a {@link ModuleRegistry}) with
+ * This ensures that modules declared at toplevel get unique identifiers and
+ * cannot conflict (particularly within a {@link ModuleRegistry}) with
  * same-named modules in other top-levels.
  * <p>
  * A top-level child module can (currently; see #166) be imported from sibling
@@ -77,19 +77,22 @@ final class TopLevelNamespace
 
         @Override
         NsDefinedBinding redefine(SyntaxSymbol identifier,
-                                  SyntaxValue formForErrors)
+                                  SyntaxValue<?> formForErrors)
         {
             // Redefinition of an active top-level variable has no effect.
             return this;
         }
 
+        /**
+         * When a {@code require}d identifier shadows an existing definition, swing the
+         * mapping to the imported binding, but record this {@code define} binding. If
+         * the identifier is re{@code define}d, we will reuse this binding.
+         */
         @Override
         RequiredBinding require(SyntaxSymbol localId,
                                 ProvidedBinding provided,
-                                SyntaxValue formForErrors)
+                                SyntaxValue<?> formForErrors)
         {
-            // Require atop define swing the the import, remembering this
-            // defined variable in case it is redefined later.
             return new TopLevelRequiredBinding(localId, this, provided);
         }
 
@@ -163,7 +166,7 @@ final class TopLevelNamespace
 
         @Override
         NsDefinedBinding redefine(SyntaxSymbol identifier,
-                                  SyntaxValue formForErrors)
+                                  SyntaxValue<?> formForErrors)
         {
             return myPriorDefinition;
         }
@@ -171,7 +174,7 @@ final class TopLevelNamespace
         @Override
         RequiredBinding require(SyntaxSymbol localId,
                                 ProvidedBinding provided,
-                                SyntaxValue formForErrors)
+                                SyntaxValue<?> formForErrors)
         {
             return new TopLevelRequiredBinding(localId, myPriorDefinition,
                                                provided);

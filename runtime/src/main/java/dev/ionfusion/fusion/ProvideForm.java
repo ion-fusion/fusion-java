@@ -100,8 +100,7 @@ final class ProvideForm
                                   SyntaxChecker check)
         throws FusionException
     {
-        // TODO id.resolve works when the id has the ns in context
-        //  https://github.com/ion-fusion/fusion-java/issues/82
+        // TODO #82 id.resolve works when the id has the ns in context
         // It doesn't work when the ns isn't in context because the
         // provided binding was macro-introduced.
 
@@ -139,7 +138,7 @@ final class ProvideForm
 
             check.arityExact(1);
 
-            // Add an all_defined form that is ignored during compilation,
+            // Add an all_defined form that is ignored during compilation
             // but is needed for syntax analysis and origin tracking.
             SyntaxSymbol allDefinedSym =
                 syntaxTrackOrigin(eval,

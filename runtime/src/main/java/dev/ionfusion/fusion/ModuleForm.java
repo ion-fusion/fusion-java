@@ -643,8 +643,7 @@ final class ModuleForm
 
             for (CompiledForm form : myBody)
             {
-                // TODO Each eval should be wrapped with a prompt.
-                //  https://github.com/ion-fusion/fusion-java/issues/79
+                // TODO #79 Each eval should be wrapped with a prompt.
                 //  See Racket reference for `module`.
                 eval.eval(store, form);
             }

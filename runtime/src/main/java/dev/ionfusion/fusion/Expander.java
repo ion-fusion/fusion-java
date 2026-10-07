@@ -99,9 +99,9 @@ final class Expander
         if (!isPair(myEval, stx.unwrap(myEval))) return stx;
 
         // Handle other cases as per Racket spec. In particular:
-        // TODO https://github.com/ion-fusion/fusion-java/issues/72 identifier macros
-        // TODO https://github.com/ion-fusion/fusion-java/issues/73 rename transformers
-        // TODO https://github.com/ion-fusion/fusion-java/issues/74 #%app
+        // TODO #72 identifier macros
+        // TODO #73 rename transformers
+        // TODO #74 #%app
 
         SyntaxSexp sexp = (SyntaxSexp) stx;
         SyntaxSymbol maybeMacro = sexp.firstIdentifier(myEval);
