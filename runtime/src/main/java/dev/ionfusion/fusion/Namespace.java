@@ -586,7 +586,7 @@ abstract class Namespace
         SyntaxSymbol identifier = SyntaxSymbol.make(null, name);
 
         identifier = predefine(identifier, null);
-        NsDefinedBinding binding = (NsDefinedBinding) identifier.getBinding();
+        NsDefinedBinding binding = (NsDefinedBinding) identifier.resolve();
         bind(binding, value);
     }
 

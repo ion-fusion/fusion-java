@@ -251,7 +251,7 @@ final class TopLevelNamespace
         throws FusionException
     {
         SyntaxSymbol boundId = predefine(id, id);
-        TopLevelDefinedBinding binding = (TopLevelDefinedBinding) boundId.getBinding();
+        TopLevelDefinedBinding binding = (TopLevelDefinedBinding) boundId.resolve();
         bind(binding, value);
     }
 

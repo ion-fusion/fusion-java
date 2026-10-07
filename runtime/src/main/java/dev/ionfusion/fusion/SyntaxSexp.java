@@ -470,7 +470,7 @@ final class SyntaxSexp
             // Identifier has been expanded to #%top, we can stop.
             if (prepared != maybeMacro) return this;
 
-            Binding binding = maybeMacro.getBinding();
+            Binding binding = maybeMacro.resolve();
             if (stops.get(binding) != null)
             {
                 return this;

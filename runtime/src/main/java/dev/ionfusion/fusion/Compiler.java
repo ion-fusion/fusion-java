@@ -319,7 +319,7 @@ class Compiler
         for (int i = 0; i < idCount; i++)
         {
             SyntaxSymbol identifier = ids[i];
-            Binding b = identifier.getBinding();
+            Binding b = identifier.resolve();
 
             names[i] = b.getName();
             addresses[i] = ((ModuleDefinedBinding) b).myAddress;
@@ -362,7 +362,7 @@ class Compiler
         final CompiledForm valueForm = compileExpression(env, valueSource);
 
         final SyntaxSymbol identifier = (SyntaxSymbol) stx.get(myEval, 1);
-        Binding binding = identifier.getBinding();
+        Binding binding = identifier.resolve();
 
         Binding.Visitor v = new Binding.Visitor()
         {
@@ -476,7 +476,7 @@ class Compiler
             }
         };
 
-        Binding binding = identifier.getBinding();
+        Binding binding = identifier.resolve();
         return (CompiledForm) binding.visit(v);
     }
 
@@ -549,7 +549,7 @@ class Compiler
             }
         };
 
-        Binding binding = id.getBinding();
+        Binding binding = id.resolve();
         return (CompiledForm) binding.visit(v);
     }
 
@@ -588,7 +588,7 @@ class Compiler
         };
 
         SyntaxSymbol id = (SyntaxSymbol) unsafePairDot(myEval, sexp, 1);
-        Binding binding = id.getBinding();
+        Binding binding = id.resolve();
         return (CompiledForm) binding.visit(v);
     }
 

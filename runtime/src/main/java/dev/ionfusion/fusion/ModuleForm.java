@@ -514,7 +514,7 @@ final class ModuleForm
                 {
                     // (provide insideId)
                     SyntaxSymbol insideId = (SyntaxSymbol) clauseObj;
-                    addBinding(check, insideId, insideId.getBinding());
+                    addBinding(check, insideId, insideId.resolve());
                 }
                 else
                 {
@@ -535,7 +535,7 @@ final class ModuleForm
                                 clauseStx.get(eval, 1);
                             SyntaxSymbol outsideId = (SyntaxSymbol)
                                 clauseStx.get(eval, 2);
-                            addBinding(check, outsideId, insideId.getBinding());
+                            addBinding(check, outsideId, insideId.resolve());
                             break;
                         }
                         default:

@@ -131,13 +131,6 @@ final class SyntaxSymbol
     }
 
 
-    /** Not set until {@link #resolve} or {@link #doExpand}. */
-    Binding getBinding()
-    {
-        return myBoundId.getBinding();
-    }
-
-
     /**
      * Resolves this identifier to a {@link BoundIdentifier}, but doesn't cache
      * the result if it has not been previously resolved.

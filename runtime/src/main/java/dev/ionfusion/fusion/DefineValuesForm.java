@@ -26,8 +26,7 @@ final class DefineValuesForm
 {
     /**
      * Predefines the identifiers at module level. As with all binding forms,
-     * we modify the original identifier so that its
-     * {@link SyntaxSymbol#getBinding()} returns the new binding.
+     * we replace the original identifier with one that resolves to the new binding.
      * This is a hack to communicate that information between the "expand" and
      * "compile" phases, since the compiler doesn't have the same environment
      * and cannot resolve bindings.
