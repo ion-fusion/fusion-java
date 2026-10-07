@@ -6,8 +6,8 @@ package dev.ionfusion.fusion;
 import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionText.BaseText;
 
-abstract class SyntaxText<Sub extends SyntaxText>
-    extends SimpleSyntaxValue
+abstract class SyntaxText<Text extends BaseText<Text>>
+    extends SimpleSyntaxValue<Text>
 {
     /**
      * @param wraps can be null.
@@ -18,7 +18,7 @@ abstract class SyntaxText<Sub extends SyntaxText>
     SyntaxText(SyntaxWraps    wraps,
                ResourcePosition pos,
                Object[]       properties,
-               BaseText       datum)
+               Text           datum)
     {
         super(wraps, pos, properties, datum);
     }

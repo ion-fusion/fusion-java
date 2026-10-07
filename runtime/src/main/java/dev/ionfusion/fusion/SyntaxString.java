@@ -9,7 +9,7 @@ import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionString.BaseString;
 
 final class SyntaxString
-    extends SyntaxText<SyntaxString>
+    extends SyntaxText<BaseString>
 {
     /**
      * @param datum must not be null.
@@ -40,9 +40,6 @@ final class SyntaxString
     @Override
     SyntaxString copyReplacing(SyntaxWraps wraps, Object[] properties)
     {
-        return new SyntaxString(wraps,
-                                getPosition(),
-                                properties,
-                                (BaseString) getContent());
+        return new SyntaxString(wraps, getPosition(), properties, getContent());
     }
 }

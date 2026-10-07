@@ -11,7 +11,7 @@ import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
 
 final class SyntaxKeyword
-    extends SyntaxText<SyntaxKeyword>
+    extends SyntaxText<BaseSymbol>
 {
 
     /**
@@ -56,15 +56,12 @@ final class SyntaxKeyword
     @Override
     SyntaxKeyword copyReplacing(SyntaxWraps wraps, Object[] properties)
     {
-        return new SyntaxKeyword(wraps,
-                                 getPosition(),
-                                 properties,
-                                 (BaseSymbol) getContent());
+        return new SyntaxKeyword(wraps, getPosition(), properties, getContent());
     }
 
 
     @Override
-    SyntaxValue doExpand(Expander expander, Environment env)
+    SyntaxKeyword doExpand(Expander expander, Environment env)
         throws SyntaxException
     {
         throw makeSyntaxError(expander.getEvaluator(), null, "Keywords are not expressions", this);
@@ -72,7 +69,7 @@ final class SyntaxKeyword
 
 
     @Override
-    Object unwrap(Evaluator eval)
+    BaseSymbol unwrap(Evaluator eval)
         throws FusionException
     {
         // TODO I have no idea if this is correct long-term.

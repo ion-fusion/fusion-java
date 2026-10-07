@@ -24,7 +24,7 @@ abstract class SyntaxValue<Content>
     extends BaseValue
 {
     /** A zero-length array. */
-    static final SyntaxValue[] EMPTY_ARRAY = new SyntaxValue[0];
+    static final SyntaxValue<?>[] EMPTY_ARRAY = new SyntaxValue[0];
 
     /**
      * Private key used to identify syntax objects constructed by the reader.
@@ -429,7 +429,7 @@ abstract class SyntaxValue<Content>
     }
 
 
-    final SyntaxValue addOrRemoveMark(MarkWrap mark)
+    final SyntaxValue<Content> addOrRemoveMark(MarkWrap mark)
     {
         // 2014-07-03 Only 32/906 (3.5%) of marks matched the first wrap.
         //            Eliminating those didn't increase that count.
@@ -441,7 +441,7 @@ abstract class SyntaxValue<Content>
     //========================================================================
 
     /** Don't call directly! Go through the evaluator. */
-    SyntaxValue<Content> doExpand(Expander expander, Environment env)
+    SyntaxValue<?> doExpand(Expander expander, Environment env)
         throws FusionException
     {
         return this;
@@ -480,9 +480,9 @@ abstract class SyntaxValue<Content>
 
 
     @Override
-    final SyntaxValue datumToSyntax(Evaluator        eval,
-                                    SyntaxValue      context,
-                                    ResourcePosition pos)
+    final SyntaxValue<Content> datumToSyntax(Evaluator        eval,
+                                             SyntaxValue<?>   context,
+                                             ResourcePosition pos)
         throws FusionException
     {
         return this;

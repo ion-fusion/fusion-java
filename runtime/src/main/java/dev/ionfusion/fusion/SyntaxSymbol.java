@@ -18,7 +18,7 @@ import dev.ionfusion.runtime.base.FusionException;
 import java.util.Set;
 
 final class SyntaxSymbol
-    extends SyntaxText<SyntaxSymbol>
+    extends SyntaxText<BaseSymbol>
 {
     /** A zero-length array of {@link SyntaxSymbol}. */
     static final SyntaxSymbol[] EMPTY_ARRAY = new SyntaxSymbol[0];
@@ -81,7 +81,7 @@ final class SyntaxSymbol
 
 
     /**
-     * @param value may be null.
+     * @param value can be null.
      */
     static SyntaxSymbol make(Evaluator eval, String value)
     {
@@ -122,7 +122,7 @@ final class SyntaxSymbol
      */
     BaseSymbol getName()
     {
-        return (BaseSymbol) getContent();
+        return getContent();
     }
 
 
@@ -239,7 +239,7 @@ final class SyntaxSymbol
 
 
     @Override
-    SyntaxValue doExpand(Expander expander, Environment env)
+    SyntaxValue<?> doExpand(Expander expander, Environment env)
         throws FusionException
     {
         Evaluator eval = expander.getEvaluator();
@@ -316,7 +316,6 @@ final class SyntaxSymbol
      * Verifies that a set of identifiers are unique with respect to
      * {@link #boundIdentifierEqual}.
      *
-     * @param eval
      * @param identifiers must not be null.
      * @param formForErrors the syntax form to be implicated in error messages.
      *
@@ -324,7 +323,7 @@ final class SyntaxSymbol
      */
     static void ensureUniqueIdentifiers(Evaluator      eval,
                                         SyntaxSymbol[] identifiers,
-                                        SyntaxValue    formForErrors)
+                                        SyntaxValue<?> formForErrors)
         throws SyntaxException
     {
         if (identifiers.length <= 1) return;

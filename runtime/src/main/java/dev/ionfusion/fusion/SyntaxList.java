@@ -42,7 +42,7 @@ final class SyntaxList
 
 
     @Override
-    SyntaxValue copyReplacing(SyntaxWraps wraps, Object[] properties)
+    SyntaxList copyReplacing(SyntaxWraps wraps, Object[] properties)
     {
         return new SyntaxList(getPosition(), properties, wraps, getContent());
     }

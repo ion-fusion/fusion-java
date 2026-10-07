@@ -79,7 +79,7 @@ abstract class BaseValue
     }
 
 
-    SyntaxValue makeOriginalSyntax(Evaluator eval, ResourcePosition pos)
+    SyntaxValue<?> makeOriginalSyntax(Evaluator eval, ResourcePosition pos)
     {
         return SimpleSyntaxValue.makeOriginalSyntax(eval, pos, this);
     }
@@ -94,9 +94,9 @@ abstract class BaseValue
      *
      * @return not null.
      */
-    SyntaxValue datumToSyntax(Evaluator        eval,
-                              SyntaxValue      context,
-                              ResourcePosition pos)
+    SyntaxValue<?> datumToSyntax(Evaluator        eval,
+                                 SyntaxValue<?>   context,
+                                 ResourcePosition pos)
         throws FusionException
     {
         assert !(this instanceof SyntaxValue) && !(this instanceof BaseCollection);
@@ -108,7 +108,7 @@ abstract class BaseValue
     /**
      * @return not null
      */
-    SyntaxValue scalarDatumToSyntax(Evaluator eval, ResourcePosition pos)
+    SyntaxValue<?> scalarDatumToSyntax(Evaluator eval, ResourcePosition pos)
         throws FusionException
     {
         // This default implementation is used for most values when we don't need to

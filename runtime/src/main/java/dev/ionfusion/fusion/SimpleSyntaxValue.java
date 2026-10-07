@@ -13,8 +13,8 @@ import dev.ionfusion.runtime.base.FusionException;
  * Implementation of {@link SyntaxValue}s for content that does not contain
  * other syntax objects.
  */
-class SimpleSyntaxValue
-    extends SyntaxValue<Object>
+class SimpleSyntaxValue<Content>
+    extends SyntaxValue<Content>
 {
     /**
      * @param wraps can be null.
@@ -25,7 +25,7 @@ class SimpleSyntaxValue
     SimpleSyntaxValue(SyntaxWraps wraps,
                       ResourcePosition pos,
                       Object[] properties,
-                      Object datum)
+                      Content datum)
     {
         super(datum, wraps, pos, properties);
         assert !(datum instanceof SyntaxValue);
@@ -38,39 +38,39 @@ class SimpleSyntaxValue
      * @param properties must not be null.
      * @param datum must not be null and must not be a {@link SyntaxValue}.
      */
-    private SimpleSyntaxValue(ResourcePosition pos, Object[] properties, Object datum)
+    private SimpleSyntaxValue(ResourcePosition pos, Object[] properties, Content datum)
     {
         this(SyntaxWraps.EMPTY, pos, properties, datum);
     }
 
 
     @Override
-    SimpleSyntaxValue copyReplacing(SyntaxWraps wraps, Object[] properties)
+    SimpleSyntaxValue<Content> copyReplacing(SyntaxWraps wraps, Object[] properties)
     {
-        return new SimpleSyntaxValue(wraps, getPosition(), properties, getContent());
+        return new SimpleSyntaxValue<>(wraps, getPosition(), properties, getContent());
     }
 
 
     /**
-     * @param pos may be null.
+     * @param pos can be null.
      * @param datum must not be null and must not be a {@link SyntaxValue}.
      */
-    static SyntaxValue makeOriginalSyntax(Evaluator      eval,
-                                          ResourcePosition pos,
-                                          BaseValue      datum)
+    static <Content> SyntaxValue<Content> makeOriginalSyntax(Evaluator        eval,
+                                                             ResourcePosition pos,
+                                                             Content          datum)
     {
-        return new SimpleSyntaxValue(pos, ORIGINAL_STX_PROPS, datum);
+        return new SimpleSyntaxValue<>(pos, ORIGINAL_STX_PROPS, datum);
     }
 
     /**
      * @param pos can be null.
      * @param datum must not be a {@link SyntaxValue}.
      */
-    static SyntaxValue makeSyntax(Evaluator      eval,
-                                  ResourcePosition pos,
-                                  Object         datum)
+    static <Content> SyntaxValue<Content> makeSyntax(Evaluator        eval,
+                                                     ResourcePosition pos,
+                                                     Content          datum)
     {
-        return new SimpleSyntaxValue(pos, EMPTY_OBJECT_ARRAY, datum);
+        return new SimpleSyntaxValue<>(pos, EMPTY_OBJECT_ARRAY, datum);
     }
 
 
@@ -84,9 +84,9 @@ class SimpleSyntaxValue
         // clearing any context we have.
     }
 
-    final Object propagateLexicalContext(Evaluator eval,
-                                         Object content,
-                                         SyntaxWraps propagate)
+    final Content propagateLexicalContext(Evaluator eval,
+                                          Content content,
+                                          SyntaxWraps propagate)
     {
         throw new IllegalStateException();
     }
