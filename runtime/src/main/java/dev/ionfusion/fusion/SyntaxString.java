@@ -9,7 +9,7 @@ import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionString.BaseString;
 
 final class SyntaxString
-    extends SyntaxText<BaseString>
+    extends SimpleSyntaxValue<BaseString>
 {
     /**
      * @param datum must not be null.

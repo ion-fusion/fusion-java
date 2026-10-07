@@ -11,7 +11,7 @@ import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
 
 final class SyntaxKeyword
-    extends SyntaxText<BaseSymbol>
+    extends SimpleSyntaxValue<BaseSymbol>
 {
 
     /**

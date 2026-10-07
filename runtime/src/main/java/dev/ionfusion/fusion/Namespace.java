@@ -705,7 +705,7 @@ abstract class Namespace
      * This is used by {@code (require module_path)}.
      */
     final void require(Evaluator      eval,
-                       SyntaxText     context,
+                       SyntaxValue<?> context,
                        ModuleIdentity moduleId)
         throws FusionException
     {

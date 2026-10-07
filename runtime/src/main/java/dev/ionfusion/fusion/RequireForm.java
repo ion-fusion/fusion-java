@@ -46,7 +46,7 @@ final class RequireForm
 
 
     @Override
-    SyntaxValue expand(Expander expander, Environment env, SyntaxSexp stx)
+    SyntaxValue<?> expand(Expander expander, Environment env, SyntaxSexp stx)
         throws FusionException
     {
         final Evaluator eval = expander.getEvaluator();
@@ -294,7 +294,7 @@ final class RequireForm
                                             Environment env,
                                             ModuleIdentity baseModule,
                                             SyntaxChecker requireCheck,
-                                            SyntaxValue spec)
+                                            SyntaxValue<?> spec)
         throws FusionException
     {
         if (spec instanceof SyntaxSexp)
@@ -304,14 +304,10 @@ final class RequireForm
             {
                 case "only":
                 {
-                    SyntaxValue pathStx = sexp.get(eval, 1);
+                    var pathStx = sexp.get(eval, 1);
 
                     ModuleIdentity moduleId =
-                        myModuleNameResolver.resolve(eval, baseModule,
-                                                     pathStx, true);
-
-                    // Resolver has type-checked the module-path for us.
-                    SyntaxText context = (SyntaxText) pathStx;
+                        myModuleNameResolver.resolve(eval, baseModule, pathStx, true);
 
                     int idCount = sexp.size(eval) - 2;
                     RequireRenameMapping[] mappings =
@@ -324,7 +320,7 @@ final class RequireForm
 
                         // Local identifier uses the context from the module path.
                         var localId =
-                            (SyntaxSymbol) datumToSyntax(eval, name, context, position);
+                            (SyntaxSymbol) datumToSyntax(eval, name, pathStx, position);
 
                         mappings[i] = new RequireRenameMapping(localId, name);
                     }
@@ -343,9 +339,6 @@ final class RequireForm
                                                          pathStx,
                                                          true);
 
-                    // Resolver has type-checked the module-path for us.
-                    SyntaxText context = (SyntaxText) pathStx;
-
                     ModuleInstance moduleInstance =
                             env.namespace().getRegistry().instantiate(eval, moduleId);
 
@@ -358,7 +351,7 @@ final class RequireForm
                         var localName = prefix + providedName.stringValue();
                         var localSym = makeSymbol(eval, localName);
                         var localId =
-                            (SyntaxSymbol) datumToSyntax(eval, localSym, context, null);
+                            (SyntaxSymbol) datumToSyntax(eval, localSym, pathStx, null);
 
                         mappings[i] = new RequireRenameMapping(localId, providedName);
                         i++;
@@ -395,7 +388,7 @@ final class RequireForm
 
             // "The lexical context of the module-path form determines the
             // context of the introduced identifiers"
-            return new CompiledFullRequire(moduleId, (SyntaxText<?>) spec);
+            return new CompiledFullRequire(moduleId, spec);
         }
     }
 
@@ -486,10 +479,10 @@ final class RequireForm
     private static final class CompiledFullRequire
         extends CompiledRequireSpec
     {
-        private final SyntaxText myLexicalContext;
+        private final SyntaxValue<?> myLexicalContext;
 
         private CompiledFullRequire(ModuleIdentity usedModuleId,
-                                    SyntaxText     lexicalContext)
+                                    SyntaxValue<?> lexicalContext)
         {
             super(usedModuleId);
             myLexicalContext = lexicalContext;

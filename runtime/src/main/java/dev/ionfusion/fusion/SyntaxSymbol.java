@@ -18,7 +18,7 @@ import dev.ionfusion.runtime.base.FusionException;
 import java.util.Set;
 
 final class SyntaxSymbol
-    extends SyntaxText<BaseSymbol>
+    extends SimpleSyntaxValue<BaseSymbol>
 {
     /** A zero-length array of {@link SyntaxSymbol}. */
     static final SyntaxSymbol[] EMPTY_ARRAY = new SyntaxSymbol[0];
@@ -123,6 +123,11 @@ final class SyntaxSymbol
     BaseSymbol getName()
     {
         return getContent();
+    }
+
+    String stringValue()
+    {
+        return getContent().stringValue();
     }
 
 
