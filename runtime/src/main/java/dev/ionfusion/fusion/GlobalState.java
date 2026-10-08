@@ -5,6 +5,7 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionString.makeString;
 import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.internSymbol;
+import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionValue.UNDEF;
 
 import com.amazon.ion.IonReader;
@@ -75,7 +76,6 @@ final class GlobalState
     final Binding myKernelDefineSyntaxBinding;
     final Binding myKernelDefineValuesBinding;
     final Binding myKernelOnlyInBinding;
-    final Binding myKernelModuleBinding;
     final Binding myKernelPrefixInBinding;
     final Binding myKernelProvideBinding;
     final Binding myKernelRenameInBinding;
@@ -116,7 +116,6 @@ final class GlobalState
         myKernelBeginBinding         = kernelBinding(BEGIN);
         myKernelDefineSyntaxBinding  = kernelBinding(DEFINE_SYNTAX);
         myKernelDefineValuesBinding  = kernelBinding(DEFINE_VALUES);
-        myKernelModuleBinding        = kernelBinding(MODULE);
         myKernelOnlyInBinding        = kernelBinding(ONLY_IN);
         myKernelPrefixInBinding      = kernelBinding(PREFIX_IN);
         myKernelProvideBinding       = kernelBinding(PROVIDE);
@@ -237,37 +236,34 @@ final class GlobalState
 
 
     /**
-     * Ensure we have a {@linkplain Binding#target target binding} that can be
+     * Returns a {@linkplain Binding#target target binding} that can be
      * compared with {@code ==}.
      */
+    private ModuleDefinedBinding kernelBinding(BaseSymbol sym)
+    {
+        return myKernelModule.resolveProvidedName(sym).target();
+    }
+
     private ModuleDefinedBinding kernelBinding(String name)
     {
-        BaseSymbol sym = FusionSymbol.makeSymbol(null, name);
-        ModuleDefinedBinding b = myKernelModule.resolveProvidedName(sym).target();
-        assert b != null;
-        return b;
+        return kernelBinding(makeSymbol(null, name));
     }
 
     @SuppressWarnings("unchecked")
     private <T> T kernelValue(String name)
     {
-        ModuleDefinedBinding b = kernelBinding(name);
-        return (T) b.lookup(myKernelModule);
+        return (T) kernelBinding(name).lookup(myKernelModule);
     }
 
     /**
-     * Creates a new identifier that's bound in this kernel.
-     *
-     * @param name must be defined by this kernel!
+     * Creates a new identifier bound to the core {@code module} form.
      */
-    SyntaxSymbol kernelBoundIdentifier(String name)
+    SyntaxSymbol coreModuleIdentifier(Evaluator eval)
+        throws FusionException
     {
-        ModuleDefinedBinding b = kernelBinding(name);
+        var id = SyntaxSymbol.make(eval, MODULE);
 
-        BaseSymbol sym = b.getName();
-        assert sym.stringValue().equals(name);
-
-        return SyntaxSymbol.make(null, sym).copyReplacingBinding(b);
+        return id.copyReplacingBinding(kernelBinding(id.unwrap(eval)));
     }
 
     private static IonStruct kernelDocs(IonSystem system)

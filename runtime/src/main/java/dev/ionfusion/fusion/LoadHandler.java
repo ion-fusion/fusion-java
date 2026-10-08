@@ -169,9 +169,8 @@ final class LoadHandler
     }
 
 
-    private SyntaxSexp
-    wrapModuleIdentifierWithKernelBindings(Evaluator eval,
-                                           SyntaxSexp moduleStx)
+    private SyntaxSexp rebuildAsCoreModuleForm(Evaluator eval,
+                                               SyntaxSexp moduleStx)
         throws FusionException
     {
         SyntaxValue[] children = moduleStx.extract(eval);
@@ -180,8 +179,7 @@ final class LoadHandler
         SyntaxSymbol moduleSym = (SyntaxSymbol) children[0];
         assert moduleSym.stringValue().equals(MODULE);
 
-        children[0] =
-            moduleSym.copyReplacingBinding(eval.getGlobalState().myKernelModuleBinding);
+        children[0] = Syntax.coreModuleIdentifier(eval);
 
         return moduleStx.copyReplacingChildren(eval, children);
     }
@@ -199,8 +197,7 @@ final class LoadHandler
                                        SyntaxSexp moduleDeclaration)
         throws FusionException
     {
-        moduleDeclaration =
-            wrapModuleIdentifierWithKernelBindings(eval, moduleDeclaration);
+        moduleDeclaration = rebuildAsCoreModuleForm(eval, moduleDeclaration);
 
         Evaluator bodyEval = eval;
 

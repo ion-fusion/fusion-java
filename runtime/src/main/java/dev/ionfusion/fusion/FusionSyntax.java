@@ -65,6 +65,16 @@ public final class FusionSyntax
 
 
     /**
+     * Returns the string content from a Fusion identifier.
+     */
+    static String unsafeIdentifierToJavaString(Evaluator eval, Object id)
+        throws FusionException
+    {
+        return ((SyntaxSymbol) id).getName().stringValue();
+    }
+
+
+    /**
      * Unwraps a Fusion value syntax object, returning the enclosed datum.
      *
      * @param top the top-level that was the source of the value.

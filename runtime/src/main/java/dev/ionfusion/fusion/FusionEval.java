@@ -9,8 +9,8 @@ import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
 import static dev.ionfusion.fusion.FusionSyntax.isSyntax;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
-import static dev.ionfusion.fusion.GlobalState.MODULE;
 import static dev.ionfusion.fusion.StandardReader.readSyntax;
+import static dev.ionfusion.fusion.Syntax.coreModuleIdentifier;
 import static java.util.Objects.requireNonNull;
 
 import com.amazon.ion.IonReader;
@@ -74,7 +74,7 @@ final class FusionEval
     }
 
     /**
-     * The default evaluation handler, evaluating the given source
+     * The default evaluation handler, which evaluates the given source
      * within the current namespace.
      *
      * @param topLevelForm is not enriched with lexical information if it is
@@ -83,7 +83,6 @@ final class FusionEval
      * @see <a href="http://docs.racket-lang.org/reference/eval.html#%28def._%28%28quote._~23~25kernel%29._current-eval%29%29">
          Racket's <code>eval</code></a>
      */
-    @SuppressWarnings("javadoc")
     private static Object defaultEval(Evaluator eval, Object topLevelForm)
         throws FusionException
     {
@@ -155,7 +154,7 @@ final class FusionEval
 
 
     /**
-     * Placeholder so we can later add current-eval parameter.
+     * Placeholder so we can later add the {@code current_eval} parameter.
      */
     static Object callCurrentEval(Evaluator eval, Object topLevelForm)
         throws FusionException
@@ -218,8 +217,7 @@ final class FusionEval
             if (maybeKeyword != null)
             {
                 maybeKeyword = (SyntaxSymbol) ns.syntaxIntroduce(maybeKeyword);
-                SyntaxSymbol moduleKeyword =
-                    eval.getGlobalState().kernelBoundIdentifier(MODULE);
+                SyntaxSymbol moduleKeyword = coreModuleIdentifier(eval);
                 if (maybeKeyword.freeIdentifierEqual(moduleKeyword))
                 {
                     // Stash the resolved identifier back in the sexp.
@@ -370,10 +368,10 @@ final class FusionEval
     /**
      * Evaluates the expansion-time code of a top-level form.
      * This generally means that top-level bindings are created as a result of
-     * require and define forms.  Additionally, module declarations are
-     * compiled and registered, but not visited or instantiated.
+     * {@code require} and {@code define} forms.  Additionally, module declarations are
+     * compiled and registered but not visited or instantiated.
      *
-     * @param topStx must be a fully-expanded top-level form, excluding
+     * @param topStx must be a fully expanded top-level form, excluding
      * {@code begin}.
      *
      * @see <a href="http://docs.racket-lang.org/syntax/toplevel.html#%28def._%28%28lib._syntax%2Ftoplevel..rkt%29._expand-syntax-top-level-with-compile-time-evals%29%29">

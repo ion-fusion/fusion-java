@@ -51,6 +51,16 @@ final class Syntax
 
 
     /**
+     * Returns an identifier whose binding is the core {@code module} form.
+     */
+    static SyntaxSymbol coreModuleIdentifier(Evaluator eval)
+        throws FusionException
+    {
+        return eval.getGlobalState().coreModuleIdentifier(eval);
+    }
+
+
+    /**
      * Extract the names from an array of identifiers.
      *
      * @param symbols can be null.
