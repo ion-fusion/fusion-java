@@ -91,7 +91,7 @@ final class SyntaxSymbol
     {
         SyntaxSymbol copy =
             new SyntaxSymbol(getWraps(), getPosition(), getProperties(), getName());
-        copy.myBoundId = uncachedResolveBoundIdentifier().copyReplacingBinding(binding);
+        copy.myBoundId = resolveBoundIdentifier().copyReplacingBinding(binding);
         return copy;
     }
 
@@ -113,19 +113,6 @@ final class SyntaxSymbol
 
 
     /**
-     * Resolves this identifier to a {@link BoundIdentifier}, but doesn't cache
-     * the result if it has not been previously resolved.
-     *
-     * @return not null.
-     */
-    BoundIdentifier uncachedResolveBoundIdentifier()
-    {
-        if (myBoundId != null) return myBoundId;
-
-        return myWraps.resolveBoundIdentifier(getName());
-    }
-
-    /**
      * Resolves this identifier to a {@link BoundIdentifier}, permanently
      * caching the result.
      *
@@ -135,7 +122,7 @@ final class SyntaxSymbol
     {
         if (myBoundId == null)
         {
-            myBoundId = uncachedResolveBoundIdentifier();
+            myBoundId = myWraps.resolveBoundIdentifier(getName());
         }
         return myBoundId;
     }
@@ -151,18 +138,6 @@ final class SyntaxSymbol
     Binding resolve()
     {
         return resolveBoundIdentifier().getBinding();
-    }
-
-
-    /**
-     * Resolves this identifier, but doesn't cache the result if it has not
-     * been previously resolved.
-     *
-     * @return not null, but maybe a {@link FreeBinding}.
-     */
-    Binding uncachedResolve()
-    {
-        return uncachedResolveBoundIdentifier().getBinding();
     }
 
 
@@ -270,15 +245,15 @@ final class SyntaxSymbol
 
     boolean boundIdentifierEqual(SyntaxSymbol that)
     {
-        BoundIdentifier thisId = this.uncachedResolveBoundIdentifier();
-        BoundIdentifier thatId = that.uncachedResolveBoundIdentifier();
+        BoundIdentifier thisId = this.resolveBoundIdentifier();
+        BoundIdentifier thatId = that.resolveBoundIdentifier();
         return thisId.equals(thatId);
     }
 
     boolean freeIdentifierEqual(SyntaxSymbol that)
     {
-        Binding thisBinding = this.uncachedResolve();
-        Binding thatBinding = that.uncachedResolve();
+        Binding thisBinding = this.resolve();
+        Binding thatBinding = that.resolve();
         return thisBinding.sameTarget(thatBinding);
     }
 
