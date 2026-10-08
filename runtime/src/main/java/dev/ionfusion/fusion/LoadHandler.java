@@ -5,6 +5,8 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionEval.callCurrentEval;
 import static dev.ionfusion.fusion.FusionString.makeString;
+import static dev.ionfusion.fusion.FusionSyntax.isIdentifier;
+import static dev.ionfusion.fusion.FusionSyntax.unsafeIdentifierToJavaString;
 import static dev.ionfusion.fusion.GlobalState.MODULE;
 import static dev.ionfusion.fusion.StandardReader.readSyntax;
 import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
@@ -104,7 +106,7 @@ final class LoadHandler
     private SyntaxSexp readModuleDeclaration(Evaluator eval,
                                              IonReader reader,
                                              ResourceDescriptor desc,
-                                             ModuleIdentity id)
+                                             ModuleIdentity moduleIdentity)
         throws FusionException
     {
         assert desc != null;
@@ -126,20 +128,22 @@ final class LoadHandler
             throw e;
         }
 
-        try
+        if (firstTopLevel instanceof SyntaxSexp)
         {
             SyntaxSexp moduleDeclaration = (SyntaxSexp) firstTopLevel;
             if (moduleDeclaration.size(eval) > 1)
             {
-                SyntaxSymbol moduleSym = (SyntaxSymbol)
-                    moduleDeclaration.get(eval, 0);
-                if (MODULE.equals(moduleSym.stringValue()))
+                var head = moduleDeclaration.get(eval, 0);
+                if (isIdentifier(eval, head))
                 {
-                    return moduleDeclaration;
+                    var symText = unsafeIdentifierToJavaString(eval, head);
+                    if (MODULE.equals(symText))
+                    {
+                        return moduleDeclaration;
+                    }
                 }
             }
         }
-        catch (ClassCastException e) { /* fall through */ }
 
         String message = "Top-level form isn't (module ...)";
         throw makeSyntaxError(eval, null /* syntax form */, message, firstTopLevel);
