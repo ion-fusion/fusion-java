@@ -430,21 +430,6 @@ abstract class Namespace
         return myBindings.get(binding, marks);
     }
 
-    @Override
-    public final NsBinding substituteFree(BaseSymbol name, Set<MarkWrap> marks)
-    {
-        Binding b = new FreeBinding(name);
-        return resolveMaybe(b, marks);
-    }
-
-    @Override
-    public final Binding substitute(Binding binding, Set<MarkWrap> marks)
-    {
-        Binding subst = resolveMaybe(binding, marks);
-        if (subst == null) subst = binding;
-        return subst;
-    }
-
     /**
      * Resolves an identifier to a namespace-level definition (not an import).
      *

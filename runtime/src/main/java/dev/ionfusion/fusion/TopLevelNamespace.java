@@ -128,10 +128,12 @@ final class TopLevelNamespace
             if (moreWraps.hasNext())
             {
                 SyntaxWrap nextWrap = moreWraps.next();
+                // Just collect marks, we don't need the binding.
                 nextWrap.resolveMaybe(name, moreWraps, returnMarks);
             }
 
-            return TopLevelNamespace.this.substituteFree(name, returnMarks);
+            return TopLevelNamespace.this.resolveMaybe(new FreeBinding(name),
+                                                       returnMarks);
         }
     }
 

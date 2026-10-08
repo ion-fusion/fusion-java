@@ -430,7 +430,8 @@ final class ModuleNamespace
                 }
             }
 
-            return ModuleNamespace.this.substituteFree(name, returnMarks);
+            return ModuleNamespace.this.resolveMaybe(new FreeBinding(name),
+                                                     returnMarks);
         }
     }
 

@@ -15,7 +15,7 @@ final class LocalEnvironment
     implements Environment
 {
     /**
-     * Denotes a binding defined by a local environment, for example a
+     * Denotes a binding defined by a local environment, for example, a
      * {@code lambda} or {@code letrec} expression.
      * <p>
      * This compile-time representation of a local binding holds the data
@@ -112,13 +112,15 @@ final class LocalEnvironment
                 if (b != null)
                 {
                     // There's an outside binding, look for a local shadow.
-                    return LocalEnvironment.this.substitute(b, returnMarks);
+                    Binding shadow = LocalEnvironment.this.resolveMaybe(b, returnMarks);
+                    return (shadow != null) ? shadow : b;
                 }
             }
 
             // The identifier doesn't have a binding outside of this environment,
             // so look for one here.
-            return LocalEnvironment.this.substituteFree(name, returnMarks);
+            return LocalEnvironment.this.resolveMaybe(new FreeBinding(name),
+                                                      returnMarks);
         }
     }
 
@@ -191,27 +193,12 @@ final class LocalEnvironment
     }
 
 
-    @Override
-    public Binding substitute(Binding binding, Set<MarkWrap> marks)
+    /**
+     * @return null if there's no relevant binding here.
+     */
+    private Binding resolveMaybe(Binding binding, Set<MarkWrap> marks)
     {
         BoundIdentifier boundId = new BoundIdentifier(binding, marks);
-
-        for (LocalBinding b : myBindings)
-        {
-            if (b.myIdentifier.resolveBoundIdentifier().equals(boundId))
-            {
-                return b;
-            }
-        }
-        return binding;
-    }
-
-    @Override
-    public Binding substituteFree(BaseSymbol name, Set<MarkWrap> marks)
-    {
-        BoundIdentifier boundId =
-            new BoundIdentifier(new FreeBinding(name), marks);
-
         for (LocalBinding b : myBindings)
         {
             if (b.myIdentifier.resolveBoundIdentifier().equals(boundId))
