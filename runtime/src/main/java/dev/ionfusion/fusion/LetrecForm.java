@@ -37,7 +37,7 @@ final class LetrecForm
         }
         ensureUniqueIdentifiers(eval, boundNames, stx);
 
-        var bodyEnv = new LocalEnvironment(env, boundNames);
+        var bodyEnv = LocalEnvironment.forExpansion(env, boundNames);
         SyntaxWrap localWrap = bodyEnv.getWrap();
 
         // Expand the bound-value expressions
@@ -107,10 +107,7 @@ final class LetrecForm
 
         var bindingForms = (SyntaxSequence) stx.get(eval, 1);
         var binders = collectBinders(eval, bindingForms);
-        if (binders.length != 0)
-        {
-            env = LocalEnvironment.forBinders(env, binders);
-        }
+        env = LocalEnvironment.forCompilation(env, binders);
 
         final int numBindings = binders.length;
         CompiledForm    [] valueForms = new CompiledForm    [numBindings];
@@ -168,7 +165,7 @@ final class LetrecForm
             Object[] boundValues = new Object[numBindings];
             Arrays.fill(boundValues, UNDEF);
 
-            Store localStore = new LocalStore(store, boundValues);
+            Store localStore = LocalStore.forExecution(store, boundValues);
 
             for (int i = 0; i < numBindings; i++)
             {

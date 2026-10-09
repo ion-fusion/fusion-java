@@ -68,7 +68,7 @@ final class LetValuesForm
         {
             boundNames = boundNameList.toArray(SyntaxSymbol.EMPTY_ARRAY);
             ensureUniqueIdentifiers(eval, boundNames, stx);
-            var localEnv = new LocalEnvironment(env, boundNames);
+            var localEnv = LocalEnvironment.forExpansion(env, boundNames);
             localWrap = localEnv.getWrap();
             bodyEnv   = localEnv;
         }
@@ -171,11 +171,7 @@ final class LetValuesForm
             valuePosns[i] = boundExpr.getPosition();
         }
 
-        if (bindingCount != 0)
-        {
-            // Dummy environment to keep track of depth
-            env = LocalEnvironment.forBinders(env, binders.toArray(new SyntaxSymbol[0]));
-        }
+        env = LocalEnvironment.forCompilation(env, binders.toArray(new SyntaxSymbol[0]));
 
         CompiledForm body = comp.compileBegin(env, expr, 2);
 
@@ -249,7 +245,7 @@ final class LetValuesForm
                 boundValues[i] = values;
             }
 
-            Store localStore = new LocalStore(store, boundValues);
+            Store localStore = LocalStore.forExecution(store, boundValues);
             return eval.bounceTailForm(localStore, myBody);
         }
     }
@@ -393,7 +389,7 @@ final class LetValuesForm
                 }
             }
 
-            Store localStore = LocalStore.forLocals(store, boundValues);
+            Store localStore = LocalStore.forExecution(store, boundValues);
             return eval.bounceTailForm(localStore, myBody);
         }
     }

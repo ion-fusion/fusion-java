@@ -18,7 +18,7 @@ final class LocalStore
      * Caller can (and does) mutate the array elements after constructing the
      * store!
      */
-    LocalStore(Store enclosure, Object[] values)
+    private LocalStore(Store enclosure, Object[] values)
     {
         assert values.length > 0;
         myEnclosure = enclosure;
@@ -68,9 +68,15 @@ final class LocalStore
     //==================================================================================
     // Factories
 
-    public static Store forLocals(Store enclosure, Object[] locals)
+
+    /**
+     * Logic for empty layers must mirror {@link LocalEnvironment#forCompilation}.
+     *
+     * @param values THE STORE ASSUMES OWNERSHIP OF THIS ARRAY.
+     */
+    public static Store forExecution(Store enclosure, Object[] values)
     {
-        if (locals.length == 0) return enclosure;
-        return new LocalStore(enclosure, locals);
+        if (values.length == 0) return enclosure;
+        return new LocalStore(enclosure, values);
     }
 }

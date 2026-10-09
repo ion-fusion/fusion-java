@@ -41,14 +41,11 @@ final class LambdaForm
         var formals = children[1];
         var args = flattenFormals(eval, check, formals);
 
-        // When there's no args, we can avoid an empty binding rib at runtime.
-        // TODO #67 This will need changing for internal definitions
-        //      since we won't know yet whether the rib will be empty or not.
         LocalEnvironment localEnv = null;
         if (args.length != 0)
         {
             ensureUniqueIdentifiers(eval, args, stx);
-            env = localEnv = new LocalEnvironment(env, args);
+            env = localEnv = LocalEnvironment.forExpansion(env, args);
         }
 
         // Prepare the bound names so they resolve to their own binding.
@@ -149,11 +146,8 @@ final class LambdaForm
 
         var formalsDecl = stx.get(eval, 1);
         var formals = flattenFormals(eval, formalsDecl);
-        if (formals.length != 0)
-        {
-            // We micro-optimize by avoiding an environment frame for no-arg procedures.
-            env = LocalEnvironment.forBinders(env, formals);
-        }
+
+        env = LocalEnvironment.forCompilation(env, formals);
 
         CompiledForm body = comp.compileBegin(env, stx, 2);
 
@@ -414,8 +408,7 @@ final class LambdaForm
         {
             checkArityExact(eval, myArity, args);
 
-            Store localStore = new LocalStore(myEnclosure, args);
-
+            Store localStore = LocalStore.forExecution(myEnclosure, args);
             return eval.bounceTailForm(localStore, myBody);
         }
     }

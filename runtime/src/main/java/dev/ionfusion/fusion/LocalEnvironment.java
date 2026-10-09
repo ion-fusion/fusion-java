@@ -130,61 +130,64 @@ final class LocalEnvironment
 
     /** Not null */
     private final Environment    myEnclosure;
-    private final Namespace      myNamespace;
     private final LocalBinding[] myBindings;
     private final SyntaxWrap     myWrap;
 
 
-    /**
-     * Expand-time environment construction.
-     */
-    LocalEnvironment(Environment enclosure, SyntaxSymbol[] identifiers)
+    private LocalEnvironment(Environment enclosure,
+                             LocalBinding[] bindings,
+                             boolean makeWrap)
     {
         myEnclosure = enclosure;
-        myNamespace = enclosure.namespace();
+        myBindings = bindings;
+        myWrap = makeWrap ? new LocalEnvironmentWrap() : null;
+    }
 
+
+    /**
+     * Expand-time environment construction creates bindings for each identifier.
+     */
+    static LocalEnvironment forExpansion(Environment enclosure,
+                                         SyntaxSymbol[] identifiers)
+    {
         // 2019-04 Stats from the standard library and test suite:
         //   85% of local envs have 1 entry, 12% have 2.
         //   99% have 3 or fewer entries and none have more than 5.
         int count = identifiers.length;
-        myBindings = new LocalBinding[count];
+        var bindings = new LocalBinding[count];
         for (int i = 0; i < count; i++)
         {
             SyntaxSymbol identifier = identifiers[i];
-            myBindings[i] = new LocalBinding(identifier);
+            bindings[i] = new LocalBinding(identifier);
         }
 
-        myWrap = new LocalEnvironmentWrap();
+        return new LocalEnvironment(enclosure, bindings, true);
     }
 
 
     /**
-     * Compile-time environment does not create bindings but uses them to
-     * determine access coordinates.
+     * Compile-time environment does not create bindings but uses them to determine
+     * variable addresses.
+     * <p>
+     * Logic for empty layers must mirror {@link LocalStore#forExecution}.
      */
-    private LocalEnvironment(Environment enclosure, LocalBinding[] bindings)
+    static Environment forCompilation(Environment enclosure, SyntaxSymbol[] binders)
     {
-        myEnclosure = enclosure;
-        myNamespace = enclosure.namespace();
-        myBindings = bindings;
-        myWrap = null;
-    }
+        if (binders.length == 0) return enclosure;
 
-    static LocalEnvironment forBinders(Environment enclosure, SyntaxSymbol[] binders)
-    {
         LocalBinding[] bindings = new LocalBinding[binders.length];
         for (int i = 0; i < binders.length; i++)
         {
             bindings[i] = (LocalBinding) binders[i].resolve();
         }
-        return new LocalEnvironment(enclosure, bindings);
+        return new LocalEnvironment(enclosure, bindings, false);
     }
 
 
     @Override
     public Namespace namespace()
     {
-        return myNamespace;
+        return myEnclosure.namespace();
     }
 
     public SyntaxWrap getWrap()
