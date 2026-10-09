@@ -374,12 +374,7 @@ final class SyntaxSexp
         throws FusionException
     {
         SyntaxSymbol first = firstIdentifier(eval);
-        if (first != null)
-        {
-            Binding binding = first.uncachedResolveMaybe();
-            if (binding != null) return binding.target();
-        }
-        return null;
+        return (first == null) ? null : first.resolve().target();
     }
 
     /**
