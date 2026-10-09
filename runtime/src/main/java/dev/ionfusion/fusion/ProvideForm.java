@@ -8,7 +8,10 @@ import static dev.ionfusion.fusion.FusionSexp.isSexp;
 import static dev.ionfusion.fusion.FusionSymbol.isSymbol;
 import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionSyntax.syntaxTrackOrigin;
+import static dev.ionfusion.fusion.GlobalState.ALL_DEFINED_OUT;
+import static dev.ionfusion.fusion.GlobalState.RENAME_OUT;
 import static dev.ionfusion.fusion.Syntax.datumToSyntax;
+import static dev.ionfusion.fusion.Syntax.isCoreForm;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.Namespace.NsDefinedBinding;
@@ -128,11 +131,8 @@ final class ProvideForm
     {
         SyntaxChecker check = new SyntaxChecker(eval, specForm);
 
-        GlobalState globalState = eval.getGlobalState();
-
         SyntaxSymbol specId = specForm.firstIdentifier(eval);
-        Binding b = specForm.firstTargetBinding(eval);
-        if (b == globalState.myKernelAllDefinedOutBinding)
+        if (isCoreForm(eval, specForm, ALL_DEFINED_OUT))
         {
             // Expanded form is a sequence of identifiers.
 
@@ -172,7 +172,7 @@ final class ProvideForm
                 //   https://github.com/ion-fusion/fusion-java/issues/73
             }
         }
-        else if (b == globalState.myKernelRenameOutBinding)
+        else if (isCoreForm(eval, specForm, RENAME_OUT))
         {
             // Expanded form is a sequence of (rename local exported) triples.
 

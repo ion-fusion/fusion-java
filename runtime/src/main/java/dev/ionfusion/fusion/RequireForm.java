@@ -12,8 +12,12 @@ import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionSyntax.syntaxTrackOrigin;
 import static dev.ionfusion.fusion.FusionText.isText;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
+import static dev.ionfusion.fusion.GlobalState.ONLY_IN;
+import static dev.ionfusion.fusion.GlobalState.PREFIX_IN;
+import static dev.ionfusion.fusion.GlobalState.RENAME_IN;
 import static dev.ionfusion.fusion.GlobalState.REQUIRE;
 import static dev.ionfusion.fusion.Syntax.datumToSyntax;
+import static dev.ionfusion.fusion.Syntax.isCoreForm;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.Namespace.RequireRenameMapping;
@@ -115,10 +119,7 @@ final class RequireForm
     {
         SyntaxChecker check = new SyntaxChecker(eval, spec);
 
-        GlobalState globalState = eval.getGlobalState();
-
-        Binding b = spec.firstTargetBinding(eval);
-        if (b == globalState.myKernelOnlyInBinding)
+        if (isCoreForm(eval, spec, ONLY_IN))
         {
             int arity = check.arityAtLeast(2);
 
@@ -145,7 +146,7 @@ final class RequireForm
 
             expandedSpecs.add(SyntaxSexp.make(eval, children));
         }
-        else if (b == globalState.myKernelPrefixInBinding)
+        else if (isCoreForm(eval, spec, PREFIX_IN))
         {
             check.arityExact(3);
 
@@ -159,7 +160,7 @@ final class RequireForm
 
             expandedSpecs.add(SyntaxSexp.make(eval, children));
         }
-        else if (b == globalState.myKernelRenameInBinding)
+        else if (isCoreForm(eval, spec, RENAME_IN))
         {
             int arity = check.arityAtLeast(2);
 

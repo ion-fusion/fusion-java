@@ -9,7 +9,9 @@ import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
 import static dev.ionfusion.fusion.FusionSyntax.isSyntax;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
+import static dev.ionfusion.fusion.GlobalState.BEGIN;
 import static dev.ionfusion.fusion.StandardReader.readSyntax;
+import static dev.ionfusion.fusion.Syntax.asCoreForm;
 import static dev.ionfusion.fusion.Syntax.coreModuleIdentifier;
 import static dev.ionfusion.fusion.Syntax.freeIdentifierEqual;
 import static java.util.Objects.requireNonNull;
@@ -25,26 +27,6 @@ import java.util.LinkedList;
 final class FusionEval
 {
     private FusionEval() {}
-
-
-    /**
-     * If the given syntax is a kernel {@code begin} form, return it;
-     * otherwise return null.
-     */
-    private static SyntaxSexp asBeginForm(Evaluator eval, SyntaxValue stx)
-        throws FusionException
-    {
-        if (stx instanceof SyntaxSexp)
-        {
-            SyntaxSexp sexp = (SyntaxSexp) stx;
-            Binding binding = sexp.firstTargetBinding(eval);
-            if (binding == eval.getGlobalState().myKernelBeginBinding)
-            {
-                return sexp;
-            }
-        }
-        return null;
-    }
 
 
     /**
@@ -104,7 +86,7 @@ final class FusionEval
             {
                 stx = expander.partialExpand(ns, forms.pop());
 
-                SyntaxSexp beginStx = asBeginForm(eval, stx);
+                SyntaxSexp beginStx = asCoreForm(eval, stx, BEGIN);
                 if (beginStx != null)
                 {
                     // Splice 'begin' elements into the top-level sequence.
@@ -298,7 +280,7 @@ final class FusionEval
 
         stx = expander.partialExpand(ns, stx);
 
-        SyntaxSexp beginStx = asBeginForm(eval, stx);
+        SyntaxSexp beginStx = asCoreForm(eval, stx, BEGIN);
         if (beginStx != null)
         {
             SyntaxValue[] elts = beginStx.extract(eval);

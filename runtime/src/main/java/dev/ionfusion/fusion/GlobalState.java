@@ -5,15 +5,12 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionString.makeString;
 import static dev.ionfusion.fusion.FusionSymbol.BaseSymbol.internSymbol;
-import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionValue.UNDEF;
 
 import com.amazon.ion.IonReader;
 import com.amazon.ion.IonStruct;
 import com.amazon.ion.IonSystem;
 import com.amazon.ion.system.IonReaderBuilder;
-import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
-import dev.ionfusion.fusion.ModuleNamespace.ModuleDefinedBinding;
 import dev.ionfusion.runtime._private.cover.CoverageCollector;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
@@ -71,17 +68,6 @@ final class GlobalState
     final DynamicParameter myCurrentOutputPortParam;
     final DynamicParameter myCurrentSecurityGuardParam;
 
-    final Binding myKernelAllDefinedOutBinding;
-    final Binding myKernelBeginBinding;
-    final Binding myKernelDefineSyntaxBinding;
-    final Binding myKernelDefineValuesBinding;
-    final Binding myKernelOnlyInBinding;
-    final Binding myKernelPrefixInBinding;
-    final Binding myKernelProvideBinding;
-    final Binding myKernelRenameInBinding;
-    final Binding myKernelRenameOutBinding;
-    final Binding myKernelRequireBinding;
-
     /**
      * The value of {@code (quote origin)}, used as a syntax property to mark
      * original code.
@@ -111,17 +97,6 @@ final class GlobalState
         myCurrentNamespaceParam     = kernelValue("current_namespace");
         myCurrentOutputPortParam    = kernelValue("current_output_port");
         myCurrentSecurityGuardParam = kernelValue("current_security_guard");
-
-        myKernelAllDefinedOutBinding = kernelBinding(ALL_DEFINED_OUT);
-        myKernelBeginBinding         = kernelBinding(BEGIN);
-        myKernelDefineSyntaxBinding  = kernelBinding(DEFINE_SYNTAX);
-        myKernelDefineValuesBinding  = kernelBinding(DEFINE_VALUES);
-        myKernelOnlyInBinding        = kernelBinding(ONLY_IN);
-        myKernelPrefixInBinding      = kernelBinding(PREFIX_IN);
-        myKernelProvideBinding       = kernelBinding(PROVIDE);
-        myKernelRequireBinding       = kernelBinding(REQUIRE);
-        myKernelRenameInBinding      = kernelBinding(RENAME_IN);
-        myKernelRenameOutBinding     = kernelBinding(RENAME_OUT);
 
         myStxPropOrigin = internSymbol("origin");
     }
@@ -235,35 +210,21 @@ final class GlobalState
     }
 
 
-    /**
-     * Returns a {@linkplain Binding#target target binding} that can be
-     * compared with {@code ==}.
-     */
-    private ModuleDefinedBinding kernelBinding(BaseSymbol sym)
-    {
-        return myKernelModule.resolveProvidedName(sym).target();
-    }
-
-    private ModuleDefinedBinding kernelBinding(String name)
-    {
-        return kernelBinding(makeSymbol(null, name));
-    }
-
     @SuppressWarnings("unchecked")
     private <T> T kernelValue(String name)
     {
-        return (T) kernelBinding(name).lookup(myKernelModule);
+        return (T) myKernelModule.getNamespace().lookup(name);
     }
 
     /**
-     * Creates a new identifier bound to the core {@code module} form.
+     * Creates a new identifier bound like a core form.
+     * This does not validate that there actually is a binding for the given name.
      */
-    SyntaxSymbol coreModuleIdentifier(Evaluator eval)
+    SyntaxSymbol coreIdentifier(Evaluator eval, String name)
         throws FusionException
     {
-        var id = SyntaxSymbol.make(eval, MODULE);
-
-        return id.copyReplacingBinding(kernelBinding(id.unwrap(eval)));
+        var id = SyntaxSymbol.make(eval, name);
+        return (SyntaxSymbol) myKernelModule.getNamespace().syntaxIntroduce(id);
     }
 
     private static IonStruct kernelDocs(IonSystem system)

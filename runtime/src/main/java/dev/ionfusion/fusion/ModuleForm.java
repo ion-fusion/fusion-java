@@ -12,7 +12,13 @@ import static dev.ionfusion.fusion.FusionString.isString;
 import static dev.ionfusion.fusion.FusionString.unsafeStringToJavaString;
 import static dev.ionfusion.fusion.FusionSyntax.unsafeSyntaxUnwrap;
 import static dev.ionfusion.fusion.FusionVoid.voidValue;
+import static dev.ionfusion.fusion.GlobalState.BEGIN;
+import static dev.ionfusion.fusion.GlobalState.DEFINE_SYNTAX;
+import static dev.ionfusion.fusion.GlobalState.DEFINE_VALUES;
 import static dev.ionfusion.fusion.GlobalState.PROVIDE;
+import static dev.ionfusion.fusion.GlobalState.REQUIRE;
+import static dev.ionfusion.fusion.Syntax.hasCoreBinding;
+import static dev.ionfusion.fusion.Syntax.isCoreForm;
 import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 import static dev.ionfusion.runtime.base.ModuleIdentity.isValidAbsoluteModulePath;
 import static dev.ionfusion.runtime.base.ModuleIdentity.isValidModuleName;
@@ -163,20 +169,17 @@ final class ModuleForm
 
             boolean formIsExpanded = false;
 
-            SyntaxValue expanded =
-                expander.partialExpand(moduleNamespace, form);
-
+            var expanded = expander.partialExpand(moduleNamespace, form);
             if (expanded instanceof SyntaxSexp)
             {
-                SyntaxSexp sexp = (SyntaxSexp)expanded;
-                Binding binding = sexp.firstTargetBinding(eval);
-
-                if (binding == globals.myKernelDefineValuesBinding)
+                var sexp = (SyntaxSexp) expanded;
+                var first = sexp.firstIdentifier(eval);
+                if (hasCoreBinding(eval, first, DEFINE_VALUES))
                 {
                     expanded = DefineValuesForm.predefine(eval, moduleNamespace,
                                                           sexp, form);
                 }
-                else if (binding == globals.myKernelDefineSyntaxBinding)
+                else if (hasCoreBinding(eval, first, DEFINE_SYNTAX))
                 {
                     try
                     {
@@ -191,7 +194,7 @@ final class ModuleForm
                     }
                     formIsExpanded = true;
                 }
-                else if (binding == globals.myKernelRequireBinding)
+                else if (hasCoreBinding(eval, first, REQUIRE))
                 {
                     try
                     {
@@ -207,19 +210,19 @@ final class ModuleForm
                     }
                     formIsExpanded = true;
                 }
-                else if (binding == globals.myKernelProvideBinding)
+                else if (hasCoreBinding(eval, first, PROVIDE))
                 {
                     provideForms.add(sexp);
                     expanded = null;
                 }
-                else if (binding == globals.myKernelBeginBinding)
+                else if (hasCoreBinding(eval, first, BEGIN))
                 {
                     // Splice 'begin' into the module-begin sequence
                     SyntaxSymbol beginId = (SyntaxSymbol) sexp.get(eval, 0);
                     int last = sexp.size(eval) - 1;
                     for (int i = last; i != 0;  i--)
                     {
-                        SyntaxValue expr = sexp.get(eval, i);
+                        SyntaxValue<?> expr = sexp.get(eval, i);
                         expr = expr.trackOrigin(eval, expanded, beginId);
                         forms.push(expr);
                     }
@@ -260,8 +263,7 @@ final class ModuleForm
         {
             if (! expanded.next())
             {
-                Binding firstBinding = firstTargetBindingOfSexp(eval, stx);
-                if (firstBinding == globals.myKernelDefineValuesBinding)
+                if (isCoreForm(eval, stx, DEFINE_VALUES))
                 {
                     assert expander.isModuleContext();
                     stx = expander.expand(moduleNamespace, stx);
@@ -282,21 +284,6 @@ final class ModuleForm
         }
 
         return source.copyReplacingChildren(eval, subforms);
-    }
-
-    /**
-     * @return null if stx isn't a sexp or doesn't start with an identifier.
-     * Null is also equivalent to a {@link FreeBinding} on a lead identifier.
-     */
-    private static Binding firstTargetBindingOfSexp(Evaluator eval,
-                                                    SyntaxValue stx)
-        throws FusionException
-    {
-        if (stx instanceof SyntaxSexp)
-        {
-            return ((SyntaxSexp) stx).firstTargetBinding(eval);
-        }
-        return null;
     }
 
 
@@ -372,31 +359,24 @@ final class ModuleForm
             }
         }
 
-
-        final Binding kernelRequireBinding =
-            eval.getGlobalState().myKernelRequireBinding;
-        final Binding kernelProvideBinding =
-            eval.getGlobalState().myKernelProvideBinding;
-
         for (;
              isPair(eval, moduleDatum);
              moduleDatum = unsafePairTail(eval, moduleDatum))
         {
             SyntaxValue form = (SyntaxValue) unsafePairHead(eval, moduleDatum);
 
-            Binding firstBinding = firstTargetBindingOfSexp(eval, form);
-            if (firstBinding == kernelRequireBinding)
+            if (isCoreForm(eval, form, REQUIRE))
             {
-                // All require forms have already been evaluated.
+                // All `require` forms have already been evaluated.
                 // We preserve them through macro expansion so that they are
                 // retained by `expand` and similar operations.
                 continue;
             }
 
-            if (firstBinding == kernelProvideBinding)
+            if (isCoreForm(eval, form, PROVIDE))
             {
-                // Expansion pushes all `provide` forms to the end of the
-                // module, so when we hit one we know we're done compiling.
+                // Expansion pushes all `provide` forms to the end of the module.
+                // When we hit one, we know we're done compiling.
                 break;
             }
 

@@ -5,6 +5,7 @@ package dev.ionfusion.fusion;
 
 
 import static dev.ionfusion.commons.util.Empties.EMPTY_STRING_ARRAY;
+import static dev.ionfusion.fusion.GlobalState.MODULE;
 
 import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.runtime.base.FusionException;
@@ -56,7 +57,7 @@ final class Syntax
     static SyntaxSymbol coreModuleIdentifier(Evaluator eval)
         throws FusionException
     {
-        return eval.getGlobalState().coreModuleIdentifier(eval);
+        return eval.getGlobalState().coreIdentifier(eval, MODULE);
     }
 
 
@@ -93,5 +94,42 @@ final class Syntax
         Binding bindingA = a.resolve();
         Binding bindingB = b.resolve();
         return bindingA.sameTarget(bindingB);
+    }
+
+
+    /**
+     * @param id can be null
+     */
+    static boolean hasCoreBinding(Evaluator eval, SyntaxSymbol id, String form)
+        throws FusionException
+    {
+        var core = eval.getGlobalState().coreIdentifier(eval, form);
+        return id != null && freeIdentifierEqual(id, core);
+    }
+
+
+    /**
+     * If the given syntax object is a sexp starting with a core form of the given name,
+     * return it, otherwise return null.
+     */
+    static SyntaxSexp asCoreForm(Evaluator eval, SyntaxValue<?> stx, String form)
+        throws FusionException
+    {
+        if (stx instanceof SyntaxSexp)
+        {
+            var sexp = (SyntaxSexp) stx;
+            var first = sexp.firstIdentifier(eval);
+            if (hasCoreBinding(eval, first, form))
+            {
+                return sexp;
+            }
+        }
+        return null;
+    }
+
+    static boolean isCoreForm(Evaluator eval, SyntaxValue<?> stx, String form)
+        throws FusionException
+    {
+        return asCoreForm(eval, stx, form) != null;
     }
 }
