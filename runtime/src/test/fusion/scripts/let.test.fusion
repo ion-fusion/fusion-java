@@ -148,6 +148,18 @@
 
 (check === 1 (letrec [] 1))
 
+(check === "r"
+  (let [(r "r")]
+    (letrec [] r)))
+(check === "r"
+  (let [(r "r")]
+    (let [(s "s")]
+      (letrec [] r))))
+(check === "s"
+  (let [(r "r")]
+    (let [(s "s")]
+      (letrec [] s))))
+
 (check === 5 (letrec ((v 5)) v))
 
 (check ident UNDEF
