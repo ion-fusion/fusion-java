@@ -5,9 +5,11 @@ package dev.ionfusion.fusion;
 
 import static com.amazon.ion.util.IonTextUtils.printQuotedSymbol;
 import static dev.ionfusion.fusion.FusionSexp.isPair;
+import static dev.ionfusion.fusion.FusionSexp.pair;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairTailN;
+import static dev.ionfusion.fusion.FusionSexp.unsafeSexpMap;
 import static dev.ionfusion.fusion.FusionString.isString;
 import static dev.ionfusion.fusion.FusionString.unsafeStringToJavaString;
 import static dev.ionfusion.fusion.FusionSyntax.unsafeSyntaxUnwrap;
@@ -31,7 +33,6 @@ import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -82,8 +83,6 @@ final class ModuleForm
 
         SyntaxSymbol name = check.requiredIdentifier("module name", 1);
         ModuleIdentity id = determineIdentity(eval, envOutsideModule, name);
-        source = (SyntaxSexp)
-            source.copyWithProperty(eval, STX_PROP_MODULE_IDENTITY, id);
 
         // The new namespace shares the registry of current-namespace.
         ModuleNamespace moduleNamespace = new ModuleNamespace(registry, id);
@@ -107,10 +106,6 @@ final class ModuleForm
             }
 
             languageId = moduleNamespace.resolveAndLoadModule(eval, path);
-
-            source = (SyntaxSexp)
-                source.copyWithProperty(eval,
-                                        STX_PROP_LANGUAGE_IDENTITY, languageId);
         }
 
         // The dialect declaration provides lexical context for imported bindings.
@@ -118,7 +113,8 @@ final class ModuleForm
         moduleNamespace.performInitialRequire(eval, languageId, initialBindingsStx);
 
 
-        if (source.size(eval) < 4)
+        var body = unsafePairTailN(eval, source.unwrap(eval), 3);
+        if (! isPair(eval, body))
         {
             throw check.failure("Module has no body");
         }
@@ -126,29 +122,18 @@ final class ModuleForm
         // TODO #78 Implement #%module-begin and #%plain-module-begin
         expander = expander.enterModuleContext();
 
+        body = unsafeSexpMap(eval, body,
+                             s -> moduleNamespace.syntaxIntroduce((SyntaxValue<?>)s));
 
         // Pass 1: locate definitions and install dummy bindings
         ArrayList<SyntaxSexp>  provideForms      = new ArrayList<>();
         ArrayList<SyntaxValue> otherForms        = new ArrayList<>();
         ArrayList<Boolean>     expandedFormFlags = new ArrayList<>();
 
-        LinkedList<SyntaxValue> forms = new LinkedList<>();
-        source.extract(eval, forms, 3);
-
-        int formsAlreadyWrapped = 0;
-        while (! forms.isEmpty())
+        while (isPair(eval, body))
         {
-            SyntaxValue form = forms.pop();
-            if (formsAlreadyWrapped == 0)
-            {
-                // This is ugly, but we don't want to do this twice. Forms
-                // that were spliced by 'begin' have already had this done.
-                form = moduleNamespace.syntaxIntroduce(form);
-            }
-            else
-            {
-                formsAlreadyWrapped--;
-            }
+            var form = (SyntaxValue<?>) unsafePairHead(eval, body);
+            body = unsafePairTail(eval, body);
 
             boolean formIsExpanded = false;
 
@@ -207,9 +192,8 @@ final class ModuleForm
                     {
                         SyntaxValue<?> expr = sexp.get(eval, i);
                         expr = expr.trackOrigin(eval, expanded, beginId);
-                        forms.push(expr);
+                        body = pair(eval, expr, body);
                     }
-                    formsAlreadyWrapped += last;
                     expanded = null;
                 }
             }
@@ -222,7 +206,9 @@ final class ModuleForm
         }
 
         source = (SyntaxSexp)
-            source.copyWithProperty(eval,
+            source.copyWithProperty(eval, STX_PROP_MODULE_IDENTITY, id)
+                  .copyWithProperty(eval, STX_PROP_LANGUAGE_IDENTITY, languageId)
+                  .copyWithProperty(eval,
                                     STX_PROP_REQUIRED_MODULES,
                                     moduleNamespace.requiredModuleIds())
                   .copyWithProperty(eval,
@@ -233,8 +219,7 @@ final class ModuleForm
         // Pass 2: Expand the expressions. We also rearrange the forms,
         // but that's not really for any functional reason.
 
-        SyntaxValue[] subforms =
-            new SyntaxValue[3 + otherForms.size() + provideForms.size()];
+        var subforms = new SyntaxValue[3 + otherForms.size() + provideForms.size()];
 
         int i = 0;
         subforms[i++] = source.get(eval, 0); // module
@@ -242,7 +227,7 @@ final class ModuleForm
         subforms[i++] = source.get(eval, 2); // language
 
         Iterator<Boolean> expanded = expandedFormFlags.iterator();
-        for (SyntaxValue stx : otherForms)
+        for (var stx : otherForms)
         {
             if (! expanded.next())
             {
@@ -260,7 +245,7 @@ final class ModuleForm
         }
 
         // Push all the `provide` forms to the end of the module.
-        for (SyntaxValue stx : provideForms)
+        for (SyntaxValue<?> stx : provideForms)
         {
             stx = expander.expand(moduleNamespace, stx);
             subforms[i++] = stx;

@@ -377,6 +377,21 @@ public final class FusionSexp
     //========================================================================
     // Transformers
 
+    static BaseSexp<?> unsafeSexpMap(Evaluator eval,
+                                     Object sexp,
+                                     Evaluator.Function<Object,?> fn)
+        throws FusionException
+    {
+        if (sexp instanceof ImmutablePair)
+        {
+            ImmutablePair s = (ImmutablePair) sexp;
+            var head = fn.apply(s.head());
+            var tail = unsafeSexpMap(eval, s.tail(), fn);
+            return pair(eval, head, tail);
+        }
+        return (BaseSexp<?>) sexp;
+    }
+
 
     /**
      * Extracts the values out of a Fusion sexp.

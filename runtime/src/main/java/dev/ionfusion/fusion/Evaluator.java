@@ -135,6 +135,12 @@ class Evaluator
             throws FusionException;
     }
 
+    interface Function<T, R>
+    {
+        R apply(T arg)
+            throws FusionException;
+    }
+
 
     /**
      * Injects an Ion DOM into the equivalent Fusion runtime objects.
