@@ -23,18 +23,6 @@ class SyntaxWraps
     /** Not null. */
     private final SyntaxWrap[] myWraps;
 
-    static SyntaxWraps make(SyntaxWrap initialWrap)
-    {
-        return new SyntaxWraps(initialWrap);
-    }
-
-    static SyntaxWraps make(SyntaxWrap... initialWraps)
-    {
-        if (initialWraps.length == 0) return EMPTY;
-
-        return new SyntaxWraps(initialWraps);
-    }
-
     private SyntaxWraps(SyntaxWrap initialWrap)
     {
         myWraps = new SyntaxWrap[] { initialWrap };
@@ -44,6 +32,9 @@ class SyntaxWraps
     {
         myWraps = wraps;
     }
+
+
+    //==================================================================================
 
 
     SyntaxWraps addWrap(SyntaxWrap wrap)
@@ -120,28 +111,7 @@ class SyntaxWraps
 
 
     /**
-     * Attempt to resolve the given symbol, assumed this object represents its
-     * lexical information.
-     *
-     * @return null is equivalent to a {@link FreeBinding}, and either may be
-     * returned.
-     */
-    Binding resolveMaybe(BaseSymbol name)
-    {
-        assert myWraps.length > 0;
-        Set<MarkWrap> marks = new HashSet<>();
-        return doResolveMaybe(name, marks);
-    }
-
-    private Binding doResolveMaybe(BaseSymbol name, Set<MarkWrap> marks)
-    {
-        Iterator<SyntaxWrap> i = Arrays.asList(myWraps).iterator();
-        SyntaxWrap wrap = i.next();
-        return wrap.resolveMaybe(name, i, marks);
-    }
-
-    /**
-     * Like {@link #resolveMaybe}, but only resolving to a top-level binding.
+     * Resolves to a top-level binding if one exists.
      *
      * @return null is equivalent to a {@link FreeBinding}, and either may be
      * returned.
@@ -165,10 +135,21 @@ class SyntaxWraps
         assert myWraps.length > 0;
 
         Set<MarkWrap> marks = new HashSet<>();
-        Binding binding = doResolveMaybe(name, marks);
-        if (binding == null) binding = new FreeBinding(name);
+
+        Iterator<SyntaxWrap> i = Arrays.asList(myWraps).iterator();
+        SyntaxWrap wrap = i.next();
+
+        Binding binding = wrap.resolveMaybe(name, i, marks);
+        if (binding == null)
+        {
+            binding = new FreeBinding(name);
+        }
+
         return new BoundIdentifier(binding, marks);
     }
+
+
+    //==================================================================================
 
 
     private static final class Empty
@@ -197,16 +178,13 @@ class SyntaxWraps
             return Collections.emptySet();
         }
 
-        Binding resolveMaybe(BaseSymbol name)
-        {
-            return null;
-        }
-
+        @Override
         Binding resolveTopMaybe(BaseSymbol name)
         {
             return null;
         }
 
+        @Override
         BoundIdentifier resolveBoundIdentifier(BaseSymbol name)
         {
             return new BoundIdentifier(new FreeBinding(name), Collections.emptySet());
