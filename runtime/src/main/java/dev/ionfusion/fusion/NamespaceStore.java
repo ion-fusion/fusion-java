@@ -10,8 +10,6 @@ interface NamespaceStore
 {
     ModuleRegistry getRegistry();
 
-    ModuleStore lookupRequiredModule(int moduleAddress);
-
     Object lookupImport(int moduleAddress, int bindingAddress);
 
     /**

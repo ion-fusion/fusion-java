@@ -461,23 +461,26 @@ abstract class Namespace
 
     /**
      * Creates a definition binding, but no value, for a name.
-     * Used during expansion phase, before evaluating the right-hand side.
+     * Used during the expansion phase before evaluating the right-hand side.
      *
      * @return a copy of the identifier that has the new binding attached.
      */
-    SyntaxSymbol predefine(SyntaxSymbol identifier, SyntaxValue formForErrors)
+    SyntaxSymbol predefine(SyntaxSymbol identifier, SyntaxValue<?> formForErrors)
         throws FusionException
     {
-        NsDefinedBinding newDefinition = null;
-
         identifier = identifier.copyAndResolveTop();
 
-        NsBinding entry = resolveBoundMaybe(identifier);
-        if (entry != null)
+        NsDefinedBinding definedBinding = null;
+
+        NsBinding currentBinding = resolveBoundMaybe(identifier);
+        if (currentBinding != null)
         {
-            newDefinition = entry.redefine(identifier, formForErrors);
+            // A binding exists, so see if it can be redefined.
+            // This throws an exception if the namespace prohibits redefinition.
+            definedBinding = currentBinding.redefine(identifier, formForErrors);
         }
-        if (newDefinition == null)
+
+        if (definedBinding == null)
         {
             // Allocate a new address for this definition.
             int address;
@@ -487,12 +490,12 @@ abstract class Namespace
                 myDefinedValues.add(null);
             }
 
-            newDefinition = newDefinedBinding(identifier, address);
+            definedBinding = newDefinedBinding(identifier, address);
         }
 
-        installBinding(identifier, newDefinition);
+        installBinding(identifier, definedBinding);
 
-        return identifier.copyReplacingBinding(newDefinition);
+        return identifier.copyReplacingBinding(definedBinding);
     }
 
     /**
@@ -889,12 +892,6 @@ abstract class Namespace
             ids[address] = entry.getKey();
         }
         return ids;
-    }
-
-    @Override
-    public final ModuleStore lookupRequiredModule(int moduleAddress)
-    {
-        return myRequiredModuleStores.get(moduleAddress);
     }
 
 

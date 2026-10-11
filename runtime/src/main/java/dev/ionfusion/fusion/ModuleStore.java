@@ -87,12 +87,6 @@ final class ModuleStore
     }
 
     @Override
-    public ModuleStore lookupRequiredModule(int moduleAddress)
-    {
-        return myRequiredModules[moduleAddress];
-    }
-
-    @Override
     public Object lookupImport(int moduleAddress, int bindingAddress)
     {
         return myRequiredModules[moduleAddress].myValues[bindingAddress];
