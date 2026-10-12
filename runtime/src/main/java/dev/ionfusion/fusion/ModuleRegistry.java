@@ -190,7 +190,8 @@ final class ModuleRegistry
 
         if (sourceDecl != null)
         {
-            for (ModuleIdentity required : sourceDecl.getRequiredModules())
+            var ns = sourceInstance.getNamespace();
+            for (ModuleIdentity required : ns.requiredModuleIds())
             {
                 attach(resolver, source, required);
             }

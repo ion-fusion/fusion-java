@@ -20,7 +20,6 @@ import static dev.ionfusion.runtime.base.ModuleIdentity.isValidModulePath;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.fusion.ModuleNamespace.ProvidedBinding;
-import dev.ionfusion.runtime._private.doc.BindingDoc;
 import dev.ionfusion.runtime.base.FusionException;
 import dev.ionfusion.runtime.base.ModuleIdentity;
 import java.util.ArrayList;
@@ -415,11 +414,9 @@ final class ModuleForm
         BaseSymbol[] definedNames = (BaseSymbol[])
             moduleStx.findProperty(eval, STX_PROP_DEFINED_NAMES);
 
-        return new CompiledModule(id,
+        return new CompiledModule(moduleNamespace,
                                   docs,
-                                  moduleNamespace.requiredModuleIds(),
                                   definedNames,
-                                  moduleNamespace.extractBindingDocs(),
                                   providedBindings,
                                   otherFormsArray);
     }
@@ -581,35 +578,25 @@ final class ModuleForm
         // We use arrays to hold the provided bindings, rather than a map
         // from names to bindings, because we want compiled forms to be flat
         // and compact.
-        private final ModuleIdentity    myId;
+        private final Namespace         myNamespace;
         private final String            myDocs;
-        private final ModuleIdentity[]  myRequiredModules;
         private final BaseSymbol[]      myDefinedNames;
-        private final BindingDoc[]      myBindingDocs;
         private final ProvidedBinding[] myProvidedBindings;
         private final CompiledForm[]    myBody;
 
-        private CompiledModule(ModuleIdentity    id,
+        private CompiledModule(Namespace         namespace,
                                String            docs,
-                               ModuleIdentity[]  requiredModules,
                                BaseSymbol[]      definedNames,
-                               BindingDoc[]      bindingDocs,
                                ProvidedBinding[] providedBindings,
                                CompiledForm[]    body)
         {
-            myId                  = id;
+            myNamespace           = namespace;
             myDocs                = docs;
-            myRequiredModules     = requiredModules;
             myDefinedNames        = definedNames;
-            myBindingDocs         = bindingDocs;
             myProvidedBindings    = providedBindings;
             myBody                = body;
         }
 
-        ModuleIdentity[] getRequiredModules()
-        {
-            return myRequiredModules;
-        }
 
         @Override
         public Object doEval(Evaluator eval, Store ignored)
@@ -619,7 +606,7 @@ final class ModuleForm
                 eval.findCurrentNamespace().getRegistry();
             ModuleNameResolver resolver =
                 eval.getGlobalState().myModuleNameResolver;
-            registry.declare(resolver, myId, this);
+            registry.declare(resolver, myNamespace.getModuleId(), this);
 
             return voidValue(eval);
         }
@@ -633,13 +620,12 @@ final class ModuleForm
 
             ModuleStore[] requiredModuleStores = requireModules(eval, registry);
 
-            // Allocate just enough space for the top-level bindings.
             ModuleStore store =
                 new ModuleStore(registry, requiredModuleStores,
-                                myDefinedNames, myBindingDocs);
+                                myDefinedNames, myNamespace.extractBindingDocs());
 
             ModuleInstance module =
-                new ModuleInstance(myId, myDocs, store, myProvidedBindings);
+                new ModuleInstance(myNamespace, myDocs, store, myProvidedBindings);
 
             for (CompiledForm form : myBody)
             {
@@ -655,13 +641,12 @@ final class ModuleForm
                                              ModuleRegistry registry)
             throws FusionException
         {
-            int count = myRequiredModules.length;
-            ModuleStore[] stores = new ModuleStore[count];
-            for (int i = 0; i < count; i++)
+            var required = myNamespace.requiredModuleIds();
+            var count    = required.length;
+            var stores   = new ModuleStore[count];
+            for (int i = 0; i < required.length; i++)
             {
-                ModuleInstance module =
-                    registry.instantiate(eval, myRequiredModules[i]);
-                stores[i] = module.getStore();
+                stores[i] = registry.instantiate(eval, required[i]).getStore();
             }
 
             return stores;

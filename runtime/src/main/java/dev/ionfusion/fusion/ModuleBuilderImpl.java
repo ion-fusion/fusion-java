@@ -76,9 +76,7 @@ final class ModuleBuilderImpl
                                             myNamespace.extractBindingDocs());
         Collection<NsDefinedBinding> bindings = myNamespace.getDefinedBindings();
 
-        ModuleIdentity id = myNamespace.getModuleId();
-
-        ModuleInstance module = new ModuleInstance(id, store, bindings);
+        ModuleInstance module = new ModuleInstance(myNamespace, store, bindings);
 
         myRegistry.register(myResolver, module, null);
     }

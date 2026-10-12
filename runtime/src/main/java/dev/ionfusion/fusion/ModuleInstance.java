@@ -27,10 +27,7 @@ import java.util.Set;
  */
 final class ModuleInstance
 {
-    // TODO This should retain the Namespace, perhaps, so we can evaluate
-    //  "inside" the module namespace
-
-    private final ModuleIdentity myIdentity;
+    private final Namespace      myNamespace;
     private final String         myDocs;
     private final ModuleStore    myStore;
 
@@ -41,14 +38,13 @@ final class ModuleInstance
     private final Map<BaseSymbol,ProvidedBinding> myProvidedBindings;
 
 
-    private ModuleInstance(ModuleIdentity identity,
+    private ModuleInstance(Namespace      namespace,
                            String         docs,
                            ModuleStore    store,
                            int            bindingCount)
-        throws FusionException
     {
-        myIdentity = identity;
-        myDocs     = docs;
+        myNamespace = namespace;
+        myDocs = docs;
         myStore = store;
 
         // Use object identity since symbols are interned.
@@ -59,11 +55,11 @@ final class ModuleInstance
      * Creates a module that {@code provide}s the given bindings.
      * This is for use by the {@link ModuleBuilder}.
      */
-    ModuleInstance(ModuleIdentity identity, ModuleStore namespace,
+    ModuleInstance(Namespace namespace, ModuleStore store,
                    Collection<NsDefinedBinding> bindings)
         throws FusionException
     {
-        this(identity, /* docs */ null, namespace, bindings.size());
+        this(namespace, /* docs */ null, store, bindings.size());
 
         for (NsDefinedBinding binding : bindings)
         {
@@ -77,13 +73,13 @@ final class ModuleInstance
     /**
      * Creates a module that {@code provide}s the given bindings.
      */
-    ModuleInstance(ModuleIdentity    identity,
+    ModuleInstance(Namespace         namespace,
                    String            docs,
-                   ModuleStore       namespace,
+                   ModuleStore       store,
                    ProvidedBinding[] providedBindings)
         throws FusionException
     {
-        this(identity, docs, namespace, providedBindings.length);
+        this(namespace, docs, store, providedBindings.length);
 
         for (ProvidedBinding binding : providedBindings)
         {
@@ -92,9 +88,14 @@ final class ModuleInstance
     }
 
 
+    Namespace getNamespace()
+    {
+        return myNamespace;
+    }
+
     ModuleIdentity getIdentity()
     {
-        return myIdentity;
+        return myNamespace.getModuleId();
     }
 
 
@@ -141,16 +142,16 @@ final class ModuleInstance
             bindings.put(name.stringValue(), documentProvidedName(name));
         }
 
-        return new ModuleDocs(myIdentity, myDocs, bindings);
+        return new ModuleDocs(getIdentity(), myDocs, bindings);
     }
 
     /**
-     * @return may be null.
+     * @return can be null.
      */
     private BindingDoc documentProvidedName(BaseSymbol name)
     {
         ModuleDefinedBinding binding = resolveProvidedName(name).target();
-        if (binding.myModuleId == myIdentity)
+        if (binding.myModuleId == getIdentity())
         {
             return myStore.document(binding.myAddress);
         }
