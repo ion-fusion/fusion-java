@@ -923,6 +923,10 @@ abstract class Namespace
         set(myBindingDocs, address, doc);
     }
 
+    /**
+     * Gets the raw documentation found in the source. This does not have a value set
+     * for {@link BindingDoc#getKind()} since we need an instance for that.
+     */
     final BindingDoc document(int address)
     {
         if (myBindingDocs != null && address < myBindingDocs.size())
@@ -930,18 +934,6 @@ abstract class Namespace
             return myBindingDocs.get(address);
         }
         return null;
-    }
-
-    /**
-     * @return can be shorter than the number of provided variables.
-     */
-    final BindingDoc[] extractBindingDocs()
-    {
-        if (myBindingDocs == null) return BindingDoc.EMPTY_ARRAY;
-
-        BindingDoc[] docs = myBindingDocs.toArray(BindingDoc.EMPTY_ARRAY);
-        myBindingDocs = null;
-        return docs;
     }
 
 

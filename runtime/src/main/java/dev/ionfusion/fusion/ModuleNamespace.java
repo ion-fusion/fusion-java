@@ -377,7 +377,7 @@ final class ModuleNamespace
         BindingDoc lookupDoc(Namespace current)
         {
             ModuleInstance module = current.getRegistry().lookup(myModuleId);
-            return (module == null) ? null : module.getStore().document(myAddress);
+            return (module == null) ? null : module.documentBinding(myAddress);
         }
 
         @Override

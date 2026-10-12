@@ -153,12 +153,34 @@ final class ModuleInstance
         ModuleDefinedBinding binding = resolveProvidedName(name).target();
         if (binding.myModuleId == getIdentity())
         {
-            return myStore.document(binding.myAddress);
+            return documentBinding(binding.myAddress);
         }
 
         ModuleInstance module = myStore.getRegistry().lookup(binding.myModuleId);
         assert module != null : "Module not found: " + binding.myModuleId;
 
-        return module.myStore.document(binding.myAddress);
+        return module.documentBinding(binding.myAddress);
+    }
+
+    BindingDoc documentBinding(int address)
+    {
+        BindingDoc doc = myNamespace.document(address);
+        if (doc != null && doc.getKind() == null)
+        {
+            Object value = myStore.lookup(address);
+            if (value instanceof Procedure)
+            {
+                doc.setKind(BindingDoc.Kind.PROCEDURE);
+            }
+            else if (value instanceof SyntacticForm)
+            {
+                doc.setKind(BindingDoc.Kind.SYNTAX);
+            }
+            else
+            {
+                doc.setKind(BindingDoc.Kind.CONSTANT);
+            }
+        }
+        return doc;
     }
 }

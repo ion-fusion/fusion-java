@@ -4,7 +4,6 @@
 package dev.ionfusion.fusion;
 
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
-import dev.ionfusion.runtime._private.doc.BindingDoc;
 
 /**
  * Eval-time storage for modules.
@@ -16,37 +15,30 @@ final class ModuleStore
     private final ModuleStore[]  myRequiredModules;
     private final Object[]       myValues;
     private final BaseSymbol[]   myDefinedNames;
-    private final BindingDoc[]   myBindingDocs;
 
 
     ModuleStore(ModuleRegistry registry,
                 ModuleStore[]  requiredModules,
-                BaseSymbol[]   definedNames,
-                BindingDoc[]   bindingDocs)
+                BaseSymbol[]   definedNames)
     {
         int variableCount = definedNames.length;
-        assert bindingDocs.length <= variableCount;
 
         myRegistry = registry;
         myRequiredModules = requiredModules;
         myValues = new Object[variableCount];
         myDefinedNames = definedNames;
-        myBindingDocs = bindingDocs;
     }
 
     ModuleStore(ModuleRegistry registry,
                 Object[]       values,
-                BaseSymbol[]   definedNames,
-                BindingDoc[]   bindingDocs)
+                BaseSymbol[]   definedNames)
     {
         assert values.length == definedNames.length;
-        assert bindingDocs.length <= definedNames.length;
 
         myRegistry = registry;
         myRequiredModules = new ModuleStore[0];
         myValues = values;
         myDefinedNames = definedNames;
-        myBindingDocs  = bindingDocs;
     }
 
     @Override
@@ -96,32 +88,5 @@ final class ModuleStore
     public BaseSymbol getDefinedName(int address)
     {
         return myDefinedNames[address];
-    }
-
-    BindingDoc document(int address)
-    {
-        // Trailing slots aren't allocated for undocumented bindings.
-        if (address < myBindingDocs.length)
-        {
-            BindingDoc doc = myBindingDocs[address];
-            if (doc != null && doc.getKind() == null)
-            {
-                Object value = lookup(address);
-                if (value instanceof Procedure)
-                {
-                    doc.setKind(BindingDoc.Kind.PROCEDURE);
-                }
-                else if (value instanceof SyntacticForm)
-                {
-                    doc.setKind(BindingDoc.Kind.SYNTAX);
-                }
-                else
-                {
-                    doc.setKind(BindingDoc.Kind.CONSTANT);
-                }
-            }
-            return doc;
-        }
-        return null;
     }
 }

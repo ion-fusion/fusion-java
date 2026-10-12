@@ -621,8 +621,7 @@ final class ModuleForm
             ModuleStore[] requiredModuleStores = requireModules(eval, registry);
 
             ModuleStore store =
-                new ModuleStore(registry, requiredModuleStores,
-                                myDefinedNames, myNamespace.extractBindingDocs());
+                new ModuleStore(registry, requiredModuleStores, myDefinedNames);
 
             ModuleInstance module =
                 new ModuleInstance(myNamespace, myDocs, store, myProvidedBindings);

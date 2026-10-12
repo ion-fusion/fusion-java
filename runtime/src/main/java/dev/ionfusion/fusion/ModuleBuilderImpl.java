@@ -72,8 +72,7 @@ final class ModuleBuilderImpl
 
         ModuleStore store = new ModuleStore(myRegistry,
                                             myNamespace.extractValues(),
-                                            myNamespace.extractDefinedNames(),
-                                            myNamespace.extractBindingDocs());
+                                            myNamespace.extractDefinedNames());
         Collection<NsDefinedBinding> bindings = myNamespace.getDefinedBindings();
 
         ModuleInstance module = new ModuleInstance(myNamespace, store, bindings);
