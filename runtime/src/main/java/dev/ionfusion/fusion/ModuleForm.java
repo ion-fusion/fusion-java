@@ -65,7 +65,6 @@ final class ModuleForm
         throws FusionException
     {
         final Evaluator      eval     = expander.getEvaluator();
-        final GlobalState    globals  = eval.getGlobalState();
         final ModuleRegistry registry = eval.findCurrentNamespace().getRegistry();
 
         SyntaxChecker check = check(eval, source);
@@ -86,10 +85,13 @@ final class ModuleForm
         source = (SyntaxSexp)
             source.copyWithProperty(eval, STX_PROP_MODULE_IDENTITY, id);
 
+        // The new namespace shares the registry of current-namespace.
+        ModuleNamespace moduleNamespace = new ModuleNamespace(registry, id);
+
+        var initialBindingsStx = source.get(eval, 2);
         ModuleIdentity languageId;
         {
             String path = check.requiredText(eval, "initial module path", 2);
-            SyntaxValue initialBindingsStx = source.get(eval, 2);
 
             if (! isValidModulePath(path))
             {
@@ -104,24 +106,16 @@ final class ModuleForm
                 throw new ModuleNotFoundException(message, initialBindingsStx);
             }
 
-            try
-            {
-                languageId =
-                    myModuleNameResolver.resolve(eval, id, initialBindingsStx,
-                                                 true /*load it*/);
-                // Force instantiation to tie any exception to the declaration.
-                registry.instantiate(eval, languageId);
-            }
-            catch (FusionException e)
-            {
-                e.addContext(initialBindingsStx.getPosition());
-                throw e;
-            }
+            languageId = moduleNamespace.resolveAndLoadModule(eval, path);
 
             source = (SyntaxSexp)
                 source.copyWithProperty(eval,
                                         STX_PROP_LANGUAGE_IDENTITY, languageId);
         }
+
+        // The dialect declaration provides lexical context for imported bindings.
+        initialBindingsStx = moduleNamespace.syntaxIntroduce(initialBindingsStx);
+        moduleNamespace.performInitialRequire(eval, languageId, initialBindingsStx);
 
 
         if (source.size(eval) < 4)
@@ -129,18 +123,7 @@ final class ModuleForm
             throw check.failure("Module has no body");
         }
 
-        // The new namespace shares the registry of current-namespace.
-        // We use the module-name symbol as lexical context for bindings
-        // introduced by the language, so they "match" references in the body
-        // of the module. The leading 'module' symbol is enriched differently
-        // when this is called via `eval` and top-level evaluation.
-        ModuleNamespace moduleNamespace =
-            new ModuleNamespace(eval, registry,
-                                (SyntaxSymbol) source.get(eval, 1),
-                                id, languageId);
-
-        // TODO Implement #%module-begin and #%plain-module-begin
-        //  https://github.com/ion-fusion/fusion-java/issues/78
+        // TODO #78 Implement #%module-begin and #%plain-module-begin
         expander = expander.enterModuleContext();
 
 

@@ -6,7 +6,6 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.AmbiguousBindingFailure.makeAmbiguousBindingError;
 import static dev.ionfusion.fusion.BindingSite.makeExportBindingSite;
 import static dev.ionfusion.fusion.GlobalState.REQUIRE;
-import static dev.ionfusion.fusion.Syntax.datumToSyntax;
 import static dev.ionfusion.fusion.UnboundIdentifierException.makeUnboundError;
 
 import dev.ionfusion.commons.resources.ResourcePosition;
@@ -443,31 +442,13 @@ final class ModuleNamespace
      * Language bindings can be shadowed by {@code require} or {@code define}.
      * <p>
      * When expansion of a {@code (module ...)} form is complete, the populated
-     * namespace is discarded. A compile-time namespace is later created to
-     * replace it.
-     * </p>
+     * namespace is discarded. A compile-time namespace is later created to replace it.
+     *
      * @param moduleId identifies this module.
      */
-    ModuleNamespace(Evaluator eval,
-                    ModuleRegistry registry,
-                    SyntaxSymbol lexicalContext,
-                    ModuleIdentity moduleId,
-                    ModuleIdentity languageId)
-        throws FusionException
+    ModuleNamespace(ModuleRegistry registry, ModuleIdentity moduleId)
     {
-        this(registry, moduleId);
-
-        ModuleInstance language = instantiateRequiredModule(eval, languageId);
-        for (ProvidedBinding provided : language.providedBindings())
-        {
-            BaseSymbol name = provided.getName();
-            SyntaxSymbol id =
-                (SyntaxSymbol) datumToSyntax(eval, name, lexicalContext, null);
-            id.resolve(); // This needs to resolve "outside" this module.
-
-            NsBinding prior = installBinding(id, new LanguageBinding(id, provided));
-            assert prior == null;
-        }
+        super(registry, moduleId);
     }
 
     /**
@@ -486,17 +467,6 @@ final class ModuleNamespace
             instantiateRequiredModule(eval, m);
         }
         assert Arrays.equals(requiredModuleIds(), requiredModules);
-    }
-
-
-    /**
-     * Constructs a module that uses no other module.
-     *
-     * @param moduleId identifies this module.
-     */
-    ModuleNamespace(ModuleRegistry registry, ModuleIdentity moduleId)
-    {
-        super(registry, moduleId);
     }
 
 
@@ -522,6 +492,18 @@ final class ModuleNamespace
     Object visit(Visitor v) throws FusionException
     {
         return v.accept(this);
+    }
+
+
+    /**
+     * @param modId identifies the dialect module; assumes it has already been loaded.
+     */
+    void performInitialRequire(Evaluator eval,
+                               ModuleIdentity modId,
+                               SyntaxValue<?> declaration)
+        throws FusionException
+    {
+        require(eval, declaration, modId, LanguageBinding::new);
     }
 
 

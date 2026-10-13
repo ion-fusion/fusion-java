@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiFunction;
 
 /**
  * Expand- and compile-time environment for all top-level sequences, and
@@ -692,13 +693,25 @@ abstract class Namespace
                        ModuleIdentity moduleId)
         throws FusionException
     {
+        require(eval, context, moduleId, this::newRequiredBinding);
+    }
+
+    /**
+     * Imports all exported bindings from a module.
+     */
+    final void require(Evaluator      eval,
+                       SyntaxValue<?> context,
+                       ModuleIdentity moduleId,
+                       RequiredBindingFactory makeBinding)
+        throws FusionException
+    {
         ModuleInstance module = instantiateRequiredModule(eval, moduleId);
 
         for (ProvidedBinding provided : module.providedBindings())
         {
             SyntaxSymbol id =
                 (SyntaxSymbol) datumToSyntax(eval, provided.getName(), context, null);
-            installRequiredBinding(eval, id, provided);
+            installRequiredBinding(id, provided, makeBinding);
         }
     }
 
@@ -726,20 +739,20 @@ abstract class Namespace
                 throw makeUnboundError(sym);
             }
 
-            installRequiredBinding(eval, mapping.myLocalIdentifier, provided);
+            installRequiredBinding(mapping.myLocalIdentifier, provided,
+                                   this::newRequiredBinding);
         }
     }
 
     /**
-     * @param eval must not be null.
      * @param localId will be re-resolved to the outside edge of this namespace.
      * @param provided the binding to import.
      *
      * @throws AmbiguousBindingFailure if there is conflict with an existing binding
      */
-    final void installRequiredBinding(Evaluator       eval,
-                                      SyntaxSymbol    localId,
-                                      ProvidedBinding provided)
+    final void installRequiredBinding(SyntaxSymbol localId,
+                                      ProvidedBinding provided,
+                                      RequiredBindingFactory makeBinding)
         throws AmbiguousBindingFailure
     {
         localId = localId.copyAndResolveTop();
@@ -748,7 +761,7 @@ abstract class Namespace
         NsBinding entry = resolveBoundMaybe(localId);
         if (entry == null)
         {
-            required = newRequiredBinding(localId, provided);
+            required = makeBinding.apply(localId, provided);
         }
         else
         {
@@ -757,6 +770,11 @@ abstract class Namespace
 
         installBinding(localId, required);
     }
+
+
+    interface RequiredBindingFactory
+        extends BiFunction<SyntaxSymbol, ProvidedBinding, RequiredBinding>
+    {}
 
     /**
      * Creates a binding for a {@code require} that has no prior binding.
