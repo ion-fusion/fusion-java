@@ -19,12 +19,6 @@ final class Expander
     private final Evaluator myEval;
     private final Context   myContext;
 
-    Expander(Evaluator eval)
-    {
-        myEval = eval;
-        myContext = Context.TOP;
-    }
-
     private Expander(Evaluator eval, Context ctx)
     {
         myEval = eval;
@@ -37,16 +31,6 @@ final class Expander
         return myEval;
     }
 
-    GlobalState getGlobalState()
-    {
-        return myEval.getGlobalState();
-    }
-
-    ModuleInstance getKernel()
-    {
-        return myEval.findKernel();
-    }
-
     boolean isTopLevelContext()
     {
         return myContext == Context.TOP;
@@ -57,6 +41,16 @@ final class Expander
         return myContext == Context.MODULE;
     }
 
+
+    //==================================================================================
+    // Factories
+
+    static Expander forNamespace(Evaluator eval,  Namespace ns)
+    {
+        return new Expander(eval, Context.TOP);
+    }
+
+
     Expander enterModuleContext()
     {
         assert isTopLevelContext();
@@ -64,6 +58,9 @@ final class Expander
         return new Expander(myEval, Context.MODULE);
     }
 
+
+    //==================================================================================
+    // Expansion loop
 
     /**
      * Expands syntax in the current context.
