@@ -36,7 +36,6 @@ import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionSexp.BaseSexp;
 import dev.ionfusion.fusion.FusionStruct.StructFieldVisitor;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
-import dev.ionfusion.fusion.LambdaForm.CompiledLambdaBase;
 import dev.ionfusion.fusion.LambdaForm.CompiledLambdaExact;
 import dev.ionfusion.fusion.LocalEnvironment.LocalBinding;
 import dev.ionfusion.fusion.ModuleNamespace.CompiledImportedVariableReference;
@@ -241,11 +240,11 @@ class Compiler
 
         if (procForm instanceof CompiledLambdaExact)
         {
-            CompiledLambdaBase lambda = (CompiledLambdaBase) procForm;
-            if (lambda.myArgNames.length != argForms.length)
+            CompiledLambdaExact lambda = (CompiledLambdaExact) procForm;
+            if (lambda.getExactArity() != argForms.length)
             {
                 String message =
-                    "procedure expects " + lambda.myArgNames.length +
+                    "procedure expects " + lambda.getExactArity() +
                     " arguments but application has " + argForms.length +
                     " expressions";
                  throw makeSyntaxError(myEval, "procedure application", message, stx);

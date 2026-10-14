@@ -3,10 +3,8 @@
 
 package dev.ionfusion.fusion;
 
-import static dev.ionfusion.commons.util.Empties.EMPTY_STRING_ARRAY;
 import static dev.ionfusion.fusion.FusionSexp.immutableSexp;
 import static dev.ionfusion.fusion.FusionString.isString;
-import static dev.ionfusion.fusion.Syntax.identifiersToNames;
 import static dev.ionfusion.fusion.Syntax.isBindableIdentifier;
 import static dev.ionfusion.fusion.SyntaxSymbol.ensureUniqueIdentifiers;
 
@@ -162,23 +160,21 @@ final class LambdaForm
         boolean isRest = (formalsDecl instanceof SyntaxSymbol);
         if (isRest)
         {
-            SyntaxSymbol identifier = (SyntaxSymbol) formalsDecl;
-            String name = identifier.stringValue();
-            return new CompiledLambdaRest(name, body);
+            return new CompiledLambdaRest(body);
         }
         else
         {
-            String[] argNames = identifiersToNames(formals);
-            switch (argNames.length)
+            int arity = formals.length;
+            switch (arity)
             {
                 case 0:
                     return new CompiledLambda0(body);
                 case 1:
-                    return new CompiledLambda1(argNames, body);
+                    return new CompiledLambda1(body);
                 case 2:
-                    return new CompiledLambda2(argNames, body);
+                    return new CompiledLambda2(body);
                 default:
-                    return new CompiledLambdaN(argNames, body);
+                    return new CompiledLambdaN(arity, body);
             }
         }
     }
@@ -187,22 +183,30 @@ final class LambdaForm
     //========================================================================
 
 
-    abstract static class CompiledLambdaBase
+    abstract static class CompiledLambda
         implements CompiledForm
     {
-        final String[]     myArgNames;
         final CompiledForm myBody;
 
-        CompiledLambdaBase(String[] argNames, CompiledForm body)
+        CompiledLambda(CompiledForm body)
         {
-            myArgNames = argNames;
-            myBody     = body;
+            myBody = body;
         }
     }
 
-    /** Marker for lambdas that accept a fixed number of arguments. */
-    interface CompiledLambdaExact
+
+    /**
+     * Implements lambdas that accept a fixed number of arguments.
+     */
+    abstract static class CompiledLambdaExact
+        extends CompiledLambda
     {
+        CompiledLambdaExact(CompiledForm body)
+        {
+            super(body);
+        }
+
+        abstract int getExactArity();
     }
 
 
@@ -220,10 +224,8 @@ final class LambdaForm
          *  closure.  Any free variables in the procedure are expected to be
          *  bound here.
          */
-        Closure(Store enclosure, String[] argNames, CompiledForm body)
+        Closure(Store enclosure, CompiledForm body)
         {
-            super(argNames);
-
             myEnclosure = enclosure;
             myBody      = body;
         }
@@ -234,17 +236,21 @@ final class LambdaForm
 
 
     private static final class CompiledLambda0
-        extends CompiledLambdaBase
-        implements CompiledLambdaExact
+        extends CompiledLambdaExact
     {
         CompiledLambda0(CompiledForm body)
         {
-            super(EMPTY_STRING_ARRAY, body);
+            super(body);
+        }
+
+        @Override
+        public int getExactArity()
+        {
+            return 0;
         }
 
         @Override
         public Object doEval(Evaluator eval, Store store)
-            throws FusionException
         {
             return new Closure0(store, myBody);
         }
@@ -256,7 +262,7 @@ final class LambdaForm
     {
         Closure0(Store enclosure, CompiledForm body)
         {
-            super(enclosure, EMPTY_STRING_ARRAY, body);
+            super(enclosure, body);
         }
 
         @Override
@@ -275,20 +281,23 @@ final class LambdaForm
 
 
     private static final class CompiledLambda1
-        extends CompiledLambdaBase
-        implements CompiledLambdaExact
+        extends CompiledLambdaExact
     {
-        CompiledLambda1(String[] argNames, CompiledForm body)
+        CompiledLambda1(CompiledForm body)
         {
-            super(argNames, body);
-            assert argNames.length == 1;
+            super(body);
+        }
+
+        @Override
+        public int getExactArity()
+        {
+            return 1;
         }
 
         @Override
         public Object doEval(Evaluator eval, Store store)
-            throws FusionException
         {
-            return new Closure1(store, myArgNames, myBody);
+            return new Closure1(store, myBody);
         }
     }
 
@@ -296,9 +305,9 @@ final class LambdaForm
     private static final class Closure1
         extends Closure
     {
-        Closure1(Store enclosure, String[] argNames, CompiledForm body)
+        Closure1(Store enclosure, CompiledForm body)
         {
-            super(enclosure, argNames, body);
+            super(enclosure, body);
         }
 
         @Override
@@ -318,20 +327,23 @@ final class LambdaForm
 
 
     private static final class CompiledLambda2
-        extends CompiledLambdaBase
-        implements CompiledLambdaExact
+        extends CompiledLambdaExact
     {
-        CompiledLambda2(String[] argNames, CompiledForm body)
+        CompiledLambda2(CompiledForm body)
         {
-            super(argNames, body);
-            assert argNames.length == 2;
+            super(body);
+        }
+
+        @Override
+        public int getExactArity()
+        {
+            return 2;
         }
 
         @Override
         public Object doEval(Evaluator eval, Store store)
-            throws FusionException
         {
-            return new Closure2(store, myArgNames, myBody);
+            return new Closure2(store, myBody);
         }
     }
 
@@ -339,9 +351,9 @@ final class LambdaForm
     private static final class Closure2
         extends Closure
     {
-        Closure2(Store enclosure, String[] argNames, CompiledForm body)
+        Closure2(Store enclosure, CompiledForm body)
         {
-            super(enclosure, argNames, body);
+            super(enclosure, body);
         }
 
         @Override
@@ -361,18 +373,26 @@ final class LambdaForm
 
 
     private static final class CompiledLambdaN
-        extends CompiledLambdaBase
-        implements CompiledLambdaExact
+        extends CompiledLambdaExact
     {
-        CompiledLambdaN(String[] argNames, CompiledForm body)
+        private final int myArity;
+
+        CompiledLambdaN(int arity, CompiledForm body)
         {
-            super(argNames, body);
+            super(body);
+            myArity = arity;
+        }
+
+        @Override
+        int getExactArity()
+        {
+            return myArity;
         }
 
         @Override
         public Object doEval(Evaluator eval, Store store)
         {
-            return new ClosureN(store, myArgNames, myBody);
+            return new ClosureN(store, myArity, myBody);
         }
     }
 
@@ -382,10 +402,10 @@ final class LambdaForm
     {
         private final int myArity;
 
-        ClosureN(Store enclosure, String[] argNames, CompiledForm body)
+        ClosureN(Store enclosure, int arity, CompiledForm body)
         {
-            super(enclosure, argNames, body);
-            myArity = argNames.length;
+            super(enclosure, body);
+            myArity = arity;
         }
 
         @Override
@@ -405,18 +425,17 @@ final class LambdaForm
 
 
     private static final class CompiledLambdaRest
-        extends CompiledLambdaBase
+        extends CompiledLambda
     {
-        CompiledLambdaRest(String restArgName, CompiledForm body)
+        CompiledLambdaRest(CompiledForm body)
         {
-            super(new String[] { restArgName, Procedure.DOTDOTDOT }, body);
+            super(body);
         }
 
         @Override
         public Object doEval(Evaluator eval, Store store)
-            throws FusionException
         {
-            return new ClosureRest(store, myArgNames, myBody);
+            return new ClosureRest(store, myBody);
         }
     }
 
@@ -424,14 +443,13 @@ final class LambdaForm
     private static final class ClosureRest
         extends Closure
     {
-        ClosureRest(Store enclosure, String[] argNames, CompiledForm body)
+        ClosureRest(Store enclosure, CompiledForm body)
         {
-            super(enclosure, argNames, body);
+            super(enclosure, body);
         }
 
         @Override
         Object doApply(Evaluator eval, Object[] args)
-            throws FusionException
         {
             Object rest = immutableSexp(eval, args);
 

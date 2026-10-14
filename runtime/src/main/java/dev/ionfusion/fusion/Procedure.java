@@ -20,29 +20,10 @@ abstract class Procedure
     extends BaseValue
     implements NamedValue<BaseSymbol>
 {
-    final static String DOTDOTDOT = "...";
-    final static String DOTDOTDOTPLUS = "...+";
-
-
     private BaseSymbol myName;
-    private final int myArity;
-
-
-    /**
-     * @param argNames are used to determine the result
-     *   of {@link #checkArityExact(Evaluator, Object[])}.
-     *
-     * @deprecated since Release 17, 2014-06-18.
-     */
-    @Deprecated
-    Procedure(String... argNames)
-    {
-        myArity = argNames.length;
-    }
 
     Procedure()
     {
-        myArity = -1;
     }
 
 
@@ -107,28 +88,6 @@ abstract class Procedure
         {
             throw makeArityError(eval, this.identify(), arity, arity, args);
         }
-    }
-
-
-    /**
-     * Checks arity against the documented argument names.
-     *
-     * @deprecated since Release 17, 2014-06-18.
-     * Use {@link #checkArityExact(Evaluator, int, Object[])} instead.
-     */
-    @Deprecated
-    final void checkArityExact(Evaluator eval, Object[] args)
-        throws FusionException
-    {
-        if (myArity < 0)
-        {
-            String message =
-                "This Procedure instance used the no-args constructor from " +
-                "which arity cannot be inferred. It must use one of the " +
-                "un-deprecated checkArity methods.";
-            throw new IllegalStateException(message);
-        }
-        checkArityExact(eval, myArity, args);
     }
 
 

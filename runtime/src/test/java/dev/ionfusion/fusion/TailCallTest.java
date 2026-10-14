@@ -58,11 +58,6 @@ public class TailCallTest
     private static final class CountupProc
         extends Procedure
     {
-        CountupProc()
-        {
-            super("i", "limit");
-        }
-
         @Override
         Object doApply(Evaluator eval, Object[] args)
             throws FusionException
