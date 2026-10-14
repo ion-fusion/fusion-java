@@ -29,6 +29,13 @@ final class Syntax
         return (value instanceof SyntaxSymbol);
     }
 
+    static boolean isBindableIdentifier(Evaluator eval, Object value)
+        throws FusionException
+    {
+        return (value instanceof SyntaxSymbol) &&
+               ((SyntaxSymbol) value).unwrap(eval).isNonEmpty();
+    }
+
 
     /**
      * @param context can be null, in which case no lexical information is

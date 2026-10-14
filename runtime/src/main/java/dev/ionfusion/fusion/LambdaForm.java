@@ -7,6 +7,7 @@ import static dev.ionfusion.commons.util.Empties.EMPTY_STRING_ARRAY;
 import static dev.ionfusion.fusion.FusionSexp.immutableSexp;
 import static dev.ionfusion.fusion.FusionString.isString;
 import static dev.ionfusion.fusion.Syntax.identifiersToNames;
+import static dev.ionfusion.fusion.Syntax.isBindableIdentifier;
 import static dev.ionfusion.fusion.SyntaxSymbol.ensureUniqueIdentifiers;
 
 import dev.ionfusion.runtime.base.FusionException;
@@ -18,7 +19,7 @@ final class LambdaForm
     extends SyntacticForm
 {
     @Override
-    SyntaxValue expand(Expander expander, Environment env, SyntaxSexp stx)
+    SyntaxValue<?> expand(Expander expander, Environment env, SyntaxSexp stx)
         throws FusionException
     {
         final Evaluator eval = expander.getEvaluator();
@@ -26,10 +27,10 @@ final class LambdaForm
         SyntaxChecker check = check(eval, stx);
         int arity = check.arityAtLeast(3);
 
-        SyntaxValue[] children = stx.extract(eval);
+        var children = stx.extract(eval);
 
         int bodyStart;
-        SyntaxValue maybeDoc = children[2];
+        var maybeDoc = children[2];
         if (isString(eval, maybeDoc.unwrap(eval)) && arity > 3)
         {
             bodyStart = 3;
@@ -39,26 +40,12 @@ final class LambdaForm
             bodyStart = 2;
         }
 
-        boolean isRest = (children[1] instanceof SyntaxSymbol);
-
-        SyntaxSymbol[] args;
-        if (isRest)
-        {
-            // Check for null/empty symbol
-            SyntaxSymbol rest = check.requiredIdentifier("rest parameter", 1);
-            args = new SyntaxSymbol[]{ rest };
-        }
-        else
-        {
-            SyntaxChecker checkFormals =
-                check.subformSexp("formal arguments", 1);
-            args = determineArgs(eval, checkFormals);
-        }
+        var formals = children[1];
+        var args = flattenFormals(eval, check, formals);
 
         // When there's no args, we can avoid an empty binding rib at runtime.
-        // TODO This will need changing for internal definitions
+        // TODO #67 This will need changing for internal definitions
         //      since we won't know yet whether the rib will be empty or not.
-        //      https://github.com/ion-fusion/fusion-java/issues/67
         LocalEnvironment localEnv = null;
         if (args.length != 0)
         {
@@ -75,18 +62,16 @@ final class LambdaForm
             args[i] = arg;
         }
 
-        if (isRest)
+        if (formals instanceof SyntaxSymbol)
         {
             children[1] = args[0];
         }
         else
         {
-            SyntaxSexp formals = (SyntaxSexp) children[1];
-            children[1] = formals.copyReplacingChildren(eval, args);
+            children[1] = ((SyntaxSexp) formals).copyReplacingChildren(eval, args);
         }
 
-        // TODO Should allow internal definitions
-        //  https://github.com/ion-fusion/fusion-java/issues/67
+        // TODO #67 Should allow internal definitions
         for (int i = bodyStart; i < children.length; i++)
         {
             SyntaxValue<?> bodyForm = children[i];
@@ -102,18 +87,34 @@ final class LambdaForm
     }
 
 
-    private static SyntaxSymbol[] determineArgs(Evaluator eval,
-                                                SyntaxChecker checkArgs)
+    private static SyntaxSymbol[] flattenFormals(Evaluator eval,
+                                                 SyntaxChecker lambdaCheck,
+                                                 SyntaxValue<?> formals)
         throws FusionException
     {
-        SyntaxSexp argSexp = (SyntaxSexp) checkArgs.form();
+        if (isBindableIdentifier(eval, formals))
+        {
+            return new SyntaxSymbol[] { (SyntaxSymbol) formals };
+        }
+
+        if (!(formals instanceof SyntaxSexp))
+        {
+            throw lambdaCheck.failure("formals must be a sexp or non-empty symbol", formals);
+        }
+
+        SyntaxSexp argSexp = (SyntaxSexp) formals;
         int size = argSexp.size(eval);
         if (size == 0) return SyntaxSymbol.EMPTY_ARRAY;
 
         SyntaxSymbol[] args = new SyntaxSymbol[size];
         for (int i = 0; i < size; i++)
         {
-            args[i] = checkArgs.requiredIdentifier("formal argument name", i);
+            var arg = argSexp.get(eval, i);
+            if (! isBindableIdentifier(eval, arg))
+            {
+                throw lambdaCheck.failure("formal argument name must be a non-empty symbol", arg);
+            }
+            args[i] = (SyntaxSymbol) arg;
         }
         return args;
     }
