@@ -309,26 +309,26 @@ class Compiler
             }
         }
 
-        BaseSymbol[] names  = new BaseSymbol[idCount];
-        int[] addresses = new int   [idCount];
+        var inferredNames  = new BaseSymbol[idCount];
+        var addresses      = new int       [idCount];
 
         for (int i = 0; i < idCount; i++)
         {
             SyntaxSymbol identifier = ids[i];
-            Binding b = identifier.resolve();
+            inferredNames[i] = identifier.getName();
 
-            names[i] = b.getName();
+            Binding b = identifier.resolve();
             addresses[i] = ((ModuleDefinedBinding) b).myAddress;
         }
 
         CompiledForm compiled;
         if (idCount == 1)
         {
-            compiled = new CompiledNsDefine(names[0], addresses[0], valuesForm);
+            compiled = new CompiledNsDefine(inferredNames[0], addresses[0], valuesForm);
         }
         else
         {
-            compiled = new CompiledNsDefineValues(names, addresses, valuesForm);
+            compiled = new CompiledNsDefineValues(inferredNames, addresses, valuesForm);
         }
 
         // Collect documentation when necessary.

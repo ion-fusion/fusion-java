@@ -988,16 +988,16 @@ abstract class Namespace
     static class CompiledNsDefine
         implements CompiledForm
     {
-        private final BaseSymbol   myName;
+        private final BaseSymbol   myInferredName;
         private final int          myAddress;
         private final CompiledForm myValueForm;
 
-        CompiledNsDefine(BaseSymbol name, int address, CompiledForm valueForm)
+        CompiledNsDefine(BaseSymbol inferredName, int address, CompiledForm valueForm)
         {
-            assert name != null;
-            myName      = name;
-            myAddress   = address;
-            myValueForm = valueForm;
+            assert inferredName != null;
+            myInferredName = inferredName;
+            myAddress      = address;
+            myValueForm    = valueForm;
         }
 
         @Override
@@ -1011,7 +1011,7 @@ abstract class Namespace
             NamespaceStore ns = store.namespace();
             ns.set(myAddress, value);
 
-            inferObjectName(value, myName);
+            inferObjectName(value, myInferredName);
 
             return voidValue(eval);
         }
@@ -1070,25 +1070,25 @@ abstract class Namespace
     static class CompiledNsDefineValues
         implements CompiledForm
     {
-        private final BaseSymbol[] myNames;
+        private final BaseSymbol[] myInferredNames;
         private final int[]        myAddresses;
         private final CompiledForm myValuesForm;
 
-        CompiledNsDefineValues(BaseSymbol[] names,
+        CompiledNsDefineValues(BaseSymbol[] inferredNames,
                                int[] addresses,
                                CompiledForm valuesForm)
         {
-            assert names.length != 1;
-            myNames      = names;
-            myAddresses  = addresses;
-            myValuesForm = valuesForm;
+            assert inferredNames.length == addresses.length;
+            myInferredNames = inferredNames;
+            myAddresses     = addresses;
+            myValuesForm    = valuesForm;
         }
 
         @Override
         public final Object doEval(Evaluator eval, Store store)
             throws FusionException
         {
-            int expectedCount = myNames.length;
+            int expectedCount = myInferredNames.length;
 
             Object values = eval.eval(store, myValuesForm);
             if (values instanceof Object[])
@@ -1108,7 +1108,7 @@ abstract class Namespace
                 {
                     Object value = vals[i];
                     ns.set(myAddresses[i], value);
-                    inferObjectName(value, myNames[i]);
+                    inferObjectName(value, myInferredNames[i]);
                 }
             }
             else
