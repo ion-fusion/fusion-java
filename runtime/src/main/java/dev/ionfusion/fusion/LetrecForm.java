@@ -46,7 +46,6 @@ final class LetrecForm
         {
             // Wrap the bound names so they resolve to their own binding.
             SyntaxSymbol name = (SyntaxSymbol) boundNames[i].addWrap(localWrap);
-            name.resolve();
 
             // Already type- and arity-checked this above
             SyntaxSexp binding = (SyntaxSexp) bindingForms.get(eval, i);

@@ -144,8 +144,8 @@ final class DefineValuesForm
         int size = argSexp.size(eval);
         for (int i = 0; i < size; i++)
         {
-            // Prepare the identifiers so they resolve to their own binding.
-            subformChecker.requiredIdentifier(i).resolve();
+            // Syntax-check the binders
+            subformChecker.requiredIdentifier(i);
         }
 
         // Check for duplicate identifiers

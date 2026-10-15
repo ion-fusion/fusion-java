@@ -54,10 +54,7 @@ final class LambdaForm
         // Prepare the bound names so they resolve to their own binding.
         for (int i = 0; i < args.length; i++)
         {
-            SyntaxSymbol arg = args[i];
-            arg = (SyntaxSymbol) arg.addWrap(localEnv.getWrap());
-            arg.resolve();           // Caches the binding in the identifier
-            args[i] = arg;
+            args[i] = (SyntaxSymbol) args[i].addWrap(localEnv.getWrap());
         }
 
         if (formals instanceof SyntaxSymbol)
