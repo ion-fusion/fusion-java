@@ -20,6 +20,7 @@ final class LocalStore
      */
     LocalStore(Store enclosure, Object[] values)
     {
+        assert values.length > 0;
         myEnclosure = enclosure;
         myNamespace = enclosure.namespace();
         myValues    = values;
@@ -61,5 +62,15 @@ final class LocalStore
         {
             myEnclosure.set(rib - 1, address, value);
         }
+    }
+
+
+    //==================================================================================
+    // Factories
+
+    public static Store forLocals(Store enclosure, Object[] locals)
+    {
+        if (locals.length == 0) return enclosure;
+        return new LocalStore(enclosure, locals);
     }
 }

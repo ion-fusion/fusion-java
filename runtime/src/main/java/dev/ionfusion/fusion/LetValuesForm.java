@@ -393,7 +393,7 @@ final class LetValuesForm
                 }
             }
 
-            Store localStore = new LocalStore(store, boundValues);
+            Store localStore = LocalStore.forLocals(store, boundValues);
             return eval.bounceTailForm(localStore, myBody);
         }
     }
