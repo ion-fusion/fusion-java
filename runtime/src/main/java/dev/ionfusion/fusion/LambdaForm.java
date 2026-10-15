@@ -205,25 +205,8 @@ final class LambdaForm
     {
     }
 
-    private static final class CompiledLambdaN
-        extends CompiledLambdaBase
-        implements CompiledLambdaExact
-    {
-        CompiledLambdaN(String[] argNames, CompiledForm body)
-        {
-            super(argNames, body);
-        }
 
-        @Override
-        public Object doEval(Evaluator eval, Store store)
-            throws FusionException
-        {
-            return new Closure(store, myArgNames, myBody);
-        }
-    }
-
-
-    private static class Closure
+    private abstract static class Closure
         extends Procedure
     {
         final Store        myEnclosure;
@@ -243,17 +226,6 @@ final class LambdaForm
 
             myEnclosure = enclosure;
             myBody      = body;
-        }
-
-        @Override
-        Object doApply(Evaluator eval, Object[] args)
-            throws FusionException
-        {
-            checkArityExact(eval, args);
-
-            Store localStore = new LocalStore(myEnclosure, args);
-
-            return eval.bounceTailForm(localStore, myBody);
         }
     }
 
@@ -379,6 +351,50 @@ final class LambdaForm
             checkArityExact(eval, 2, args);
 
             Store localStore = new LocalStore2(myEnclosure, args[0], args[1]);
+
+            return eval.bounceTailForm(localStore, myBody);
+        }
+    }
+
+
+    //========================================================================
+
+
+    private static final class CompiledLambdaN
+        extends CompiledLambdaBase
+        implements CompiledLambdaExact
+    {
+        CompiledLambdaN(String[] argNames, CompiledForm body)
+        {
+            super(argNames, body);
+        }
+
+        @Override
+        public Object doEval(Evaluator eval, Store store)
+        {
+            return new ClosureN(store, myArgNames, myBody);
+        }
+    }
+
+
+    private static class ClosureN
+        extends Closure
+    {
+        private final int myArity;
+
+        ClosureN(Store enclosure, String[] argNames, CompiledForm body)
+        {
+            super(enclosure, argNames, body);
+            myArity = argNames.length;
+        }
+
+        @Override
+        Object doApply(Evaluator eval, Object[] args)
+            throws FusionException
+        {
+            checkArityExact(eval, myArity, args);
+
+            Store localStore = new LocalStore(myEnclosure, args);
 
             return eval.bounceTailForm(localStore, myBody);
         }
