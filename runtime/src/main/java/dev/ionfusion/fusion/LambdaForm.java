@@ -25,61 +25,31 @@ final class LambdaForm
         SyntaxChecker check = check(eval, stx);
         int arity = check.arityAtLeast(3);
 
-        var children = stx.extract(eval);
+        var subforms = stx.extract(eval);
 
-        int bodyStart;
-        var maybeDoc = children[2];
-        if (isString(eval, maybeDoc.unwrap(eval)) && arity > 3)
-        {
-            bodyStart = 3;
-        }
-        else
-        {
-            bodyStart = 2;
-        }
+        var maybeDoc = subforms[2];
+        int bodyStart = ((isString(eval, maybeDoc.unwrap(eval)) && arity > 3) ? 3 : 2);
 
-        var formals = children[1];
-        var args = flattenFormals(eval, check, formals);
+        var binders = collectBinders(eval, check, subforms[1]);
+        ensureUniqueIdentifiers(eval, binders, stx);
 
-        LocalEnvironment localEnv = null;
-        if (args.length != 0)
-        {
-            ensureUniqueIdentifiers(eval, args, stx);
-            env = localEnv = LocalEnvironment.forExpansion(env, args);
-        }
+        var localEnv = LocalEnvironment.forExpansion(env, binders);
 
         // Prepare the bound names so they resolve to their own binding.
-        for (int i = 0; i < args.length; i++)
-        {
-            args[i] = (SyntaxSymbol) args[i].addWrap(localEnv.getWrap());
-        }
-
-        if (formals instanceof SyntaxSymbol)
-        {
-            children[1] = args[0];
-        }
-        else
-        {
-            children[1] = ((SyntaxSexp) formals).copyReplacingChildren(eval, args);
-        }
+        subforms[1] = localEnv.applyContext(subforms[1]);
 
         // TODO #67 Should allow internal definitions
-        for (int i = bodyStart; i < children.length; i++)
+        for (int i = bodyStart; i < subforms.length; i++)
         {
-            SyntaxValue<?> bodyForm = children[i];
-            if (localEnv != null)
-            {
-                bodyForm = bodyForm.addWrap(localEnv.getWrap());
-            }
-            bodyForm = expander.expandExpression(env, bodyForm);
-            children[i] = bodyForm;
+            var bodyForm = localEnv.applyContext(subforms[i]);
+            subforms[i] = expander.expandExpression(localEnv, bodyForm);
         }
 
-        return stx.copyReplacingChildren(eval, children);
+        return stx.copyReplacingChildren(eval, subforms);
     }
 
 
-    private static SyntaxSymbol[] flattenFormals(Evaluator eval,
+    private static SyntaxSymbol[] collectBinders(Evaluator eval,
                                                  SyntaxChecker lambdaCheck,
                                                  SyntaxValue<?> formals)
         throws FusionException
@@ -262,7 +232,7 @@ final class LambdaForm
         {
             checkArityExact(eval, 0, args);
 
-            // No local store is created to wrap myEnclosure!
+            // No local bindings, so no local store.
             return eval.bounceTailForm(myEnclosure, myBody);
         }
     }

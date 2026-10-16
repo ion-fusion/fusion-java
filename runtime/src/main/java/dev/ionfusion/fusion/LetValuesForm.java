@@ -7,120 +7,17 @@ import static dev.ionfusion.fusion.FusionSexp.isPair;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
 import static dev.ionfusion.fusion.ResultFailure.makeResultError;
-import static dev.ionfusion.fusion.SyntaxSymbol.ensureUniqueIdentifiers;
 
 import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.runtime.base.FusionException;
 import java.util.ArrayList;
 
 final class LetValuesForm
-    extends SyntacticForm
+    extends AbstractLetForm
 {
-    @Override
-    SyntaxValue expand(Expander expander, Environment env, SyntaxSexp stx)
-        throws FusionException
+    LetValuesForm()
     {
-        final Evaluator eval = expander.getEvaluator();
-
-        SyntaxChecker check = check(eval, stx);
-        final int letExprSize = check.arityAtLeast(3);
-
-        SyntaxChecker checkBindings =
-            check.subformSeq("sequence of bindings", 1);
-        SyntaxSequence bindingForms = checkBindings.form();
-
-        final int numBindingForms = bindingForms.size(eval);
-
-        // Gather the bound names
-        ArrayList<SyntaxSymbol> boundNameList =
-            new ArrayList<>(numBindingForms);
-        for (int i = 0; i < numBindingForms; i++)
-        {
-            SyntaxChecker checkPair =
-                checkBindings.subformSexp("binding pair", i);
-            checkPair.arityExact(2);
-
-            SyntaxChecker checkBoundNames =
-                checkPair.subformSexp("binding name sequence", 0);
-
-            int size = checkBoundNames.form().size(eval);
-            for (int j = 0; j < size; j++)
-            {
-                SyntaxSymbol name =
-                    checkBoundNames.requiredIdentifier("binding name", j);
-                boundNameList.add(name);
-            }
-        }
-
-
-        SyntaxSymbol[] boundNames;
-        Environment bodyEnv;
-        SyntaxWrap localWrap;
-
-        final int bindingCount = boundNameList.size();
-        if (bindingCount == 0)
-        {
-            boundNames = null;
-            bodyEnv = env;
-            localWrap = null;
-        }
-        else
-        {
-            boundNames = boundNameList.toArray(SyntaxSymbol.EMPTY_ARRAY);
-            ensureUniqueIdentifiers(eval, boundNames, stx);
-            var localEnv = LocalEnvironment.forExpansion(env, boundNames);
-            localWrap = localEnv.getWrap();
-            bodyEnv   = localEnv;
-        }
-
-        // Expand the bound-value expressions
-        SyntaxValue[] expandedForms = new SyntaxValue[numBindingForms];
-        int bindingPos = 0;
-        for (int i = 0; i < numBindingForms; i++)
-        {
-            // Already type- and arity-checked this above
-            SyntaxSexp binding = (SyntaxSexp) bindingForms.get(eval, i);
-
-            SyntaxSexp names = (SyntaxSexp) binding.get(eval, 0);
-            SyntaxValue[] wrappedNames = names.extract(eval);
-            int size = names.size(eval);
-            for (int j = 0; j < size; j++)
-            {
-                // Wrap the bound names so they resolve to their own binding.
-                SyntaxSymbol name = boundNames[bindingPos];
-                assert name == wrappedNames[j];
-
-                wrappedNames[j] = name.addWrap(localWrap);
-                bindingPos++;
-            }
-            names = names.copyReplacingChildren(eval, wrappedNames);
-
-            SyntaxValue boundExpr = binding.get(eval, 1);
-            boundExpr = expander.expandExpression(env, boundExpr);
-            expandedForms[i] =
-                binding.copyReplacingChildren(eval, names, boundExpr);
-        }
-        assert bindingPos == bindingCount;
-
-        bindingForms = bindingForms.copyReplacingChildren(eval, expandedForms);
-
-        expandedForms = new SyntaxValue[letExprSize];
-        expandedForms[0] = stx.get(eval, 0);
-        expandedForms[1] = bindingForms;
-
-        // TODO Should allow internal definitions
-        //  https://github.com/ion-fusion/fusion-java/issues/67
-        for (int i = 2; i < letExprSize; i++)
-        {
-            SyntaxValue subform = stx.get(eval, i);
-            if (localWrap != null)
-            {
-                subform = subform.addWrap(localWrap);
-            }
-            expandedForms[i] = expander.expandExpression(bodyEnv, subform);
-        }
-
-        return stx.copyReplacingChildren(eval, expandedForms);
+        super(/* multivalue? */ true, /* recursive? */ false);
     }
 
 

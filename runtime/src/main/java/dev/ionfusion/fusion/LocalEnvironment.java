@@ -190,9 +190,11 @@ final class LocalEnvironment
         return myEnclosure.namespace();
     }
 
-    public SyntaxWrap getWrap()
+
+    @SuppressWarnings("unchecked")
+    public <T extends SyntaxValue<?>> T applyContext(T stx)
     {
-        return myWrap;
+        return (T) stx.addWrap(myWrap);
     }
 
 
