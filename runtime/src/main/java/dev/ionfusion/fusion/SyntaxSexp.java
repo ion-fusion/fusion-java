@@ -231,7 +231,7 @@ final class SyntaxSexp
 
 
     @Override
-    SyntaxValue get(Evaluator eval, int index)
+    SyntaxValue<?> get(Evaluator eval, int index)
         throws FusionException
     {
         return (SyntaxValue) unsafePairDot(eval, unwrap(eval), index);

@@ -128,7 +128,10 @@ abstract class SyntaxValue<Content>
     final void write(Evaluator eval, Appendable out)
         throws IOException, FusionException
     {
-        Object content = unwrap(eval);
+        // Be careful not to propagate context here! This is called from `toString()`,
+        // which is called asynchronously by debuggers, which can cause context loss if
+        // it happens at the wrong time.
+        Object content = getContent();
 
         // When possible, only write the explicit wrapper on the outside edge.
         if (eval != null && (boolean) WRITE_EXPLICIT_SYNTAX.currentValue(eval))

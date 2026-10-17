@@ -10,6 +10,9 @@ interface NamespaceStore
 {
     ModuleRegistry getRegistry();
 
+    /**
+     * Provides runtime access to module-level definitions from outside the module.
+     */
     Object lookupImport(int moduleAddress, int bindingAddress);
 
     /**

@@ -14,14 +14,14 @@ package dev.ionfusion.fusion;
 interface NamedValue <T>
 {
     /**
-     * Suggests a name for the given value, if it can accept it.
+     * Suggests a name for the given value if it can accept it.
      */
     @SuppressWarnings("unchecked")
-    static void inferObjectName(Object value, Object name)
+    static <T> void inferObjectName(Object value, T name)
     {
         if (value instanceof NamedValue)
         {
-            ((NamedValue<Object>)value).inferObjectName(name);
+            ((NamedValue<T>)value).inferObjectName(name);
         }
     }
 
@@ -35,8 +35,7 @@ interface NamedValue <T>
     }
 
     /**
-     * Produces a Fusion value that's the object's name for the purpose of the
-     * {@code object_name} function.
+     * Returns a Fusion value that's the result for the {@code object_name} function.
      * The result must not change between invocations.
      *
      * @return the object name. If null, {@code object_name} returns void.

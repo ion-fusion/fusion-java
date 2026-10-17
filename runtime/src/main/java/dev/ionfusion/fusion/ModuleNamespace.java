@@ -431,7 +431,12 @@ final class ModuleNamespace
 
     //==================================================================================
 
-
+    /**
+     * For each storage slot, hold a symbol for reporting its name.
+     * These are only used for reporting forward reference errors and are not unique.
+     * From here it is attached to an expanded `module` form as a syntax property,
+     * and from there to {@link dev.ionfusion.fusion.ModuleForm.CompiledModule}.
+     */
     private final List<BaseSymbol> myDefinedNames = new ArrayList<>();
 
     private final SyntaxWrap myWrap = new ModuleWrap();
@@ -570,13 +575,14 @@ final class ModuleNamespace
 
 
     /**
-     * A reference to a module-level variable in the lexically enclosing
-     * namespace.
+     * A reference to a module-level variable in the lexically enclosing namespace.
      */
     static final class CompiledModuleVariableReference
         implements CompiledForm
     {
         private final int              myAddress;
+
+        /** Used to make an identifier for forward-reference errors. */
         private final ResourcePosition myPosition;
 
         CompiledModuleVariableReference(int address, ResourcePosition position)

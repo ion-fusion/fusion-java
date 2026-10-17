@@ -9,8 +9,7 @@ import dev.ionfusion.runtime.base.FusionException;
  * Implements {@code object_name}.
  *
  * @see NamedValue
- * @see <a href="http://tinyurl.com/object-name">Racket Reference for
- *        object-name</a>
+ * @see <a href="http://tinyurl.com/object-name">Racket Reference for object-name</a>
  */
 class ObjectNameProc
     extends Procedure1
@@ -21,7 +20,7 @@ class ObjectNameProc
     {
         if (arg instanceof NamedValue)
         {
-            Object o = ((NamedValue) arg).objectName();
+            Object o = ((NamedValue<?>) arg).objectName();
             if (o != null)
             {
                 return o;

@@ -61,7 +61,7 @@ class SyntaxWraps
         int prefixLen = wraps.myWraps.length;
         int suffixLen =  this.myWraps.length;
 
-        if (suffixLen == 0) return this; // Nothing to add
+        if (prefixLen == 0) return this; // Nothing to prepend
 
         int len = prefixLen + suffixLen;
 

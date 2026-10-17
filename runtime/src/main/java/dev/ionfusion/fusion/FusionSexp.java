@@ -421,46 +421,6 @@ public final class FusionSexp
     }
 
 
-    /**
-     * @param sexp must be a proper sexp; it is not type-checked!
-     */
-    static IonSexp unsafeCopyToIonSexp(Evaluator eval,
-                                       Object sexp,
-                                       ValueFactory factory,
-                                       boolean throwOnConversionFailure)
-        throws FusionException
-    {
-        BaseSexp base = (BaseSexp) sexp;
-        return base.copyToIonValue(eval, factory, throwOnConversionFailure);
-    }
-
-    /**
-     * @param sexp must be a proper sexp; it is not type-checked!
-     */
-    static IonSexp unsafeCopyToIonSexp(Evaluator eval,
-                                       Object sexp,
-                                       ValueFactory factory)
-        throws FusionException
-    {
-        BaseSexp base = (BaseSexp) sexp;
-        return base.copyToIonValue(eval, factory, true);
-    }
-
-    /**
-     * @param sexp must be a proper sexp; it is not type-checked!
-     *
-     * @return null if the sexp and its contents cannot be ionized.
-     */
-    static IonSexp unsafeCopyToIonSexpMaybe(Evaluator eval,
-                                            Object sexp,
-                                            ValueFactory factory)
-        throws FusionException
-    {
-        BaseSexp base = (BaseSexp) sexp;
-        return base.copyToIonValue(eval, factory, false);
-    }
-
-
     //========================================================================
 
 
