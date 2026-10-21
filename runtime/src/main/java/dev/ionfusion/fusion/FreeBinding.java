@@ -25,7 +25,7 @@ final class FreeBinding
 
 
     @Override
-    BindingSite getBindingSite()
+    BindingSite bindingSite()
     {
         return null;
     }

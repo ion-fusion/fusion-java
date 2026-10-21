@@ -33,7 +33,6 @@ final class ModuleNamespace
     {
         private final BaseSymbol       myName;
         private final ResourcePosition myLoc;
-        private       BindingSite      mySite;
 
         ProvidedBinding(BaseSymbol name, ResourcePosition sourceLocation)
         {
@@ -45,13 +44,9 @@ final class ModuleNamespace
         final BaseSymbol getName() { return myName; }
 
         @Override
-        BindingSite getBindingSite()
+        BindingSite bindingSite()
         {
-            if (mySite == null)
-            {
-                mySite = makeExportBindingSite(myLoc, inside().getBindingSite());
-            }
-            return mySite;
+            return makeExportBindingSite(myLoc, inside().bindingSite());
         }
 
         @Override
@@ -99,7 +94,7 @@ final class ModuleNamespace
         DefinedProvidedBinding(ModuleDefinedBinding binding)
         {
             this(binding.getName(),
-                 binding.getBindingSite().getPosition(),
+                 binding.bindingSite().getPosition(),
                  binding);
         }
 

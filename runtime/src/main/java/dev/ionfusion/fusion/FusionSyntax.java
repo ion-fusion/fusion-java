@@ -166,7 +166,7 @@ public final class FusionSyntax
     static BindingSite unsafeIdentifierBinding(Evaluator eval, Object id)
         throws FusionException
     {
-        return ((SyntaxSymbol) id).resolve().getBindingSite();
+        return ((SyntaxSymbol) id).resolve().bindingSite();
     }
 
 

@@ -35,12 +35,10 @@ final class LocalEnvironment
         static final LocalBinding[] EMPTY_ARRAY = new LocalBinding[0];
 
         private final SyntaxSymbol       myIdentifier;
-        private final BindingSite        mySite;
 
         private LocalBinding(SyntaxSymbol identifier)
         {
             myIdentifier = identifier;
-            mySite       = makeLocalBindingSite(identifier.getPosition());
         }
 
         @Override
@@ -50,9 +48,9 @@ final class LocalEnvironment
         }
 
         @Override
-        BindingSite getBindingSite()
+        BindingSite bindingSite()
         {
-            return mySite;
+            return makeLocalBindingSite(myIdentifier.getPosition());
         }
 
         @Override

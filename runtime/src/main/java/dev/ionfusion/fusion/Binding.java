@@ -61,7 +61,7 @@ abstract class Binding
     /**
      * @return null if {@link FreeBinding}.
      */
-    abstract BindingSite getBindingSite();
+    abstract BindingSite bindingSite();
 
     /**
      * Determines whether this is a {@link FreeBinding} with the given name.

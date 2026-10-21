@@ -96,14 +96,14 @@ abstract class Namespace
     {
         private final BaseSymbol  myName;
         private final String      myDebugName;
-        private final BindingSite mySite;
+        private final ResourcePosition myPosition;
         final int myAddress;
 
         NsDefinedBinding(SyntaxSymbol identifier, int address)
         {
             myName      = identifier.getName();
             myDebugName = identifier.debugString();
-            mySite      = makeDefineBindingSite(identifier.getPosition());
+            myPosition  = identifier.getPosition();
             myAddress   = address;
         }
 
@@ -117,9 +117,9 @@ abstract class Namespace
         }
 
         @Override
-        BindingSite getBindingSite()
+        BindingSite bindingSite()
         {
-            return mySite;
+            return makeDefineBindingSite(myPosition);
         }
 
         final String getDebugName()
@@ -170,7 +170,6 @@ abstract class Namespace
         private final String           myDebugName;
         private final ResourcePosition myPosition;
         private final ProvidedBinding  myProvide;
-        private BindingSite            mySite;
 
         RequiredBinding(SyntaxSymbol identifier, ProvidedBinding provide)
         {
@@ -188,13 +187,9 @@ abstract class Namespace
         }
 
         @Override
-        BindingSite getBindingSite()
+        BindingSite bindingSite()
         {
-            if (mySite == null)
-            {
-                mySite = makeImportBindingSite(myPosition, myProvide.getBindingSite());
-            }
-            return mySite;
+            return makeImportBindingSite(myPosition, myProvide.bindingSite());
         }
 
         final String getDebugName()
