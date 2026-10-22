@@ -102,8 +102,7 @@ public class IdentifierBindingTest
 
 
         BindingSite topLevelSite =
-            unsafeIdentifierBinding(eval,
-                                    traversal.topLevelReference);
+            unsafeIdentifierBinding(eval, traversal.topLevelReference);
         assertBindingAt(3, 9, topLevelSite);
         assertTrue(topLevelSite.isDefinitionSite());
         assertNull(topLevelSite.nextSite());
@@ -115,17 +114,21 @@ public class IdentifierBindingTest
         // to the export site using getModuleBindingInformation after confirming
         // that this is a required binding.
         BindingSite moduleProvidedBinding =
-            unsafeIdentifierBinding(eval,
-                                    traversal.moduleReference);
+            unsafeIdentifierBinding(eval, traversal.moduleReference);
         assertNull(moduleProvidedBinding.getPosition());
         assertTrue(moduleProvidedBinding.isImportSite());
-        assertBindingAt(4, 12,
-                        moduleProvidedBinding.nextSite());
+
+        var exportSite = moduleProvidedBinding.nextSite();
+        assertTrue(exportSite.isExportSite());
+        assertBindingAt(4, 12, exportSite);
+
+        var defnSite = exportSite.nextSite();
+        assertTrue(defnSite.isDefinitionSite());
+        assertBindingAt(2, 12, defnSite);
 
 
         BindingSite renameProvidedBinding =
-            unsafeIdentifierBinding(eval,
-                                    traversal.renamedModuleReference);
+            unsafeIdentifierBinding(eval, traversal.renamedModuleReference);
         assertNull(renameProvidedBinding.getPosition());
         assertTrue(renameProvidedBinding.isImportSite());
         assertBindingAt(5, 22, renameProvidedBinding.nextSite());

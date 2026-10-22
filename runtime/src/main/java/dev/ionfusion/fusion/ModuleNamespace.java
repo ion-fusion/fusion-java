@@ -28,16 +28,19 @@ import java.util.Set;
 final class ModuleNamespace
     extends Namespace
 {
-    static abstract class ProvidedBinding
+    static abstract class ProvidedBinding<InsideBinding extends Binding>
         extends Binding
     {
         private final BaseSymbol       myName;
         private final ResourcePosition myLoc;
+        private final InsideBinding    myInside;
 
-        ProvidedBinding(BaseSymbol name, ResourcePosition sourceLocation)
+        ProvidedBinding(BaseSymbol name, ResourcePosition sourceLocation,
+                        InsideBinding inside)
         {
             myName = name;
             myLoc  = sourceLocation;
+            myInside = inside;
         }
 
         @Override
@@ -50,21 +53,23 @@ final class ModuleNamespace
         }
 
         @Override
-        final ProvidedBinding provideAs(BaseSymbol name,
-                                        ResourcePosition sourceLocation)
+        final ProvidedBinding<?> provideAs(BaseSymbol name,
+                                           ResourcePosition sourceLocation)
         {
-            return new ImportedProvidedBinding(name, sourceLocation, this);
+            return new ImportedProvidedBinding<>(name, sourceLocation, this);
         }
 
         /**
          * Gets the binding that's being exported, either a definition or
          * import.
          */
-        abstract Binding inside();
+        InsideBinding inside()
+        {
+            return myInside;
+        }
 
         @Override
         abstract ModuleDefinedBinding target();
-        abstract ModuleIdentity getTargetModule();
 
         @Override
         final Object lookup(Namespace ns)
@@ -77,18 +82,15 @@ final class ModuleNamespace
      * A provided binding that was defined in the providing module.
      */
     static final class DefinedProvidedBinding
-        extends ProvidedBinding
+        extends ProvidedBinding<ModuleDefinedBinding>
     {
-        private final ModuleDefinedBinding myDefinition;
-
         DefinedProvidedBinding(BaseSymbol name,
                                ResourcePosition sourceLocation,
                                ModuleDefinedBinding binding)
         {
-            super(name, sourceLocation);
+            super(name, sourceLocation, binding);
 
             assert binding.target() == binding;
-            myDefinition = binding;
         }
 
         DefinedProvidedBinding(ModuleDefinedBinding binding)
@@ -99,21 +101,9 @@ final class ModuleNamespace
         }
 
         @Override
-        Binding inside()
-        {
-            return myDefinition;
-        }
-
-        @Override
         ModuleDefinedBinding target()
         {
-            return myDefinition;
-        }
-
-        @Override
-        ModuleIdentity getTargetModule()
-        {
-            return myDefinition.myModuleId;
+            return inside();
         }
 
         @Override
@@ -125,43 +115,27 @@ final class ModuleNamespace
         @Override
         public String toString()
         {
-            return "{{{DefinedProvidedBinding " + getName()
-                + " -> "  + myDefinition + "}}}";
+            return "{{{DefinedProvidedBinding " + getName() + " -> "  + inside() + "}}}";
         }
     }
 
     /**
      * A provided binding that was imported into the providing module.
      */
-    static final class ImportedProvidedBinding
-        extends ProvidedBinding
+    static final class ImportedProvidedBinding<InsideBinding extends Binding>
+        extends ProvidedBinding<ProvidedBinding<InsideBinding>>
     {
-        private final ProvidedBinding myImport;
-
         ImportedProvidedBinding(BaseSymbol name,
                                 ResourcePosition sourceLocation,
-                                ProvidedBinding imported)
+                                ProvidedBinding<InsideBinding> imported)
         {
-            super(name, sourceLocation);
-            myImport = imported;
-        }
-
-        @Override
-        Binding inside()
-        {
-            return myImport;
+            super(name, sourceLocation, imported);
         }
 
         @Override
         ModuleDefinedBinding target()
         {
-            return myImport.target();
-        }
-
-        @Override
-        ModuleIdentity getTargetModule()
-        {
-            return myImport.getTargetModule();
+            return inside().target();
         }
 
         @Override
@@ -173,8 +147,7 @@ final class ModuleNamespace
         @Override
         public String toString()
         {
-            return "{{{ImportedProvidedBinding " + getName()
-                + " -> "  + myImport + "}}}";
+            return "{{{ImportedProvidedBinding " + getName() + " -> "  + inside() + "}}}";
         }
     }
 
