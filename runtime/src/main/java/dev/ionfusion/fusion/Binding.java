@@ -102,7 +102,7 @@ abstract class Binding
      *   exported identifier. May be null if the name isn't explicitly given
      *   in the form, as in {@code (provide (all_defined_out))}.
      */
-    ProvidedBinding provideAs(BaseSymbol name, ResourcePosition idLocation)
+    ProvidedBinding<?> provideAs(BaseSymbol name, ResourcePosition idLocation)
     {
         throw new IllegalStateException("This kind of binding can't be exported");
     }

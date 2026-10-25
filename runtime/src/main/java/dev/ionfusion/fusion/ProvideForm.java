@@ -134,7 +134,7 @@ final class ProvideForm
         SyntaxSymbol specId = specForm.firstIdentifier(eval);
         if (isCoreForm(eval, specForm, ALL_DEFINED_OUT))
         {
-            // Expanded form is a sequence of identifiers.
+            // Expanded form adds a sequence of defined identifiers
 
             check.arityExact(1);
 
@@ -161,6 +161,7 @@ final class ProvideForm
                                   binding.getName(),
                                   specId,
                                   null);
+                // TODO Shouldn't this have syntaxTrackOrigin as well?
                 Binding localBinding = moduleNamespace.resolveDefinition(localized);
                 if (localBinding != null && binding.sameTarget(localBinding))
                 {
@@ -168,8 +169,7 @@ final class ProvideForm
                     expanded.add(localized);
                 }
 
-                // TODO handle rename-transformers per Racket
-                //   https://github.com/ion-fusion/fusion-java/issues/73
+                // TODO #73 handle rename-transformers per Racket
             }
         }
         else if (isCoreForm(eval, specForm, RENAME_OUT))
