@@ -1,0 +1,136 @@
+#!/bin/bash
+
+# Copyright Ion Fusion contributors. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
+set -o errexit  # Exit if any statement returns a non-true return value.
+set -o nounset  # Exit if any uninitialized variable is used.
+set -o pipefail # Exit if commands fail as part of a pipeline.
+#set -o xtrace   # Print a trace of the commands being executed.
+
+
+timestamp=$(date "+%m%d%H%M")
+
+resultsDir=benchmarks/build/reports/jmh
+
+
+commits=
+
+jmh_args=""
+jmh_args_q="-f 1 -wi 1 -w 1s -i 1 -r 1s"
+
+function usage()
+{
+    echo
+    echo "Usage: . run-benchmarks [-h] [-q] [-c COMMIT] [JMH-ARG] ..."
+    echo
+    echo "Run benchmarks for each FusionJava COMMIT."
+    echo
+    echo "-c Identifies a commit of the FusionJava package, which must be"
+    echo "   present in the enclosing workspace.  FusionJava is checked-out at"
+    echo "   that COMMIT and built before running the benchmarks."
+    echo "   Multiple [-c COMMIT] occurrences are allowed."
+    echo
+    echo "-q Runs benchmarks quickly to ensure they run to completion."
+    echo "   Equivalent to: $jmh_args_q"
+    echo
+    echo "-H Show help for JMH. (This runs Gradle.)"
+    exit
+}
+
+
+function jmh_usage()
+{
+    ./gradlew --rerun-tasks :benchmarks:jmh -PjmhArgs=-h
+    exit
+}
+
+
+function parse_args()
+{
+  # Don't pollute global namespace when using getopts
+  local o OPTARG OPTIND OPTERR
+  local args=
+
+  while getopts ":c:qhH" o; do
+    case "$o" in
+      h) usage;;
+      H) jmh_usage;;
+      c) commits="${commits:-} $OPTARG";;
+      q) args="$jmh_args_q";;
+      *) args="$args -$OPTARG"; break;; # Other arguments are passed through to JMH
+    esac
+  done
+  shift $((OPTIND-1))
+
+  jmh_args="$jmh_args $args $*"
+}
+
+
+function run_bench()
+{
+  local suffix=$1
+
+  ./gradlew \
+    "-PjmhArgs=$jmh_args" \
+    ":benchmarks:jmh"
+
+  ## TODO Build a new way to keep multiple sessions for A/B comparison:
+
+#  local resultsFile=$resultsDir/$timestamp-$suffix.json
+#  cp build/private/jmh/results.json "$resultsFile"
+#  echo
+#  echo "Results are at $resultsFile"
+}
+
+
+function run_current()
+{
+  local commit
+
+  # Separate assignment to void hiding failure. ShellCheck SC2155
+  commit=$(git branch --show-current)
+
+  echo
+  echo "Running benchmarks using current commit $commit"
+  echo
+  run_bench "$commit"
+}
+
+
+function run_commit()
+{
+  local commit=$1
+
+  echo
+  echo "Building FusionJava commit $commit"
+  echo
+  (cd ../FusionJava;
+    git checkout "$commit";
+    ./gradlew clean;
+    ./gradlew)
+
+  echo
+  echo "Running benchmarks using FusionJava commit $commit"
+  echo
+  run_bench "$commit"
+}
+
+
+parse_args "$@"
+
+
+if [[ -z $commits ]];
+then
+  run_current
+else
+  for commit in $commits;
+  do
+    run_commit "$commit"
+  done
+fi
+
+
+echo
+echo "Benchmark results are:"
+ls -1 "$resultsDir/$timestamp"-*.json

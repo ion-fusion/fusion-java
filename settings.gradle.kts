@@ -23,4 +23,4 @@ pluginManagement {
     }
 }
 
-include("testing", "runtime", "fusioncli", "sdk")
+include("testing", "runtime", "fusioncli", "sdk", "benchmarks")
