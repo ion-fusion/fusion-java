@@ -74,7 +74,7 @@ final class FusionEval
 
         Namespace ns = eval.findCurrentNamespace();
 
-        Expander expander = new Expander(eval);
+        Expander expander = Expander.forNamespace(eval, ns);
 
         LinkedList<SyntaxValue> forms = new LinkedList<>();
         forms.push(stx);
@@ -275,8 +275,8 @@ final class FusionEval
     expandSyntaxTopLevelWithCompileTimeEvals(Evaluator eval, SyntaxValue stx)
         throws FusionException
     {
-        Expander expander = new Expander(eval);
         TopLevelNamespace ns = (TopLevelNamespace) eval.findCurrentNamespace();
+        Expander expander = Expander.forNamespace(eval, ns);
 
         stx = expander.partialExpand(ns, stx);
 
@@ -382,7 +382,7 @@ final class FusionEval
             var topLevelForm = topLevelStx(eval, arg0, true);
 
             Namespace ns = eval.findCurrentNamespace();
-            Expander expander = new Expander(eval);
+            Expander expander = Expander.forNamespace(eval, ns);
             topLevelForm = expander.expand(ns, topLevelForm);
 
             return topLevelForm;
@@ -400,7 +400,7 @@ final class FusionEval
             var topLevelForm = topLevelStx(eval, arg0, true);
 
             Namespace ns = eval.findCurrentNamespace();
-            Expander expander = new Expander(eval);
+            Expander expander = Expander.forNamespace(eval, ns);
             topLevelForm = expander.expandOnce(ns, topLevelForm);
 
             return topLevelForm;
