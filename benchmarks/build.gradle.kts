@@ -24,7 +24,12 @@ tasks.register<JavaExec>("jmh") {
     classpath = sourceSets.main.get().runtimeClasspath
     mainClass.set("org.openjdk.jmh.Main")
 
+    // Send output to a JSON file
     args("-rf", "json", "-rff", jmhReportDir.get().file("jmh.json"))
+
+    // Always fail on error
+    args("-foe", "true")
+
     args("-prof", "gc")
 
     args(providers.gradleProperty("jmhArgs").orNull

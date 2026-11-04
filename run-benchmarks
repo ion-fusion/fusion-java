@@ -11,30 +11,40 @@ set -o pipefail # Exit if commands fail as part of a pipeline.
 
 timestamp=$(date "+%m%d%H%M")
 
-resultsDir=benchmarks/build/reports/jmh
+resultsDir=tmp/benchmarks
 
-
+substring=
+tag=
 commits=
 
-jmh_args=""
+jmh_args=
 jmh_args_q="-f 1 -wi 1 -w 1s -i 1 -r 1s"
 
 function usage()
 {
     echo
-    echo "Usage: . run-benchmarks [-h] [-q] [-c COMMIT] [JMH-ARG] ..."
+    echo "Usage: . run-benchmarks [-h] [-q] [-s STRING] [-t TAG] [-c COMMIT] [JMH-ARG] ..."
     echo
     echo "Run benchmarks for each FusionJava COMMIT."
     echo
-    echo "-c Identifies a commit of the FusionJava package, which must be"
-    echo "   present in the enclosing workspace.  FusionJava is checked-out at"
-    echo "   that COMMIT and built before running the benchmarks."
+    echo "-s Substring to match among benchmarks. Equivalent to '.*STRING.*'."
+    echo
+    echo "-t Tag to use in the name of the results files"
+    echo
+    echo "-c Identifies a commit of this package to check out and build before running"
+    echo "   the benchmarks."
     echo "   Multiple [-c COMMIT] occurrences are allowed."
     echo
     echo "-q Runs benchmarks quickly to ensure they run to completion."
     echo "   Equivalent to: $jmh_args_q"
     echo
     echo "-H Show help for JMH. (This runs Gradle.)"
+    echo
+    echo
+    echo "Benchmark results are copied into $resultsDir"
+    echo "The file names include the current time, the given tag, and the commit id."
+    echo "If more than one commit is requested, then an index is included such that the"
+    echo "files sort in the order they were listed."
     exit
 }
 
@@ -52,11 +62,13 @@ function parse_args()
   local o OPTARG OPTIND OPTERR
   local args=
 
-  while getopts ":c:qhH" o; do
+  while getopts ":c:s:t:qhH" o; do
     case "$o" in
       h) usage;;
       H) jmh_usage;;
       c) commits="${commits:-} $OPTARG";;
+      s) substring=$OPTARG;;
+      t) tag=$OPTARG;;
       q) args="$jmh_args_q";;
       *) args="$args -$OPTARG"; break;; # Other arguments are passed through to JMH
     esac
@@ -69,53 +81,102 @@ function parse_args()
 
 function run_bench()
 {
-  local suffix=$1
+  local index=${1:-}   # If given, ensures files sort as they appear on the CLI.
 
-  ./gradlew \
-    "-PjmhArgs=$jmh_args" \
-    ":benchmarks:jmh"
+  if [[ -n $substring ]];
+  then
+      : "${tag:=$substring}"
+      jmh_args=".*${substring}.* $jmh_args"
+  fi
 
-  ## TODO Build a new way to keep multiple sessions for A/B comparison:
+  local infix=${index:+-$index}${tag:+-$tag}  # That is, [-index][-tag] when each exists
 
-#  local resultsFile=$resultsDir/$timestamp-$suffix.json
-#  cp build/private/jmh/results.json "$resultsFile"
-#  echo
-#  echo "Results are at $resultsFile"
+  local commit  #  Separate assignment to avoid hiding errors
+  commit=$(current_revision)
+
+  ./gradlew "-PjmhArgs=$jmh_args" ":benchmarks:jmh"
+
+  mkdir -p "$resultsDir"
+  local resultsFile=$resultsDir/$timestamp$infix-$commit.json
+  cp benchmarks/build/reports/jmh/jmh.json "$resultsFile"
+
+  echo
+  echo "Results are at $resultsFile"
 }
+
+
+#=======================================================================================
+
+
+vcs=git
+jj_ws_root=$(jj workspace root) && vcs=jj
+
+function current_revision()
+{
+    current_revision_$vcs
+}
+
+function current_revision_jj
+{
+    jj log --revision @ --no-graph --template 'self.change_id().shortest(4)'
+}
+
+function current_revision_git
+{
+    git log -n1 --format=%h
+}
+
+
+function checkout()
+{
+    checkout_$vcs "$@"
+}
+
+function checkout_jj
+{
+    jj edit $1
+}
+
+function checkout_git
+{
+    git checkout $1
+}
+
+
+#=======================================================================================
 
 
 function run_current()
 {
-  local commit
-
-  # Separate assignment to void hiding failure. ShellCheck SC2155
-  commit=$(git branch --show-current)
-
+  echo "Running benchmarks using current commit $(current_revision)"
   echo
-  echo "Running benchmarks using current commit $commit"
-  echo
-  run_bench "$commit"
+  run_bench
 }
 
+
+# Used in file names so they sort in the order given on the command line.
+commit_index=0
 
 function run_commit()
 {
   local commit=$1
+  commit_index=$(( commit_index + 1 ))
+
+  echo "==============================================================================="
+  echo "Checking out commit $commit"
+  checkout "$commit"
 
   echo
-  echo "Building FusionJava commit $commit"
-  echo
-  (cd ../FusionJava;
-    git checkout "$commit";
-    ./gradlew clean;
-    ./gradlew)
+  echo "Cleaning workspace"
+  ./gradlew clean
 
   echo
-  echo "Running benchmarks using FusionJava commit $commit"
-  echo
-  run_bench "$commit"
+  echo "Running benchmarks"
+  run_bench $commit_index
 }
 
+
+#=======================================================================================
 
 parse_args "$@"
 
@@ -124,6 +185,7 @@ if [[ -z $commits ]];
 then
   run_current
 else
+  # TODO validate the commits before doing anything, so we don't fail mid-run.
   for commit in $commits;
   do
     run_commit "$commit"
