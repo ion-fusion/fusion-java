@@ -21,6 +21,14 @@ tasks.register<JavaExec>("jmh") {
     dependsOn(tasks.classes)
     outputs.dir(jmhReportDir)
 
+    // Using the default GC caused allocation-heavy benchmarks to OOM, presumably
+    // because the GC could not keep up with the allocation rate.
+    // Shenandoah keeps up and performs better than ZGC; both were added in JDK 15.
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+    jvmArgs = listOf("-XX:+UseShenandoahGC")
+
     classpath = sourceSets.main.get().runtimeClasspath
     mainClass.set("org.openjdk.jmh.Main")
 
