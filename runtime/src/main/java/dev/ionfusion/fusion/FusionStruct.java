@@ -865,9 +865,6 @@ final class FusionStruct
             }
         }
 
-        private static final class VisitFailure
-            extends RuntimeException
-        { }
 
         @Override
         SyntaxValue<?> datumToSyntax(Evaluator        eval,
