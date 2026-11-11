@@ -6,6 +6,7 @@
   "/fusion/experimental/check"
   "/fusion/experimental/syntax"
   "/fusion/ffi/java"
+  "/testutils"
 )
 
 (define ctx (quote_syntax ctx))
@@ -15,9 +16,16 @@
         (quote_syntax "context")
         (quote_syntax null.null)
         (quote_syntax 1234)
-        (datum_to_syntax (java_new "java.lang.Object") ctx)
+        (datum_to_syntax (java_new "java.lang.Object") ctx ctx)
         // TODO #68 collections should also work
         ))
+
+(define syntaxable_values
+  (append all_nulls
+          truthy_values
+          untruthy_values
+          (sexp (java_new "java.lang.Object")
+                (lambda () null))))
 
 
 (define_check (check_loc expected actual)
@@ -32,18 +40,33 @@
   (syntax_to_datum (datum_to_syntax v ctx)))
 
 
+// Verify context application
+
+(for [(d syntaxable_values)]
+  (unless (is_collection d)                // TODO #68
+    (let [(stx (datum_to_syntax d ctx))]
+      // stx should have the top-level context; use it to make a fresh identifier
+      (check free_identifier_equal ctx (datum_to_syntax (quote ctx) stx) d))))
+
+
 // When given a location, datum->syntax uses it for all new syntax objects
 // created, not just the outermost one.
 
 (for [(ctx context_objects)]
-  (let [(s (datum_to_syntax
-             (quote (a (b)))
-             ctx
-             ctx))]
-    (check_loc ctx s)
-    (check_loc ctx (. (syntax_unwrap s) 0))  // a
-    (check_loc ctx (. (syntax_unwrap s) 1))  // (b)
-    (check_loc ctx (. (syntax_unwrap (. (syntax_unwrap s) 1)) 0))))  // b
+  (for [(d (quote [(a (b)), [a, [b]]]))]
+    (let [(s (datum_to_syntax d ctx ctx))]
+      (check_loc ctx s)
+      (check_loc ctx (. (syntax_unwrap s) 0))  // a
+      (check_loc ctx (. (syntax_unwrap s) 1))  // (b)
+      (check_loc ctx (. (syntax_unwrap (. (syntax_unwrap s) 1)) 0))) // b
+   (let [(s (datum_to_syntax (quote {a:a, b:{b:b}}) ctx ctx))]
+      (check_loc ctx s)
+      (check_loc ctx (. (syntax_unwrap s) "a"))  // a
+      (check_loc ctx (. (syntax_unwrap s) "b"))  // {b:b}
+      (check_loc ctx (. (syntax_unwrap (. (syntax_unwrap s) "b")) "b")))) // b
+   (for [(d syntaxable_values)]
+    (let [(s (datum_to_syntax d ctx ctx))]
+      (check_loc ctx s))))
 
 
 (define_check (check_syntaxable v ctx)

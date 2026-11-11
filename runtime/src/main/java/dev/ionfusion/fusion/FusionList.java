@@ -623,7 +623,7 @@ final class FusionList
             int size = size();
             if (size == 0 && (this instanceof ImmutableList))
             {
-                stx = SyntaxList.make(eval, null, this);
+                stx = SyntaxList.make(eval, pos, this);
             }
             else
             {
@@ -639,9 +639,8 @@ final class FusionList
                 stx = SyntaxList.make(eval, pos, list);
             }
 
-            // TODO This should retain context, but not push it
+            // TODO #68 This should retain context, but not push it
             //      down to the current children (which already have it).
-            //      https://github.com/ion-fusion/fusion-java/issues/68
             //return Syntax.applyContext(eval, context, stx);
 
             return stx;
