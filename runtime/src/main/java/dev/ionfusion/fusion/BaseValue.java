@@ -96,24 +96,27 @@ abstract class BaseValue
      */
     SyntaxValue<?> datumToSyntax(Evaluator        eval,
                                  SyntaxValue<?>   context,
-                                 ResourcePosition pos)
+                                 ResourcePosition pos,
+                                 Object[]         props)
         throws FusionException
     {
         assert !(this instanceof SyntaxValue) && !(this instanceof BaseCollection);
         // else this method is overridden
 
-        return scalarDatumToSyntax(eval, pos).initLexicalContext(context);
+        return scalarDatumToSyntax(eval, pos, props).initLexicalContext(context);
     }
 
     /**
      * @return not null
      */
-    SyntaxValue<?> scalarDatumToSyntax(Evaluator eval, ResourcePosition pos)
+    SyntaxValue<?> scalarDatumToSyntax(Evaluator        eval,
+                                       ResourcePosition pos,
+                                       Object[]         props)
         throws FusionException
     {
         // This default implementation is used for most values when we don't need to
         // perform context propagation.
-        return makeSyntax(eval, pos, this);
+        return makeSyntax(eval, this, pos, props);
     }
 
 

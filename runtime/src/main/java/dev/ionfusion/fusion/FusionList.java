@@ -613,17 +613,18 @@ final class FusionList
         }
 
         @Override
-        SyntaxValue datumToSyntax(Evaluator        eval,
-                                  SyntaxValue      context,
-                                  ResourcePosition pos)
+        SyntaxList datumToSyntax(Evaluator        eval,
+                                 SyntaxValue<?>   context,
+                                 ResourcePosition pos,
+                                 Object[]         props)
             throws FusionException
         {
-            SyntaxList stx;
+            ImmutableList list;
 
             int size = size();
             if (size == 0 && (this instanceof ImmutableList))
             {
-                stx = SyntaxList.make(eval, pos, this);
+                list = (ImmutableList) this;
             }
             else
             {
@@ -634,16 +635,12 @@ final class FusionList
                     children[i] = Syntax.datumToSyntax(eval, rawChild, context, pos);
                 }
 
-                BaseSymbol[] anns = getAnnotations();
-                Object list = immutableList(eval, anns, children);
-                stx = SyntaxList.make(eval, pos, list);
+                list = immutableList(eval, getAnnotations(), children);
             }
 
             // TODO #68 This should retain context, but not push it
             //      down to the current children (which already have it).
-            //return Syntax.applyContext(eval, context, stx);
-
-            return stx;
+            return SyntaxList.make(eval, list, pos, props);
         }
 
 
@@ -814,7 +811,7 @@ final class FusionList
     }
 
 
-    private static class ImmutableList
+    static class ImmutableList
         extends BaseList
     {
         /**

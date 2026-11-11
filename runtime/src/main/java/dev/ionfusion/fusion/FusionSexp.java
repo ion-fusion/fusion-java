@@ -519,14 +519,15 @@ public final class FusionSexp
         }
 
         @Override
-        SyntaxValue datumToSyntax(Evaluator        eval,
-                                  SyntaxValue      context,
-                                  ResourcePosition pos)
+        SyntaxValue<?> datumToSyntax(Evaluator        eval,
+                                     SyntaxValue<?>   context,
+                                     ResourcePosition pos,
+                                     Object[]         props)
             throws FusionException
         {
             assert size(eval) == 0;  // else this method is overridden
 
-            return SyntaxSexp.make(eval, pos, this).initLexicalContext(context);
+            return SyntaxSexp.make(eval, this, pos, props).initLexicalContext(context);
         }
 
         @Override
@@ -929,20 +930,17 @@ public final class FusionSexp
         }
 
         @Override
-        SyntaxValue datumToSyntax(Evaluator        eval,
-                                  SyntaxValue      context,
-                                  ResourcePosition pos)
+        SyntaxValue<?> datumToSyntax(Evaluator        eval,
+                                     SyntaxValue<?>   context,
+                                     ResourcePosition pos,
+                                     Object[]         props)
             throws FusionException
         {
             var newPair = toPairOfSyntax(eval, context, pos);
 
-            var stx = SyntaxSexp.make(eval, pos, newPair);
-
             // TODO #68 This should retain context, but not push it
             //      down to the current children (which already have it).
-            //return Syntax.applyContext(eval, context, stx);
-
-            return stx;
+            return SyntaxSexp.make(eval, newPair, pos, props);
         }
 
         @Override

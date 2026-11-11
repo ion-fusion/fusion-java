@@ -12,6 +12,7 @@ import static java.lang.System.arraycopy;
 
 import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionList.BaseList;
+import dev.ionfusion.fusion.FusionList.ImmutableList;
 import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
 
@@ -38,6 +39,19 @@ final class SyntaxList
     {
         super(datum, pos);
         assert isImmutableList(eval, datum);
+    }
+
+
+    /**
+     * @param content must contain {@link SyntaxValue}s.
+     * @param props must not be null.
+     */
+    static SyntaxList make(Evaluator        eval,
+                           ImmutableList    content,
+                           ResourcePosition pos,
+                           Object[]         props)
+    {
+        return new SyntaxList(pos, props, SyntaxWraps.EMPTY, content);
     }
 
 

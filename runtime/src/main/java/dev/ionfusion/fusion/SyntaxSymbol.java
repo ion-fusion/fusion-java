@@ -64,6 +64,17 @@ final class SyntaxSymbol
 
 
     /**
+     * @param symbol must not be null.
+     * @param pos can be null.
+     * @param props must not be null.
+     */
+    static SyntaxSymbol make(BaseSymbol symbol, ResourcePosition pos, Object[] props)
+    {
+        return new SyntaxSymbol(SyntaxWraps.EMPTY, pos, props, symbol);
+    }
+
+
+    /**
      * @param value can be null.
      */
     static SyntaxSymbol make(Evaluator eval, String value)

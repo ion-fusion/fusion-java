@@ -157,14 +157,16 @@ final class FusionSymbol
         }
 
         @Override
-        SyntaxValue scalarDatumToSyntax(Evaluator eval, ResourcePosition pos)
+        SyntaxValue scalarDatumToSyntax(Evaluator        eval,
+                                        ResourcePosition pos,
+                                        Object[]         props)
             throws FusionException
         {
             if (isKeyword())
             {
-                return SyntaxKeyword.make(eval, pos, this);
+                return SyntaxKeyword.make(eval, this, pos, props);
             }
-            return SyntaxSymbol.make(pos, this);
+            return SyntaxSymbol.make(this, pos, props);
         }
     }
 
@@ -210,11 +212,13 @@ final class FusionSymbol
         }
 
         @Override
-        SyntaxValue scalarDatumToSyntax(Evaluator eval, ResourcePosition pos)
+        SyntaxValue scalarDatumToSyntax(Evaluator        eval,
+                                        ResourcePosition pos,
+                                        Object[]         props)
             throws FusionException
         {
             // No need to check for keywords.
-            return SyntaxSymbol.make(pos, this);
+            return SyntaxSymbol.make(this, pos, props);
         }
 
         @Override

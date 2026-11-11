@@ -121,3 +121,16 @@
 (let ((val (quote_syntax val)))
   (check same val
     (syntax_get (datum_to_syntax (sexp 1 val) inside_id) 1)))
+
+
+// Verify property application
+
+(define prop_key   (java_new "java.lang.Object"))
+(define prop_value (java_new "java.lang.Object"))
+
+(define prop_stx (syntax_property (quote_syntax props) prop_key prop_value))
+(check_same prop_value (syntax_property prop_stx prop_key))
+
+(for [(d syntaxable_values)]
+  (let [(stx (datum_to_syntax d ctx ctx prop_stx))]
+    (check_same prop_value (syntax_property stx prop_key))))

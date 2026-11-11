@@ -3,8 +3,6 @@
 
 package dev.ionfusion.fusion;
 
-import static dev.ionfusion.commons.util.Empties.EMPTY_OBJECT_ARRAY;
-
 import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionCollection.BaseCollection;
 import dev.ionfusion.runtime.base.FusionException;
@@ -62,15 +60,18 @@ class SimpleSyntaxValue<Content>
         return new SimpleSyntaxValue<>(pos, ORIGINAL_STX_PROPS, datum);
     }
 
+
     /**
+     * @param content must not be a {@link SyntaxValue}.
      * @param pos can be null.
-     * @param datum must not be a {@link SyntaxValue}.
+     * @param props must not be null.
      */
     static <Content> SyntaxValue<Content> makeSyntax(Evaluator        eval,
+                                                     Content          content,
                                                      ResourcePosition pos,
-                                                     Content          datum)
+                                                     Object[]         props)
     {
-        return new SimpleSyntaxValue<>(pos, EMPTY_OBJECT_ARRAY, datum);
+        return new SimpleSyntaxValue<>(pos, props, content);
     }
 
 

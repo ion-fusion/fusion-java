@@ -31,6 +31,18 @@ final class SyntaxStruct
     }
 
 
+    /**
+     * @param content must be an immutable struct
+     * @param props must not be null.
+     */
+    static SyntaxStruct make(Evaluator        eval,
+                             ImmutableStruct  content,
+                             ResourcePosition pos,
+                             Object[]         props)
+    {
+        return new SyntaxStruct(pos, props, SyntaxWraps.EMPTY, content);
+    }
+
 
     @Override
     SyntaxStruct copyReplacing(SyntaxWraps wraps, Object[] properties)
@@ -43,16 +55,7 @@ final class SyntaxStruct
                                      ResourcePosition pos,
                                      ImmutableStruct struct)
     {
-        return new SyntaxStruct(pos, ORIGINAL_STX_PROPS, SyntaxWraps.EMPTY, struct);
-    }
-
-
-    /**
-     * @param datum must be an immutable struct
-     */
-    static SyntaxStruct make(Evaluator eval, ResourcePosition pos, ImmutableStruct datum)
-    {
-        return new SyntaxStruct(pos, datum);
+        return make(eval, struct, pos, ORIGINAL_STX_PROPS);
     }
 
 

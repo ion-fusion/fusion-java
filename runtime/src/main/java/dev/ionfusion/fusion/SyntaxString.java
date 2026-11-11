@@ -3,8 +3,6 @@
 
 package dev.ionfusion.fusion;
 
-import static dev.ionfusion.commons.util.Empties.EMPTY_OBJECT_ARRAY;
-
 import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionString.BaseString;
 
@@ -22,18 +20,20 @@ final class SyntaxString
         super(wraps, pos, properties, datum);
     }
 
+
+    static SyntaxString make(Evaluator        eval,
+                             BaseString       content,
+                             ResourcePosition pos,
+                             Object[]         props)
+    {
+        return new SyntaxString(SyntaxWraps.EMPTY, pos, props, content);
+    }
+
     static SyntaxString makeOriginal(Evaluator        eval,
                                      ResourcePosition pos,
                                      BaseString       datum)
     {
-        return new SyntaxString(SyntaxWraps.EMPTY, pos, ORIGINAL_STX_PROPS, datum);
-    }
-
-    static SyntaxString make(Evaluator        eval,
-                             ResourcePosition pos,
-                             BaseString       datum)
-    {
-        return new SyntaxString(SyntaxWraps.EMPTY, pos, EMPTY_OBJECT_ARRAY, datum);
+        return make(eval, datum, pos, ORIGINAL_STX_PROPS);
     }
 
 

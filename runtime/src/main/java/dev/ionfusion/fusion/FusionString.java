@@ -101,9 +101,11 @@ public final class FusionString
         }
 
         @Override
-        SyntaxString scalarDatumToSyntax(Evaluator eval, ResourcePosition pos)
+        SyntaxString scalarDatumToSyntax(Evaluator        eval,
+                                         ResourcePosition pos,
+                                         Object[]         props)
         {
-            return SyntaxString.make(eval, pos, this);
+            return SyntaxString.make(eval, this, pos, props);
         }
 
 

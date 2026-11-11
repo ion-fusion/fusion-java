@@ -589,12 +589,13 @@ final class FusionStruct
         }
 
         @Override
-        SyntaxValue datumToSyntax(Evaluator        eval,
-                                  SyntaxValue      context,
-                                  ResourcePosition pos)
+        SyntaxValue<?> datumToSyntax(Evaluator        eval,
+                                     SyntaxValue<?>   context,
+                                     ResourcePosition pos,
+                                     Object[]         props)
             throws FusionException
         {
-            SyntaxValue stx = SyntaxStruct.make(eval, pos, this);
+            SyntaxValue<?> stx = SyntaxStruct.make(eval, this, pos, props);
 
             // TODO #68 This should retain context, but not push it
             //      down to the current children (which already have it).
@@ -882,16 +883,17 @@ final class FusionStruct
         { }
 
         @Override
-        SyntaxValue datumToSyntax(final Evaluator        eval,
-                                  final SyntaxValue      context,
-                                  final ResourcePosition pos)
+        SyntaxValue<?> datumToSyntax(Evaluator        eval,
+                                     SyntaxValue<?>   context,
+                                     ResourcePosition pos,
+                                     Object[]         props)
             throws FusionException
         {
             StructFieldVisitor visitor =
                 (name, value) -> Syntax.datumToSyntax(eval, value, context, pos);
 
             var datum = transformFields(eval, visitor);
-            return SyntaxStruct.make(eval, pos, datum);
+            return SyntaxStruct.make(eval, datum, pos, props);
 
         }
 
