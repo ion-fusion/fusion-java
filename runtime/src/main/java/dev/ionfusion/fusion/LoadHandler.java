@@ -9,6 +9,8 @@ import static dev.ionfusion.fusion.FusionSyntax.isIdentifier;
 import static dev.ionfusion.fusion.FusionSyntax.unsafeIdentifierToJavaString;
 import static dev.ionfusion.fusion.GlobalState.MODULE;
 import static dev.ionfusion.fusion.StandardReader.readSyntax;
+import static dev.ionfusion.fusion.Syntax.coreModuleIdentifier;
+import static dev.ionfusion.fusion.Syntax.replaceHead;
 import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 
 import com.amazon.ion.IonException;
@@ -173,22 +175,6 @@ final class LoadHandler
     }
 
 
-    private SyntaxSexp rebuildAsCoreModuleForm(Evaluator eval,
-                                               SyntaxSexp moduleStx)
-        throws FusionException
-    {
-        SyntaxValue[] children = moduleStx.extract(eval);
-
-        // We already verified this type-safety
-        SyntaxSymbol moduleSym = (SyntaxSymbol) children[0];
-        assert moduleSym.stringValue().equals(MODULE);
-
-        children[0] = Syntax.coreModuleIdentifier(eval);
-
-        return moduleStx.copyReplacingChildren(eval, children);
-    }
-
-
     /**
      * Declares a module in the current namespace's registry. The
      * module is not instantiated. Its identity is determined by the
@@ -201,7 +187,10 @@ final class LoadHandler
                                        SyntaxSexp moduleDeclaration)
         throws FusionException
     {
-        moduleDeclaration = rebuildAsCoreModuleForm(eval, moduleDeclaration);
+        // Ensure we start with a core-bound `module` identifier.
+        moduleDeclaration = replaceHead(eval,
+                                        moduleDeclaration,
+                                        coreModuleIdentifier(eval));
 
         Evaluator bodyEval = eval;
 

@@ -5,6 +5,11 @@ package dev.ionfusion.fusion;
 
 
 import static dev.ionfusion.commons.util.Empties.EMPTY_STRING_ARRAY;
+import static dev.ionfusion.fusion.FusionSexp.pair;
+import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
+import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
+import static dev.ionfusion.fusion.FusionSexp.unsafeSexpMap;
+import static dev.ionfusion.fusion.FusionValue.unsafeCopyAnnotations;
 import static dev.ionfusion.fusion.GlobalState.MODULE;
 import static dev.ionfusion.fusion.SyntaxValue.NO_PROPS;
 
@@ -79,6 +84,54 @@ final class Syntax
 
         return SimpleSyntaxValue.makeSyntax(eval, datum, pos, props)
                                 .initLexicalContext(context);
+    }
+
+
+    /**
+     * Like {@link #datumToSyntax} but copying syntax metadata from the original.
+     */
+    static SyntaxValue<?> rebuild(Evaluator eval,
+                                  Object content,
+                                  SyntaxValue<?> original)
+        throws FusionException
+    {
+        return datumToSyntax(eval,
+                             content,
+                             original, // Lexical context
+                             original.getPosition(),
+                             original.getProperties());
+    }
+
+
+    static SyntaxSexp replaceHead(Evaluator eval,
+                                  SyntaxSexp stx,
+                                  SyntaxValue<?> newHead)
+        throws FusionException
+    {
+        var sexp    = stx.unwrap(eval);
+        var tail    = unsafePairTail(eval, sexp);
+        var newSexp = unsafeCopyAnnotations(eval, pair(eval, newHead, tail), sexp);
+
+        return (SyntaxSexp) rebuild(eval, newSexp, stx);
+    }
+
+
+    /**
+     * Maps a function over elements of a sexp, except for the head.
+     */
+    static SyntaxSexp mapOverSubforms(Evaluator eval,
+                                      SyntaxSexp stx,
+                                      Evaluator.Function<Object,?> fn)
+        throws FusionException
+    {
+        var sexp  = stx.unwrap(eval);
+        var ifId  = unsafePairHead(eval, sexp);
+        var exprs = unsafePairTail(eval, sexp);
+
+        var expanded = unsafeSexpMap(eval, exprs, fn);
+
+        var newSexp = unsafeCopyAnnotations(eval, pair(eval, ifId, expanded), sexp);
+        return (SyntaxSexp) rebuild(eval, newSexp, stx);
     }
 
 

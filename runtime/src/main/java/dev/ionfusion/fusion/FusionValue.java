@@ -169,6 +169,14 @@ public final class FusionValue
     }
 
 
+    static Object unsafeCopyAnnotations(Evaluator eval, Object to, Object from)
+        throws FusionException
+    {
+        var annotations = (BaseSymbol[]) annotations(eval, from);
+        return ((AnnotatableValue<?>) to).annotate(eval, annotations);
+    }
+
+
     /**
      * Determines whether a Fusion value has any annotations.
      */

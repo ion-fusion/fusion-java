@@ -14,6 +14,8 @@ import static dev.ionfusion.fusion.StandardReader.readSyntax;
 import static dev.ionfusion.fusion.Syntax.asCoreForm;
 import static dev.ionfusion.fusion.Syntax.coreModuleIdentifier;
 import static dev.ionfusion.fusion.Syntax.freeIdentifierEqual;
+import static dev.ionfusion.fusion.Syntax.mapOverSubforms;
+import static dev.ionfusion.fusion.Syntax.replaceHead;
 import static java.util.Objects.requireNonNull;
 
 import com.amazon.ion.IonReader;
@@ -187,7 +189,7 @@ final class FusionEval
      * Enriches a syntax object "in the same way as eval", using the current
      * namespace.
      */
-    private static SyntaxValue enrich(Evaluator eval, SyntaxValue topLevelForm)
+    private static SyntaxValue<?> enrich(Evaluator eval, SyntaxValue<?> topLevelForm)
         throws FusionException
     {
         Namespace ns = eval.findCurrentNamespace();
@@ -203,16 +205,13 @@ final class FusionEval
                 SyntaxSymbol moduleKeyword = coreModuleIdentifier(eval);
                 if (freeIdentifierEqual(maybeKeyword, moduleKeyword))
                 {
-                    // Stash the resolved identifier back in the sexp.
-                    SyntaxValue[] children = maybeModule.extract(eval);
-                    children[0] = maybeKeyword;
-                    return maybeModule.copyReplacingChildren(eval, children);
+                    // Stash the enriched identifier back in the sexp.
+                    return replaceHead(eval, maybeModule, maybeKeyword);
                 }
             }
         }
 
-        topLevelForm = ns.syntaxIntroduce(topLevelForm);
-        return topLevelForm;
+        return ns.syntaxIntroduce(topLevelForm);
     }
 
 
@@ -271,8 +270,8 @@ final class FusionEval
     /**
      * See http://docs.racket-lang.org/syntax/toplevel.html#%28def._%28%28lib._syntax%2Ftoplevel..rkt%29._expand-syntax-top-level-with-compile-time-evals%29%29
      */
-    static SyntaxValue
-    expandSyntaxTopLevelWithCompileTimeEvals(Evaluator eval, SyntaxValue stx)
+    static SyntaxValue<?>
+    expandSyntaxTopLevelWithCompileTimeEvals(Evaluator eval, SyntaxValue<?> stx)
         throws FusionException
     {
         TopLevelNamespace ns = (TopLevelNamespace) eval.findCurrentNamespace();
@@ -283,14 +282,9 @@ final class FusionEval
         SyntaxSexp beginStx = asCoreForm(eval, stx, BEGIN);
         if (beginStx != null)
         {
-            SyntaxValue[] elts = beginStx.extract(eval);
-            for (int i = 1; i < elts.length; i++)
-            {
-                elts[i] =
-                    expandSyntaxTopLevelWithCompileTimeEvals(eval, elts[i]);
-            }
-
-            stx = beginStx.copyReplacingChildren(eval, elts);
+            return mapOverSubforms(eval, beginStx,
+                                   c -> expandSyntaxTopLevelWithCompileTimeEvals(eval,
+                                                                                 (SyntaxValue<?>) c));
         }
         else
         {
