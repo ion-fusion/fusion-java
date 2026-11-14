@@ -50,18 +50,6 @@ class SimpleSyntaxValue<Content>
 
 
     /**
-     * @param pos can be null.
-     * @param datum must not be null and must not be a {@link SyntaxValue}.
-     */
-    static <Content> SyntaxValue<Content> makeOriginalSyntax(Evaluator        eval,
-                                                             ResourcePosition pos,
-                                                             Content          datum)
-    {
-        return new SimpleSyntaxValue<>(pos, ORIGINAL_STX_PROPS, datum);
-    }
-
-
-    /**
      * @param content must not be a {@link SyntaxValue}.
      * @param pos can be null.
      * @param props must not be null.

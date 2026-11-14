@@ -51,14 +51,6 @@ final class SyntaxStruct
     }
 
 
-    static SyntaxStruct makeOriginal(Evaluator eval,
-                                     ResourcePosition pos,
-                                     ImmutableStruct struct)
-    {
-        return make(eval, struct, pos, ORIGINAL_STX_PROPS);
-    }
-
-
     //========================================================================
 
 

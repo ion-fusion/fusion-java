@@ -79,12 +79,6 @@ abstract class BaseValue
     }
 
 
-    SyntaxValue<?> makeOriginalSyntax(Evaluator eval, ResourcePosition pos)
-    {
-        return SimpleSyntaxValue.makeOriginalSyntax(eval, pos, this);
-    }
-
-
     /**
      * For containers, extant {@link SyntaxValue}s must be left unchanged, so the
      * context is eagerly propagated to new syntax objects. Otherwise, the parent's

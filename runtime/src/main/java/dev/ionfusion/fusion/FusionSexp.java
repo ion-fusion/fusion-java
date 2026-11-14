@@ -513,12 +513,6 @@ public final class FusionSexp
         }
 
         @Override
-        SyntaxValue makeOriginalSyntax(Evaluator eval, ResourcePosition pos)
-        {
-            return SyntaxSexp.makeOriginal(eval, pos, this);
-        }
-
-        @Override
         SyntaxValue<?> datumToSyntax(Evaluator        eval,
                                      SyntaxValue<?>   context,
                                      ResourcePosition pos,

@@ -29,13 +29,6 @@ final class SyntaxString
         return new SyntaxString(SyntaxWraps.EMPTY, pos, props, content);
     }
 
-    static SyntaxString makeOriginal(Evaluator        eval,
-                                     ResourcePosition pos,
-                                     BaseString       datum)
-    {
-        return make(eval, datum, pos, ORIGINAL_STX_PROPS);
-    }
-
 
     @Override
     SyntaxString copyReplacing(SyntaxWraps wraps, Object[] properties)

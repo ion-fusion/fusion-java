@@ -66,11 +66,6 @@ final class SyntaxSexp
     }
 
 
-    static SyntaxSexp makeOriginal(Evaluator eval, ResourcePosition pos, BaseSexp sexp)
-    {
-        return make(eval, sexp, pos, ORIGINAL_STX_PROPS);
-    }
-
     static SyntaxSexp make(Evaluator eval, ResourcePosition pos, BaseSexp sexp)
     {
         return new SyntaxSexp(pos, sexp);
