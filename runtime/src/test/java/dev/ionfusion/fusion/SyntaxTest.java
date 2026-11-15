@@ -27,31 +27,6 @@ public class SyntaxTest
 
 
     @Test
-    public void syntaxAppendArity()
-        throws Exception
-    {
-        expectArityExn("(syntax_append)");
-    }
-
-
-    @Test
-    public void syntaxSubseqArity()
-        throws Exception
-    {
-        expectArityExn("(syntax_subseq)");
-        expectArityExn("(syntax_subseq (quasisyntax ()))");
-        expectArityExn("(syntax_subseq (quasisyntax ()) 1 2)");
-    }
-
-    @Test
-    public void syntaxSubseqIndexType()
-        throws Exception
-    {
-        expectContractExn("(syntax_subseq (quasisyntax ()) null)");
-    }
-
-
-    @Test
     public void quasisyntaxArity()
         throws Exception
     {

@@ -46,16 +46,4 @@ abstract class SyntaxSequence<Content extends BaseSequence>
     abstract SyntaxSequence<Content> copyReplacingChildren(Evaluator eval,
                                                            SyntaxValue... children)
         throws FusionException;
-
-
-    /** Creates a new sequence with this + that. */
-    abstract SyntaxSequence<Content> makeAppended(Evaluator eval, SyntaxSequence<?> that)
-        throws FusionException;
-
-
-    /**
-     * @return null if this sequence isn't proper and from goes beyond the end.
-     */
-    abstract SyntaxSequence<Content> makeSubseq(Evaluator eval, int from)
-        throws FusionException;
 }

@@ -145,37 +145,6 @@ by virtue of being macro-introduced.
 
 
 //============================================================================
-// syntax_append
-
-(define_syntax join
-  (lambda (stx)
-    (syntax_append (syntax_get stx 1) (syntax_get stx 2))))
-
-(check === 16
-  (let ((x 3)) (join (+ 10 x) (x))))
-
-
-//============================================================================
-// syntax_subseq
-
-(define_syntax from1
-  (lambda (stx)
-    (syntax_subseq (syntax_get stx 1) 1)))
-
-(check === 5
-  (from1 (ignored + 2 3)) 5)
-
-(define_syntax prepend_from1
-  (lambda (stx)
-    (syntax_append (quasisyntax (+ 1)) (syntax_subseq (syntax_get stx 1) 1))))
-
-// Test syntax_subseq with index over size
-(check === 4 (prepend_from1 (2 3)))
-(check === 1 (prepend_from1 (2  )))
-(check === 1 (prepend_from1 (   )))
-
-
-//============================================================================
 // Hygiene tests
 
 // Macro must not capture bindings from outside.
