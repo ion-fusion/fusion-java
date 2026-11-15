@@ -2,10 +2,17 @@
 // SPDX-License-Identifier: Apache-2.0
 
 plugins {
+    idea
     id("buildlogic.fusion-common-conventions")
     id("buildlogic.java-common-conventions")
     id("jacoco-report-aggregation")
     id("test-report-aggregation")
+}
+
+idea {
+    module {
+        excludeDirs.add(file("tmp"))
+    }
 }
 
 // https://docs.gradle.org/current/userguide/jacoco_report_aggregation_plugin.html
