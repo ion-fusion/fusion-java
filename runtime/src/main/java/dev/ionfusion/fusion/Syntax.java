@@ -54,7 +54,8 @@ final class Syntax
             return ((BaseValue) datum).datumToSyntax(eval, context, pos);
         }
 
-        return SimpleSyntaxValue.makeSyntax(eval, pos, datum);
+        return SimpleSyntaxValue.makeSyntax(eval, pos, datum)
+                                .initLexicalContext(context);
     }
 
 

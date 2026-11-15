@@ -10,6 +10,7 @@
     )
 
   (provide
+    all_nulls
     bag_equal
     remove_first
     test_data_file
