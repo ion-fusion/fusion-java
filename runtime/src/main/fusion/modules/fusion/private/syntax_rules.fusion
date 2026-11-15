@@ -109,7 +109,7 @@
                 [
                   pattern_arg,
                   (quasisyntax
-                    [ // As syntax list vs. sexp doesn't matter since it'll be a 2nd arg in syntax_append (1st arg type retained)
+                    [ // As syntax list vs. sexp doesn't matter since it'll be a 2nd arg in append (1st arg type retained)
                       (unsyntax
                         (let [(pre_sub_syntax_arg (syntax_unwrap pre_sub_syntax_arg_stx))]
                           (if
@@ -137,26 +137,21 @@
       (when (not (is_sequence unwrapped_template_stx))
         (wrong_syntax template_stx "Expected unwrapped template_stx to be a sequence"))
       (fold_left
-        (lambda (accumulated_stx current_stx_piece)
-          (syntax_append
-            accumulated_stx
+        (lambda (accumulated current_stx_piece)
+          (append
+            accumulated
             (let [(unwrapped_current_stx_piece (syntax_unwrap current_stx_piece))]
               (if
                 (and
                   (is_symbol unwrapped_current_stx_piece)
                   (has_key substitution_map unwrapped_current_stx_piece))
-                (element substitution_map unwrapped_current_stx_piece)
-                (quasisyntax
-                  [ // Note: syntax list vs. syntax sexp doesn't matter  here -- retains initial syntax sequence type
-                    (unsyntax
-                      (if
-                        (is_sequence unwrapped_current_stx_piece)
+                (syntax_unwrap (element substitution_map unwrapped_current_stx_piece))
+                (sexp (if (is_sequence unwrapped_current_stx_piece)
                         (deep_substitute_syntax_sequence_substitutions current_stx_piece substitution_map)
-                        current_stx_piece))])))))
-        (if
-          (is_sexp unwrapped_template_stx)
-          (quote_syntax ())
-          (quote_syntax []))
+                        current_stx_piece))))))
+        (if (is_sexp unwrapped_template_stx)
+          (quote ())
+          (quote []))
         unwrapped_template_stx)))
 
   (provide (all_defined_out))

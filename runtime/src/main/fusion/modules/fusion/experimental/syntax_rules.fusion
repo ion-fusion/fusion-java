@@ -80,9 +80,10 @@ This was an unnoticed interface difference that will eventually be remedied.
                          literals_inner_copy
                          (tail (syntax_to_datum pattern_stx))
                          (datum_to_syntax (tail (syntax_unwrap pre_substitution_stx)))))]
-               (deep_substitute_syntax_sequence_substitutions
-                 template_stx
-                 substitution_map))))))))
+                (datum_to_syntax
+                  (deep_substitute_syntax_sequence_substitutions
+                     template_stx
+                     substitution_map)))))))))
 
   (define_syntax define_syntax_rules
     (lambda (rules_definition_stx)

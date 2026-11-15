@@ -140,6 +140,8 @@ to apply optimizations to the generated code.
     "/fusion/procedure"
     "/fusion/sexp"
     "/fusion/unsafe/sexp"
+    (rename_in "/fusion/experimental/syntax"
+      (quote_syntax QS))
     (rename_in "/fusion/private/layer0"
       (quote Q) (quasiquote QQ) (unquote UQ)))
 
@@ -234,7 +236,7 @@ This is currently simpler than Racket's version because we don't have...
     '''
     (let_values
       [((ids rhs) (split_binding orig_stx clause check_single_or_multi_id))]
-      (let [(ids (normalize_ids ids)),
+      (let [(inner_ids (syntax_unwrap (normalize_ids ids))),
             (clause_loc (|s| (datum_to_syntax s ctx rhs)))] // Copy the rhs location
         (datum_to_syntax
           (quasiquote
@@ -243,10 +245,16 @@ This is currently simpler than Racket's version because we don't have...
              (void),
              [(pos init)],
              (UQ (clause_loc (Q (if pos_cont (pos_cont pos) true)))),
-             [((UQ ids)
+             [((UQ inner_ids)
                (UQ (clause_loc (Q (pos_vals pos)))))],
-             (UQ (clause_loc (QQ (if val_cont (UQ (syntax_append (quote_syntax (val_cont)) ids)) true)))),
-             (UQ (clause_loc (QQ (if all_cont (UQ (syntax_append (quote_syntax (all_cont pos)) ids)) true)))),
+             // pre-guard: (if val_cont (val_cont inner-id ...) true)
+             (UQ (clause_loc (QQ (if val_cont
+                                   (UQ (pair (QS val_cont) inner_ids))
+                                   true)))),
+             // post-guard: (if all_cont (all_cont pos inner-id ...) true)
+             (UQ (clause_loc (QQ (if all_cont
+                                   (UQ (pair (QS all_cont) (pair (QS pos) inner_ids)))
+                                   true)))),
              (UQ (clause_loc (Q ((pos_next pos)))))])
           ctx
           clause))))
@@ -314,7 +322,10 @@ Helper form for `for_fold_derived`.
                 // parts.
                 (lets [(binds  (reverse binds)),
                        (...    (|n| (map (|b| (syntax_get b n)) binds))),
-                       (...... (|n| (apply syntax_append (map (|b| (syntax_get b n)) binds))))]
+                       (...... (|n| (datum_to_syntax
+                                      (apply append
+                                        (map (|b| (syntax_unwrap (element b n)))
+                                          binds)))))]
                   (let [(outer_bindings (...... 0)),
                         (outer_checks   (...    1)),
                         (loop_bindings  (...... 2)),
@@ -337,7 +348,8 @@ Helper form for `for_fold_derived`.
                         (let_values (unquote outer_bindings)
                           (unquote (pair (quote begin) outer_checks))
                           (let for_loop
-                            (unquote (syntax_append accums loop_bindings))
+                            (unquote (append (syntax_unwrap accums)
+                                             (syntax_unwrap loop_bindings)))
                             (if (unquote (pair (quote and) pos_guards))
                               (let_values (unquote inner_bindings)
                                 (if (unquote (pair (quote and) pre_guards))
