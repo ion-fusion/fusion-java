@@ -131,8 +131,9 @@ code.
         (wrong_syntax stx "insufficient number of arguments"))
       (lets [(segment_stx   (syntax_get stx 2)),
              (segment_datum (syntax_to_datum segment_stx)),
-             (segment_sym   (is_symbol segment_datum))]
-        (if (= 3 (syntax_size stx))
+             (segment_sym   (is_symbol segment_datum)),
+             (more_segments (drop (syntax_unwrap stx) 3))]
+        (if (is_empty more_segments)
           // Single-segment path: treat symbol as field name, other forms as-is
           (let [(segment_out (if segment_sym
                                (quasisyntax (quote (unsyntax segment_stx)))
@@ -152,9 +153,9 @@ code.
                   (if (or (is_list v) (is_sexp v))
                     (map (lambda (e)
                            (unsyntax
-                             (syntax_append
-                               (quote_syntax (@? e))
-                               (syntax_subseq stx 3))))
+                             (datum_to_syntax
+                               (pair (quote_syntax @?)
+                                     (pair (quote_syntax e) more_segments)))))
                       v)
                     (void)))))
             ((and segment_sym (= (quote **) segment_datum))
@@ -166,10 +167,10 @@ code.
                      (sweep
                        (map (lambda (e)
                               (unsyntax
-                                (syntax_append
-                                  (quote_syntax (@? e))
-                                  (syntax_subseq stx 3))))
-                       v)))
+                                (datum_to_syntax
+                                  (pair (quote_syntax @?)
+                                        (pair (quote_syntax e) more_segments)))))
+                         v)))
                    (void)))))
             ((and segment_sym (= (quote +) segment_datum))
              (quasisyntax
@@ -177,9 +178,9 @@ code.
                  (if (or (is_list v) (is_sexp v))// sexp wont work
                    (apply append_m
                      (unsyntax
-                       (syntax_append
-                         (quote_syntax (@? v))
-                         (syntax_subseq stx 3))))
+                       (datum_to_syntax
+                         (pair (quote_syntax @?)
+                               (pair (quote_syntax v) more_segments)))))
                    (void)))))
             ((and segment_sym (= (quote ?) segment_datum))
              (quasisyntax
@@ -187,9 +188,9 @@ code.
                  (if (or (is_list v) (is_sexp v))// sexp wont work
                    (choose (negate is_void)
                      (unsyntax
-                       (syntax_append
-                         (quote_syntax (@? v))
-                         (syntax_subseq stx 3))))
+                       (datum_to_syntax
+                         (pair (quote_syntax @?)
+                               (pair (quote_syntax v) more_segments)))))
                    (void)))))
 
             // Multi-segment path: unwind one segment
@@ -197,7 +198,7 @@ code.
               (quasisyntax
                 (@? (@? (unsyntax (syntax_get stx 1))
                         (unsyntax segment_stx))))
-              (syntax_subseq stx 3))))))))
+              (datum_to_syntax more_segments))))))))
 
 
   (define_syntax ##
@@ -205,7 +206,8 @@ code.
       // Minimum length is checked by # before we get here.
       (lets [(segment_stx   (syntax_get stx 2)),
              (segment_datum (syntax_to_datum segment_stx)),
-             (segment_sym   (is_symbol segment_datum))]
+             (segment_sym   (is_symbol segment_datum)),
+             (more_segments (tail (tail (tail (syntax_unwrap stx)))))]
         (if (= 3 (syntax_size stx))
           // Single-segment path: treat symbol as field name, other forms as-is
           (if (and segment_sym (= (quote +) segment_datum))
@@ -230,15 +232,13 @@ code.
                          (choose (unsyntax (syntax_get stx 3)) v))))]
               (if (= 4 (syntax_size stx))
                 c
-                (syntax_append
-                  //  CRASH HERE(quasisyntax (# c))
-                  (quasisyntax (## (unsyntax c)))
-                  (syntax_subseq stx 4))))
-            (syntax_append
-              (quasisyntax
-                (## (## (unsyntax (syntax_get stx 1))
-                        (unsyntax segment_stx))))
-              (syntax_subseq stx 3)))))))
+                (datum_to_syntax
+                    (pair (quote_syntax ##)
+                          (pair c (tail more_segments))))))
+            (datum_to_syntax
+              (pair (quote_syntax ##)
+                    (pair (sexp (quote_syntax ##) (syntax_get stx 1) segment_stx)
+                          more_segments))))))))
 
 
   (defpub_syntax #
@@ -246,8 +246,10 @@ code.
       // This simply wraps the arg into a list, so we start with a 'set'.
       (when (< (syntax_size stx) 3)
         (wrong_syntax stx "insufficient number of arguments"))
-      (syntax_append
-        (quasisyntax (## (list (unsyntax (syntax_get stx 1)))))
-        (syntax_subseq stx 2))))
+      //  (# E K ...)  =>  (## (list E) K ...)
+      (datum_to_syntax
+        (pair (quote_syntax ##)
+              (pair (sexp (quote_syntax list) (syntax_get stx 1))
+                    (tail (tail (syntax_unwrap stx))))))))
 
 )

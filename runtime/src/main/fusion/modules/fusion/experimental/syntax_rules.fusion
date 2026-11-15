@@ -78,9 +78,8 @@ This was an unnoticed interface difference that will eventually be remedied.
                      (substitution_map
                        (symbol_to_syntax_sequence_substitution_map
                          literals_inner_copy
-                         (syntax_to_datum
-                           (syntax_subseq pattern_stx 1))
-                         (syntax_subseq pre_substitution_stx 1)))]
+                         (tail (syntax_to_datum pattern_stx))
+                         (datum_to_syntax (tail (syntax_unwrap pre_substitution_stx)))))]
                (deep_substitute_syntax_sequence_substitutions
                  template_stx
                  substitution_map))))))))
