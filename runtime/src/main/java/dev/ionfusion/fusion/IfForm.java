@@ -4,6 +4,8 @@
 package dev.ionfusion.fusion;
 
 
+import static dev.ionfusion.fusion.Syntax.mapOverSubforms;
+
 import dev.ionfusion.runtime.base.FusionException;
 
 /**
@@ -13,11 +15,15 @@ final class IfForm
     extends SyntacticForm
 {
     @Override
-    SyntaxValue expand(Expander expander, Environment env, SyntaxSexp stx)
+    SyntaxValue<?> expand(Expander expander, Environment env, SyntaxSexp stx)
         throws FusionException
     {
         check(expander, stx).arityExact(4);
-        return expandArgs(expander, env, stx);
+
+        Evaluator eval = expander.getEvaluator();
+
+        return mapOverSubforms(eval, stx,
+                               c -> expander.expandExpression(env, (SyntaxValue<?>) c));
     }
 
 

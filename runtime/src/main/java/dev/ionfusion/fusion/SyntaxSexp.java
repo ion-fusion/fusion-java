@@ -14,7 +14,9 @@ import static dev.ionfusion.fusion.FusionSexp.pair;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairDot;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
+import static dev.ionfusion.fusion.FusionSexp.unsafeSexpMap;
 import static dev.ionfusion.fusion.FusionSexp.unsafeSexpSize;
+import static dev.ionfusion.fusion.Syntax.rebuild;
 import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 
 import dev.ionfusion.commons.resources.ResourcePosition;
@@ -424,16 +426,12 @@ final class SyntaxSexp
             // TODO #71 Eliminate this tail-call.
         }
 
-        // else we have a procedure application, expand each subform as an
-        // expression
-        SyntaxValue[] children = extract(eval);
-        for (int i = 0; i < len; i++)
-        {
-            SyntaxValue subform = children[i];
-            children[i] = expander.expandExpression(env, subform);
-        }
-
-        return this.copyReplacingChildren(eval, children);
+        // else we have a procedure application, expand each subform as an expression
+        var sexp = unwrap(eval);
+        var expanded = unsafeSexpMap(eval, sexp,
+                                     c -> expander.expandExpression(env,
+                                                                    (SyntaxValue<?>) c));
+        return rebuild(eval, expanded, this);
     }
 
 

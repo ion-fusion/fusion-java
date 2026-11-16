@@ -33,27 +33,6 @@ abstract class SyntacticForm
         throws FusionException;
 
 
-    /** Expand elements [1...] from a sexp. */
-    final SyntaxValue expandArgs(Expander expander, Environment env,
-                                 SyntaxSexp stx)
-        throws FusionException
-    {
-        final Evaluator eval = expander.getEvaluator();
-
-        int size = stx.size(eval);
-
-        SyntaxValue[] expandedChildren = new SyntaxValue[size];
-        expandedChildren[0] = stx.get(eval, 0);
-
-        for (int i = 1; i < size; i++)
-        {
-            SyntaxValue subform = stx.get(eval, i);
-            expandedChildren[i] = expander.expandExpression(env, subform);
-        }
-        return stx.copyReplacingChildren(eval, expandedChildren);
-    }
-
-
     abstract CompiledForm compile(Compiler comp, Environment env,
                                   SyntaxSexp stx)
         throws FusionException;
