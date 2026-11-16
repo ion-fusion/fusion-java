@@ -33,6 +33,8 @@ abstract class SyntaxValue<Content>
      */
     static final Object STX_PROPERTY_ORIGINAL = new String("is_original");
 
+    static final Object[] NO_PROPS = EMPTY_OBJECT_ARRAY;
+
     /**
      * Syntax properties list used when creating "original" syntax via the
      * {@link StandardReader}.
@@ -84,7 +86,7 @@ abstract class SyntaxValue<Content>
      */
     SyntaxValue(Content content, SyntaxWraps wraps, ResourcePosition pos)
     {
-        this(content, wraps, pos, EMPTY_OBJECT_ARRAY);
+        this(content, wraps, pos, NO_PROPS);
     }
 
     /**
@@ -92,7 +94,7 @@ abstract class SyntaxValue<Content>
      */
     SyntaxValue(Content content, ResourcePosition pos)
     {
-        this(content, SyntaxWraps.EMPTY, pos, EMPTY_OBJECT_ARRAY);
+        this(content, SyntaxWraps.EMPTY, pos, NO_PROPS);
     }
 
 
@@ -485,7 +487,8 @@ abstract class SyntaxValue<Content>
     @Override
     final SyntaxValue<Content> datumToSyntax(Evaluator        eval,
                                              SyntaxValue<?>   context,
-                                             ResourcePosition pos)
+                                             ResourcePosition pos,
+                                             Object[]         props)
         throws FusionException
     {
         return this;

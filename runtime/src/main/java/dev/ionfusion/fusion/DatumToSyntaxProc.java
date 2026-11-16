@@ -5,6 +5,7 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionSyntax.isSyntax;
 import static dev.ionfusion.fusion.FusionSyntax.unsafeSyntaxPosition;
+import static dev.ionfusion.fusion.SyntaxValue.NO_PROPS;
 
 import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.runtime.base.FusionException;
@@ -17,28 +18,40 @@ class DatumToSyntaxProc
     Object doApply(Evaluator eval, Object[] args)
         throws FusionException
     {
-        checkArityRange(eval, 1, 3, args);
+        checkArityRange(eval, 1, 4, args);
 
         Object           datum    = args[0];
-        SyntaxValue      context  = null;
+        SyntaxValue<?>   context  = null;
         ResourcePosition position = null;
+        var              props    = NO_PROPS;
 
         if (args.length > 1)
         {
             // TODO #68 This should accept arbitrary syntax objects.
             context = validateContext(eval, args);
-
-            if (args.length > 2)
-            {
-                if (! isSyntax(eval, args[2]))
-                {
-                    throw argError(eval, "syntax object", 2, args);
-                }
-                position = unsafeSyntaxPosition(eval, args[2]);
-            }
         }
 
-        return Syntax.datumToSyntax(eval, datum, context, position);
+        if (args.length > 2)
+        {
+            if (! isSyntax(eval, args[2]))
+            {
+                throw argError(eval, "syntax object", 2, args);
+            }
+            position = unsafeSyntaxPosition(eval, args[2]);
+        }
+
+        if (args.length > 3)
+        {
+            if (! isSyntax(eval, args[3]))
+            {
+                throw argError(eval, "syntax object", 3, args);
+            }
+
+            props = ((SyntaxValue<?>) args[3]).getProperties();
+        }
+
+
+        return Syntax.datumToSyntax(eval, datum, context, position, props);
     }
 
 

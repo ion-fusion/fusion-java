@@ -6,6 +6,7 @@ package dev.ionfusion.fusion;
 
 import static dev.ionfusion.commons.util.Empties.EMPTY_STRING_ARRAY;
 import static dev.ionfusion.fusion.GlobalState.MODULE;
+import static dev.ionfusion.fusion.SyntaxValue.NO_PROPS;
 
 import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.runtime.base.FusionException;
@@ -43,18 +44,40 @@ final class Syntax
      *
      * @return not null.
      */
-    static SyntaxValue datumToSyntax(Evaluator        eval,
-                                     Object           datum,
-                                     SyntaxValue      context,
-                                     ResourcePosition pos)
+    static SyntaxValue<?> datumToSyntax(Evaluator        eval,
+                                        Object           datum,
+                                        SyntaxValue<?>   context,
+                                        ResourcePosition pos)
+        throws FusionException
+    {
+        return datumToSyntax(eval, datum, context, pos, NO_PROPS);
+    }
+
+    /**
+     * Converts data into a syntax object.
+     *
+     * @param datum the object to convert. If it's already a syntax object, it is
+     * returned as is.
+     * @param context can be null, in which case no lexical information is
+     * applied to converted objects.
+     * @param pos can be null.
+     * @param props must not be null.
+     *
+     * @return not null.
+     */
+    static SyntaxValue<?> datumToSyntax(Evaluator        eval,
+                                        Object           datum,
+                                        SyntaxValue<?>   context,
+                                        ResourcePosition pos,
+                                        Object[]         props)
         throws FusionException
     {
         if (datum instanceof BaseValue)
         {
-            return ((BaseValue) datum).datumToSyntax(eval, context, pos);
+            return ((BaseValue) datum).datumToSyntax(eval, context, pos, props);
         }
 
-        return SimpleSyntaxValue.makeSyntax(eval, pos, datum)
+        return SimpleSyntaxValue.makeSyntax(eval, datum, pos, props)
                                 .initLexicalContext(context);
     }
 

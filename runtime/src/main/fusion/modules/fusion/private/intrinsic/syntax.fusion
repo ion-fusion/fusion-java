@@ -22,11 +22,12 @@ reference position.
 
   (define_values (datum_to_syntax)
     '''
-    (datum_to_syntax datum [context location])
+    (datum_to_syntax datum [context location properties])
 
 Recursively converts the `datum` to a syntax object with lexical information
-copied from the `context` syntax object, and source-location copied from
-the `location` syntax object. Existing syntax objects in `datum` are included
+copied from the `context` syntax object, source-location copied from
+the `location` syntax object, and properties copied from the `properties`
+syntax object. Existing syntax objects in `datum` are included
 as-is.
 
 When `context` isn't provided, converted syntax objects have no lexical
@@ -114,6 +115,16 @@ The result is zero if there's no line number available.
 
 
   (define_values (syntax_property)
+    '''
+    (syntax_property stx key)
+
+Returns the value of the syntax property `key` from the syntax object `stx`.
+If no such property exists, the result is void.
+
+    (syntax_property stx key value)
+
+Returns a copy of syntax object `stx` that has syntax property `key` mapped to `value`.
+    '''
     (java_new "dev.ionfusion.fusion.FusionSyntax$PropertyProc"))
 
 

@@ -3,7 +3,6 @@
 
 package dev.ionfusion.fusion;
 
-import static dev.ionfusion.commons.util.Empties.EMPTY_OBJECT_ARRAY;
 import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 
 import dev.ionfusion.commons.resources.ResourcePosition;
@@ -44,9 +43,12 @@ final class SyntaxKeyword
     }
 
 
-    static SyntaxKeyword make(Evaluator eval, ResourcePosition pos, BaseSymbol symbol)
+    static SyntaxKeyword make(Evaluator        eval,
+                              BaseSymbol       symbol,
+                              ResourcePosition pos,
+                              Object[]         props)
     {
-        return new SyntaxKeyword(pos, EMPTY_OBJECT_ARRAY, symbol);
+        return new SyntaxKeyword(pos, props, symbol);
     }
 
 

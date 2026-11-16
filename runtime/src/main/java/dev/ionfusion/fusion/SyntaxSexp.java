@@ -50,6 +50,15 @@ final class SyntaxSexp
     }
 
 
+    static SyntaxSexp make(Evaluator        eval,
+                           BaseSexp         content,
+                           ResourcePosition pos,
+                           Object[]         props)
+    {
+        return new SyntaxSexp(pos, props, SyntaxWraps.EMPTY, content);
+    }
+
+
     @Override
     SyntaxSexp copyReplacing(SyntaxWraps wraps, Object[] properties)
     {
@@ -59,7 +68,7 @@ final class SyntaxSexp
 
     static SyntaxSexp makeOriginal(Evaluator eval, ResourcePosition pos, BaseSexp sexp)
     {
-        return new SyntaxSexp(pos, ORIGINAL_STX_PROPS, SyntaxWraps.EMPTY, sexp);
+        return make(eval, sexp, pos, ORIGINAL_STX_PROPS);
     }
 
     static SyntaxSexp make(Evaluator eval, ResourcePosition pos, BaseSexp sexp)
