@@ -210,13 +210,6 @@ abstract class SyntaxValue<Content>
     //========================================================================
     // Original syntax tracking
 
-    @Override
-    final SyntaxValue<Content> makeOriginalSyntax(Evaluator eval, ResourcePosition pos)
-    {
-        throw new IllegalStateException("Cannot wrap syntax as syntax");
-    }
-
-
     final SyntaxValue<Content> trackOrigin(Evaluator      eval,
                                            SyntaxValue<?> origStx,
                                            SyntaxSymbol   origin)

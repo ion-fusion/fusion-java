@@ -35,14 +35,6 @@ final class SyntaxKeyword
     }
 
 
-    static SyntaxKeyword makeOriginal(Evaluator        eval,
-                                      ResourcePosition pos,
-                                      BaseSymbol       symbol)
-    {
-        return new SyntaxKeyword(pos, ORIGINAL_STX_PROPS, symbol);
-    }
-
-
     static SyntaxKeyword make(Evaluator        eval,
                               BaseSymbol       symbol,
                               ResourcePosition pos,

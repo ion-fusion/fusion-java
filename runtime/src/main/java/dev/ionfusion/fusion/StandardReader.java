@@ -18,6 +18,8 @@ import static dev.ionfusion.fusion.FusionStruct.nullStruct;
 import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
 import static dev.ionfusion.fusion.FusionSyntax.isSyntax;
 import static dev.ionfusion.fusion.FusionTimestamp.makeTimestamp;
+import static dev.ionfusion.fusion.Syntax.datumToSyntax;
+import static dev.ionfusion.fusion.SyntaxValue.ORIGINAL_STX_PROPS;
 import static dev.ionfusion.fusion.SyntaxValue.STX_PROPERTY_ORIGINAL;
 import static java.lang.Boolean.TRUE;
 import static java.util.Objects.requireNonNull;
@@ -267,7 +269,7 @@ class StandardReader
         assert ! isSyntax(eval, datum);
         if (readingSyntax)
         {
-            SyntaxValue stx = datum.makeOriginalSyntax(eval, pos);
+            SyntaxValue<?> stx = datumToSyntax(eval, datum, null, pos, ORIGINAL_STX_PROPS);
             assert stx.findProperty(eval, STX_PROPERTY_ORIGINAL) == TRUE;
             return stx;
         }

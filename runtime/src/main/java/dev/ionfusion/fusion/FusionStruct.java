@@ -583,12 +583,6 @@ final class FusionStruct
         }
 
         @Override
-        SyntaxValue makeOriginalSyntax(Evaluator eval, ResourcePosition pos)
-        {
-            return SyntaxStruct.makeOriginal(eval, pos, this);
-        }
-
-        @Override
         SyntaxValue<?> datumToSyntax(Evaluator        eval,
                                      SyntaxValue<?>   context,
                                      ResourcePosition pos,
@@ -871,13 +865,6 @@ final class FusionStruct
             }
         }
 
-        @Override
-        SyntaxValue makeOriginalSyntax(Evaluator eval, ResourcePosition pos)
-        {
-            throw new IllegalStateException("Cannot wrap mutable struct as syntax");
-        }
-
-        @SuppressWarnings("serial")
         private static final class VisitFailure
             extends RuntimeException
         { }
@@ -1152,11 +1139,6 @@ final class FusionStruct
             super(annotations);
         }
 
-        @Override
-        SyntaxValue makeOriginalSyntax(Evaluator eval, ResourcePosition pos)
-        {
-            return SyntaxStruct.makeOriginal(eval, pos, this);
-        }
 
         @Override
         NonNullImmutableStruct makeSimilar(MultiHashTrie<String, Object> map,

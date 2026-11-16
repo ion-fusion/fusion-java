@@ -43,16 +43,6 @@ final class SyntaxSymbol
     }
 
 
-
-    /**
-     * @param pos can be null.
-     * @param symbol must not be null.
-     */
-    static SyntaxSymbol makeOriginal(ResourcePosition pos, BaseSymbol symbol)
-    {
-        return new SyntaxSymbol(SyntaxWraps.EMPTY, pos, ORIGINAL_STX_PROPS, symbol);
-    }
-
     /**
      * @param pos can be null.
      * @param symbol must not be null.

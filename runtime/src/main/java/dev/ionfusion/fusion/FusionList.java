@@ -607,12 +607,6 @@ final class FusionList
         }
 
         @Override
-        SyntaxValue makeOriginalSyntax(Evaluator eval, ResourcePosition pos)
-        {
-            return SyntaxList.makeOriginal(eval, pos, this);
-        }
-
-        @Override
         SyntaxList datumToSyntax(Evaluator        eval,
                                  SyntaxValue<?>   context,
                                  ResourcePosition pos,
