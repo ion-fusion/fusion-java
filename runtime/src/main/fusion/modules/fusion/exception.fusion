@@ -172,10 +172,10 @@ Returns `true` or `false`.
   (define_syntax generate_predicate
     (lambda (stx)
       (lets
-        [(orig_args (syntax_subseq stx 1)),
-         (pred_name (syntax_element orig_args 0)),
-         (exn_name  (syntax_element orig_args 1)),
-         (exn_class (syntax_element orig_args 2)),
+        [(orig_args (tail (syntax_unwrap stx))),
+         (pred_name (head orig_args)),
+         (exn_name  (head (tail orig_args))),
+         (exn_class (head (tail (tail orig_args)))),
          (docs (string_append
                  "\n    (" (syntax_unwrap pred_name) " v)\n\n"
                  "Determines whether a value is an exception of type `"

@@ -284,7 +284,7 @@ Helper form for `for_fold_derived`.
           (wrong_syntax original))
         (let [(accums  (head (tail subforms))),
               (clauses (head (tail (tail subforms)))),
-              (body    (tail (tail (tail subforms))))]
+              (body    (drop subforms 3))]
           (unless (is_sequence (syntax_unwrap accums))
             (wrong_syntax original "bad accumulator sequence: " accums))
           (unless (is_sequence (syntax_unwrap clauses))

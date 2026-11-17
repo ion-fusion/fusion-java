@@ -46,11 +46,12 @@
         (wrong_syntax pattern_pieces_stx "Ellipsis currently only supported in final position"))))
 
   (define (matches_syntax_rule_pattern literals rule_stx candidate_stx)
-    (lets [(pattern_stx    (syntax_get rule_stx 0)),
-           (pattern_name   (syntax_to_datum (syntax_get pattern_stx 0))),
-           (candidate_name (syntax_to_datum (syntax_get candidate_stx 0))),
-           (pattern_args   (syntax_to_datum (syntax_subseq pattern_stx 1))),
-           (candidate_args (syntax_to_datum (syntax_subseq candidate_stx 1)))]
+    (lets [(pattern        (head (syntax_to_datum rule_stx))),
+           (pattern_name   (head pattern)),
+           (pattern_args   (tail pattern)),
+           (candidate      (syntax_to_datum candidate_stx)),
+           (candidate_name (head candidate)),
+           (candidate_args (tail candidate))]
       (and
         // Same name check
         (= pattern_name candidate_name)
@@ -77,12 +78,9 @@
 
   (define (symbol_to_syntax_sequence_substitution_map literals pattern_args pre_substitution_args_stx)
     (lets [(pattern_args_ends_in_ellipsis
-             (=
-               (last pattern_args)
-               (quote ...))),
+             (= (last pattern_args) (quote ...))),
            (pattern_args_without_ellipsis
-             (if
-               pattern_args_ends_in_ellipsis
+             (if pattern_args_ends_in_ellipsis
                (subseq
                  pattern_args
                  0
@@ -91,15 +89,11 @@
                    1))
                pattern_args)),
            (potential_kleene_star_substitution_syntax_pair
-             (if
-               pattern_args_ends_in_ellipsis
+             (if pattern_args_ends_in_ellipsis
                [
                  (quote ...),
-                 (syntax_subseq
-                   pre_substitution_args_stx
-                  (-
-                    (size pattern_args)
-                    1))]
+                 (subseq (syntax_unwrap pre_substitution_args_stx)
+                   (- (size pattern_args) 1))]
                []))]
       // TODO: struct_from_pairs_collection helper
       (apply
