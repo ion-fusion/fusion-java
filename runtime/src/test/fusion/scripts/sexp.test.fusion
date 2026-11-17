@@ -275,6 +275,31 @@
 
 
 //==========================================================================
+// drop
+
+(check == (sexp)     (drop (sexp)     0))
+(check == (sexp 1 2) (drop (sexp 1 2) 0))
+(check == (sexp   2) (drop (sexp 1 2) 1))
+(check == (sexp    ) (drop (sexp 1 2) 2))
+
+// The sexp can be improper, as in Racket
+(check == [] (drop (pair 1 []) 1))
+(check == [] (drop (pair 1 (pair 2 [])) 2))
+
+
+(expect_argument_error (drop (list) 0))
+(expect_argument_error (drop (sexp) 1))
+
+(check string_contains
+  (exn_message (expect_argument_error (drop (sexp 1) 2)))
+  "at least 2 elements")
+
+(check string_contains
+  (exn_message (expect_argument_error (drop (sexp) -1)))
+   "nonnegative int")
+
+
+//==========================================================================
 // add
 
 (check === (sexp 3 1 2)   (add (sexp 1 2) 3)  )
