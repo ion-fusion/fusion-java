@@ -207,7 +207,7 @@ code.
       (lets [(segment_stx   (syntax_get stx 2)),
              (segment_datum (syntax_to_datum segment_stx)),
              (segment_sym   (is_symbol segment_datum)),
-             (more_segments (tail (tail (tail (syntax_unwrap stx)))))]
+             (more_segments (drop (syntax_unwrap stx) 3))]
         (if (= 3 (syntax_size stx))
           // Single-segment path: treat symbol as field name, other forms as-is
           (if (and segment_sym (= (quote +) segment_datum))
