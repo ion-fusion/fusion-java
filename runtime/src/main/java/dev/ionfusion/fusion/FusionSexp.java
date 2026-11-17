@@ -742,12 +742,21 @@ public final class FusionSexp
         }
 
         @Override
-        Object unsafeRef(Evaluator eval, int i)
+        Object unsafeRef(Evaluator eval, int pos)
             throws FusionException
         {
-            String message =
-                "No index " + i + " in sequence " + this;
-            throw new IndexOutOfBoundsException(message);
+            ImmutablePair p = this;
+            for ( ; pos > 0; pos--)
+            {
+                Object tail = p.myTail;
+                if (! (tail instanceof ImmutablePair))
+                {
+                    String message = "No index " + pos + " in sequence " + this;
+                    throw new IndexOutOfBoundsException(message);
+                }
+                p = (ImmutablePair) tail;
+            }
+            return p.myHead;
         }
 
         /**

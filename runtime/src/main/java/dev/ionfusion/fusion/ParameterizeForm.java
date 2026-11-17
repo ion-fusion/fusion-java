@@ -22,9 +22,9 @@ final class ParameterizeForm
 
         SyntaxChecker checkBindings =
             check.subformSeq("sequence of parameterizations", 1);
-        SyntaxSequence bindingForms = checkBindings.form();
+        var bindingForms = (SyntaxSequence<?>) checkBindings.form();
 
-        final int numBindings = bindingForms.size(eval);
+        final int numBindings = checkBindings.size();
         SyntaxValue[] expandedForms = new SyntaxValue[numBindings];
         for (int i = 0; i < numBindings; i++)
         {

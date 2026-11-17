@@ -3,9 +3,11 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.fusion.FusionSequence.isSequence;
 import static dev.ionfusion.fusion.FusionValue.isAnyNull;
 import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 
+import dev.ionfusion.fusion.FusionSequence.BaseSequence;
 import dev.ionfusion.runtime.base.FusionException;
 
 
@@ -14,17 +16,20 @@ import dev.ionfusion.runtime.base.FusionException;
  */
 class SyntaxChecker
 {
-    final Evaluator myEvaluator;
-    final String myFormName;
-    final SyntaxSequence myForm;
+    protected final Evaluator myEvaluator;
+    protected final String myFormName;
+    protected final SyntaxValue<?> myForm;
+    protected final BaseSequence<?> mySequence;
 
-    SyntaxChecker(Evaluator eval, String formName, SyntaxSequence form)
+    SyntaxChecker(Evaluator eval, String formName, SyntaxValue<?> form)
+        throws FusionException
     {
         assert form != null;
 
         myEvaluator = eval;
         myFormName = formName;
         myForm = form;
+        mySequence = (BaseSequence<?>) form.unwrap(eval);
     }
 
 
@@ -41,6 +46,7 @@ class SyntaxChecker
         myEvaluator = eval;
         myFormName = (id == null ? null : id.getName().stringValue());
         myForm = form;
+        mySequence = form.unwrap(eval);
     }
 
 
@@ -49,9 +55,21 @@ class SyntaxChecker
      *
      * @return not null.
      */
-    SyntaxSequence form()
+    SyntaxValue<?> form()
     {
         return myForm;
+    }
+
+
+    BaseSequence<?> sequence()
+    {
+        return mySequence;
+    }
+
+    int size()
+        throws FusionException
+    {
+        return mySequence.size(myEvaluator);
     }
 
 
@@ -75,7 +93,7 @@ class SyntaxChecker
     void arityExact(int count)
         throws FusionException
     {
-        if (myForm.size(myEvaluator) != count)
+        if (size() != count)
         {
             throw failure("expected " + (count-1) + " subforms");
         }
@@ -89,7 +107,7 @@ class SyntaxChecker
     final int arityAtLeast(int count)
         throws FusionException
     {
-        int size = myForm.size(myEvaluator);
+        int size = size();
         if (size < count)
         {
             throw failure("expect at least " + (count-1) + " subforms");
@@ -98,25 +116,30 @@ class SyntaxChecker
     }
 
 
-    final SyntaxValue requiredForm(String expectation, int argNum)
+    final SyntaxValue<?> requiredForm(String expectation, int argNum)
         throws FusionException
     {
         try
         {
-            return myForm.get(myEvaluator, argNum);
+            return (SyntaxValue<?>) mySequence.unsafeRef(myEvaluator, argNum);
         }
-        catch (IndexOutOfBoundsException e) {}
-
-        throw failure("expected " + expectation);
+        catch (IndexOutOfBoundsException e)
+        {
+            throw failure("expected " + expectation);
+        }
     }
 
 
-    final SyntaxSequence requiredSequence(String expectation, int argNum)
+    final SyntaxValue<?> requiredSequence(String expectation, int argNum)
         throws FusionException
     {
-        SyntaxValue form = requiredForm(expectation, argNum);
-        return checkSyntax(SyntaxSequence.class, expectation,
-                           false /* nullable */, form);
+        var form  = requiredForm(expectation, argNum);
+        var datum = form.unwrap(myEvaluator);
+        if (isAnyNull(myEvaluator, datum) || ! isSequence(myEvaluator, datum))
+        {
+            throw failure("expected " + expectation, form);
+        }
+        return form;
     }
 
 
@@ -238,7 +261,7 @@ class SyntaxChecker
     SyntaxChecker subformSeq(String description, int index)
         throws FusionException
     {
-        SyntaxSequence subsexp = requiredSequence(description, index);
+        var subsexp = requiredSequence(description, index);
         return new SubformChecker(this, description, subsexp);
     }
 
@@ -246,8 +269,8 @@ class SyntaxChecker
     {
         private final SyntaxChecker myBaseForm;
 
-        SubformChecker(SyntaxChecker base, String description,
-                       SyntaxSequence form)
+        SubformChecker(SyntaxChecker base, String description, SyntaxValue<?> form)
+            throws FusionException
         {
             super(base.myEvaluator, description, form);
             myBaseForm = base;
@@ -275,11 +298,9 @@ class SyntaxChecker
         void arityExact(int count)
             throws FusionException
         {
-            if (myForm.size(myEvaluator) != count)
+            if (size() != count)
             {
-                String message =
-                    "expected " + count + " subforms in " + myFormName;
-                throw failure(message);
+                throw failure("expected " + count + " subforms in " + myFormName);
             }
         }
 
@@ -295,7 +316,7 @@ class SyntaxChecker
         SyntaxChecker subformSeq(String description, int index)
             throws FusionException
         {
-            SyntaxSequence subsexp = requiredSequence(description, index);
+            var subsexp = requiredSequence(description, index);
             return new SubformChecker(myBaseForm, description, subsexp);
         }
     }
