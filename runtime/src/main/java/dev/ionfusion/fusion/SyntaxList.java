@@ -118,12 +118,10 @@ final class SyntaxList
     }
 
 
-    @Override
     SyntaxValue get(Evaluator eval, int index)
         throws FusionException
     {
-        var thisList = unwrap(eval);
-        return (SyntaxValue) thisList.elt(eval, index);
+        return (SyntaxValue) unsafeListElement(eval, unwrap(eval), index);
     }
 
 

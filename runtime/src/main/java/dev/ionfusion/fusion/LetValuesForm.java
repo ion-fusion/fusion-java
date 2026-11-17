@@ -3,9 +3,13 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.fusion.FusionCollection.unsafeCollectionSize;
+import static dev.ionfusion.fusion.FusionSequence.unsafeSequenceElt;
 import static dev.ionfusion.fusion.FusionSexp.isPair;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
+import static dev.ionfusion.fusion.FusionSexp.unsafeSexpElement;
+import static dev.ionfusion.fusion.FusionSyntax.unsafeSyntaxUnwrap;
 import static dev.ionfusion.fusion.ResultFailure.makeResultError;
 
 import dev.ionfusion.commons.resources.ResourcePosition;
@@ -30,10 +34,11 @@ final class LetValuesForm
     {
         Evaluator eval = comp.getEvaluator();
 
-        SyntaxSequence bindingForms = (SyntaxSequence) expr.get(eval, 1);
+        var formSexp = expr.unwrap(eval);
+        var decls = unsafeSyntaxUnwrap(eval, unsafeSexpElement(eval, formSexp, 1));
 
         // The number of bindings is >= the number of binding forms.
-        final int numBindingForms = bindingForms.size(eval);
+        int numBindingForms = unsafeCollectionSize(eval, decls);
 
         var binders = new ArrayList<SyntaxSymbol>();
         int[] valueCounts = new int[numBindingForms];
@@ -44,9 +49,9 @@ final class LetValuesForm
         boolean allSingles = true;
         for (int i = 0; i < numBindingForms; i++)
         {
-            var binding = ((SyntaxSexp) bindingForms.get(eval, i)).unwrap(eval);
+            var decl = unsafeSyntaxUnwrap(eval, unsafeSequenceElt(eval, decls, i));
 
-            Object names = ((SyntaxSexp) unsafePairHead(eval, binding)).unwrap(eval);
+            Object names = unsafeSyntaxUnwrap(eval, unsafePairHead(eval, decl));
             int size = 0;
             while (isPair(eval, names))
             {
@@ -60,10 +65,9 @@ final class LetValuesForm
 
             allSingles &= (size == 1);
 
-            SyntaxValue<?> boundExpr =
-                (SyntaxValue<?>) unsafePairHead(eval, unsafePairTail(eval, binding));
-            valueForms[i] = comp.compileExpression(env, boundExpr);
-            valuePosns[i] = boundExpr.getPosition();
+            var valueExpr = (SyntaxValue<?>) unsafeSexpElement(eval, decl, 1);
+            valueForms[i] = comp.compileExpression(env, valueExpr);
+            valuePosns[i] = valueExpr.getPosition();
         }
 
         env = LocalEnvironment.forCompilation(env, binders.toArray(new SyntaxSymbol[0]));

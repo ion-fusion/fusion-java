@@ -26,10 +26,6 @@ abstract class SyntaxSequence<Content extends BaseSequence>
         throws FusionException;
 
 
-    abstract SyntaxValue get(Evaluator eval, int index)
-        throws FusionException;
-
-
     /**
      * Creates a new syntax sequence, using our location and properties but
      * the given children.
