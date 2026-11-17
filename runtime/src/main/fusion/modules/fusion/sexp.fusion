@@ -26,11 +26,13 @@ sexps.
   (require
     "/fusion/private/layer08/actual"
     "/fusion/private/sequence"
+    "/fusion/private/sexp"
   )
 
   (provide_signature_elements sequence_sig)
 
   (provide
+    drop
     head
     is_actual_sexp
     is_pair

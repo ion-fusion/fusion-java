@@ -3,7 +3,36 @@
 
 (module private_sexp "/fusion/private/layer08"
 
+  (require
+    "/fusion/private/bind"
+    "/fusion/private/define"
+    "/fusion/private/intrinsic/io"
+  )
+
   (provide
+    drop
     sexp_append
   )
+
+
+  (define (drop sexp count)
+    '''
+Returns the sexp after the first `count` elements of `sexp`.
+
+    (drop (sexp 1 2 3) 2)  =>  (3)
+    '''
+    (unless (is_sexp sexp)
+      (raise_argument_error "drop" "sexp" 0 sexp count))
+    (unless (>= count 0)
+      (raise_argument_error "drop" "nonnegative int" 1 sexp count))
+    // Hang onto the original args for error reporting
+    (let loop [(s sexp),
+               (c count)]
+      (if (== 0 c)
+        s
+        (if (is_pair s)
+          (loop (tail s) (- c 1))
+          (raise_argument_error "drop"
+            (display_to_string "sexp of at least " count " elements")
+            0 sexp count)))))
 )
