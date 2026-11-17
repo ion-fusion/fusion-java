@@ -31,15 +31,6 @@ abstract class SyntaxSequence<Content extends BaseSequence>
 
 
     /**
-     * Gets all the children of this sequence as a new array.
-     * Useful for making changes and then building a replacement sequence.
-     *
-     * @return a new array, or null when called on null sequences.
-     */
-    abstract SyntaxValue[] extract(Evaluator eval)
-        throws FusionException;
-
-    /**
      * Creates a new syntax sequence, using our location and properties but
      * the given children.
      */

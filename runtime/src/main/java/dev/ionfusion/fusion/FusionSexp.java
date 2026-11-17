@@ -378,7 +378,7 @@ public final class FusionSexp
             ImmutablePair s = (ImmutablePair) sexp;
             var head = fn.apply(s.head());
             var tail = unsafeSexpMap(eval, s.tail(), fn);
-            return pair(eval, head, tail);
+            return pair(eval, s.myAnnotations, head, tail);
         }
         return (BaseSexp<?>) sexp;
     }

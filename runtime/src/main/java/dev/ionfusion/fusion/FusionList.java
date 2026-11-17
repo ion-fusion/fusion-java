@@ -286,6 +286,23 @@ final class FusionList
     // Transformers
 
 
+    static BaseList unsafeListMap(Evaluator eval,
+                                  Object list,
+                                  Evaluator.Function<Object,?> fn)
+        throws FusionException
+    {
+        BaseList lst = (BaseList) list;
+
+        Object[] mapped = lst.extract(eval);
+        for (int i = 0; i < mapped.length; i++)
+        {
+            mapped[i] = fn.apply(mapped[i]);
+        }
+
+        return lst.makeSimilar(lst.myAnnotations, mapped);
+    }
+
+
     /**
      * @param list must be a list; it is not type-checked!
      */
