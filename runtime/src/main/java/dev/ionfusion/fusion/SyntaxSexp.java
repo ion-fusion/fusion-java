@@ -208,7 +208,6 @@ final class SyntaxSexp
     }
 
 
-    @Override
     int size(Evaluator eval)
         throws FusionException
     {

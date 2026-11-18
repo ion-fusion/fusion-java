@@ -22,10 +22,6 @@ abstract class SyntaxSequence<Content extends BaseSequence>
     }
 
 
-    abstract int size(Evaluator eval)
-        throws FusionException;
-
-
     /**
      * Creates a new syntax sequence, using our location and properties but
      * the given children.

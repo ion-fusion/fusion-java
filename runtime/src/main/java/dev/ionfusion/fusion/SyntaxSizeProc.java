@@ -3,8 +3,11 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.fusion.FusionCollection.unsafeCollectionSize;
 import static dev.ionfusion.fusion.FusionNumber.makeInt;
-import static dev.ionfusion.fusion.FusionSyntax.checkSyntaxSequenceArg;
+import static dev.ionfusion.fusion.FusionSequence.isSequence;
+import static dev.ionfusion.fusion.FusionSyntax.isSyntax;
+import static dev.ionfusion.fusion.FusionSyntax.unsafeSyntaxUnwrap;
 
 import dev.ionfusion.runtime.base.FusionException;
 
@@ -15,7 +18,16 @@ final class SyntaxSizeProc
     Object doApply(Evaluator eval, Object arg)
         throws FusionException
     {
-        SyntaxSequence c = checkSyntaxSequenceArg(eval, this, 0, arg);
-        return makeInt(eval, c.size(eval));
+        if (isSyntax(eval, arg))
+        {
+            var datum = unsafeSyntaxUnwrap(eval, arg);
+            if (isSequence(eval, datum))
+            {
+                var size = unsafeCollectionSize(eval, datum);
+                return makeInt(eval, size);
+            }
+        }
+
+        throw argError(eval, "syntax list or sexp", 0, arg);
     }
 }
