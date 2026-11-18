@@ -6,8 +6,10 @@ package dev.ionfusion.fusion;
 import static dev.ionfusion.fusion.FusionCollection.unsafeCollectionSize;
 import static dev.ionfusion.fusion.FusionIo.safeWriteToString;
 import static dev.ionfusion.fusion.FusionSequence.unsafeSequenceElt;
+import static dev.ionfusion.fusion.FusionSexp.immutableSexp;
 import static dev.ionfusion.fusion.FusionSexp.unsafeSexpElement;
 import static dev.ionfusion.fusion.FusionSyntax.unsafeSyntaxUnwrap;
+import static dev.ionfusion.fusion.Syntax.rebuild;
 
 import dev.ionfusion.runtime.base.FusionException;
 
@@ -26,37 +28,28 @@ final class ParameterizeForm
 
         SyntaxChecker checkBindings =
             check.subformSeq("sequence of parameterizations", 1);
-        var bindingForms = (SyntaxSequence<?>) checkBindings.form();
 
-        final int numBindings = checkBindings.size();
-        SyntaxValue[] expandedForms = new SyntaxValue[numBindings];
-        for (int i = 0; i < numBindings; i++)
-        {
-            SyntaxChecker checkPair =
-                checkBindings.subformSexp("parameter/value pair", i);
-            checkPair.arityExact(2);
+        var expandedDecls = checkBindings.subformSexpMap("parameter/value pair",
+                                                          checkDecl -> {
+            checkDecl.arityExact(2);
 
-            SyntaxSexp binding = (SyntaxSexp) checkPair.form();
+            var decl = checkDecl.sequence();
+            var paramExpr = unsafeSexpElement(eval, decl, 0);
+            var valueExpr = unsafeSexpElement(eval, decl, 1);
 
-            SyntaxValue paramExpr = binding.get(eval, 0);
-            paramExpr = expander.expandExpression(env, paramExpr);
+            paramExpr = expander.expandExpression(env, (SyntaxValue<?>) paramExpr);
+            valueExpr = expander.expandExpression(env, (SyntaxValue<?>) valueExpr);
 
-            SyntaxValue boundExpr = binding.get(eval, 1);
-            boundExpr = expander.expandExpression(env, boundExpr);
-
-            binding = binding.copyReplacingChildren(eval, paramExpr, boundExpr);
-            expandedForms[i] = binding;
-        }
-
-        bindingForms = bindingForms.copyReplacingChildren(eval, expandedForms);
+            var expanded = immutableSexp(eval, paramExpr, valueExpr);
+            return rebuild(eval, expanded, checkDecl.form());
+        });
 
         // Expand the body expressions
-        expandedForms = new SyntaxValue[exprSize];
+        var expandedForms = new SyntaxValue[exprSize];
         expandedForms[0] = stx.get(eval, 0);
-        expandedForms[1] = bindingForms;
+        expandedForms[1] = rebuild(eval, expandedDecls, checkBindings.form());
 
-        // TODO Should allow internal definitions
-        //  https://github.com/ion-fusion/fusion-java/issues/67
+        // TODO #67 Should allow internal definitions
         for (int i = 2; i < exprSize; i++)
         {
             SyntaxValue bodyExpr = stx.get(eval, i);
