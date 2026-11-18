@@ -24,7 +24,6 @@ import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
 import java.lang.reflect.Array;
 import java.util.IdentityHashMap;
-import java.util.List;
 
 final class SyntaxSexp
     extends SyntaxSequence<BaseSexp>
@@ -183,8 +182,7 @@ final class SyntaxSexp
     }
 
 
-    @Override
-    SyntaxValue[] extract(Evaluator eval)
+    SyntaxValue<?>[] extract(Evaluator eval)
         throws FusionException
     {
         return extract(eval, SyntaxValue.class);
@@ -207,22 +205,6 @@ final class SyntaxSexp
         }
 
         return extracted;
-    }
-
-
-    void extract(Evaluator eval, List<SyntaxValue> list, int from)
-        throws FusionException
-    {
-        int i = 0;
-        for (Object p = unwrap(eval); isPair(eval, p); p = unsafePairTail(eval, p))
-        {
-            if (from <= i)
-            {
-                SyntaxValue child = (SyntaxValue) unsafePairHead(eval, p);
-                list.add(child);
-            }
-            i++;
-        }
     }
 
 

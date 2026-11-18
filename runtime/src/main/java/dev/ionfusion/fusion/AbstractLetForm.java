@@ -3,6 +3,7 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.fusion.FusionSequence.unsafeSequenceMap;
 import static dev.ionfusion.fusion.SyntaxSymbol.ensureUniqueIdentifiers;
 
 import dev.ionfusion.runtime.base.FusionException;
@@ -87,19 +88,17 @@ abstract class AbstractLetForm
     }
 
 
-    SyntaxSequence<?> expandBindingPairs(Expander expander,
-                                         Environment outerEnv,
-                                         LocalEnvironment localEnv,
-                                         SyntaxSequence<?> bindingPairs)
+    SyntaxValue<?> expandBindingPairs(Expander expander,
+                                      Environment outerEnv,
+                                      LocalEnvironment localEnv,
+                                      SyntaxSequence<?> bindingPairs)
         throws FusionException
     {
         var eval = expander.getEvaluator();
 
-        var pairs = bindingPairs.extract(eval);
-        for (int i = 0; i < pairs.length; i++)
-        {
-            var bindingPair = (SyntaxSexp) bindingPairs.get(eval, i);
-
+        var seq = bindingPairs.unwrap(eval);
+        var expanded = unsafeSequenceMap(eval, seq, bp -> {
+            var bindingPair = (SyntaxSexp) bp;
             var binders = bindingPair.get(eval, 0);
             var expr    = bindingPair.get(eval, 1);
 
@@ -114,9 +113,9 @@ abstract class AbstractLetForm
 
             expr = expander.expandExpression(outerEnv, expr);
 
-            pairs[i] = bindingPair.copyReplacingChildren(eval, binders, expr);
-        }
+            return bindingPair.copyReplacingChildren(eval, binders, expr);
+        });
 
-        return bindingPairs.copyReplacingChildren(eval, pairs);
+        return Syntax.rebuild(eval, expanded, bindingPairs);
     }
 }

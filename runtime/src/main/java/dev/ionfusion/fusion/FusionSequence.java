@@ -3,6 +3,10 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.fusion.FusionList.unsafeListMap;
+import static dev.ionfusion.fusion.FusionSexp.isSexp;
+import static dev.ionfusion.fusion.FusionSexp.unsafeSexpMap;
+
 import dev.ionfusion.fusion.FusionBool.BaseBool;
 import dev.ionfusion.fusion.FusionCollection.BaseCollection;
 import dev.ionfusion.fusion.FusionList.BaseList;
@@ -118,6 +122,25 @@ final class FusionSequence
         throws FusionException
     {
         return ((BaseSequence) sequence).elt(eval, pos);
+    }
+
+
+    //========================================================================
+    // Transformers
+
+    static Object unsafeSequenceMap(Evaluator eval,
+                                    Object sequence,
+                                    Evaluator.Function<Object, ?> fn)
+        throws FusionException
+    {
+        if (isSexp(eval, sequence))
+        {
+            return unsafeSexpMap(eval, sequence, fn);
+        }
+        else
+        {
+            return unsafeListMap(eval, sequence, fn);
+        }
     }
 
 

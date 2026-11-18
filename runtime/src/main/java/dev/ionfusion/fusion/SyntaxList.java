@@ -119,20 +119,6 @@ final class SyntaxList
 
 
     @Override
-    SyntaxValue[] extract(Evaluator eval)
-        throws FusionException
-    {
-        var thisList = unwrap(eval);
-        if (thisList.isAnyNull()) return null;
-
-        int len = thisList.size();
-        SyntaxValue[] extracted = new SyntaxValue[len];
-        thisList.unsafeCopy(eval, 0, extracted, 0, len);
-        return extracted;
-    }
-
-
-    @Override
     SyntaxValue get(Evaluator eval, int index)
         throws FusionException
     {
