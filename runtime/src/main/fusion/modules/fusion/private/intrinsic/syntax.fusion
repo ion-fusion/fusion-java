@@ -80,16 +80,6 @@ Determines whether a `value` is a syntax object, returning `true` or `false`.
     (java_new "dev.ionfusion.fusion.FusionSyntax$IsSyntaxProc"))
 
 
-  (define_values (syntax_append)
-    '''
-    (syntax_append front back ...)
-
-Returns a new syntax sexp that combines the `front` and `back` syntax
-sequences.
-    '''
-    (java_new "dev.ionfusion.fusion.SyntaxAppendProc"))
-
-
   (define_values (syntax_column)
     '''
     (syntax_column stx)
@@ -148,17 +138,6 @@ Returns a description of the source of a syntax object.
 for identity comparison.
     '''
     (java_new "dev.ionfusion.fusion.SyntaxSourceProc"))
-
-
-  (define_values (syntax_subseq)
-    '''
-    (syntax_subseq sequence from)
-
-Returns a new syntax sexp that copies children from `sequence` starting at
-`from`.  If `from` is beyond the end of the sequence, the result is an empty
-sequence.
-    '''
-    (java_new "dev.ionfusion.fusion.SyntaxSubseqProc"))
 
 
   (define_values (syntax_to_datum)

@@ -3,9 +3,7 @@
 
 package dev.ionfusion.fusion;
 
-import static dev.ionfusion.fusion.FusionList.unsafeListToSexp;
 import static dev.ionfusion.fusion.FusionSexp.immutableSexp;
-import static dev.ionfusion.fusion.FusionSexp.isEmptySexp;
 import static dev.ionfusion.fusion.FusionSexp.isNullSexp;
 import static dev.ionfusion.fusion.FusionSexp.isPair;
 import static dev.ionfusion.fusion.FusionSexp.isSexp;
@@ -281,68 +279,6 @@ final class SyntaxSexp
     {
         // Don't bother to push wraps; we'll just discard them anyway.
         return syntaxToDatum(eval, getContent());
-    }
-
-
-    //========================================================================
-    // Helpers for syntax_append and syntax_subseq
-
-
-    @Override
-    SyntaxSequence makeAppended(Evaluator eval, SyntaxSequence that)
-        throws FusionException
-    {
-        Object back = that.unwrap(eval);
-
-        BaseSexp backSexp;
-        if (that instanceof SyntaxSexp)
-        {
-            backSexp = (BaseSexp) back;
-        }
-        else
-        {
-            backSexp = unsafeListToSexp(eval, back);
-        }
-
-        BaseSexp appended = unwrap(eval).sexpAppend(eval, backSexp);
-        if (appended == null)
-        {
-            return null;
-        }
-
-        return SyntaxSexp.make(eval, null, appended);
-    }
-
-
-    /**
-     * @return null if not a proper sexp and we go beyond the end.
-     */
-    private static Object subseq(Evaluator eval, Object sexp, int from)
-        throws FusionException
-    {
-        if (from == 0) return sexp;
-
-        if (isEmptySexp(eval, sexp))
-        {
-            return sexp;
-        }
-
-        if (isPair(eval, sexp))
-        {
-            Object tail = unsafePairTail(eval, sexp);
-            return subseq(eval, tail, from - 1);
-        }
-
-        return null;
-    }
-
-    @Override
-    SyntaxSequence makeSubseq(Evaluator eval, int from)
-        throws FusionException
-    {
-        BaseSexp sub = (BaseSexp) subseq(eval, unwrap(eval), from);
-
-        return make(eval, null, sub);
     }
 
 

@@ -3,12 +3,10 @@
 
 package dev.ionfusion.fusion;
 
-import static dev.ionfusion.commons.util.Empties.EMPTY_STRING_ARRAY;
 import static dev.ionfusion.fusion.FusionList.immutableList;
 import static dev.ionfusion.fusion.FusionList.isImmutableList;
 import static dev.ionfusion.fusion.FusionList.nullList;
 import static dev.ionfusion.fusion.FusionList.unsafeListElement;
-import static java.lang.System.arraycopy;
 
 import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionList.BaseList;
@@ -140,66 +138,6 @@ final class SyntaxList
     {
         var thisList = unwrap(eval);
         return (SyntaxValue) thisList.elt(eval, index);
-    }
-
-
-    @Override
-    SyntaxList makeAppended(Evaluator eval, SyntaxSequence<?> that)
-        throws FusionException
-    {
-        int thisLength = this.size(eval);
-        int thatLength = that.size(eval);
-        int newLength  = thisLength + thatLength;
-
-        if (newLength == 0) return this;
-
-        var thisList = unwrap(eval);
-        Object[] children = new Object[newLength];
-        if (thisLength != 0)
-        {
-            thisList.unsafeCopy(eval, 0, children, 0, thisLength);
-        }
-        if (thatLength != 0)
-        {
-            // that could be a sexp so we cant copy directly
-            // TODO avoid intermediate array copy
-            SyntaxValue[] c = that.extract(eval);
-            arraycopy(c, 0, children, thisLength, thatLength);
-        }
-
-        BaseSymbol[] anns = thisList.getAnnotations();
-        BaseList list = immutableList(eval, anns, children);
-        return new SyntaxList(eval, null, list);
-    }
-
-
-    @Override
-    SyntaxList makeSubseq(Evaluator eval, int from)
-        throws FusionException
-    {
-        var thisList = unwrap(eval);
-
-        if ((thisList.size() == 0 || from == 0)
-            && ! thisList.isAnnotated())
-        {
-            return this;
-        }
-
-        BaseList list;
-        if (thisList.isAnyNull())
-        {
-            list = FusionList.NULL_LIST;
-        }
-        else
-        {
-            // TODO will crash if `from` is beyond the end of the list
-            int len = thisList.size();
-            Object[] children = new Object[len - from];
-            thisList.unsafeCopy(eval, from, children, 0, children.length);
-            list = immutableList(eval, EMPTY_STRING_ARRAY, children);
-        }
-
-        return new SyntaxList(eval, null, list);
     }
 
 

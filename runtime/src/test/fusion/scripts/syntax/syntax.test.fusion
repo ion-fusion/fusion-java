@@ -223,50 +223,8 @@
 
 
 //==========================================================================
-// syntax_subseq
-
-(check === EMPTY_SEXP
-  (syntax_to_datum (syntax_subseq (quote_syntax ()) 0)))
-(check === []
-  (syntax_to_datum (syntax_subseq (quote_syntax []) 0)))
-
-(check === EMPTY_SEXP
-  (syntax_to_datum (syntax_subseq (quote_syntax ()) 5)))
-(check === []
-  (syntax_to_datum (syntax_subseq (quote_syntax []) 5)))
-
-(check === (quote (1))
-  (syntax_to_datum (syntax_subseq (quote_syntax (1)) 0)))
-(check === [1]
-  (syntax_to_datum (syntax_subseq (quote_syntax [1]) 0)))
-
-(check === EMPTY_SEXP
-  (syntax_to_datum (syntax_subseq (quote_syntax (1)) 1)))
-(check === []
-  (syntax_to_datum (syntax_subseq (quote_syntax [1]) 1)))
-
-(check === EMPTY_SEXP
-  (syntax_to_datum (syntax_subseq (quote_syntax (1)) 5)))
-(check === []
-  (syntax_to_datum (syntax_subseq (quote_syntax [1]) 5)))
-
-(check === (quote (1 2))
-  (syntax_to_datum (syntax_subseq (quote_syntax (1 2)) 0)))
-(check === [1, 2]
-  (syntax_to_datum (syntax_subseq (quote_syntax [1, 2]) 0)))
-
-(check === (quote (2))
-  (syntax_to_datum (syntax_subseq (quote_syntax (1 2)) 1)))
-(check === [2]
-  (syntax_to_datum (syntax_subseq (quote_syntax [1, 2]) 1)))
-
-(check === EMPTY_SEXP
-  (syntax_to_datum (syntax_subseq (quote_syntax (1 2)) 5)))
-(check === []
-  (syntax_to_datum (syntax_subseq (quote_syntax [1, 2]) 5)))
-
-
 // Syntax objects are never null
+
 (do
   (lambda (stx)
     (check_pred is_syntax stx) // sanity
