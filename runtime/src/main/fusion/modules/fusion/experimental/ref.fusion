@@ -194,11 +194,11 @@ code.
                    (void)))))
 
             // Multi-segment path: unwind one segment
-            (true (syntax_append
-              (quasisyntax
-                (@? (@? (unsyntax (syntax_get stx 1))
-                        (unsyntax segment_stx))))
-              (datum_to_syntax more_segments))))))))
+            (true
+             (datum_to_syntax
+               (pair (quote_syntax @?)
+                     (pair (sexp (quote_syntax @?) (element stx 1) segment_stx)
+                           more_segments)))))))))
 
 
   (define_syntax ##
