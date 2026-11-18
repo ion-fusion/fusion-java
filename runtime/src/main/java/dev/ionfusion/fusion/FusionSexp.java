@@ -307,47 +307,38 @@ public final class FusionSexp
     }
 
 
-    static Object unsafePairDot(Evaluator eval, Object pair, int pos)
-        throws FusionException
+    /**
+     * @param pos must be within range
+     */
+    static Object unsafeSexpElement(Evaluator eval, Object sexp, int pos)
     {
-        ImmutablePair p = (ImmutablePair) pair;
+        ImmutablePair p = (ImmutablePair) sexp;
         for ( ; pos > 0; pos--)
         {
-            Object tail = p.myTail;
-            if (tail instanceof ImmutablePair)
-            {
-                p = (ImmutablePair) tail;
-            }
-            else
-            {
-                return voidValue(eval);
-            }
+            p = (ImmutablePair) p.myTail;
         }
         return p.myHead;
     }
 
 
     static Object unsafePairHead(Evaluator eval, Object pair)
-        throws FusionException
     {
         return ((ImmutablePair) pair).myHead;
     }
 
 
     static Object unsafePairTail(Evaluator eval, Object pair)
-        throws FusionException
     {
         return ((ImmutablePair) pair).myTail;
     }
 
     /**
-     * Performs <em>n</em> tail operations.
-     * That is, traverse <em>n</em> elements from the front of a sexp.
+     * Remove <em>n</em> elements from the front of a sexp.
+     * In other words, performs <em>n</em> tail operations.
      */
-    static Object unsafePairTailN(Evaluator eval, Object pair, int n)
-        throws FusionException
+    static Object unsafeSexpDrop(Evaluator eval, Object pair, int n)
     {
-        while (n-- != 0)
+        while (n-- > 0)
         {
             pair = unsafePairTail(eval, pair);
         }

@@ -8,7 +8,7 @@ import static dev.ionfusion.fusion.FusionSexp.isPair;
 import static dev.ionfusion.fusion.FusionSexp.pair;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
-import static dev.ionfusion.fusion.FusionSexp.unsafePairTailN;
+import static dev.ionfusion.fusion.FusionSexp.unsafeSexpDrop;
 import static dev.ionfusion.fusion.FusionSexp.unsafeSexpMap;
 import static dev.ionfusion.fusion.FusionString.isString;
 import static dev.ionfusion.fusion.FusionString.unsafeStringToJavaString;
@@ -113,7 +113,7 @@ final class ModuleForm
         moduleNamespace.performInitialRequire(eval, languageId, initialBindingsStx);
 
 
-        var body = unsafePairTailN(eval, source.unwrap(eval), 3);
+        var body = unsafeSexpDrop(eval, source.unwrap(eval), 3);
         if (! isPair(eval, body))
         {
             throw check.failure("Module has no body");
@@ -307,7 +307,7 @@ final class ModuleForm
         }
 
         // Skip `module` name language
-        moduleDatum = unsafePairTailN(eval, moduleDatum, 3);
+        moduleDatum = unsafeSexpDrop(eval, moduleDatum, 3);
 
         ArrayList<CompiledForm> otherForms = new ArrayList<>();
 

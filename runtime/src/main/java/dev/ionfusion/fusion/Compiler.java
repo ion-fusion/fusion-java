@@ -11,10 +11,10 @@ import static dev.ionfusion.fusion.FusionList.isList;
 import static dev.ionfusion.fusion.FusionList.unsafeListElement;
 import static dev.ionfusion.fusion.FusionSexp.isPair;
 import static dev.ionfusion.fusion.FusionSexp.isSexp;
-import static dev.ionfusion.fusion.FusionSexp.unsafePairDot;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
-import static dev.ionfusion.fusion.FusionSexp.unsafePairTailN;
+import static dev.ionfusion.fusion.FusionSexp.unsafeSexpDrop;
+import static dev.ionfusion.fusion.FusionSexp.unsafeSexpElement;
 import static dev.ionfusion.fusion.FusionSexp.unsafeSexpSize;
 import static dev.ionfusion.fusion.FusionString.stringToJavaString;
 import static dev.ionfusion.fusion.FusionStruct.emptyStruct;
@@ -111,7 +111,7 @@ class Compiler
             return;
         }
 
-        var first = unsafePairDot(myEval, content, 0);
+        var first = unsafePairHead(myEval, content);
         if (first instanceof SyntaxSymbol)
         {
             SyntacticForm form = ((SyntaxSymbol) first).resolveSyntaxMaybe(topNs);
@@ -206,7 +206,7 @@ class Compiler
         throws FusionException
     {
         BaseSexp<?> exprs = stx.unwrap(myEval);
-        exprs = (BaseSexp<?>) unsafePairTailN(myEval, exprs, from);
+        exprs = (BaseSexp<?>) unsafeSexpDrop(myEval, exprs, from);
 
         // Empty body
         if (!isPair(myEval, exprs))
@@ -538,7 +538,7 @@ class Compiler
         Object sexp = stx.unwrap(myEval);
         assert isPair(myEval, sexp) && (unsafeSexpSize(myEval, sexp) == 3);
 
-        SyntaxValue expr = (SyntaxValue) unsafePairDot(myEval, sexp, 2);
+        SyntaxValue expr = (SyntaxValue) unsafeSexpElement(myEval, sexp, 2);
         CompiledForm valueForm = compileExpression(env, expr);
 
         Binding.Visitor v = new Binding.Visitor()
@@ -558,7 +558,7 @@ class Compiler
             }
         };
 
-        SyntaxSymbol id = (SyntaxSymbol) unsafePairDot(myEval, sexp, 1);
+        SyntaxSymbol id = (SyntaxSymbol) unsafeSexpElement(myEval, sexp, 1);
         Binding binding = id.resolve();
         return (CompiledForm) binding.visit(v);
     }
