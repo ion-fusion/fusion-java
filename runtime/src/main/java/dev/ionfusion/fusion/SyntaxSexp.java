@@ -11,9 +11,9 @@ import static dev.ionfusion.fusion.FusionSexp.isPair;
 import static dev.ionfusion.fusion.FusionSexp.isSexp;
 import static dev.ionfusion.fusion.FusionSexp.nullSexp;
 import static dev.ionfusion.fusion.FusionSexp.pair;
-import static dev.ionfusion.fusion.FusionSexp.unsafePairDot;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
+import static dev.ionfusion.fusion.FusionSexp.unsafeSexpElement;
 import static dev.ionfusion.fusion.FusionSexp.unsafeSexpMap;
 import static dev.ionfusion.fusion.FusionSexp.unsafeSexpSize;
 import static dev.ionfusion.fusion.Syntax.rebuild;
@@ -240,7 +240,7 @@ final class SyntaxSexp
     SyntaxValue<?> get(Evaluator eval, int index)
         throws FusionException
     {
-        return (SyntaxValue) unsafePairDot(eval, unwrap(eval), index);
+        return (SyntaxValue) unsafeSexpElement(eval, unwrap(eval), index);
     }
 
 
