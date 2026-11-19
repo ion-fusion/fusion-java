@@ -344,7 +344,8 @@ abstract class SyntaxValue<Content>
     final SyntaxValue<Content> initLexicalContext(SyntaxValue<?> context)
     {
         assert !(context instanceof SyntaxStruct) &&
-               !(context instanceof SyntaxSequence)
+               !(context instanceof SyntaxSexp) &&
+               !(context instanceof SyntaxList)
             : "Can't use container as lexical context; see #68";
         assert myWraps == SyntaxWraps.EMPTY : "Already initialized";
 

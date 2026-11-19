@@ -15,7 +15,7 @@ import dev.ionfusion.fusion.FusionSymbol.BaseSymbol;
 import dev.ionfusion.runtime.base.FusionException;
 
 final class SyntaxList
-    extends SyntaxSequence<BaseList>
+    extends SyntaxValue<BaseList>
 {
     /**
      * @param datum an immutable list of {@link SyntaxValue}s.
@@ -25,7 +25,7 @@ final class SyntaxList
                        SyntaxWraps      wraps,
                        BaseList         datum)
     {
-        super(datum, pos, properties, wraps);
+        super(datum, wraps, pos, properties);
     }
 
     /**
