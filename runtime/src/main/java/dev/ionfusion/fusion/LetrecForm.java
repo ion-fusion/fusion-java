@@ -3,6 +3,11 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.fusion.FusionCollection.unsafeCollectionSize;
+import static dev.ionfusion.fusion.FusionSequence.unsafeSequenceElt;
+import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
+import static dev.ionfusion.fusion.FusionSexp.unsafeSexpElement;
+import static dev.ionfusion.fusion.FusionSyntax.unsafeSyntaxUnwrap;
 import static dev.ionfusion.fusion.FusionValue.UNDEF;
 
 import dev.ionfusion.commons.resources.ResourcePosition;
@@ -25,17 +30,16 @@ final class LetrecForm
      * Extract the {@code id}s from a form like {@code ((id expr) ...)} or
      * {@code [(id expr), ...]}.
      */
-    private static SyntaxSymbol[] collectBinders(Evaluator eval,
-                                                 SyntaxSequence<?> bindings)
+    private static SyntaxSymbol[] collectBinders(Evaluator eval, Object decls)
         throws FusionException
     {
-        final int numBindings = bindings.size(eval);
+        int numBindings = unsafeCollectionSize(eval, decls);
 
         SyntaxSymbol[] binders = new SyntaxSymbol[numBindings];
         for (int i = 0; i < numBindings; i++)
         {
-            SyntaxSexp binding = (SyntaxSexp) bindings.get(eval, i);
-            binders[i] = (SyntaxSymbol) binding.get(eval, 0);
+            var decl = unsafeSyntaxUnwrap(eval, unsafeSequenceElt(eval, decls, i));
+            binders[i] = (SyntaxSymbol) unsafePairHead(eval, decl);
         }
 
         return binders;
@@ -48,8 +52,9 @@ final class LetrecForm
     {
         Evaluator eval = comp.getEvaluator();
 
-        var bindingForms = (SyntaxSequence) stx.get(eval, 1);
-        var binders = collectBinders(eval, bindingForms);
+        var formSexp = stx.unwrap(eval);
+        var decls = unsafeSyntaxUnwrap(eval, unsafeSexpElement(eval, formSexp, 1));
+        var binders = collectBinders(eval, decls);
         env = LocalEnvironment.forCompilation(env, binders);
 
         final int numBindings = binders.length;
@@ -58,10 +63,10 @@ final class LetrecForm
 
         for (int i = 0; i < numBindings; i++)
         {
-            SyntaxSexp binding = (SyntaxSexp) bindingForms.get(eval, i);
-            SyntaxValue boundExpr = binding.get(eval, 1);
-            valueForms[i] = comp.compileExpression(env, boundExpr);
-            valuePosns[i] = boundExpr.getPosition();
+            var decl = unsafeSyntaxUnwrap(eval, unsafeSequenceElt(eval, decls, i));
+            var valueExpr = (SyntaxValue<?>) unsafeSexpElement(eval, decl, 1);
+            valueForms[i] = comp.compileExpression(env, valueExpr);
+            valuePosns[i] = valueExpr.getPosition();
         }
 
         CompiledForm body = comp.compileBegin(env, stx, 2);

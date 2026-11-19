@@ -3,7 +3,11 @@
 
 package dev.ionfusion.fusion;
 
+import static dev.ionfusion.fusion.FusionCollection.unsafeCollectionSize;
 import static dev.ionfusion.fusion.FusionIo.safeWriteToString;
+import static dev.ionfusion.fusion.FusionSequence.unsafeSequenceElt;
+import static dev.ionfusion.fusion.FusionSexp.unsafeSexpElement;
+import static dev.ionfusion.fusion.FusionSyntax.unsafeSyntaxUnwrap;
 
 import dev.ionfusion.runtime.base.FusionException;
 
@@ -72,27 +76,28 @@ final class ParameterizeForm
     {
         Evaluator eval = comp.getEvaluator();
 
-        SyntaxSequence bindingForms = (SyntaxSequence) stx.get(eval, 1);
+        var formSexp = stx.unwrap(eval);
+        var decls = unsafeSyntaxUnwrap(eval, unsafeSexpElement(eval, formSexp, 1));
 
-        final int numBindings = bindingForms.size(eval);
+        int numBindings = unsafeCollectionSize(eval, decls);
 
-        CompiledForm[] parameterForms = new CompiledForm[numBindings];
-        CompiledForm[] valueForms     = new CompiledForm[numBindings];
+        CompiledForm[] paramForms = new CompiledForm[numBindings];
+        CompiledForm[] valueForms = new CompiledForm[numBindings];
 
         for (int i = 0; i < numBindings; i++)
         {
-            SyntaxSexp binding = (SyntaxSexp) bindingForms.get(eval, i);
+            var decl = unsafeSyntaxUnwrap(eval, unsafeSequenceElt(eval, decls, i));
 
-            SyntaxValue paramExpr = binding.get(eval, 0);
-            parameterForms[i] = comp.compileExpression(env, paramExpr);
+            var paramExpr = unsafeSexpElement(eval, decl, 0);
+            var valueExpr = unsafeSexpElement(eval, decl, 1);
 
-            SyntaxValue valueExpr = binding.get(eval, 1);
+            paramForms[i] = comp.compileExpression(env, paramExpr);
             valueForms[i] = comp.compileExpression(env, valueExpr);
         }
 
         CompiledForm body = comp.compileBegin(env, stx, 2);
 
-        return new CompiledParameterize(parameterForms, valueForms, body);
+        return new CompiledParameterize(paramForms, valueForms, body);
     }
 
 

@@ -216,7 +216,6 @@ final class SyntaxSexp
     }
 
 
-    @Override
     SyntaxValue<?> get(Evaluator eval, int index)
         throws FusionException
     {

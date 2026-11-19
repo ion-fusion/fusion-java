@@ -9,6 +9,7 @@ import static dev.ionfusion.fusion.FusionList.immutableList;
 import static dev.ionfusion.fusion.FusionList.isImmutableList;
 import static dev.ionfusion.fusion.FusionList.isList;
 import static dev.ionfusion.fusion.FusionList.unsafeListElement;
+import static dev.ionfusion.fusion.FusionSequence.unsafeSequenceElt;
 import static dev.ionfusion.fusion.FusionSexp.isPair;
 import static dev.ionfusion.fusion.FusionSexp.isSexp;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
@@ -24,6 +25,7 @@ import static dev.ionfusion.fusion.FusionStruct.isStruct;
 import static dev.ionfusion.fusion.FusionStruct.nullStruct;
 import static dev.ionfusion.fusion.FusionSymbol.isSymbol;
 import static dev.ionfusion.fusion.FusionSymbol.makeSymbol;
+import static dev.ionfusion.fusion.FusionSyntax.unsafeSyntaxUnwrap;
 import static dev.ionfusion.fusion.FusionValue.isAnnotated;
 import static dev.ionfusion.fusion.FusionValue.isAnyNull;
 import static dev.ionfusion.fusion.FusionVoid.isVoid;
@@ -124,6 +126,15 @@ class Compiler
         }
     }
 
+
+    /**
+     * Compiles a single fully expanded core syntax form.
+     */
+    CompiledForm compileExpression(Environment env, Object stx)
+        throws FusionException
+    {
+        return compileExpression(env, (SyntaxValue<?>) stx);
+    }
 
     /**
      * Compiles a single fully expanded core syntax form.
@@ -286,11 +297,14 @@ class Compiler
     CompiledForm compileDefineValues(final Environment env, SyntaxSexp stx)
         throws FusionException
     {
-        int arity = stx.size(myEval);
-        SyntaxValue valueSource = stx.get(myEval, arity - 1);
-        final CompiledForm valuesForm = compileExpression(env, valueSource);
+        var formSexp = unsafeSyntaxUnwrap(myEval, stx);
 
-        SyntaxSexp idSexp = (SyntaxSexp) stx.get(myEval, 1);
+        int arity = unsafeSexpSize(myEval, formSexp);
+
+        var valuesStx = unsafeSexpElement(myEval, formSexp, arity - 1);
+        CompiledForm valuesForm = compileExpression(env, valuesStx);
+
+        var idSexp = (SyntaxSexp) unsafeSexpElement(myEval, formSexp, 1);
         SyntaxSymbol[] ids = idSexp.extract(myEval, SyntaxSymbol.class);
         int idCount = ids.length;
 
@@ -333,11 +347,12 @@ class Compiler
         // Collect documentation when necessary.
         if (arity != 3 && isDocCollectingEnabled())
         {
-            SyntaxSequence docSeq = (SyntaxSequence) stx.get(myEval, 2);
+            var docs = unsafeSyntaxUnwrap(myEval, unsafeSexpElement(myEval, formSexp, 2));
 
             for (int i = 0; i < idCount; i++)
             {
-                Object docString = docSeq.get(myEval, i).unwrap(myEval);
+                var docStx    = unsafeSequenceElt(myEval, docs, i);
+                var docString = unsafeSyntaxUnwrap(myEval, docStx);
                 BindingDoc doc = new BindingDoc(null, // kind
                                                 null, // usage
                                                 stringToJavaString(myEval, docString));
