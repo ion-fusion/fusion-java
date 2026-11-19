@@ -61,12 +61,14 @@ abstract class SyntacticForm
     // Type-checking helpers
 
     final SyntaxChecker check(Evaluator eval, SyntaxSexp form)
+        throws FusionException
     {
         String name = objectName().stringValue();
         return new SyntaxChecker(eval, name, form);
     }
 
     final SyntaxChecker check(Expander expander, SyntaxSexp form)
+        throws FusionException
     {
         return check(expander.getEvaluator(), form);
     }

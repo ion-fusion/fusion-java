@@ -32,16 +32,15 @@ abstract class AbstractLetForm
         SyntaxChecker check = check(eval, stx);
         check.arityAtLeast(3);
 
-        SyntaxChecker checkBindings = check.subformSeq("sequence of bindings", 1);
-        SyntaxSequence<?> bindingPairs = checkBindings.form();
+        SyntaxChecker decls = check.subformSeq("sequence of bindings", 1);
 
-        var binders = collectBinders(eval, checkBindings, bindingPairs);
+        var binders = collectBinders(eval, decls);
         ensureUniqueIdentifiers(eval, binders, stx);
 
         var localEnv = LocalEnvironment.forExpansion(outerEnv, binders);
 
         var subforms = stx.extract(eval);
-        subforms[1] = expandBindingPairs(expander, outerEnv, localEnv, bindingPairs);
+        subforms[1] = expandBindingPairs(expander, outerEnv, localEnv, decls);
 
         // TODO #67 Should allow internal definitions
         for (int i = 2; i < subforms.length; i++)
@@ -54,12 +53,10 @@ abstract class AbstractLetForm
     }
 
 
-    SyntaxSymbol[] collectBinders(Evaluator eval,
-                                  SyntaxChecker checkPairs,
-                                  SyntaxSequence<?> bindingPairs)
+    SyntaxSymbol[] collectBinders(Evaluator eval, SyntaxChecker checkPairs)
         throws FusionException
     {
-        int pairCount = bindingPairs.size(eval);
+        int pairCount = checkPairs.size();
 
         var binders = new ArrayList<SyntaxSymbol>(pairCount);
         for (int i = 0; i < pairCount; i++)
@@ -70,7 +67,7 @@ abstract class AbstractLetForm
             if (myBindingsAreMultiValue)
             {
                 var checkIds = checkPair.subformSexp("binding names", 0);
-                int size     = checkIds.form().size(eval);
+                int size     = checkIds.size();
                 for (int j = 0; j < size; j++)
                 {
                     var binder = checkIds.requiredIdentifier("bound name", j);
@@ -91,12 +88,12 @@ abstract class AbstractLetForm
     SyntaxValue<?> expandBindingPairs(Expander expander,
                                       Environment outerEnv,
                                       LocalEnvironment localEnv,
-                                      SyntaxSequence<?> bindingPairs)
+                                      SyntaxChecker bindingPairs)
         throws FusionException
     {
         var eval = expander.getEvaluator();
 
-        var seq = bindingPairs.unwrap(eval);
+        var seq = bindingPairs.sequence();
         var expanded = unsafeSequenceMap(eval, seq, bp -> {
             var bindingPair = (SyntaxSexp) bp;
             var binders = bindingPair.get(eval, 0);
@@ -116,6 +113,6 @@ abstract class AbstractLetForm
             return bindingPair.copyReplacingChildren(eval, binders, expr);
         });
 
-        return Syntax.rebuild(eval, expanded, bindingPairs);
+        return Syntax.rebuild(eval, expanded, bindingPairs.form());
     }
 }

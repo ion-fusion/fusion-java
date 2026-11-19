@@ -108,7 +108,7 @@ final class DefineValuesForm
                     check.subformSeq("documentation sequence", 2);
 
                 int idCount = boundIds.length;
-                if (docs.form().size(eval) != idCount)
+                if (docs.size() != idCount)
                 {
                     throw docs.failure("expected " + idCount + " doc strings");
                 }
