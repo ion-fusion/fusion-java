@@ -6,7 +6,6 @@ package dev.ionfusion.fusion;
 
 import dev.ionfusion.commons.resources.ResourcePosition;
 import dev.ionfusion.fusion.FusionSequence.BaseSequence;
-import dev.ionfusion.runtime.base.FusionException;
 
 abstract class SyntaxSequence<Content extends BaseSequence>
     extends SyntaxValue<Content>
@@ -20,13 +19,4 @@ abstract class SyntaxSequence<Content extends BaseSequence>
     {
         super(content, pos);
     }
-
-
-    /**
-     * Creates a new syntax sequence, using our location and properties but
-     * the given children.
-     */
-    abstract SyntaxSequence<Content> copyReplacingChildren(Evaluator eval,
-                                                           SyntaxValue... children)
-        throws FusionException;
 }

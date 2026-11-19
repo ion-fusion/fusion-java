@@ -4,6 +4,7 @@
 package dev.ionfusion.fusion;
 
 import static dev.ionfusion.fusion.FusionSequence.isSequence;
+import static dev.ionfusion.fusion.FusionSequence.unsafeSequenceMap;
 import static dev.ionfusion.fusion.FusionValue.isAnyNull;
 import static dev.ionfusion.fusion.SyntaxException.makeSyntaxError;
 
@@ -72,6 +73,19 @@ class SyntaxChecker
         return mySequence.size(myEvaluator);
     }
 
+    /**
+     * Maps over all subforms, checking that they are sexps.
+     */
+    Object subformSexpMap(String expectation, Evaluator.Function<SyntaxChecker, ?> fn)
+        throws FusionException
+    {
+        return unsafeSequenceMap(myEvaluator, mySequence, form -> {
+            var subform = checkSyntax(SyntaxSexp.class, expectation,
+                                      false /* nullable */, (SyntaxValue<?>) form);
+            var checker = new SubformChecker(this, expectation, subform);
+            return fn.apply(checker);
+        });
+    }
 
     //========================================================================
 

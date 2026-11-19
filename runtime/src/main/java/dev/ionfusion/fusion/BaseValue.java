@@ -86,6 +86,8 @@ abstract class BaseValue
      * <p>
      * TODO #65 This needs to do cycle detection.
      *
+     * @param context can be null.
+     *
      * @return not null.
      */
     SyntaxValue<?> datumToSyntax(Evaluator        eval,

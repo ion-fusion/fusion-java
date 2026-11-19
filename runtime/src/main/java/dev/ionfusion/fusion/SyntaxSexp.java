@@ -120,7 +120,6 @@ final class SyntaxSexp
     //========================================================================
 
 
-    @Override
     SyntaxSexp copyReplacingChildren(Evaluator      eval,
                                      SyntaxValue... children)
         throws FusionException

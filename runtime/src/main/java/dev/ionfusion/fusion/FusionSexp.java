@@ -88,9 +88,9 @@ public final class FusionSexp
     /**
      * Caller must have injected children.
      */
-    static BaseSexp immutableSexp(Evaluator eval, Object[] elements)
+    static BaseSexp immutableSexp(Evaluator eval, Object... elements)
     {
-        BaseSexp c = EMPTY_SEXP;
+        BaseSexp<?> c = EMPTY_SEXP;
 
         int i = elements.length;
         while (i-- != 0)

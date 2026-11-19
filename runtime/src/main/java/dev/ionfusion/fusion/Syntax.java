@@ -5,6 +5,7 @@ package dev.ionfusion.fusion;
 
 
 import static dev.ionfusion.commons.util.Empties.EMPTY_STRING_ARRAY;
+import static dev.ionfusion.fusion.FusionCollection.isCollection;
 import static dev.ionfusion.fusion.FusionSexp.pair;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairHead;
 import static dev.ionfusion.fusion.FusionSexp.unsafePairTail;
@@ -95,9 +96,12 @@ final class Syntax
                                   SyntaxValue<?> original)
         throws FusionException
     {
+        // TODO #68 Remove this when context is retained on collections.
+        var context = isCollection(eval, original.unwrap(eval)) ? null : original;
+
         return datumToSyntax(eval,
                              content,
-                             original, // Lexical context
+                             context,
                              original.getPosition(),
                              original.getProperties());
     }

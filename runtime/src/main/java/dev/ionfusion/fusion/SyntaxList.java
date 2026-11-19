@@ -69,7 +69,6 @@ final class SyntaxList
     }
 
 
-    @Override
     SyntaxList copyReplacingChildren(Evaluator      eval,
                                      SyntaxValue... children)
         throws FusionException
