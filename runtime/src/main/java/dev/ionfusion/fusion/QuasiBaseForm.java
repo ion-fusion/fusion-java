@@ -127,7 +127,7 @@ abstract class QuasiBaseForm
     {
         final Evaluator eval = expander.getEvaluator();
 
-        int size = stx.size(eval);
+        int size = stx.unwrap(eval).size(eval);
         if (size == 0) return stx;
 
         Object list = stx.unwrap(eval);
@@ -264,7 +264,7 @@ abstract class QuasiBaseForm
         throws FusionException
     {
         Evaluator eval = comp.getEvaluator();
-        int size = stx.size(eval);
+        int size = stx.unwrap(eval).size(eval);
         if (size == 0) return constant(eval, stx);
 
         boolean same = true;

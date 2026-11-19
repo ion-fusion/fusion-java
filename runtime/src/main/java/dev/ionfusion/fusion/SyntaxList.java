@@ -111,13 +111,6 @@ final class SyntaxList
     }
 
 
-    @Override
-    final int size(Evaluator eval)
-    {
-        return getContent().size();
-    }
-
-
     SyntaxValue get(Evaluator eval, int index)
         throws FusionException
     {
@@ -130,7 +123,7 @@ final class SyntaxList
         throws FusionException
     {
         Evaluator eval = expander.getEvaluator();
-        int len = size(eval);
+        int len = getContent().size(eval);
         if (len == 0) return this;
 
         Object list = unwrap(eval);

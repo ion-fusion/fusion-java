@@ -243,26 +243,6 @@ public final class FusionSyntax
     }
 
 
-    /**
-     * Accepts syntax values wrapping sequences, including {@code null.list} and
-     * {@code null.sexp}.
-     */
-    static SyntaxSequence checkSyntaxSequenceArg(Evaluator eval,
-                                                 Procedure who,
-                                                 int       argNum,
-                                                 Object... args)
-        throws FusionException
-    {
-        Object arg = args[argNum];
-        if (arg instanceof SyntaxSequence)
-        {
-            return (SyntaxSequence) arg;
-        }
-
-        throw who.argError(eval, "syntax list or sexp", argNum, args);
-    }
-
-
     //========================================================================
     // Procedures
 
