@@ -26,7 +26,7 @@ import java.lang.reflect.Array;
 import java.util.IdentityHashMap;
 
 final class SyntaxSexp
-    extends SyntaxSequence<BaseSexp>
+    extends SyntaxValue<BaseSexp<?>>
 {
     /**
      * @param sexp must not be null.
@@ -36,7 +36,7 @@ final class SyntaxSexp
                        SyntaxWraps      wraps,
                        BaseSexp         sexp)
     {
-        super(sexp, pos, properties, wraps);
+        super(sexp, wraps, pos, properties);
     }
 
 
